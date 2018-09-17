@@ -97,6 +97,16 @@ D.  Die meisten Werte sind $>7$.
 Antwort ***B*** ist korrekt, da der Balken am höchsten ist - bei gleicher Balkenbreite, somit in dieser Klasse prozentual am meisten Beobachtungen sind.
 :::
 
+### Übung `r nextExercise()`: Fahrzeit {.exercise type=essay}
+
+Wie lange brauchen Studierende zum Studienzentrum? Skizzieren Sie das Histogramm. Bestimmen Sie den Anteil derjenigen, die maximal 30min. zum Studienzentrum brauchen.
+
+
+::: {.notes}
+*Individuell*. Die Datenerhebung kann z. B. auf gruppierten Zeiten erfolgen: $(0,10], (10,20], (20,30], \ldots$. Aus dieser Tabelle kann dann auch ermittelt werden für wie viele Beobachtungen die Fahrzeit $x\leq 30$ gilt.
+:::
+
+
 ### Verteilungen
 
 Die Verteilung gibt an, wie häufig bzw. wahrscheinlich bestimmte Werte oder Wertebereiche sind.
@@ -160,6 +170,31 @@ E.  Das Einkommen ist rechtsschief.
 
 ::: {.notes}
 Da, grob gesagt, nur wenige viel und sehr viel verdienen, viele ein mittleres Einkommen haben und etwas weniger ein geringes, wird die Verteilung rechtsschief sein. Antwort ***E*** ist also korrekt. *Tipp:* Recherchieren Sie doch mal die Einkommensverteilung in Deutschland.
+:::
+
+### Verteilungsfunktion
+
+Die **empirische Verteilungsfunktion**^[Neben der *empirischen* Verteilungsfunktion gibt es auch eine *theoretische* Verteilungsfunktion $F(x)$.] $F_n(x)$ gibt an, wie viele der $n$ Beobachtungen kleiner oder gleich $x$ sind:
+
+\[F_n(x)=\frac{\text{Anzahl Beobachtungen }\leq x}{n}\]
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+p1 <- gf_dist("binom", size = 10, prob=1/2, ylab="Relative Häuigkeit", xlab="Anzahl Kopf", title="10 facher Münzwurf")
+p2 <- gf_dist("binom", size = 10, prob=1/2, ylab="Verteilungsfunktion", xlab="Anzahl Kopf", kind = "cdf")
+gridExtra::grid.arrange(p1,p2)
+```
+
+### Übung `r nextExercise()`: Verteilungsfunktion {.exercise type=A-B-C answer=C}
+
+Bei einem 10 fachen Münzwurf gilt für die Anzahl Kopf: $F(8)=`r pbinom(8, 10, prob=0.5)`$. Welche Aussage stimmt?
+
+A.  Die relative Häufigkeit bei 10 Würfen 8 mal Kopf zu werfen liegt bei $`r pbinom(8, 10, prob=0.5)`$.
+B.  Die relative Häufigkeit bei 10 Würfen mehr als 8 mal Kopf zu werfen liegt bei $`r pbinom(8, 10, prob=0.5)`$.
+C.  Die relative Häufigkeit bei 10 Würfen höchstens 8 mal Kopf zu werfen liegt bei $`r pbinom(8, 10, prob=0.5)`$.
+
+::: {.notes}
+Die (empirische) Verteilungsfunktion sagt aus, wie groß der Anteil der Beobachtungen ist, die $\leq x$ sind, also ***C***.
+9 bzw. 10 mal Kopf ist als selten: $1-`r pbinom(8, 10, prob=0.5)`=`r 1-pbinom(8, 10, prob=0.5)`$.
 :::
 
 
