@@ -1,0 +1,285 @@
+```{r setup-Einfuehrung-Normalverteilung, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Einfuehrung-Normalverteilung",  # Dateiname ohne Suffix
+    "EinfuehrungInferenz"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+# `r nextChapter()` Normalverteilung
+
+### Zufallsvariable
+
+- Eine **Zufallsvariable** $X$ ist eine Variable, deren Wert $x$ vom **Zufall** abhängt.
+- Beobachtungen $x_i$ können aufgefasst werden als Realisationen von Zufallsvariablen $X$.
+- Die **Verteilungsfunktion** $F(x)$ sagt, wie wahrscheinlich es ist, einen Wert $\leq x$ zu beobachten: $F(x)=P(X\leq x)$, und damit $0\leq F(x) \leq 1$.
+- Durch eine *zufällige* Stichprobe oder eine *zufällige* Zuordnung im Rahmen eines Experimentes soll sichergestellt werden, dass die Beobachtungen $x_i, i=1, \ldots ,n$ unabhängig und identisch verteilt sind.
+
+### Normalverteilung
+
+Die Punkte einer Klausur seien **normalverteilt** mit $\mu=55$ (Mittelwert der Population/ Erwartungswert) und $\sigma=15$ (Standardabweichung Population).
+
+```{r, echo=FALSE, fig.align="center", out.width="70%"}
+p1<-plotDist("norm", mean = 55, sd = 15, main = "Dichtefunktion", xlab = "Punkte", ylab = "f(x)=F'(x)")
+p2<-plotDist("norm", mean = 55, sd = 15, kind = "cdf", main = "Verteilungsfunktion", xlab = "Punkte", ylab = expression(paste("F(x)=P(",X<=x,")")))
+gridExtra::grid.arrange(p1,p2, nrow=2 )
+rm(p1)
+rm(p2)
+```
+
+
+### Dichte- und Verteilungsfunktion der Normalverteilung
+
+- Dichtefunktion: \[f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\]
+- Verteilungsfunktion: \[F(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(u-\mu)^2}{2\sigma^2}} du\]
+
+
+Lage und Streuung:
+
+- $\mu=E(X)=\int_{-\infty}^{\infty} x \cdot f(x) dx$: Mittelwert der Verteilung (Erwartungswert).
+- $\sigma^2=Var(X)=\int_{-\infty}^{\infty} (x-\mu)^2 \cdot f(x) dx$: Varianz der Verteilung.
+
+Unter der Annahme einer Normalverteilung können abhängig von den Parametern $\mu$ und $\sigma$ Wahrscheinlichkeiten berechnet werden.
+
+### Verteilungsfunktion
+
+Angenommen, unter $45$ Punkten, d. h., mit $44.5$ Punkten oder weniger, fällt mensch leider durch, dann liegt die Durchfallwahrscheinlichkeit bei `r round(pnorm(44.5, mean = 55, sd = 15),2)`:
+
+$$p=F(x)=P(X\leq x)$$
+
+```{r, fig.align="center", out.width="35%"}
+xpnorm(44.5, mean = 55, sd = 15)
+```
+
+### Übung  `r nextExercise()`: Eigenschaften Verteilungsfunktion I {.exercise type=yesno answer=yes}
+
+Stimmt die Aussage: Die Verteilungsfunktion ist monoton steigend, d. h., mit größerem $x$ wird $F(x)$ zumindest nicht kleiner?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***: $F(x)=P(X\leq x)$, d. h., wenn $x$ größer wird, kann $P$ und damit $F$ nicht fallen.
+:::
+
+### Übung  `r nextExercise()`: Eigenschaften Verteilungsfunktion II {.exercise type=A-B-C-D answer=B}
+
+Was gilt für $x \rightarrow \infty$?
+
+A.  $F(x)$ geht gegen 0.
+B.  $F(x)$ geht gegen 1.
+C.  $F(x)$ geht gegen Unendlich.
+D.  Kann nicht beantwortet werden.
+
+::: {.notes}
+Richtig ist ***B***. Für $x \rightarrow -\infty$ gilt $F(x) \rightarrow 0$.
+:::
+
+### Standardisierung, z-Transformation
+
+**z-Transformation, Standardisierung**: Überführung einer beliebigen Verteilung in eine mit $\mu=0$ und $\sigma=1$: $$z=\frac{x-\mu}{\sigma}$$.^[Symbol für die Verteilungsfunktion einer Standardnormalverteilung: $\Phi(\cdot)$.]
+
+```{r}
+zscore(c(0,1,2))
+zscore(c(100,200,300))
+```
+
+### Übung `r ex`: z-Wert {.exercise type=A-B-C answer=C}
+
+Welche der Interpretationen von $z=-2$ ist *falsch*?
+
+A.  Der Wert ist unterdurchschnittlich.
+B.  Der Wert liegt 2 Standardabweichungen vom Mittelwert entfernt.
+C.  $x$^[$x= z \cdot \sigma + \mu$] ist kleiner als $0$.
+
+::: {.notes}
+***C***.: z. B. $\mu=100, \sigma=1: \quad x=-2 \cdot 1 + 100=98>0$
+:::
+
+### Übung  `r nextExercise()`: Verteilungsfunktion (I/II) {.exercise}
+
+Ein Studierender hat $60$ Punkte erreicht:
+
+```{r, fig.align="center", out.width="45%"}
+xpnorm(60, mean = 55, sd = 15)
+```
+
+
+### Übung `r ex`: Verteilungsfunktion (II/II) {.exercise type=A-B-C-D answer=C}
+
+Welche Aussage stimmt?
+
+A.  ca. $37\%$ der Population schneiden schlechter ab als er.
+B.  ca. $63\%$ der Population schneiden besser ab als er.
+C.  Er ist $\frac{1}{3}$ Standardabweichungen über dem Durchschnitt.
+D.  Keine der Antworten A--C stimmt.
+
+::: {.notes}
+Da $z=\frac{60-55}{15}=\frac{1}{3}>0$ gilt, stimmt ***C***.
+:::
+
+### 68-95-99,7% Regel
+
+Bei einer Normalverteilung liegen ca. 
+
+- $68\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$
+- $95\%$ der Werte im Bereich  $\mu\pm 1 \cdot \sigma$ 
+- $99,7\%$ der Werte im Bereich  $\mu\pm 1 \cdot \sigma$.
+
+```{r, fig.align="center", out.width="40%"}
+xpnorm(c(-2,2)) # Standardnormalverteilung
+```
+
+### Übung  `r nextExercise()`: 68-95-99,7% Regel {.exercise type=yesno answer=no}
+
+Die Daten seien normalverteilt mit $\mu=100$ und $\sigma=15$. Ist dann $x=150$ ein üblicher Wert?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: $z=\frac{150-100}{15}>3$. Ein solcher Wert kommt also in weniger als $0,3\%$ der Fälle vor.
+:::
+
+### Offene Übung `r nextExercise()`: Standardisierung {.exercise type=essay}
+
+Welchen $z$-Wert^[standardisiert, z-transformiert] hat ein Kandidat mit $x=130$, wenn $\mu=100$ und $\sigma=15$ ist?
+
+::: {.notes}
+$z=\frac{130-100}{15}=2$. Der Kandidat ist also 2 Standardabweichungen besser als der Durchschnitt.
+:::
+
+### Übung  `r nextExercise()`: Verteilungsfunktion in R {.exercise type=A-B-C answer=A}
+
+Welcher Befehl liefert den Wert der Verteilungsfunktion an der Stelle $115$, wenn $\mu=100$ und $\sigma=15$ ist?
+
+A.  `xpnorm(115, 100, 15)`
+B.  `xpnorm(100, 15, 115)`
+C.  `xpnorm(15, 115, 100)`
+
+::: {.notes}
+***A***: `xpnorm(115, 100, 15)`. Die Standardreihenfolge ist `xpnorm(x, mean, sd)`. Siehe auch `?xpnorm`.
+:::
+
+### Quantilsfunktion
+
+Man gehört zu den $10\%$ besten^[$90\%$ sind nicht besser] ab `r round(qnorm(0.9, mean = 55, sd = 15))` Punkten:
+$$q=F^{-1}(p)$$
+
+```{r, fig.align="center", out.width="45%"}
+xqnorm(0.9, mean = 55, sd = 15)
+```
+
+### Übung `r nextExercise()`: Quantilsfunktion {.exercise type=A-B-C answer=A}
+
+Welche Aussage stimmt? ($p$: Wahrscheinlichkeit, dass $q$ nicht überschritten wird)
+
+A.  Je kleiner $p$, desto kleiner $q$.
+B.  Je kleiner $p$, desto größer $q$.
+C.  $p$ und $q$ stehen in keinem Zusammenhang.
+
+::: {.notes}
+Mit einer kleineren Wahrscheinlichkeit werden kleinere Werte nicht überschritten, daher ***A***.
+```{r, echo=FALSE, fig.align="center", out.width="40%"}
+p<-seq(0,1, length=5000)
+q<-qnorm(p, mean=55, sd=15)
+xyplot(q~p, type="l", main="Quantilsfunktion")
+rm(p)
+rm(q)
+```
+
+
+:::
+
+### Übung `r nextExercise()`: Quantil berechnen {.exercise type=A-B answer=B}
+
+Mit bis zu wie vielen Punkten zählt man zu dem oberen Drittel der Klausur?
+
+A.  `xqnorm(1/3, mean = 55, sd = 15)`: `r round(qnorm(1/3, mean = 55, sd = 15))` Punkte.
+B.  `xqnorm(2/3, mean = 55, sd = 15)`: `r round(qnorm(2/3, mean = 55, sd = 15))` Punkte.
+
+::: {.notes}
+Man zählt zum oberen Drittel, wenn zwei Drittel nicht besser sind, also ***B***.
+:::
+
+
+### Überprüfung Normalverteilungsannahme
+
+Ein Q-Q Plot (`xqqmath()`) vergleicht die Quantile einer Verteilung z. B. mit den theoretischen einer Normalverteilung. Bei einer guten Übereinstimmung liegen die Punkte auf der Diagonalen.^[Formale Überprüfung z.B. über Shapiro-Wilk Test (`shapiro.test()`).]
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+set.seed(1896)
+xnorm <- rnorm(200)
+xchi2 <- rchisq(200,4)
+
+hxn <- histogram(~xnorm)
+qxn <- xqqmath(~xnorm)
+
+
+hxc <- histogram(~xchi2)
+qxc <-xqqmath(~xchi2)
+
+library(gridExtra)
+
+grid.arrange(hxn, qxn, hxc, qxc, ncol=2)
+
+
+```
+
+### Six Sigma
+
+Ein Fertigungsprozess funktioniere zum sog. $3\sigma$ Niveau, d. h., die erlaubten Abweichungen (Toleranz) sind innerhalb von 3 Standardabweichungen um den Mittelwert:
+
+```{r}
+x3 <- pnorm(-3)
+```
+
+Dann wird bei $1.000.000=10^6$ Produkten ein Ausschuss von
+```{r}
+(2*x3) * 1e06
+```
+ 
+erwartet.^[Innerhalb von Six Sigma wird zur Berechnung des erwarteten Fehleranteils ("DPMO") zusätzlich eine langfristige Mittelwertsberschiebung um $1.5\sigma$ berücksichtigt, die hier ignoriert wird.]
+
+
+### Übung `r nextExercise()`: Six Sigma {.exercise type=A-B-C-D answer=D}
+
+Wie viele Fehler pro Million werden erwartet, wenn der akzeptierte Bereich innerhalb von $6\sigma$ liegt?^[Ohne Berücksichtigung der Mittelwertsverschiebung.]
+
+A.  $\approx 2700$
+B.  $\approx 65$
+C.  $\approx 1$
+D.  $<0.1$
+
+
+::: {.notes}
+`(2*pnorm(-6)) * 1e06`=`r (2*pnorm(-6)) * 1e06`, also ***D***.
+:::
+
+### Übung `r nextExercise()`: Score {.exercise type=A-B-C answer=A}
+
+Gabi und Klaus haben zwei verschiedene Tests geschrieben. Dabei hat Gabi bei Test A ($\mu=60, \sigma=10$) $75$ Punkte erreicht, Klaus bei Test B ($\mu=250, \sigma=25$) $275$ Punkte. Beide Tests sollen das Gleiche testen und die Testergebnisse seien normalverteilt. Wer von beiden hat besser abgeschnitten?
+
+A.  Gabi
+B.  Klaus
+C.  Beide gleich gut.
+
+::: {.notes}
+Gabi hat einen z-Wert von 1.5, Klaus einen von 1, also hat Gabi (***A***) besser abgeschnitten.  
+Siehe auch für Gabi: `xpnorm(75, mean=60, sd=10)`, für Klaus: `xpnorm(275, mean=250, sd=25)`
+:::
+
+```{r finish-Einfuehrung-Normalverteilung, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

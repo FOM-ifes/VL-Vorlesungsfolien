@@ -1,0 +1,613 @@
+```{r setup-Polynominterpolation, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "20-Polynominterpolation",  # Dateiname ohne Suffix
+    "Polynominterpolation"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(mosaicCalc)
+
+library(xtable)
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+
+```
+
+# `r nextChapter()` Polynominterpolation
+
+### Interpolation
+
+**Ziel:** An wenige gegebene Datenpunkte eine Funktion so anpassen, dass die
+Funktion durch diese Punkte geht.
+Mit Hilfe der gefundenen Funktion können dann z.B. Nullstellen oder
+Zwischenwerte berechnet werden.
+
+
+**Formal:**
+
+- *Gegeben* sind $n+1$ (verschiedene) Wertepaare $(x_i, y_i)$.
+
+- *Gesucht* wird eine Funktion $f$ mit der Eigenschaft $f(x_i)=y_i$ für alle
+  Punkte $i=0, 1, \dots, n$.
+
+
+Die Wertpaare werden auch **Stützpunkte**, die $x$-Werte der Stützpunkte auch
+**Stützwerte** genannt.
+
+Eine Funktion $f$ für die $f(x_i)=y_i$ für alle Punkte $i=0, 1, \dots, n$ gilt
+wird **Interpolierende** genannt
+
+
+### Polynominterpolation
+
+**Satz:** Seien n+1 Wertepaare $(x_i,y_i)$ gegeben.
+Dann gibt es genau ein Polynom $p$ vom höchsten Grad $n$, so dass gilt
+$p(x_i)=y_i$ für $i=0, 1, \dots, n$:
+
+*Existenz und Eindeutigkeit:* Für $n+1$ gegebene Stützpunkte gibt es also immer
+genau ein Polynom mit dem höchsten Exponenten $n$, so dass das Polynom genau
+durch die Stützpunkte geht
+
+
+
+### Beispiel: Polynominterpolation
+Prinzipiell kann also ein lineares Gleichungssystem aufgestellt und gelöst
+werden:
+
+<div class="columns">
+<div class="column" width="40%">
+
+
+**Wertetabelle:**
+
+```{r eval=TRUE, echo=FALSE}
+tab.df <- data.frame( x = c(-1, 0, 1), y = c(12, 7, 4))
+colnames(tab.df) <- c("$x_i$", "$y_i$")
+rws <- c(0,1,2)
+col <- c("\\rowcolor[gray]{0.7}", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7}")
+
+xtab <- xtable(tab.df)
+
+knitr::asis_output(
+    tyxtable(
+        print(
+            xtab, 
+            booktabs = FALSE,  
+            sanitize.text.function = function(x) {x},
+            add.to.row = list(
+                pos = as.list(rws), 
+                command = col
+            )
+        )
+     )
+)
+```
+
+
+**Plot:**
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+fkt = makeFun( x^2 - 4*x + 7 ~ x)
+tab.df <- data.frame( x = c(-1, 0, 1), y = c(12, 7, 4))
+plt <- xyplot(tab.df$y ~ tab.df$x,  ylim=range(3,16), xlim=range(-1.5, 1.5), pch=21, fill="red", col="red", ylab="p(x)", xlab="x")
+plt2 <- plotFun(fkt(x) ~ x, x.lim=range(-1.5, 1.5), ylim=range(3,16), ylab="p(x)", xlab="x")
+print(plt, more=TRUE)
+print(plt2)
+```
+
+
+</div>
+<div class="column" width="60%">
+
+Aus $p(x) = a_2 x^2 + a_1 x + a_0$ folgt
+
+$$
+    \begin{pmatrix} 1 & -1 & 1 \\ 0 & 0 & 1 \\ 1 & 1 & 1 \end{pmatrix} 
+    \cdot 
+    \begin{pmatrix} a_2 \\ a_1 \\ a_0 \end{pmatrix}
+    = 
+    \begin{pmatrix} 12 \\ 7 \\ 4 \end{pmatrix}
+$$
+
+mit Gauß-(Jordan-)Elimination dann
+
+$$
+    \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} 
+    \cdot 
+    \begin{pmatrix} a_2 \\ a_1 \\ a_0 \end{pmatrix} 
+    = 
+    \begin{pmatrix} 1 \\ -4 \\ 7 \end{pmatrix}
+$$
+
+und somit $p(x) = x^2 -4 x + 7$.
+
+</div>
+</div>
+
+### Dividierte Differenzen {.shrink}
+
+Rekursiv definierte dividierte Differenzen:
+
+$$
+    \begin{aligned}
+        f[x_i] &= f(x_i) \\
+        f[x_i, x_{i+1}, \dots, x_{i+k}] &= \frac{f[x_{i+1}, x_{i+2}, \dots, x_{i+k}] - f[x_i, x_{i+1}, \dots, x_{i+k-1}]}{x_{i+k}- x_i}
+    \end{aligned}
+$$
+
+Also Schema:
+
+$$
+\footnotesize
+\begin{array}{crcrccrcrc}
+f[x_0] \\
+       & \searrow \\{}
+f[x_1] & \rightarrow  & f[x_0, x_1]  \\
+       & \searrow     &                & \searrow     \\{}
+f[x_2] & \rightarrow  & f[x_1, x_2]     & \rightarrow & f[x_0,x_1,x_2] \\{}
+ \vdots & \vdots      & \vdots         & \vdots    & \vdots  &\ddots \\{}
+  & \searrow     &                & \searrow    & &              & \searrow \\{}
+f[x_{n-1}] & \rightarrow  & f[x_{n-2}, x_{n-1}] & \rightarrow & f[x_{n-3},x_{n-2},x_{n-1}]
+  & \cdots & \rightarrow & f[x_0\ldots x_{n-1}]  \\
+  & \searrow     &                & \searrow    & &              & \searrow && \searrow\\{}
+f[x_n] & \rightarrow  & f[x_{n-1}, x_n] & \rightarrow & f[x_{n-2},x_{n-1},x_n]
+  & \cdots & \rightarrow & f[x_1\ldots x_n] & \rightarrow & f[x_0\ldots x_n]
+\end{array}
+$$
+
+### Newtonverfahren zur Polynominterpolation
+
+Ein Polynom lässt sich auch wie folgt darstellen
+$$
+    p(x) = a_0 + a_1\cdot(x-x_0) + a_2\cdot(x-x_0)(x-x_1) + \cdots a_n(x-x_0)(x-x_1)\cdot(x-x_{n-1})
+$$
+Im Newtonschen Interpolationspolynom sind die $a_i$ die dividierten Differenzen $a_i = f[x_0, x_1, \dots, x_{i}]$.
+
+**Anmerkung:**
+Im Newtonverfahren werden also nur die dividierten Differenzen verwendet, die im „oberen Dreieckschenkel“ stehen
+
+
+### Beispiel: Newtonverfahren zur Polynominterpolation
+
+$$
+    \begin{array}{crcrc}
+    f[-1] = 12 & \searrow    &               &             &                  \\
+    f[0]  =  7 & \rightarrow & f[-1, 0] = -5 & \searrow    &                  \\
+    f[1]  =  4 & \rightarrow & f[ 0, 1] = -3 & \rightarrow & f[-1, 0, 1] = 1  \\
+    \end{array}
+$$
+
+Damit ist:
+
+$$
+    \begin{aligned}
+        p(x) &= 12 - 5\cdot (x+1) + 1 \cdot (x+1)(x-0) = 12-5(x+1)+(x+1)x \\
+             &= 12-5x+5+x^2+x = 7 -4x +x^2
+    \end{aligned}
+$$
+Als Beispiel das Auswerten an der Stelle $x=-2$:
+$$
+    p(-2) = 12 - 5 (-2+1) + (-2+1)(-2) = 12+5+2 = 19
+$$
+
+### R-Code zur Polynominterpolation (I/ IV)
+
+```{r}
+polynewton <- function(x,y){
+    # Polynominterpolation mit Hife des Newton Verfahrens
+
+        # Korrektur für Poylnome a_0, a_n (Länge n+1)
+    n <- length(x) - 1
+    a <- y
+    # Berechnung der dividierten Differenzen
+    for (j in 1:n)
+        for (i in n:j){
+            a[i+1] <- (a[i+1]-a[i])/(x[i+1]-x[i-j+1])
+        }
+    erg <- list(x=x, y=y, a=a)
+    return(erg)
+}
+
+```
+
+### R-Code zur Polynominterpolation (II/ IV)
+
+```{r}
+interpoly <- function(x, ergnewton){
+    # Polynominterpolation mit Newtonverfahren
+    n <- length(x)
+    y <- numeric(n)
+    
+    # Polynomberechnung für einzelnen x-Wert
+    for (i in 1:n) {
+        y[i] <- internewton(x[i], ergnewton)
+    }
+    return(y)
+}
+```
+
+### R-Code zur Polynominterpolation (III/ IV)
+
+```{r}
+internewton <- function(x, ergpoly){
+    # Berechnung der Interpolation mit Hilfe des Newton-Verfahrens
+    a <- ergpoly$a; xa <- ergpoly$x
+    # Korrektur der Länge
+    n <- length(xa) - 1
+    y <- a[1]
+    for (i in 1:n) {
+        xd <- 1
+        for (j in 1:i) {
+            xd <- xd * (x - xa[j])
+        }
+        y <- y + a[i+1] * xd
+    }
+    return(y)
+}
+```
+
+### R-Code zur Polynominterpolation (IV/ IV)
+
+```{r}
+erg <- polynewton(x = c(-1, 0, 1), y = c(12, 7, 4))
+interpoly(-2, erg)
+```
+
+
+### Übung `r nextExercise()`: Newtonverfahren zur Polynominterpolation {.exercise}
+
+
+Gegeben Seien die folgenden 4 Wertepaare:
+
+```{r eval=TRUE, echo=FALSE}
+tab.df <- data.frame( x = c(0, 1, 3, 4), y = c(-4, -1, 29, 80) )
+colnames(tab.df) <- c("$x_i$", "$y_i$")
+rws <- c(0,1,2,3)
+col <- c("\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ")
+
+xtab <- xtable(tab.df)
+
+knitr::asis_output(
+    tyxtable(
+        print(
+            xtab, 
+            booktabs = FALSE,  
+            sanitize.text.function = function(x) {x},
+            add.to.row = list(
+                pos = as.list(rws), 
+                command = col
+            )
+        ),
+        trim = 2
+     )
+)
+
+```
+
+
+Berechnen Sie mit Hilfe des Newtonverfahrens das Interpolationspolynom und werten Sie es an der Stelle $x=2$ aus!
+
+```{r echo=FALSE, fig.align="center", out.width="40%"}
+fkt = makeFun( 2*x^3 - 4*x^2 + 5*x - 4 ~ x)
+tab.df <- data.frame( x = c(0, 1, 3, 4), y = c(-4, -1, 29, 80) )
+plt <- xyplot(tab.df$y ~ tab.df$x,  ylim=range(-10, 100), xlim=range(-.5, 4.5), pch=21, fill="red", col="red", ylab="p(x)", xlab="x")
+plt2 <- plotFun(fkt, xlim=range(-.5, 4.5), ylim=range(-10, 100), ylab="p(x)", xlab="x")
+print(plt, more=TRUE)
+print(plt2)
+```
+
+
+### Ein weiteres Beispiel Polynominterpolation
+
+Betrachten wir die Funktion $f(x)=\frac{1}{x^2+1}$, die Wertpaare,
+
+
+<div class="columns">
+<div class="column" width="28%">
+
+```{r eval=TRUE, echo=FALSE}
+tab.df <- data.frame( x = c(-3, -2, -1, 0, 1, 2, 3), y = c(0.1, 0.2, 0.5, 1, 0.5, 0.2, 0.1) )
+names(tab.df) <- c("$x_i$", "$y_i$")
+rws <- c(0, 1, 2, 3, 4, 5, 6)
+col <- c("\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ")
+
+xtab <- xtable(tab.df)
+
+knitr::asis_output(
+    tyxtable(
+        print(
+            xtab, 
+            booktabs = FALSE,  
+            sanitize.text.function = function(x) {x},
+            add.to.row = list(
+                pos = as.list(rws), 
+                command = col
+            ),
+            comment = FALSE
+        ),
+        trim = 0
+     )
+)
+```
+
+
+</div>
+<div class="column" width="68%">
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+tab.df <- data.frame( x = c(-3, -2, -1, 0, 1, 2, 3), y = c(0.1, 0.2, 0.5, 1, 0.5, 0.2, 0.1) )
+fkt = makeFun( 1 / (x^2 + 1) ~ x)
+pfkt = makeFun(1. - 1.11022*10^-16*x - 0.64*x^2 + 0.15*x^4 - 0.01*x^6  ~ x)
+xrange = range(-3.2, 3.2)
+yrange = range(-0.1, 1.1)
+plt <- xyplot(tab.df$y ~ tab.df$x, ylim=yrange, xlim=xrange, pch=21, fill="red", col="red", ylab="p(x)", xlab="x")
+plt2 <- plotFun(fkt, ylim=yrange, xlim=xrange, ylab="p(x)", xlab="x")
+plt3 <- plotFun(pfkt, ylim=yrange, xlim=xrange, col="red", ylab="p(x)", xlab="x")
+print(plt, more=TRUE)
+print(plt2, more=TRUE)
+print(plt3)
+```
+
+</div>
+</div>
+sowie das Interpolationspolynom (rot) sowie den wahren Funktionsverlauf (grün).
+
+
+### Zusammenfassung Polynominterpolation
+
+Theoretisch kann ein Polynom an beliebig viele Punkte genau angepasst werden.
+Häufig wird dieses Polynom aber zu viele Schwingungen aufweisen und
+insbesondere an den Randbereichen aufgrund der starken Schwankung unbrauchbar
+sein.
+
+Das gesuchte Polynom kann mit Hilfe eines Linearen Gleichungssystems gefunden
+werden, in der Regel funktioniert aber das Newtonverfahren basierend auf den
+dividierten Differenzen schneller.
+
+
+### Splineinterpolation
+
+Um den Nachteil der zu großen Schwankungen auszugleichen wird das Intervall
+in mehrere Teilintervalle aufgeteilt.
+In den Teilintervallen wird dann ein Polynom niedrigeren Grades verwendet.
+
+Werden die einzelnen Stützpunkte mit Geraden verbunden spricht man von einer
+**linearen Interpolierenden** (*Polygonzug*):
+<div class="columns">
+<div class="column" width="29%">
+
+- Zwei benachbarte Wertepaare werden durch ein Polynom vom Grad 1 interpoliert.
+
+- Diese Interpolierende ist aber an den Stützwerten nicht differenzierbar.
+
+</div>
+<div class="column" width="69%">
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+fkt = makeFun( 1 / (x^2 + 1) ~ x)
+xrange = range(-3.2, 3.2)
+yrange = range(-0.1, 1.1)
+plt <- xyplot(tab.df$y ~ as.numeric(tab.df$x), ylim=yrange, xlim=xrange, pch=21, fill="red", col="red", ylab="p(x)", xlab="x")
+plt2 <- plotFun(fkt(x) ~ x, ylim=yrange, x.lim=xrange, ylab="p(x)", xlab="x") 
+plt3 <- xyplot(tab.df$y ~ as.numeric(tab.df$x), ylim=yrange, xlim=xrange, type="l", col="red", ylab="p(x)", xlab="x") 
+print(plt, more=TRUE)
+print(plt2, more=TRUE)
+print(plt3)
+```
+</div>
+</div>
+
+### Interpolation mit kubischen Splines
+
+Interpolation mit (natürlichen) kubischen Splines
+
+- Stetiges, stückweises Interploationspolynom dritten Grades durch die
+  Stützpunkte
+
+- Stetige erste und zweite Ableitung im Intervall $[a, b]$
+
+- (an den Randstellen $a$, $b$ ist die zweite Ableitung gleich $0$)
+
+Zu gegeben Wertepaaren existiert genau ein (natürlicher) kubischer Spline mit
+den obigen Anforderungen.
+
+Kubische Splines haben unter den *glatten* Interpolierenden die geringste
+Krümmung.
+
+Die Berechnung *per Hand* ist möglich, mit Hilfe eines Computers sogar einfach.
+
+###  R-Code zur Interpolation mit kubischen Splines (I/ V) {.shrink}
+
+```{r}
+natspline <- function(x,y){
+    # Berechnung von natürlichen Splines
+    n <- length(x)
+    y2 <- numeric(n)
+    u <-numeric(n)
+    
+    # natuerlicher Spline:
+    y2[1] <- 0
+    u[1] <- 0
+    
+    for (i in 2:(n-1)){
+        sig <- (x[i]-x[i-1])/(x[i+1]-x[i-1])
+        p <- sig*y2[i-1]+2.0
+        y2[i] <- (sig-1.0)/p
+        u[i] <- (y[i+1]-y[i])/(x[i+1]-x[i]) - (y[i]-y[i-1])/(x[i]-x[i-1])
+        u[i] <- (6.0*u[i]/(x[i+1]-x[i-1])-sig*u[i-1])/p
+    }
+    # natürlicher Spline:
+    y2[n] <- 0
+    for (i in (n-1):1){
+        y2[i] <- y2[i]*y2[i+1]+u[i]
+    }
+    erg <- list(x=x, y=y, y2=y2)
+    return(erg)
+}
+```
+
+
+###  R-Code zur Interpolation mit kubischen Splines (II/ IV) {.shrink}
+
+```{r}
+
+splinterpol <- function(x, ergspline){
+    # Spline Interpolation für einen Vektor x
+    n <- length(x)
+    y <- numeric(n)
+    
+    # Polynomberechnung für einzelnen x-Wert
+    for (i in 1:n) {
+        y[i] <- splint(x[i], ergspline)
+    }
+    return(y)
+}
+```
+
+
+###  R-Code zur Interpolation mit kubischen Splines (III/ IV) {.shrink}
+
+```{r}
+splint <- function(x, erg){
+    # Berechnung der Interpolation mit Hilfe von natürlichen Splines
+    xa <- erg$x; ya <- erg$y; y2a <- erg$y2; k <- 0
+    n <- length(xa) 
+    
+    # Bisektion zum Finden der Position
+    klo <- 1 ; khi <- n
+    while ((khi-klo) > 1){
+        k <- floor((khi+klo)/2)
+        if (xa[k] > x) {
+            khi <- k
+        } else {
+            klo <- k
+        }
+    }
+
+    # Berechnung des Polyomwertes
+    h <- xa[khi] - xa[klo]
+    a <- (xa[khi]-x)/h
+    b <- (x-xa[klo])/h
+    y <- a*ya[klo]+b*ya[khi] + ((a^3-a)*y2a[klo] + (b^3-b)*y2a[khi])*h^2/6.0
+    return(y)
+}
+```
+
+
+###  R-Code zur Interpolation mit kubischen Splines (IV/ IV) {.shrink}
+
+```{r}
+fkt <- makeFun( 1 / (x^2 + 1) ~ x)
+x <- -3:3
+x
+y <- fkt(x)
+y
+erg <- natspline(x, y)
+erg
+xa <- 1.5
+fkt(1.5)
+splint(1.5, erg)
+```
+
+
+### Anwendung des R-Code zur Interpolation mit kubischen Splines
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+xx <- seq(-3, 3, 0.1)
+yy <- splinterpol(xx, erg)
+p1 <- plotFun(fkt(x) ~ x, x.lim=range(-3, 3), col="red", xlab="x", ylab="f(x), S(x)")
+p2 <- xyplot(yy ~ xx, type="l", xlim=c(-3, 3), xlab="x", ylab="f(x), S(x)")
+p3 <- xyplot(erg$y ~ erg$x, xlim=c(-3, 3), pch=21, fill="red", col="red", xlab="x", ylab="f(x), S(x)")
+print(p1, more=TRUE)
+print(p2, more=TRUE)
+print(p3)
+```
+
+
+### Fehlerbetrchtung der kubischen Splineinterpolation
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+xx <- seq(-3, 3, 0.1)
+yy <- fkt(xx) - splinterpol(xx, erg)
+xyplot(yy ~ xx, type="l", xlim=c(-3, 3), xlab="x", ylab="f(x)-S(x)")
+```
+
+### Beispiel: Interpolation mit kubischen Splines
+
+Betrachten wir die Funktion $f(x)=\frac{1}{x^2+1}$, die Wertpaare,
+
+
+<div class="columns">
+<div class="column" width="28%">
+
+```{r eval=TRUE, echo=FALSE}
+tab.df <- data.frame( x = c(-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0), y = c(0.1, 0.2, 0.5, 1, 0.5, 0.2, 0.1) )
+colnames(tab.df) <- c("$x_i$", "$y_i$")
+rws <- c(0,1,2,3,4,5,6)
+col <- c("\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ", "\\rowcolor[gray]{0.95} ", "\\rowcolor[gray]{0.7} ")
+
+xtab <- xtable(tab.df)
+
+knitr::asis_output(
+    tyxtable(
+        print(
+            xtab, 
+            booktabs = FALSE,  
+            sanitize.text.function = function(x) {x},
+            add.to.row = list(
+                pos = as.list(rws), 
+                command = col
+            ),
+            comment = FALSE
+        )
+     , trim = 0)
+)
+
+```
+
+
+</div>
+<div class="column" width="68%">
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+fkt = makeFun( 1 / (x^2 + 1) ~ x)
+xrange = range(-3.2, 3.2)
+yrange = range(-0.1, 1.1)
+plt <- xyplot(tab.df$y ~ as.numeric(tab.df$x), ylim=yrange, xlim=xrange, pch=21, fill="red", col="red", ylab="p(x)", xlab="x")
+plt2 <- plotFun(fkt, ylim=yrange, xlim=xrange, ylab="p(x)", xlab="x") 
+spl <- spline(tab.df$`$x_i$`, tab.df$`$y_i$`, method = "natural", n=301)
+plt3 <- xyplot(spl$y ~ spl$x, ylim=yrange, xlim=xrange, type="l", col="red", ylab="p(x)", xlab="x") 
+print(plt, more=TRUE)
+print(plt2, more=TRUE)
+print(plt3)
+```
+</div>
+</div>
+
+### Das wissen sie nun!
+
+- Mit Hilfe von Polynomen lassen sich Funktionen an gegebene Datenpunkte anpassen.
+
+- Das Newtonverfahren berechnet ein solches Interpolationspolynom mittels
+  dividierter Differenzen.
+
+- Polynome höheren Grades weisen häufig starke Schwankungen auf, was
+  insbesondere in den Randbereichen zu großen Fehlern führen kann.
+  Durch Aufteilen des Wertebereiches können auf Teilintervallen Polynome
+  niedrigeren Grades angepasst werden.
+
+- (Natürliche) kubische Splines sind stückweise Polynome dritten Grades mit
+  steigen ersten und zweiten Ableitungen.
+  Sie haben von allen *glatten* Interpolierenden die geringste Krümmung.
+
+
+```{r finish-Polynominterpolation, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

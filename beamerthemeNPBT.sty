@@ -1,0 +1,147 @@
+\ProvidesPackage{beamerthemeNPBT}[2017/06/28 v3.0 Main Beamer Theme of NPBT]
+% ===========================================================================
+% beamerthemeNPBT.sty
+% ===================---------------------------------------------------------
+% 
+% (C) in 2017 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% NPBT <-> Norman's Pandoc Beamer Theme -> NPBT 
+% ----     =        =      =      =
+%
+%
+% ---------------------------------------------------------------------------
+%
+\mode<presentation>
+% ---------------------------------------------------------------------------
+% Used Packages:
+% ---------------------------------------------------------------------------
+\RequirePackage{ifthen} 
+\RequirePackage{multicol} % Für das zweispaltige TOC.
+% ---------------------------------------------------------------------------
+
+\def\softness{0.8}
+
+\definecolor{softred}{rgb}{1,\softness,\softness}
+\definecolor{softgreen}{rgb}{\softness,1,\softness}
+\definecolor{softblue}{rgb}{\softness,\softness,1}
+% ---------------------------------------------------------------------------
+\definecolor{NPBTblue}{rgb}{0.77,0.58,0.75}
+\definecolor{NPBT}{rgb}{0,0.67,0.6}
+\definecolor{NPBTTitelColor}{RGB}{0,38,153}
+
+% ---------------------------------------------------------------------------
+\setbeamercolor*{structure}{fg=NPBTblue, bg=softblue}
+\setbeamercolor{structure}{fg=NPBT}
+
+% ---------------------------------------------------------------------------
+% title page
+% ---------------------------------------------------------------------------
+\setbeamercolor{title in titlepage}{fg=NPBTTitelColor}
+\setbeamercolor{institute in titlepage}{fg=lightgray}
+\setbeamercolor{author in titlepage}{fg=darkgray}
+
+% ---------------------------------------------------------------------------
+\setbeamerfont{title in titlepage}{size=\Large, series=\bfseries}
+\setbeamerfont{institute in titlepage}{size=\large, series=\bfseries}
+\setbeamerfont{author in titlepage}{series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% part title page
+% ---------------------------------------------------------------------------
+\setbeamercolor{part title}{fg=NPBTTitelColor}
+
+% ---------------------------------------------------------------------------
+% section title page
+% ---------------------------------------------------------------------------
+\setbeamercolor{section name}{fg=NPBTTitelColor}
+\setbeamercolor{section title}{fg=NPBTTitelColor}
+
+% ---------------------------------------------------------------------------
+\setbeamerfont{section name}{size=\Large, family=\sffamily, series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% subsection title page
+% ---------------------------------------------------------------------------
+\setbeamercolor{subsection name}{fg=NPBTTitelColor}
+\setbeamercolor{subsection title}{fg=NPBTTitelColor}
+
+% ---------------------------------------------------------------------------
+\setbeamerfont{subsection name}{size=\large, family=\sffamily, series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% header
+% ---------------------------------------------------------------------------
+\setbeamercolor{myheader}{fg=darkgray}
+\setbeamercolor{section in head}{parent=myheader}
+\setbeamercolor{subsection in head}{parent=myheader}
+\setbeamercolor{frametitle in head}{parent=myheader, fg=NPBTTitelColor}
+
+% ---------------------------------------------------------------------------
+\setbeamerfont{myheader}{}
+\setbeamerfont{section in head}{parent=myheader}
+\setbeamerfont{subsection in head}{parent=myheader}
+\setbeamerfont{frametitle in head}{parent=myheader}
+
+% ---------------------------------------------------------------------------
+\setbeamercolor{footer}{fg=normal text.fg}
+\setbeamercolor{author in footer}{parent=footer}
+\setbeamercolor{date in footer}{parent=footer}
+\setbeamercolor{title in footer}{parent=footer}
+\setbeamercolor{framenumber in footer}{parent=footer}
+
+% ---------------------------------------------------------------------------
+% 
+\setbeamerfont{block title}{size={}}
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+\setbeamerfont{frametitle}{shape=\upshape,family=\sffamily,series=\mdseries}
+
+% ---------------------------------------------------------------------------
+%
+% FIX ME!!!
+%
+\usetheme{Boadilla}
+
+\useinnertheme{rounded}
+
+%
+% FIX ME!!!
+%
+\setbeamertemplate{items}[triangle]
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{navigation symbols}{}
+
+% ---------------------------------------------------------------------------
+% Font setting
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% Mathematische Formeln mit Serifen
+%
+\usefonttheme[onlymath]{serif}
+
+% ---------------------------------------------------------------------------
+%running fraction with slash - requires math mode.
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+
+% ---------------------------------------------------------------------------
+\IfFileExists{myfonts.tex}{%
+  \input{myfonts.tex}
+}{%else
+  \relax
+}
+\IfFileExists{mygeometry.tex}{%
+    \input{mygeometry.tex}
+	\InputIfFileExists{customize_geom.tex}{\relax}{\relax}
+}{% else
+    \relax
+}
+\IfFileExists{sections.tex}{%
+    \input{sections.tex}
+    \InputIfFileExists{customize_theme.tex}{\relax}{\relax}
+}{ % else
+    \relax
+}
+
+% ---------------------------------------------------------------------------
+\mode<all>
+%
+% ========================================================================
+%

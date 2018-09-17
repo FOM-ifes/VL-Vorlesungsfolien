@@ -1,0 +1,127 @@
+```{r setup-Strategisches-Marketingcontrolling, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser (oliver.gansser@fom.de)
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "Strategisches-Marketingcontrolling",  # Dateiname ohne Suffix
+    "Marketingcontrolling"  # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` Strategisches Marketing Controlling
+
+
+### Lernziele
+
+- Funktion des strategischen Marketing Controllings verstehen.
+- Zusammenhang zwischen Planung und Strategie verstehen.
+- Die Bedeutung der Markenstrategi im Rahmend des Marketing-Controllings verstehen und evaluieren. 
+
+
+### Definition Strategie
+
+
+>Eine Strategie ist das rational geplante Entscheidungs-, Maßnahmen- und Verhaltensbündel, das der langfristigen Sicherung des Unternehmenserfolgs dient.
+
+
+### Arten von Strategien
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Strategiearten.png"))
+```
+
+
+### Vorgehensweise bei der strategischen Planung {.shrink}
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Vorgehensweise2.png"))
+```
+
+
+### Analyseinstrumente
+
+>Analyseinstrumente dienen dazu, die aus der Unternehmungs- und Umweltanalye gewonnenen Daten zu verdichten. Mit Hilfe der verschiedenen Analyseinstrumente gelingt es, die Daten so aufzubereiten, dass sie eine Grundlage für die Strategiewahl darstellen.
+
+
+### Übung `r nextExercise()`: Strategische Planungsinstrumente {.exercise type=essay}
+
+Diskutieren Sie die verschiedenen strategischen Planungsinstrumente aus der Umwelt- und Unternehmensanalyse. Welche Rolle spielt dabei die Positionierung und wie könnte diese gemessen werden?
+
+
+### Relevanz des Markenwerts
+
+Der Wert von Marken ist im Wesentlichen darauf zurückzuführen, dass Marken in der Lage sind, zukünftige Cash-Flows eines Unternehmens zu beschleunigen, auszuweiten und deren Risiko zu reduzieren:
+
+- Beschleunigung von Cash-Flows, z.B. durch schnellere Reaktion der Konsumenten auf Neuprodukteinführungen infolge eines starken Markenimages. 
+- Ausweitung zukünftiger Cash-Flows durch den Transfer einer etablierten Marke auf neue Produktbereiche, Zielgruppen oder Märkte. 
+- Risikoreduktion zukünftiger Cash-Flows z.B. durch verstärkte Markenloyalität und damit erhöhte Wechselkosten bei Einsatz einer starken Marke.
+
+
+### Prognose markenspezifischer Zahlungen mit ertragsorientierten Verfahren
+
+**Grundidee**: die zukünftigen Erträge einer Marke, d. h. die markenspezifischen Einzahlungsüberschüsse, werden prognostiziert und auf den Bewertungsstichtag diskontiert.
+
+**Verfahren**:
+
+- Explizite Prognose markenspezifischer Einzahlungsüberschüsse auf Basis einer detaillierten Datenanalyse.
+- Einfache pauschalierte Fortschreibung von Zahlungen in die Zukunft.
+
+Für die **Diskontierung** der prognostizierten markenspezifischen Zahlungsreihen ist ein Kalkulationszinssatz zu bestimmen, der aus kapitalmarkttheoretischen Modellen abgeleitet werden kann (z.B. gemäß dem Capital Asset Pricing Model (CAPM)).
+
+Ein markenspezifisches Risiko  kann dadurch eingebunden werden, dass eine produktgruppenspezifisch ermittelte Bandbreite von Betafaktoren in Abhängigkeit der empirisch bestimmten Markenstärke zu einem markenspezifischen Betafaktor verdichtet wird.
+
+
+### Bewertung markenstrategischer Optionen
+
+- Auswahl besonders **erfolgversprechender Transfermärkte**, auf welche die zu bewertende Marke zukünftig ausgedehnt werden kann. 
+- Ermittlung der **Markentransferpotenzialstärke** dieser Märkte über einen so genannten **Stretching-Score**. 
+- Der Stretching-Score determiniert die **Erfolgswahrscheinlichkeit** zur Erreichung eines bestimmten Marktanteils auf dem Transfermarkt. 
+- Ermittlung des Stretching-Score über ein **Punktbewertungsverfahren**, in das eine Vielzahl von Erfolgsfaktoren von Markentransfers einfließt.
+
+
+### Gestaltung des Markenwerts
+
+- Die wesentliche Ursache dafür, dass Marken einen (finanziellen) Wert für Markenanbieter haben, liegt in der Wahrnehmung von Marken durch Nachfrager begründet. 
+- Die Wahrnehmung einer Marke bezieht sich im Wesentlichen auf die beiden Konstrukte Markenbekanntheit und Markenimage:
+    - **Markenbekanntheit** beinhaltet die Fähigkeit potenzieller Nachfrager, ein Markenzeichen zu erinnern oder wieder zu erkennen und diese Kenntnisse einer Produktkategorie zuzuordnen. Markenbekanntheit ist eine notwendige Bedingung zum Aufbau eines Markenimage.
+    - **Markenimage** kann als Wahrnehmungen einer Marke, die in Form von Markenassoziationen im Gedächtnis von Nachfragern repräsentiert sind, definiert werden. Die Markenassoziationen verkörpern die eigentliche inhaltliche Wissensstruktur einer Marke aus der subjektiven Sicht von Nachfragern. 
+    
+- Markenbekanntheit und Markenimage sind die Quelle für zukünftige markenspezifische Gewinne und stellen zentrale Treiber des Markenwerts dar.
+
+
+### Übung `r nextExercise()`: Messung des Markenwerts (a) {.exercise type=essay}
+
+Viele Unternehmen sind damit befasst, den Wert der Unternehmens-marke bzw. von Produktmarkten zu messen. Hierfür existieren unterschiedliche Ansätze, die sich in nicht-monetäre und monetäre Verfahren unterscheiden lassen.
+
+Stellen Sie sich vor, Sie sind Marketingchef eines bedeutsamen Konsumgüterherstellers, der eine Vielzahl von einzelnen Produktmarken im Sortiment führt. Für eines dieser Produkte gilt es, den Markenwert zu bestimmen.
+
+**Diskutieren Sie Faktoren, die auf den Markenwert des von Ihnen betrachteten Konsumguts einwirken.**
+
+<div class="notes">
+Der Wert einer Produktmarke wird durch zahlreiche Faktoren getrieben. Hierzu zählen beispielsweise die Bekanntheit des Produkts, die Alleinstellung des Produkts im Absatzmarkt, die Chance, den Markennamen auf andere Erzeugnisse zu übertragen, die Marge, die dieses Produkt generiert, die Wettbewerbssituation im Markt, die Investitionen, die notwendig waren, um die Marke zu generieren.
+</div>
+
+
+### Übung `r nextExercise()`: Messung des Markenwerts (b) {.exercise type=essay}
+
+**Erörtern Sie die Grenzen des Markenwertkonzepts.**
+
+<div class="notes">
+Die verschiedenen Verfahren zur Erfassung des Markenwertes gelangen in vielen Anwendungsfällen zu völlig unterschiedlichen Werten für den Markenwert eine betrachteten Produktes. Abhängig davon, welche Parameter in die Markenwertbestimmung eingehen, ergeben sich völlig unterschiedliche Markenwerte. Insofern ist die Diskussion über jene Faktoren, die markenwerttreibend sind, noch nicht umfassend abgeschlossen, sodass bislang kein einheitliches Modell zur Erfassung des Markenwerts vorliegt. Folglich bietet es sich an, verschiedene Verfahren gleichzeitig einzusetzen, um damit eine Bandbreite für den Wert einer Marke festzulegen. Neben diesen harten, ökonomischen Werten bedarf es einer qualitativen, inhaltlichen Diskussion darüber, wie die verschiedenen Ergebnisse  zu interpretieren sind und welche Schlussfolgerungen sich für die Markenwertgestaltung hieraus ergeben.
+</div>
+
+
+
+
+```{r finish--Strategische-Marketingcontrolling, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

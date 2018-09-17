@@ -1,0 +1,455 @@
+```{r setup-PCA_brands, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser (oliver.gansser@fom.de)
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "PCA_brands",  # Dateiname ohne Suffix
+    "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` Dimensionsreduktion bei Marketingdaten
+
+
+### Lerziele
+
+- Einsatz und Ziel der Dimensionsreduktion verstehen.
+- Daten für die Dimensionsreduktion aufbereiten.
+- Anwendung der Dimensionsreduktion.
+- Interpretation und Schlussfolgerungen der Dimensionsreduktion.
+- Evaluation des Einsates der Dimensionsreduktion in der Marketing Controlling Praxis.
+
+
+### Dimensionsreduktion
+
+Datensätze im Marketing, haben oft viele Variablen - oder auch Dimensionen - und es ist vorteilhaft, diese auf eine kleinere Anzahl von Variablen zu **reduzieren**. 
+
+Ziel: 
+
+**Zusammenhänge** zwischen verschiedenen Dimensionen oder **Unterschiede** zwischen verschiedenen Gruppen bezüglich einer oder mehrerer Dimensionen (z. B. bei Experimenten) können so **klarer und einfacher identifiziert** werden. 
+
+
+### Zwei Methoden der Dimensionsreduktion
+
+- Die *Hauptkomponentenanalyse (PCA)* versucht, unkorrelierte Linearkombinationen zu finden, die die maximale Varianz in den Daten erfassen. Die PCA beinhaltet also das Extrahieren von linearen Zusammenhängen der beobachteten Variablen. 
+- Die *Exploratorische Faktorenanalyse (EFA)* versucht, die Varianz auf Basis einer kleinen Anzahl von Dimensionen zu modellieren, während sie gleichzeitig versucht, die Dimensionen in Bezug auf die ursprünglichen Variablen interpretierbar zu machen. Es wird davon ausgegangen, dass die Daten einem Faktoren Modell entsprechen, bei der die beobachteten Korrelationen auf `latente` Faktoren zurückführen. Mit der EFA wird nicht die gesamte Varianz erklärt.  
+
+### Welches ist die bessere Methode?
+
+Beide Methoden ergeben in der Regel ähnliche inhaltliche Schlussfolgerungen. 
+
+Dies erklärt, warum einige Statistik-Software-Programme beide Methoden zusammenpacken. So wird die PCA als Standard-Extraktionsmethode in den SPSS-Faktoranalyse-Routinen verwendet. Dies führt zweifellos zu einer gewissen Verwirrung über die Unterscheidung zwischen den beiden Methoden. Die EFA wird oft als `Common Factor Analysis oder principal axis factoring (Hauptachsenanalyse)` bezeichnet. EFA verwendet eine Vielzahl von Optimierungsroutinen und das Ergebnis, im Gegensatz zu PCA, hängt von der verwendeten Optimierungsroutine und Ausgangspunkten für diese Routinen ab. 
+
+Es gibt also keine einzigartige Lösung bei der EFA.
+
+### Faustregeln
+
+Eine einfache Faustregel für die Entscheidung zwischen diesen beiden Methoden:
+
+- Führe die PCA durch, wenn die korrelierten beobachteten Variablen einfach auf einen kleineren Satz von wichtigen unabhängigen zusammengesetzten Variablen reduziert werden soll. 
+- Führe die EFA durch, wenn ein theoretisches Modell von latenten Faktoren zugrunde liegt, dass die beobachtete Variablen verursacht. 
+
+
+### Übung `r nextExercise()`: Methodenauswahl {.exercise type=A-B-C answer=A}
+
+welche Methode wählen Sie aus, wenn Sie in einer Ansammlung von 50 KPIs verdichten wollen?
+
+A.  PCA
+B.  EFA
+C.  KPIs lassen sich nicht verdichten
+
+<div class="notes">
+***A***
+</div>
+
+
+### Daten zur Markenbewertung
+
+Wir untersuchen die Dimensionalität anhand eines simulierten Datensatzes, der typisch für **Markenwahrnehmungsstudien** ist. 
+
+Diese Daten spiegeln die Verbraucherbewertungen von Marken in Bezug auf Wahrnehmungsadjektive wider, wie sie in der folgenden Form auf Befragungsobjekten ausgedrückt werden:
+
+Quelle: Chapman, C; McDonnell Feit, E. (2014): R for Marketing Research and Analytics, Springer. (Kapitel 8)
+
+
+### Benötigte Pakete
+
+Pakete, die für diese Datenanalyse benötigt werden, müssen vorher einmalig in R installiert werden.
+
+```{r}
+# install.packages("corrplot")
+# install.packages("gplots")
+# install.packages("nFactors")
+# install.packages("gplots")
+# install.packages("RColorBrewer")
+```
+
+
+### Daten
+
+Auf einer Skala von 1 bis 10 - wobei 1 am wenigsten und 10 am meisten ist - ist [brand] ist [adjektiv]?
+
+In diesen Daten ist eine Beobachtung die Bewertung einer Marke durch einen Befragten auf einem der
+Adjektive. 
+
+Beispiel:
+
+1. Wie trendy ist FOM?
+2. Wie hoch schätzen Sie die FOM als Marktführer ein?
+
+Die Daten umfassen simulierte Bewertungen von 10 Marken ("a" bis "j") zu 9 Adjektiven.
+
+
+### Einlesen {.shrink}
+
+Download und Einlesen der Daten mit dem Befehl read.csv.Wir schauen uns auch gleich den Datensatz mit head() an. 
+
+```{r}
+brand.ratings <- read.csv("http://goo.gl/IQl8nc")
+
+head(brand.ratings)
+
+```
+
+
+### Wir inspizieren die Daten des Datensatzes {.shrink}
+
+```{r}
+library(mosaic)
+summary(brand.ratings)
+
+```
+
+
+### Neuskalierung der Daten {.shrink}
+
+In vielen Fällen ist es sinnvoll, Rohdaten neu zu skalieren. Dies wird üblicherweise als **Standardisierung**, **Normierung**, oder **Z Scoring/Transformation** bezeichnet. Als Ergebnis ist der Mittelwert aller Variablen über alle Beobachtungen dann 0. Da wir hier gleiche Skalenstufen haben, ist ein Skalieren nicht unbedingt notwendig, wir führen es aber trotzdem durch. 
+
+Ein einfacher Weg, alle Variablen im Datensatz auf einmal zu skalieren ist der Befehl `scale()`. Da wir die Rohdaten nie ändern wollen, weisen wir die Rohwerte zuerst einem neuen Dataframe `Werte.sc` zu und skalieren anschließend die Daten. Wir skalieren in unserem Datensatz alle Variablen.
+
+```{r}
+brand.sc <- brand.ratings
+brand.sc[, 1:9] <- scale(brand.ratings[, 1:9])
+summary(brand.sc)
+```
+
+
+
+Die Daten wurden richtig skaliert, da der Mittelwert aller Variablen über alle Beobachtungen 0 ist. 
+
+### Zusammenhänge in den Daten {.shrink}
+
+Wir verwenden den Befehl `corrplot()` für die Erstinspektion von bivariaten Beziehungen zwischen den Variablen. Das Argument `order = "hclust"` ordnet die Zeilen und Spalten entsprechend der Ähnlichkeit der Variablen in einer hierarchischen Cluster-Lösung der Variablen (mehr dazu im Teil *Clusteranalyse*) neu an.
+
+```{r}
+library(corrplot)
+corrplot(cor(brand.sc[, 1:9]), order="hclust")
+```
+
+
+
+### Übung `r nextExercise()`: Korrelationen {.exercise type=A-B-C-D answer=B}
+
+Wie viele Cluster sind sichbar?
+
+A.  2
+B.  3
+C.  4
+D.  5
+
+<div class="notes">
+***B***
+</div>
+
+
+### Übung `r nextExercise()`: Cluster {.exercise type=essay}
+
+Welche Adjektive lassen sich aufgrund der Korrelationen zu CLustern zusammenfassen?
+
+<div class="notes">
+- fun/latest/trendy
+- rebuy/bargain/value
+- perform/leader/serious
+</div>
+
+
+### Aggregierte Durchschnittswerte nach Marke {.shrink}
+
+Wie berechnet man den Durchschnitt (mittlere) Position der einzelnen Marken auf jedem Adjektiv?" 
+
+```{r}
+brand.mean <- aggregate(. ~ brand, data=brand.sc, mean)
+rownames(brand.mean) <- brand.mean[, 1] # Marke für die Zeilennamen verwenden
+brand.mean <- brand.mean[, -1]          # Markenspalte entfernen
+brand.mean
+```
+
+### Visualisierung der Rohdaten {.shrink}
+
+**Heatmap der Attribute nach Marke**
+
+```{r}
+library(gplots)
+library(RColorBrewer)
+heatmap.2(as.matrix(brand.mean),
+         col=brewer.pal(9, "Blues"), trace="none", key=FALSE, dend="none",
+         main="Markenbewertung")
+
+```
+
+
+### Wahrnehmungsraum der Marken {.shrink}
+
+```{r}
+brand.mu.pc <- prcomp(brand.mean, scale=TRUE)
+biplot(brand.mu.pc, main="Wahrnehmungsraum")
+```
+
+
+
+### Hauptkomponentenanalyse (PCA)
+
+Die PCA berechnet ein Variablenset (Komponenten) in Form von linearen Gleichungen, die die linearen Beziehungen in den Daten erfassen. 
+
+Die erste Komponente erfasst so viel Streuung (Varianz) wie möglich von allen Variablen als eine einzige lineare Funktion. 
+
+Die zweite Komponente erfasst unkorreliert zur ersten Komponente so viel Streuung wie möglich, die nach der ersten Komponente verbleibt. 
+
+Das geht so lange weiter, bis es so viele Komponenten gibt wie Variablen. 
+
+
+
+### Scree-Plot
+
+Der Standard-Plot `plot()` für die PCA ist ein **Scree-Plot**, dieser zeigt uns in Reihenfolge der Hauptkomponenten jeweils die durch diese Hauptkomponente erfasste Streuung (Varianz).
+
+- Es soll die Stelle gefunden werden, ab der die Varianzen der Hauptkomponenten deutlich kleiner sind. 
+- Je kleiner die Varianzen, desto weniger Streuung erklärt diese Hauptkomponente. 
+
+
+### Elbow-Kriterium
+
+Nach diesem Kriterium werden alle Hauptkomponenten berücksichtigt, die links von der Knickstelle im Scree-Plot liegen. 
+
+Gibt es mehrere Knicks, dann werden jene Hauptkomponenten ausgewählt, die links vom rechtesten Knick liegen. 
+
+Gibt es keinen Knick, dann hilft der Scree-Plot nicht weiter. 
+
+
+### Eigenwert-Kriterium {.shrink}
+
+Der Eigenwert ist eine Metrik für den Anteil der erklärten Varianz. Die Anzahl Eigenwerte können wir über den Befehl `eigen()` ausgeben. An dieser Stelle können wir die original Daten nehmen, da wir keine unterschiedlichen Skalenstufen haben. Der Eigenwert einer Komponente/ eines Faktors sagt aus, wie viel Varianz dieser Faktor an der Gesamtvarianz aufklärt. Laut dem Eigenwert-Kriterium sollen nur Faktoren mit einem Eigenwert größer 1 extrahiert werden
+
+```{r}
+eigen(cor(brand.sc[, 1:9]))
+
+```
+
+
+### Scree-Plot {.shrink}
+
+Dies kann auch grafisch mit dem `VSS.Scree` geplotet werden. 
+
+```{r}
+library(nFactors)
+VSS.scree(brand.sc[, 1:9])
+```
+
+
+### Übung `r nextExercise()`: Anzahl Hauptkomponenten {.exercise type=A-B-C-D answer=C}
+
+Wie viele Hauptkomponenten lasse sich extrahieren?
+
+A.  1
+B.  2
+C.  3
+D.  4
+
+<div class="notes">
+***C***
+</div>
+
+
+
+### Extraktion der Komponenten {.shrink}
+
+Am einfachsten lassen sich die Komponenten extrahieren mit dem `principal`-Befehl aus dem psych-Paket (ist durch das Paket nFactors bereits geladen)
+```{r}
+brands.pca<-principal(brand.sc[, 1:9], nfactors=3)
+print(brands.pca, cut=0.5, sort = TRUE, digits=2)
+
+```
+
+
+### Übung `r nextExercise()`: Interpretation der PCA Ergebnisse {.exercise type=essay}
+
+Wie interpretieren Sie das Ergebnis? Diskutieren Sie mögliche Lösungen. 
+
+<div class="notes">
+- Das Ergebnis sieht sehr gut aus. Es laden immer mehrere Items (mindestens 2) hoch (> 0,5) auf einer Komponente (die mit RC1 bis RC3 bezeichnet werden, RC steht für Rotated Component). Innerhalb einer PCA kann die Interpretierbarkeit über eine **Rotation** erhöht werden. Wenn die Rotation nicht ausgeschlossen wird (mit dem Argument `rotate="none"`), dann ist die Voreinstellung eine `Varimax-Rotation`.   
+- Es gibt keine Items die auf mehr als einer Komponente hoch laden. Die Ladungen sind Korrelationskoeffizienten zwischen den Items und den Hauptkomponenten. 
+- In der Zeile SS loadings finden wir die Eigenwerte der fünf Hauptkomponenten. Den Anteil an der Gesamtvarianz, den sie erklären, findet man in der Zeile Proportion Var. Aufsummiert sind die Anteile in der Zeile Cumlative Var. Insgesamt werden durch die fünf Hauptkomponenten 64% der Gesamtvarianz erklärt. 
+- Einzig das Item `fun` lädt negativ auf RC2. 
+</div>
+
+
+### Exploratorische Faktorenanalyse (EFA)
+
+EFA ist eine Methode, um die Beziehung von Konstrukten (Konzepten), d. h. Faktoren zu Variablen zu beurteilen. Dabei werden die Faktoren als **latente Variablen** betrachtet, die nicht direkt beobachtet werden können. 
+
+Stattdessen werden sie empirisch durch mehrere Variablen beobachtet, von denen jede ein Indikator der zugrundeliegenden Faktoren ist. Diese beobachteten Werte werden als **manifeste Variablen** bezeichnet und umfassen Indikatoren. 
+
+Die EFA versucht den Grad zu bestimmen, in dem Faktoren die beobachtete Streuung der manifesten Variablen berücksichtigen.
+
+
+### Vergleich zur PCA
+
+Das Ergebnis der EFA ist ähnlich zur PCA: eine Matrix von Faktoren (ähnlich zu den PCA-Komponenten) und ihre Beziehung zu den ursprünglichen Variablen (Ladung der Faktoren auf die Variablen). 
+
+Im Gegensatz zur PCA versucht die EFA, Lösungen zu finden, die in den **manifesten Variablen maximal interpretierbar** sind. 
+
+Im Allgemeinen versucht sie, Lösungen zu finden, bei denen eine kleine Anzahl von Ladungen für jeden Faktor sehr hoch ist, während andere Ladungen für diesen Faktor gering sind. Wenn dies möglich ist, kann dieser Faktor mit diesem Variablen-Set interpretiert werden. 
+
+
+### Finden einer EFA Lösung
+
+Als erstes muss die Anzahl der zu schätzenden Faktoren bestimmt werden. Hierzu verwenden wir wieder das Ellbow-Kriterium und das Eigenwert-Kriterium. Beide Kriterien haben wir schon bei der PCA verwendet, dabei kommen wir auf 3 Faktoren. 
+
+Durch das Paket `nFactors` bekommen wir eine formalisierte Berechnung der Scree-Plot Lösung mit dem Befehl `nScree()`
+
+```{r}
+library(nFactors)
+nScree(brand.sc[, 1:9])
+
+```
+
+`nScree` gibt vier methodische Schätzungen für die Anzahl an Faktoren durch den Scree-Plot aus. Wir sehen, dass drei von vier Methoden 3 Faktoren vorschlagen.
+
+
+### Schätzung der EFA {.shrink}
+
+Eine EFA wird geschätzt mit dem Befehl `factanal(x,factors=k)`, wobei `k` die Anzahl Faktoren angibt.
+
+```{r}
+brands.fa<-factanal(brand.sc[, 1:9], factors=3)
+brands.fa
+```
+
+
+### Schönere Ausgabe der EFA {.shrink}
+
+Eine übersichtlichere Ausgabe bekommen wir mit dem `print` Befehl, in dem wir zusätzlich noch die Dezimalstellen kürzen mit `digits=2`, alle Ladungen kleiner als 0,5 ausblenden mit `cutoff=.4` und die Ladungen mit `sort=TRUE` so sortieren, dass die Ladungen, die auf einen Faktor laden, untereinander stehen.
+```{r}
+print(brands.fa, digits=2, cutoff=.4, sort=TRUE)
+```
+
+
+### Heatmap mit Ladungen {.shrink}
+
+In der obigen Ausgabe werden die Item-to-Faktor-Ladungen angezeigt. Im zurückgegebenen Objekt `Werte.fa` sind diese als  `$loadings` vorhanden. Wir können die Item-Faktor-Beziehungen mit einer Heatmap von `$loadings` visualisieren:
+
+```{r}
+heatmap.2(brands.fa$loadings,
+          col=brewer.pal(9, "Blues"), trace="none", key=FALSE, dend="none",
+          Colv=FALSE, cexCol = 1.2, main="Ladungen brands.fa")
+```
+
+
+### Übung `r nextExercise()`: Interpretation der EFA Ergebnisse {.exercise type=essay}
+
+Wie interpretieren Sie das Ergebnis? 
+
+<div class="notes">
+Das Ergebnis zeigt eine klare Trennung der Items in 3 Faktoren, die grob als **Wert**, **Leader** und **Trend** interpretierbar sind. Das item **rebuy* läd sowohl auf Faktor1 (Wert) als auch Faktor2 (Leader). Dies deutet darauf hin, dass die Verbraucher in den simulierten Daten sagen, sie würden eine Marke aus irgendeinem Grund wiederkaufen, weil sie hochwertig ist oder weil sie führend ist.
+</div>
+
+
+### Bildung der Faktoren durch Mittelwertbildung {.shrink}
+
+Eine Möglichkeit Faktoren zu bilden geht über die Mittelwerte der Items. Dies ist jedoch nur sinnvoll, wenn einheitliche Skalen über alle Items hinweg vorliegen. Wir verwenden hierfür den Befehl `rowMeans`.
+
+```{r}
+brand.ratings$Wert<-rowMeans(brand.ratings[,c("value", "bargain", 
+                                              "rebuy")], na.rm = TRUE)
+brand.ratings$Leader<-rowMeans(brand.ratings[,c("serious", "perform", 
+                                                "leader")], na.rm = TRUE)
+brand.ratings$Trend<-rowMeans(brand.ratings[,c("latest", "trendy", 
+                                               "fun")], na.rm = TRUE)
+```
+
+
+
+### Interne Konsistenz der Skalen
+
+Das einfachste Maß für die **interne Konsistenz** ist die **Split-Half-Reliabilität**. Die Items werden in zwei Hälften unterteilt und die resultierenden Scores sollten in ihren Kenngrößen ähnlich sein. 
+
+Hohe Korrelationen zwischen den Hälften deuten auf eine hohe interne Konsistenz hin. 
+
+Das Problem ist, dass die Ergebnisse davon abhängen, wie die Items aufgeteilt werden. Ein üblicher Ansatz zur Lösung dieses Problems besteht darin, den Koeffizienten **Alpha (Cronbachs Alpha)** zu verwenden.
+
+
+### Cronbachs Alpha
+
+Der Koeffizient **Alpha** ist der Mittelwert aller möglichen Split-Half-Koeffizienten, die sich aus verschiedenen Arten der Aufteilung der Items ergeben. Dieser Koeffizient variiert von 0 bis 1. Formal ist es ein korrigierter durchschnittlicher Korrelationskoeffizient.
+
+Zufriedenstellende Reliabilität wird bei einem Alpha-Wert von 0.7 erreicht. Werte unter 0.5 gelten als nicht akzeptabel, Werte ab 0.8 als gut.
+
+
+### Bewertung von Wert {.shrink}
+
+```{r}
+library(psych)
+alpha(brand.ratings[,c("value", "bargain", "rebuy")])
+```
+
+
+### Übung `r nextExercise()`: Interpretation Alpha {.exercise type=A-B-C-D answer=A}
+
+Wie beurteilen Sie das Alpha von Werte?
+
+A.  gut
+B.  zufriedenstellen
+C.  akzeptabel
+D.  schlecht
+
+<div class="notes">
+***A***
+</div>
+
+
+### Beurteilung der Marken je Faktor {.shrink}
+
+```{r}
+brand.fa.mean <- aggregate(. ~ brand, data=brand.ratings, mean)
+rownames(brand.fa.mean) <- brand.fa.mean[, 1]
+brand.fa.mean <- brand.fa.mean[, -1]
+brand.fa.mean <- brand.fa.mean[,10:12]
+heatmap.2(as.matrix(brand.fa.mean), 
+          col=brewer.pal(9, "Blues"), trace="none", key=FALSE, dend="none",
+          cexCol=1.2, main="Markenbeurteilung je Faktor")
+```
+
+
+
+### Literatur
+
+- Chris Chapman, Elea McDonnell Feit (2015): *R for Marketing Research and Analytics*, Kapitel 8.1-8.3
+- Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2013): *An Introduction to Statistical Learning -- with Applications in R*, [http://www-bcf.usc.edu/~gareth/ISL/](http://www-bcf.usc.edu/~gareth/ISL/), Kapitel 10.2, 10.4
+- Reinhold Hatzinger, Kurt Hornik, Herbert Nagel (2011): *R -- Einführung durch angewandte Statistik*. Kapitel 11
+- Maike Luhmann (2015): R für Einsteiger, Kapitel 19
+
+
+```{r finish--Kind-PCA_brands, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```
+
+

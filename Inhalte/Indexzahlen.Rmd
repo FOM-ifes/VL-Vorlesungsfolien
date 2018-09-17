@@ -1,0 +1,120 @@
+```{r setup-Index, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Indexzahlen",              # Dateiname ohne Suffix
+    "Wirtschaftsstatistik"  # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` Indexzahlen
+
+### Preisentwicklung
+
+Angenommen vor zwei Jahren haben Sie für eine Party $2$ Flaschen Korn für je $10\,€$ und 2 Flaschen Cola je $1\,€$ eingekauft. Heute kaufen Sie nur $1$ Flasche Korn für $10{,}50\,€$, dafür $3$ Cola für je $1{,}10\,€$.
+
+Wie haben sich die Preise entwickelt?
+
+- Früher kostete die Party $22\,€$, heute nur noch $13{,}80\,€$. Damit beträgt der Partypreisindex $\frac{13{,}80\,€}{22\,€}=0{,}6275$.
+- Wenn Sie heute genau so viel Korn kaufen würden wie früher, würde die Party heute $2\cdot 10{,}50\,€+2\cdot 1{,}10\,€=23{,}20\,€$ kosten. Damit würde die Partypreisentwicklung $\frac{23{,}20\,€}{22\,€}=1{,}0545$ betragen.
+- Wenn Sie früher schon so bescheiden gewesen wären, hätte die Party damals $1\cdot 10\,€+3 \cdot 1\,€=13\,€$ gekostet. Damit hätte  die Partypreisentwicklung $\frac{13{,}80\,€}{13\,€}=1{,}0615$ betragen.
+
+### Indexzahlen
+
+Nicht nur die Preise $p_i$, auch die Mengen $q_i$ haben sich im Lauf der Zeit (von $0$ bis $t$) verändert und damit auch der Einfluss der Produkte auf den Warenkorb:^[Berechnung in R z.B. über [micEconIndex](https://cran.r-project.org/package=micEconIndex).]
+
+- Der **Umsatzindex** korrigiert nicht die verschiedenen Mengen: $U_{0t}=\frac{\sum{q_{ti}p_{ti}}}{\sum{q_{0i}p_{0i}}}$.
+- Der **Preisindex nach Laspeyres**^[z. B. Verbraucherpreisindex, DAX] zeigt, wie viel der Warenkorb der Basisperiode $0$ in der Berichtsperiode $t$ kostet, d. h., der Quotient der hypothetischen Gesamtausgaben der Berichtsperiode geteilt durch die tatsächlichen Gesamtausgaben der Basisperiode: $P^L_{0t}=\frac{\sum{q_{0i}p_{ti}}}{\sum{q_{0i}p_{0i}}}$.
+- Der **Preisindex nach Paasche**^[z. B.Inflationkorrektur beim BIP] ist der Quotient der tatsächlichen Gesamtausgaben in der Berichtsperiode $t$ geteilt durch die fiktiven Ausgaben der Basisperiode $0$ für den Warenkorb der Berichtsperiode: $P^P_{0t}=\frac{\sum{q_{ti}p_{ti}}}{\sum{q_{ti}p_{0i}}}$.
+
+
+### Übung `r nextExercise()`: Aufwand Indexzahlen {.exercise type=A-B-C-D answer=B}
+
+Indexzahlen werden häufig über einen längeren Zeitraum bestimmt. Welche Aussage stimmt?
+
+A.  Der Umsatzindex ist am einfachsten zu erheben.
+B.  Der Preisindex nach Laspeyres ist am einfachsten zu erheben.
+C.  Der Preisindex nach Paasche ist am einfachsten zu erheben.
+D.  Alle Indexzahlen sind gleich aufwendig zu erheben.
+
+<div class="notes">
+Da beim Preisindex nach Laspeyres nicht jedes Jahr die Mengen $q_t$ erhoben werden, müssen stimmt ***B***.
+</div>
+
+
+### Verbraucherpreisindex
+
+- Im **Verbraucherpreisindex für Deutschland** (VPI) werden zur Zeit etwa 750 Waren und Dienstleistungen (Warenkorb) berücksichtigt.
+- Das Gewicht $g_0(i)$ eines Gutes $i$ ist dabei der Anteil an den gesamten Verbrauchsausgaben (Wägungsschema):
+$$g_0(i)=\frac{{q_{0i}p_{0i}}}{\sum{q_{0j}p_{0j}}}.$$
+
+### Wägungsschema Verbraucherpreisindex
+
+Die Gewichte $g$ innerhalb eines Warenkorbes (hier Verbraucherpreisindex) sind im Wägungsschema angegeben.^[Quelle: [Statistisches Bundesamt](https://www.destatis.de/DE/ZahlenFakten/GesamtwirtschaftUmwelt/Preise/_Grafik/Fokus_Waegungsschema.html)]
+
+```{r echo=FALSE, out.width = "55%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"Fokus_Waegungsschema.png"))
+```
+
+
+### Übung `r nextExercise()`: Entwicklung Indexzahlen {.exercise type=yesno answer=no}
+
+Angenommen die Preise aller Güter sind gestiegen. Stimmt die Aussage: Es gilt immer $U_{0t}>1$?
+
+- Ja.
+- Nein.
+
+<div class="notes">
+***Nein***, z. B. wenn alle Mengen stärker gefallen sind als die Preise. Die Aussage stimmt für Laspeyres und Paasche.
+</div>
+
+
+### Offene Übung `r nextExercise()`: Indexzahlen {.exercise type=essay}
+
+Eine Drogerie stellt das Sortiment um: Während vor einem Jahr zu $80\,\%$ eher preiswerte Marken und Produkte im Durchschnitt zu $5\,€$ verkauft wurden und $20\,\%$ hochpreisige Marken im Durchschnitt zu $50\,€$, werden heute $50\,\%$ preiswerte Produkte zu $5{,}50\,€$ und $50\,\%$ hochpreisige zu $45\,€$ verkauft.
+
+Bestimmen Sie zur Analyse der Preisentwicklung eine Indexzahl Ihrer Wahl.
+
+```{r, include=FALSE}
+q0 <- c(0.8, 0.2)
+qt <- c(0.5, 0.5)
+p0 <- c(5, 50)
+pt <- c(5.5, 45)
+
+# Umsatzindex
+sum(qt*pt) / sum(q0*p0)
+# Laspeyres
+sum(q0*pt) / sum(q0*p0)
+# Paasche
+sum(qt*pt) / sum(qt*p0)
+```
+
+<div class="notes">
+- Umsatzindex: `r round(sum(qt*pt) / sum(q0*p0),2)`
+- Laspeyres: `r round(sum(q0*pt) / sum(q0*p0),2)`
+- Paasche: `r round(sum(qt*pt) / sum(qt*p0),2)`
+
+`q0 <- c(0.8, 0.2)`   
+`qt <- c(0.5, 0.5)`   
+`p0 <- c(5, 50)`  
+`pt <- c(5.5, 45)`    
+`sum(qt*pt) / sum(q0*p0) # Umsatzindex`   
+`sum(q0*pt) / sum(q0*p0) # Laspeyres`     
+`sum(qt*pt) / sum(qt*p0) # Paasche`     
+
+Alternative: R Paket [https://cran.r-project.org/package=micEcon](https://cran.r-project.org/package=micEcon)
+</div>
+
+```{r finish-Index, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

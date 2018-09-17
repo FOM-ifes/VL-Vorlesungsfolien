@@ -1,0 +1,206 @@
+```{r setup-Zeitreihen, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Zeitreihen",          # Dateiname ohne Suffix
+    "Wirtschaftsstatistik"  # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(forecast)
+```
+
+# `r nextChapter()` Grundlagen Zeitreihenanalyse
+
+### Zerlegung einer Zeitreihe
+
+```{r echo=FALSE, out.width = "20%", fig.align="center"}
+data("co2")
+plot(co2, lwd=2, main="CO2 Konzentration", xlab="Zeit", cex=1.1)
+```
+
+*Ziel:* Modellierung der Variation eines numerischen Merkmals $y$ durch die Zeit $t$.
+
+Eine Zeitreihe, d. h. hier ein regelmäßig beobachtes Merkmal $y_t$, kann in verschiedene Komponenten zerlegt werden:^[Literaturempfehlung: Rob J Hyndman, George Athanasopoulos: Forecasting: Principles and Practice [http://otexts.org/fpp2/](http://otexts.org/fpp2/)]
+
+- **Trend**: $m_t$
+- **Saisonkomponenten**: $s_t$
+- **Rest**-/ Fehlerkomponenten: $e_t$
+
+Damit sind verschiedene Modelle möglich:
+
+- **Additives** Modell: $y_t=m_t+s_t+e_t$
+- **Multiplikatives** Modell: $y_t=m_t \cdot s_t \cdot e_t$
+
+
+### Beispiele
+
+- Zeitliche Entwicklung von BIP, Beschäftigungszahlen etc..
+- Umsatzverlauf von z. B. Kerzen, Mückenspray, Toilettenpapier.
+- Bedarfsprognose von Statistikbüchern.
+- Analyse der Entwicklung von Persönlichkeitsmerkmalen im Laufe der Zeit.
+- Vorhersage des Strombedarfs.
+- Analyse von Kursverläufen.
+
+*Wo können Sie dies Verfahren einsetzen?*
+
+
+### Cartoon: Zeitreihe
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_07-2018.jpg", "cartoon0718.jpg", pathToImages)
+```
+"Immer dasselbe: Kurz vor der Klausur gibt es eine Spitze in den Lehrbuchverkäufen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+
+### CO~2~ Konzentration
+
+Dr. Pieter Tans, NOAA/ESRL^[[www.esrl.noaa.gov/gmd/ccgg/trends/](www.esrl.noaa.gov/gmd/ccgg/trends/)] und Dr. Ralph Keeling, Scripps Institution of Oceanography^[[scrippsco2.ucsd.edu/](scrippsco2.ucsd.edu/)] stellen aktuelle Daten zur CO~2~ Konzentration zur Verfügung: [https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html](https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html)
+
+*Hinweis:* Sollte das Herunterladen nicht klappen, können Sie auch einfach über `data(co2)` historische Daten verwenden.
+
+
+### Aktuelle CO~2~ Daten beziehen
+
+```{r}
+# URL der Daten
+urlco2 <- "ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt"
+
+# Datei herunterladen
+data <- read.table(file=url(urlco2))
+
+# Relevante Spalte als Monatliche Zeitreihe definieren
+co2 <- ts(data$V5, start = c(data$V1[1], data$V2[1]), frequency = 12)
+```
+
+### Zeitreihe plotten
+
+```{r, out.width = "80%", fig.align="center"}
+plot(co2)
+```
+
+### Übung `r nextExercise()`: CO~2~ Konzentration {.exercise type=yesno answer=yes}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+plot(co2)
+```
+
+Stimmt die Aussage: Es scheint saisonale Schwankungen in der CO~2~ Konzentration zu geben?
+
+- Ja.
+- Nein.
+
+<div class="notes">
+***Ja***, bei einer insgesamt steigenden CO~2~ Konzentration gibt es innerhalb der Jahre saisonale Schwankungen.
+</div>
+
+
+### Glätten durch gleitende Durchschnitte
+
+**Gleitende Durchschnitte** (engl.: moving-average) glätten eine Zeitreihe, z. B. um saisonale Schwankungen, damit der Trend erkannt werden kann.
+
+$$ \hat{y}_{q,t}=\frac{1}{p}\sum_{j=-q}^{q}y_{t+j} $$ 
+mit $p=2q+1$. D.h., $\hat{y_t}$ ist der Mittelwert von $y_t$ und der $q$ vorhergehenden und nachfolgenden Beobachtungen
+
+```{r, eval=FALSE}
+# Einmalig installieren
+install.packages("forecast")
+```
+
+```{r}
+# Paket laden
+library(forecast)
+```
+
+### `ma()` {.shrink}
+
+Gleitende Durchschnitte berechnen, plotten:
+
+```{r, out.width = "60%", fig.align="center"}
+ma(co2, order=11) %>% # p=11
+  plot()
+```
+
+### Übung `r nextExercise()`: Gleitende Durchschnitte {.exercise type=yesno answer=yes}
+
+Stimmt die Aussage: Je größer $p$ (`order`), desto glatter wird die geglättete Zeitreihe?
+
+- Ja.
+- Nein.
+
+<div class="notes">
+Je größer $p$ (und $q$), von desto mehr Werten wird der Mittelwert berechnet, der einzelne Wert wird unwichtiger, also geglättet. Daher ***Ja***.
+</div>
+
+
+### Zeitreihe zerlegen
+
+Gleitende Durchschnitte zerlegen, plotten:
+
+```{r, out.width = "70%", fig.align="center"}
+stl(co2, s.window = 11) %>%
+  plot()
+```
+
+### Übung `r nextExercise()`: Gleitende Durchschnitte  {.exercise type=A-B-C answer=A}
+
+::: {.scriptsize}
+
+```{r}
+stl(co2, s.window = 11) %>% seasonal() %>% tail(n=12)
+```
+
+:::
+
+Welche Aussage stimmt?
+
+A.  Die CO~2~ Konzentration ist im Juni höher als im Dezember.
+B.  Die CO~2~ Konzentration ist im Juni geringer als im Dezember.
+C.  Die CO~2~ Konzentration ist im Juni ungefähr so hoch wie im Dezember.
+
+```{r, include=FALSE}
+co2l <- stl(co2, s.window = 11) %>% seasonal() %>% tail(n=12)
+```
+
+<div class="notes">
+Während die Saisonkomponente im Dezember `r round(co2l[cycle(co2l)==12],2)` beträgt, ist sie im Juni `r round(co2l[cycle(co2l)==6],2)`. Also ***A***.
+</div>
+
+### Vorhersagen
+
+Ausblick:^[vgl. Literatur]
+```{r, out.width = "60%", fig.align="center"}
+stl(co2, s.window = 11) %>% # Zerlegung
+  predict() %>% # Prognosen
+  plot() # Abbildung
+```
+
+### Offene Übung `r nextExercise()`: Zeitreihenanalyse {.exercise type=essay}
+
+Führen Sie eine Analyse des Datensatzes `AirPassengers`^[interner R Datensatz. Hilfe: `?AirPassengers`] durch.
+
+<div class="notes">
+Steigende Tendenz mit saisonalen Schwankungen.
+
+`data("AirPassengers")`   
+`stl(AirPassengers, s.window = 11) %>% predict() %>% plot()`    
+
+```{r, echo=FALSE, out.width = "40%", fig.align="center"}
+data("AirPassengers")
+stl(AirPassengers, s.window = 11) %>% predict() %>% plot()
+```
+</div>
+
+```{r finish-Zeitreihen, include=FALSE}
+rm(pathToImages)
+rm("co2")
+rm("co2l")
+detach("package:forecast", unload = TRUE)
+finalizePart(partname)
+```

@@ -1,0 +1,102 @@
+
+\defbeamertemplate*{frametitle}{normal}{%
+  \savebox{\myftbox}{%
+      \usebeamercolor[fg]{frametitle in head}%
+      \usebeamerfont{frametitle in head}%
+      \insertframetitle}%
+  \settowidth{\myftboxwidth}{\usebox{\myftbox}}%
+  \nointerlineskip%
+%      \vspace*{2px}%
+  \vskip6pt\vskip0pt%
+  \begin{beamercolorbox}[%
+%      ht=2ex,
+      ht=1.20em,
+      sep=0pt, %
+      leftskip=\myleftskip, %
+      rightskip=\myrightskip, %
+      wd=\paperwidth %
+    ]{frametitle}%
+      \ifdim\myftboxwidth>\myftboxmaxwidth%
+        \resizebox{\myftboxmaxwidth}{!}{\usebox{\myftbox}}\\[-0.85em]
+      \else%
+        \usebox{\myftbox}\\[-0.85em]
+      \fi
+      \logoline%
+  \end{beamercolorbox}%
+  \begin{tikzpicture}[%
+      remember picture, 
+      overlay
+    ]
+      \putLogo%
+  \end{tikzpicture}%
+  \vskip-1.05em\vskip0pt%
+%  \the\myftboxwidth% Breite ausgeben!
+}
+
+\defbeamertemplate{frametitle}{exercise}{%
+  \nointerlineskip%
+  \vspace*{2px}%
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=west, inner sep=0pt, yshift=-\logoheight+5pt] at (current page.north west){
+          \includegraphics[%
+            width=0.86\paperwidth,%
+            height=1.25em
+          ]{\titlebackgroundimage}%
+    };
+  \end{tikzpicture}
+  \begin{beamercolorbox}[%
+      ht=2ex,
+      sep=0pt, %
+      leftskip=\myleftskip, %
+      rightskip=\myrightskip, %
+      wd=\paperwidth %
+    ]{frametitle}%
+      \usebeamercolor[fg]{frametitle in head exercise}%
+      \usebeamerfont{frametitle in head exercise}%
+      \insertframetitle%
+  \end{beamercolorbox}%
+  \begin{tikzpicture}[%
+      remember picture, 
+      overlay
+    ]
+      \putLogo%
+  \end{tikzpicture}
+}
+
+\newcommand{\setNormalMode}{\setbeamertemplate{frametitle}[normal]{}}
+
+\newcommand{\setExerciseMode}{\setbeamertemplate{frametitle}[exercise]{}}
+
+%%\gdef\setmode{0}
+%\newcounter{setmode}
+%\setcounter{setmode}{0}
+
+%\let\oldframe=\frame
+%\let\oldendframe=\endframe
+
+%\newenvironment{nframe}{%
+%  \relax%
+%  \oldframe%
+%}%
+%{%
+%  \oldendframe%
+%}
+
+%\renewenvironment{frame}{%
+%  \ifthenelse{\equal{\value{setmode}}{1}}{% then
+%    \wlog{Switch to Exercise Mode!}
+%    %\setExerciseMode{}
+%    \setbeamertemplate{frametitle}[exercise]
+%  }{% else
+%    \wlog{Switch to Normal Mode!}
+%    \setbeamertemplate{frametitle}[normal]
+%  }
+%  \oldframe%
+%}%
+%{
+%  \oldendframe%
+%  \setNormalMode
+%}
+
+%\setExerciseMode
+%\setNormalMode

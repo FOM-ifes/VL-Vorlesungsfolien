@@ -1,0 +1,303 @@
+```{r setup-Fragebogen, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Bianca Krol
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Fragebogen",  # Dateiname ohne Suffix
+    "Fragebogen"       # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+# `r nextChapter()` Entwicklung des Fragebogens
+
+### Formen der Befragung
+
+:::::::::::::: {.columns}
+::: {.column width="33%"}
+**Kommunikationsformen**
+
+- standardisiert: nicht gestalbarer, starrer Ablauf       
+- teilstandardisiert: teilweise gestaltbarerer Ablauf     
+- nicht standardisiert: gestaltbarerer, flexibler Ablauf  
+
+**Befragungssetting**
+
+- Einzelperson  (Einzelbefragung)
+- Gruppe (Gruppenbefragung)
+
+:::
+::: {.column width="33%"}
+**Durchführungsform**
+
+- schriftlich (Fragebogen)
+- internetgestützt (Onlinebefragung)
+- mündlich, persönlich (face to face)
+- telefonisch (Telefoninterview)
+
+**Kommunikationsart**
+
+- schriftlich
+- mündlich
+
+
+:::
+::::::::::::::
+
+
+### Die Frage: Formen, Struktur und Funktionen 
+
+**Fragetypen**
+
+- Einstellungs- oder Meinungsfragen
+  - "Auf der Autobahn sollte Tempo 100 eingeführt werden"
+  - Antwortkategorien von "stimme überhaupt nicht zu" bis "stimme voll zu"
+- Überzeugungsfragen
+  - "Im letzten Jahr wurden in Deutschland mehr ausländische als deutsche Kinder geboren"
+  - Antwortkategorien: "richtig" / "falsch"
+- Verhaltensfragen
+  - "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?"
+  - Antwortkategorie: ........
+- Fragen nach Eigenschaften der APN (Antwortperson)
+  - "Was ist ihr höchster Bildungsabschluss?"
+  - Antwortkategorie: "Hauptschulabschluss" / "Mittlere Reife" / "Fachhochschulreife" / "Allgemeine Hochschulreife" / "Kein Abschluss"
+  
+### Die Frage: Formen, Struktur und Funktionen 
+<!-- Eigentlich als Tabelle mit zwei Spalten formatiert --> 
+**geschlossene Fragen**
+
+- Vorteile:                                 
+  - Vergleichbarkeit der Antworten
+  - höhere Durchführungs- und Auswertungsobjektivität
+  - geringerer Zeitaufwand für Befragte
+  - geringerer Aufwand bei der Auswertung
+
+- Nachteile:
+  - Gefahr der Suggestivwirkung, v.a. bei Meinungsfragen
+  - Erhalt von Informationen im Rahmen der vorgegebenen Kategorien
+    
+**offene Fragen**
+
+- Vorteile:                                 
+  - Befragter muss sich nicht an vorgegebene Antwortkategorien halten
+  - dient der Exploration des Problemfelds
+  - Generierung relevanter Antwortkategorien hinsichtlich geschlossener Fragen
+
+- Nachteile:
+  - Unterschiedliches Verbalisierungsvermögen der Befragten
+  - schwierige und zeitaufwändige Auswertung
+
+### Die Frage: Formen, Struktur und Funktionen 
+
+**Antwortformate**
+
+- freies (offenes) Antwortformat
+  - Befragter formuliert Antwort selbst in Sprache, Zahlen, Bilder etc.
+- dichotomes Antwortformat
+  - Antwortkategorie mit zwei Ausprägungen: "richtig"/"falsch", "ja"/"nein"
+- Ratingskala
+  - Skala mit mehr als zwei abgestuften Antwortkategorien, Informationsgewinn
+  - am häufigsten in der Sozialforschung eingesetztes Erhebungsinstrument
+  - verbale Skalenbezeichnung können sich auf unterschiedliche Variablenarten beziehen
+- Rankingskala
+  - Themen werden nach Wichtigkeit in eine Reihenfolge gebracht
+  
+### Die Frage: Formen, Struktur und Funktionen
+
+**Ratingskalen**
+
+- das Skalenniveau unterscheidet sich nach der Gestaltung der Skala
+- oft maximale Abstufung von 5 bis 7 Kategorien
+- unipolare vs. bipolare Ratingskala
+```{r echo=FALSE, out.width = "60%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Rating.png"))
+```
+
+- Skala mit der Angabe der Ausprägungen pro Antwortmöglichkeit: Ordinalskala
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Ordinalskala.png"))
+```
+
+- **Likert-Skala** mit Angabe an den Extrempunkten: Intervallskala
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Intervallskala1.png"))
+```
+
+- **Likert-Skala** mit Angabe aller *gleichabständigen* Skalenwerte: Intervallskala
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"))
+```
+
+
+### Die Frage: Formen, Struktur und Funktionen 
+
+- Kontrollfragen
+  - Kontrolle einer gegebenen Antwort auf eine schon vorher gestellte Frage
+  - "Sind Sie für die Todesstrafe?" - "In den USA ist ein überführter Straftäter letzte Woche zum Tode verurteilt worden. Befürworten Sie die Entscheidung oder lehnen Sie sie ab?"
+- Filterfrage
+  - Frageblöcke, die nur für eine Teilmenge der befragten Personen relevant sind, werden "ausgeblendet"
+  - "Sind Sie erwerbstätig?" Antwortkategorie: "ja"/"nein" - Weiter mit Frage 12
+- Trichterfragen
+  - Fragen mit denen man sich schrittweise vom Allgemeinen zum Besonderen vortastet, um z.B. Hemmungen im Fall "heikler" Fragen abzubauen
+- Eisbrecherfragen
+  - stehen am Anfang des Fragebogens und sollen eine kooperative Intervieweratmosphäre aufbauen sowie den Einstieg in den Fragebogen erleichtern
+
+### Frageformulierung
+
+- kurze, verständliche, direkte und eindimensionale Fragen
+  - "Fahren Sie gerne und schnell Auto?"
+  - "Was haben Sie für Nachbarn?"
+- keine doppelten Verneinungen
+  - "Neigen Sie nicht dazu, die Dinge nicht leicht zu nehmen?"
+- Antwortkategorien von geschlossenen Fragen sollten disjunkt (nicht überlappend), erschöpfend und präzise sein
+  - "Rauchen Sie Zigaretten?"
+    Antwortkategorien: "häufig"/"manchmal"/"selten"/"nie"
+- Vorsicht bei stark wertbesetzten Begriffen
+  - "Gerechtigkeit", "Freiheit", "Verbrechen", "Selbstbestimmung" - starker positiver oder negativer Beigeschmack
+- möglichst keine indirekten Fragen
+  - "Viele Erwachsene sind der Ansicht, dass es im Kinderfernsehen keine Werbung geben sollte. Meinst du das auch?"
+- keine Suggestivfragen
+  - "Sind Sie nicht auch der Meinung, dass ausländische Straftäter schneller abgeschoben werden müssten?"
+- Befragte nicht überfordern
+  - "Wie viel Prozent des Monatseinkommens geben Sie für die Miete aus?"
+  
+### Fehlerquellen
+
+- soziale Erwünschtheit
+  - Beantwortung der Frage in Richtung der entsprechenden sozialen Norm
+  - Lösung: ausbalancierte Antwortvorgaben (Antwortvorgaben sind alle gleich erwünscht oder unerwünscht), Kontrollskalen, Aufforderung zu korrektem Testverhalten
+- Response-Set
+  - systematische Antwortmuster, die unabhängig vom Inhalt der Frage zustande kommen: Tendenz zur Mitte oder Extrempositionen sowie Akquieszenz (Ja-Sage-Bereitschaft)
+  - Lösung: abgestufte Antwortmöglichkeiten, unterschiedliche Polung der Items
+- Positionierung der Frage
+  - Halo-Effekt (Fragereiheneffekt): Fragen können auf andere Fragen ausstrahlen:
+    "Wie stehen Sie zur Todesstrafe?" - "Wie sollte man Ihrer Meinung nach Sexualstraftäter bestrafen?"
+  - Lösung: andere Platzierung der Frage, Umformulierung oder Präzisierung der Frage
+
+### Wie beurteilen Sie diese Fragen?
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Fragen.png"))
+```
+
+### Bewährte Fragebögen
+
+**Oberstes Gebot**: Suche nach bereits validierten Verfahren, bevor du selber konzipierst.
+Es gibt unzählige Konstrukte für eine Vielzahl von Fragestellungen und man muss nicht immer das Rad neu erfinden!
+
+Zugang zu **validierten Fragebögen** 
+
+- Psychometrische Tests aus der **ZPID-Datenbank**: [https://www.zpid.de/index.php?wahl=products&uwahl=frei&uuwahl=testarchiveintro-klassifikatoren](https://www.zpid.de/index.php?wahl=products&uwahl=frei&uuwahl=testarchiveintro-klassifikatoren)
+- Sozialwissenschaftliche Items von **GESIS**: [http://zis.gesis.org/](http://zis.gesis.org/)
+- Literaturrecherche: in Fachzeitschriften publiziert
+
+
+Grundsätzlich auf **NUTZUNGSRECHTE** Acht geben
+
+### Schriftliche Befragung: Aufbau des Fragebogens 
+
+- Einleitungs-/Eröffungsfrage (Eisbrecherfrage)
+- Spannungskurve (motivierende, schwierige, leichte Fragen)
+- Platzierung/Anordnung der Fragen
+  - Bildung thematischer Blöcke
+  - vom Allgemeinen zum Besonderen
+  - Platzierung sensibler Fragen: Fragen nach dem Einkommen, Sexualität, usw. erst im späteren Verlauf der Befragung
+  - Ausstrahlungseffekte beachten
+- Filterfragen
+- Überleitungsformulierungen
+- Sozialstatistische Angaben
+
+### Schriftliche Befragung: Aufbau des Fragebogens 
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"))
+```
+  
+### Schriftliche Befragung: Aufbau des Fragebogens 
+
+**Wichtige Merkmale**
+
+- Der Fragebogen muss vom Befragten ohne Hilfe verstanden werden können!
+- Hauptsächlich geschlossene Fragen, nur wenige offene Fragen!
+- Klarer Aufbau, nur wenig Verzweigungen und Verschachtelungen!
+- Je kürzer der Fragebogen, desto besser!
+
+
+### Schriftliche Befragung: Aufbau des Fragebogens 
+
+**Aufbau des Anschreibens**
+
+- Ansprache des Adressaten
+- kurze Darstellung der Person und evtl. der Einrichtung, für die die Erhebung durchgeführt wird
+- grobe Darstellung des Themas und des Ziels der Befragung
+- Interesse und Motivation des Befragten wecken
+- Zusicherung der Anonymität (Hinweis zum Umgang mit den Daten)
+- Auswahl des Befragten (warum er und niemand anderes)
+- Rücksendetermin/Abgabetermin
+- Incentivierung (Schaffung eines materiellen Anreizes)
+- Absender mit Kontaktdaten/Unterschrift
+- Dank für die Bearbeitung des Fragebogens
+
+### Schriftliche Befragung: Das Anschreiben
+
+```{r echo=FALSE, out.width = "50%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"))
+```
+
+### Schriftliche Befragung: Der Pretest
+
+**Pretest**
+
+- Prüfung des Fragebogens auf Anwendbarkeit, Vollständigkeit, Verständlichkeit, Qualität und Bearbeitungsdauer
+  - Sind Antworten in den vorgegebenen Antwortkategorien eindeutig zuordenbar?
+  - Ist das Layout übersichtlich und ansprechend?
+  - Menge der offenen Fragen
+  - Ist der Fragebogen sprachlich auf die Zielgruppe abgestimmt?
+  
+- Stichprobe soll strukturell denen der endgültigen Personengruppe entsprechen oder Beurteilung durch unabhängige Experten 
+- abschließende Befragung der Testpersonen hinsichtlich aller Auffälligkeiten und Schwierigkeiten bei der Bearbeitung des Fragebogens 
+
+### Schriftliche Befragung: Vor- und Nachteile
+
+**Vorteile**
+
+- geringerer Zeit- und Personalaufwand, geringere Kosten 
+- geeignet bei der Befragung großer homogener Gruppen
+- Befragte können Fragen besser durchdenken
+- keine Beeinflussung durch Merkmale und Verhalten des Interviewers
+
+**Nachteile**
+
+- Befragungssituation ist kaum hinreichend kontrollierbar
+- bei Verständnisproblemen kann keine Hilfe erfolgen
+- Risiko, dass einzelne Fragen wenig sorgfältig, unvollständig oder überhaupt nicht ausgefüllt werden
+
+
+### Schriftliche Befragung: Aufbereitung der Daten (1)
+
+- Antwortbögen durchnummerieren, sowohl auf den Bögen als auch im Datensatz
+- eine Spalte pro Variable
+- eine Zeile pro Antwortbogen
+- (z.B.) 99, 999, NA, falls die Antwort zu einer Frage fehlt
+- keine Änderungen an den Werten, auch wenn diese offensichtlich falsch sind
+- nach der Eingabe ist die Eingabe durch eine andere Person zu überprüfen (4-Augen-Prinzip)
+  - falls zu viele Fehler entdeckt werden, ist die Eingabe zu wiederholen
+- Sicherung der Daten
+- weitere Arbeiten mit dem Datensatz erfolgen auf der Kopie, das Original wird nicht mehr verwendet
+
+### Schriftliche Befragung: Aufbereitung der Daten (2)
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Datenaufbereitung.png"))
+```
+
+
+```{r finish-Fragebogen, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

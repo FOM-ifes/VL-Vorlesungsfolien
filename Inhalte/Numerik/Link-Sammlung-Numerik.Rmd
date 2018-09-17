@@ -1,0 +1,15 @@
+### Spline-Interpolation:
+
+- https://tools.timodenk.com/polynomial-interpolation
+- https://github.com/Simsso/Online-Tools
+- https://tools.timodenk.com/?p=cubic-spline-interpolation
+- https://lp.uni-goettingen.de/get/text/1232
+- https://de.wikipedia.org/wiki/Spline-Interpolation
+- https://www2.units.it/ipl/students_area/imm2/files/Numerical_Recipes.pdf (Seite 113f)
+- http://www.arndt-bruenner.de/mathe/scripts/kubspline.htm
+- https://de.wikipedia.org/wiki/Thomas-Algorithmus
+- https://www.cfd-online.com/Wiki/Tridiagonal_matrix_algorithm_-_TDMA_(Thomas_algorithm)
+
+### Octave-Online
+
+- https://octave-online.net

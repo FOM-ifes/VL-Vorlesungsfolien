@@ -1,0 +1,47 @@
+% ===========================================================================
+% mygeometry.tex
+% ==============-------------------------------------------------------------
+%
+% (C) in 2017 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% ---------------------------------------------------------------------------
+%
+\newlength{\myPaperWidth}
+\newlength{\myPaperHeight}
+
+\newcommand*{\setScreenRatio}[1]{%
+%
+% Default:
+%
+\setlength{\myPaperWidth}{140mm}
+\setlength{\myPaperHeight}{105mm}
+
+\ifthenelse{\equal{#1}{4x3}}{%
+%\ifstrequal{#1}{4x3}{%
+	%% 4:3 -> 160 x 120
+	\setlength{\myPaperWidth}{160mm}
+	\setlength{\myPaperHeight}{120mm}
+	\typeout{Set ScreenRatio to 4:3 (160x120)}
+}{
+    \ifthenelse{\equal{#1}{16x9}}{%
+%	\ifstrequal{#1}{16x9}{%
+		%% 16:9 ->  224 x 126
+		\setlength{\myPaperWidth}{224mm}
+		\setlength{\myPaperHeight}{126mm}
+	\typeout{Set ScreenRatio to 16:9 (224x126)}
+	}{%
+		%% Default:
+		\setlength{\myPaperWidth}{140mm}
+		\setlength{\myPaperHeight}{105mm}
+		\typeout{Set ScreenRatio to default (140x105)}
+	}
+}
+\geometry{paperwidth=\myPaperWidth,paperheight=\myPaperHeight}
+}
+
+\setScreenRatio{4x3}
+
+\def\footlinesize{\scriptsize} % \tiny\footnotesize\scriptsize
+%
+% ===========================================================================
+%

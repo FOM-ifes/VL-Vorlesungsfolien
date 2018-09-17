@@ -1,0 +1,243 @@
+```{r setup-MDS, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser (oliver.gansser@fom.de)
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "MDS",  # Dateiname ohne Suffix
+    "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` MDS als Analyseverfahren
+
+
+### Lernziele
+
+- Einsatz und Ziel der MDS Analyse verstehen.
+- Daten für die MDS aufbereiten.
+- Anwendung der MDS.
+- Interpretation und Schlussfolgerungen der MDS.
+- Evaluation des Einsates der MDS in der Marketing Controlling Praxis.
+
+
+### Multidimensiononale Skalierung (MDS)
+
+MDS ist eine Methode, mit der auch niedrigdimensionale Darstellungen von Daten gefunden werden können. Statt Komponenten oder latente Faktoren wie bei der PCA oder EFA zu extrahieren, arbeitet das MDS stattdessen mit Entfernungen (oder Ähnlichkeiten). 
+
+Die MDS versucht, eine **niedrigdimensionale Raum** zu finden, die alle beobachteten Ähnlichkeiten zwischen den Objekten am besten darstellt. Die Objekte werden auf Basis ihrer **Ähnlichkeit** zueinander dargestellt
+
+Praktische Marketinganwendungen der MDS:
+
+- Imagemessung, 
+- Marktsegmentierung, 
+- Entwicklung neuer Produkte, 
+- Beurteilung der Werbewirksamkeit, 
+- Preisanalyse, 
+- Channel-Entscheidungen und 
+- Erstellung von Einstellungsskalen.
+
+
+
+### MDS als Verfahren zur Positionierung
+
+Einsatz der MDS bei Positionierungsstudien:
+
+- Untersuchung eines Markenraumes
+- Analyse der Positionierung einer bestimmten Marke
+- Entwicklung einer Zielvorstellung für die Neupositionierung der Marke im Kontext konkurrierender Marken
+- Überprüfung des Neupositionierungsziels nach Einsatz geeigneter Marketing-Instrumente
+
+
+### Stärken der MDS
+
+Konstruktion eines möglichst niedrig dimensionierten Wahrnehmungsraums aus der ordinalen Ausgangsinformation.
+
+Gründe für den Umweg:
+
+- Verzichtet auf Vorgabe von Merkmalen um nicht auf bestimmte Merkmale aufmerksam zu machen.
+- Die Merkmale, die Personen bei Beurteilungsobjekten wahrnehmen, sind dem Untersuchungsleiter unbekannt.
+- Bei direkt erfragten Wahrnehmungen (konfirmatorischen Messungen) ist die interne Konsistenz der Daten nicht prüfbar
+- Die Merkmale sind z. T. sehr subjektiver oder emotionaler Art, sie lassen sich nicht gut in Worte fassen.
+
+
+### Erhebungverfahren zur Ähnlichkeit von Objekten
+
+**Ratingverfahren:**  
+„Beurteilen Sie paarweise die Ähnlichkeit der folgenden Automarken. Vergeben sie für die Ähnlichkeit eines Automarkenpaares eine Zahl im Wertebereich von 1 (= sehr ähnlich) bis 9 (= sehr unähnlich)!“
+
+**Rangreihung:**  
+Es werden alle möglichen Paarungen von Objekten gebildet (Karteikarten) und in eine Rangreihe gebracht (sortiert).
+
+**Ankerpunktmethode:**  
+„Geben Sie für jedes Objekt (zeilenweise) die Reihenfolge der anderen Objekte zu diesem Objekt an.“
+
+
+### Auswahl der Beurteilungsobjekte
+
+- Objekte müssen bekannt sein
+- Anzahl der Ähnlichkeiten zwischen den Objekten muss die Anzahl der Koordinaten im Lösungsraum deutlich übersteigen
+    - Dateninput bei n Beurteilungsobjekten sind = n x (n-1)/2 Ähnlichkeitswerte
+    - Datenoutput sind h x n Profilwerte (n: Anzahl der Beurteilungsobjekte, h: Anzahl der Dimensionen)
+- Zahl der Objekte sollte nicht zu groß sein (Überforderung der Apn)
+
+
+### Übung `r nextExercise()`: Dateninput {.exercise type=A-B-C-D answer=B}
+
+Wie viele Daten müssen für eine MDS Analyse eingegeben werden, wenn 10 Marken beurteilt werden sollen?
+
+A.  50
+B.  45
+C.  10
+D.  100
+
+<div class="notes">
+***B***
+</div>
+
+
+### Statistische Optimierung
+
+Bei der Bestimmung der Konfiguration verwendet die MDS einen **iterativen Prozess**.
+
+Die **Idee** hinter diesem Prozess:
+
+1. Alle Objekte werden willkürlich im Raum angeordnet.
+2. Die Distanzen zwischen den Objekten werden nun mit den Ähnlichkeiten verglichen. Liegen nun zwei Objekte im Verhältnis zur Ähnlichkeit weit **auseinander/bei einander**, werden sie **aufeinander zu-/voneinander** weg geschoben
+3. Dieser Vorgang wird so lange wiederholt, bis die Konfiguration der Objekte die erhobenen Ähnlichkeiten zufriedenstellend abbildet.
+
+
+### Statistische Optimierung
+
+**Minkowski-Metrik:**
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Minkowski.png"))
+```
+
+
+- Dimensionszahl H=2 und Minkowski-Parameter r=2 (euklidische Distanz)
+
+
+### Euklidische Distanz  
+
+
+```{r echo=FALSE, out.width = "50%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Euklid.png"))
+```
+
+
+### Übung `r nextExercise()`: Eukliddistanz {.exercise type=A-B-C answer=A}
+
+Wie Lang ist die eukliddistanz im Schaubild auf der letzten Folie?
+
+A.  2,82
+B.  4
+C.  3,82
+D.  3,22
+
+<div class="notes">
+***A***
+</div>
+
+
+### Anwendung mit dem Datensatz brand.ratings
+
+Wenn bereits Ähnlichkeitsdaten vorliegen, kann die MDS direkt auf die Daten angewendet werden. 
+
+Wenn andere Daten vorliegen, wie z.B. die Markenbewertungsdaten, die wir bereits bei der Dimensionsreduktion verwendet haben, müssen die **Distanzen noch berechnet** werden. 
+
+- Bei **metrische Daten** ist das relativ einfach. Man berechnet einfach die euklidische Abstände mit dem Befehl `dist()`.
+
+
+### Distanzen berechnen {.shrink}
+
+
+```{r}
+# Download der skalierten aggreguierten Markenbewertungen 
+# (10 Marken, 9 Dimensionen)
+load(url("http://gansser.de/data/brand/brand.mean.Rdata")) 
+brand.dist <- dist(brand.mean) # Distanzmatrix berechnen
+brand.dist
+```
+
+
+### Eine MDS Lösung berechnen für metrische Daten {.shrink}
+
+```{r}
+brand.mds <- cmdscale(brand.dist) # metrische MDS
+brand.mds
+```
+
+### Plot der MDS Lösung für metrische Daten {.shrink}
+
+```{r}
+plot(brand.mds, type="n") 
+# mit type=n verhindern wir, dass die Punkte der Marken in den raum eingezeichnet werden.  
+# stattdessen nehemn wir als Text die Markennamen
+text(brand.mds, rownames(brand.mds), cex=2)
+```
+
+
+### Übung `r nextExercise()`: MDS Lösung {.exercise type=essy}
+
+Diskutieren Sie, welche Schlüsse das Marketing aus diesen Ergebnissen ziehen kann. 
+
+<div class="notes">
+**individuell**
+</div>
+
+
+### Ausblick Clusteranalyse {.shrink}
+
+```{r}
+library(cluster)
+clusplot(fanny(brand.dist, k=3), color="TRUE", shade=FALSE, 
+         labels=3, lines=0, plotchar=FALSE,
+         main="Brandbeurteilungen Clusterlösung")
+```
+
+### Übung `r nextExercise()`: Cluster/PCA  {.exercise type=essy}
+
+Was fällt Ihnen auf, wenn Sie das Ergebnis mit den Ergebnissen aus dem Kapitel PCA vergleichen?
+
+<div class="notes">
+**gleiches Ergebnis**
+</div>
+
+
+### Übung `r nextExercise()`: Fallstudie/praktische Anwendung zur MDS  {.exercise type=essy}
+
+Ausgangssituation und Aufgabenstellung: 
+
+1.	Diskutieren Sie in der Vorlesung, welches Produkt Sie positionieren wollen.
+2.	Wieviele Markenanbieter gibt es zu diesem Produkt? (Die Anzahl Anbieter sollte 10 nicht übersteigen, da sonst die Matrix zu groß wird und der Paarvergleich zu umfangreich.
+3.	Wie groß ist die Anzahl Paarvergleiche die bewertet werden müssen? (Berechnung mit Formel)
+4.	Erstellen Sie ein Fragebogendesign für die Abfrage aller Paarvergleiche.
+5.	Welche Skala wählen Sie?
+6.	Erfassen Sie die Daten je Teilnehmer im Kurs und aggregieren Sie die Daten anschließend so, dass Sie eine Unähnlichkeitsmatrix bekommen.
+7.	Setzen Sie die Fallbezeichnungen mit den Anbieternamen.
+8.	Führen Sie eine metrische MDS durch und Interpretieren Sie das Ergebnis.
+
+
+
+### Literatur
+
+- Chris Chapman, Elea McDonnell Feit (2015): *R for Marketing Research and Analytics*, Kapitel 8.1-8.3
+- Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2013): *An Introduction to Statistical Learning -- with Applications in R*, [http://www-bcf.usc.edu/~gareth/ISL/](http://www-bcf.usc.edu/~gareth/ISL/), Kapitel 10.2, 10.4
+- Reinhold Hatzinger, Kurt Hornik, Herbert Nagel (2011): *R -- Einführung durch angewandte Statistik*. Kapitel 11
+
+
+```{r finish--Kind-MDS, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```
+
+

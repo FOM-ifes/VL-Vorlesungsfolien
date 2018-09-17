@@ -1,0 +1,77 @@
+---
+title: "Marketing Controlling"
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "VOR-",        # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+```
+
+
+
+```{r child = './Inhalte/Marketingcontrolling/MC-Organisatorisches.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/Grundlagen-Marketingcontrolling.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/Wirtschaftlichkeitsanalysen.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/Operatives-Marketingcontrolling.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/Strategisches-Marketingcontrolling.Rmd'}
+```
+
+
+```{r child = './Inhalte/Conjoint.Rmd'}
+```
+
+
+```{r child = './Inhalte/PCA_brands.Rmd'}
+```
+
+
+```{r child = './Inhalte/MDS.Rmd'}
+```
+
+
+```{r child = './Inhalte/Cluster_brands.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/FOM-Verhaltenstypen.Rmd'}
+```
+
+
+```{r child = './Inhalte/Marketingcontrolling/Warenkorbanalyse.Rmd'}
+```
+
+
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

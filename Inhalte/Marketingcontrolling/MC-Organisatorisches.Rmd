@@ -1,0 +1,97 @@
+```{r setup-MC-Organisatorisches, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "MC-Organisatorisches",  # Dateiname ohne Suffix
+    "Marketingcontrolling"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` Organisatorisches
+
+### Copyrighthinweis
+
+**© FOM Hochschule für Oekonomie & Management gemeinnützige Gesellschaft mbH (FOM), Leimkugelstraße 6, 45141 Essen**
+
+Dieses Werk ist urheberrechtlich geschützt und nur für den persönlichen Gebrauch im Rahmen der Veranstaltungen der FOM bestimmt.
+Die durch die Urheberschaft begründeten Rechte (u.a. Vervielfältigung, Verbreitung, Übersetzung, Nachdruck) bleiben dem Urheber vorbehalten.
+
+Das Werk oder Teile daraus dürfen nicht ohne schriftliche Genehmigung der FOM reproduziert oder unter Verwendung elektronischer Systeme verarbeitet, vervielfältigt oder verbreitet werden. 
+
+
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- auf einen strukturierten Überblick über den Stand von Theorie und Praxis auf dem Gebiet des Marketing-Controllings zugreifen.
+- Wertebeiträge des Marketings zum Unternehmenserfolg beurteilen und messen.
+- Verfahren des Marketing-Controllings anwenden.
+- verstehen, dass Effektivität und Effizienz im Marketing erklärtes Ziel der Unternehmensführung als Führungsfunktion des Marketing ist.
+- Marketingcontrolling als dynamisches Forschungs- und Anwendungsfeld gesehen wird, in das Erkenntnisse aus dem strategischen Management, der Marketing- und Verkaufsplanung, dem Marketing-Accounting, der Marktforschung sowie einem modernen Controlling- und Informationsmanagement-Verständnis einfließen.
+- evaluieren, dass ein integriertes, mit der Marketingplanung eng verknüpftes Marketingcontrolling maßgeblich hilft, das Marketingmanagement zu professionalisieren sowie profitables Unternehmenswachstum zu gewährleisten.
+
+
+### Prüfungsleistung/ Workload
+
+Prüfung:
+
+$100\%$ der Modulnote ist eine **Klausur** mit 90 Minuten. 
+
+Zur Vergabe von Credit Points muss die Klausur mit einer mindestens ausreichenden Leistung bestanden werden.
+
+Transferaufgabe in der Klausur (etwa 10% des Klausurumfangs):
+
+In der Veranstaltung werden Arbeits- und/oder Rechercheaufgaben mit explizitem Transferbezug zum praktischen Umfeld der Studierenden gestellt. Im Rahmen der Klausur wird dann durch angelehnte (nicht zwingend identische) Fragestellungen die Übertragung wissenschaftlicher Inhalte und Methoden auf konkrete betriebliche oder gesellschaftliche Probleme reflektiert.
+
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+
+### Workload
+
+**Workload:**
+
+- Präsenzstunden:	60,0 UE
+- Strukturiertes Eigenstudium	100,00 ZStd
+- Student Consulting/Praxistransfer:	55,00 ZStd
+- Workload gesamt:	200,0 ZStd
+- ECTS-Credit Punkte:	8
+
+
+### Literatur
+
+**Pflichtliteratur:**
+
+Gansser, O.; Füller, S. R. (2015): Präferenzprognosen mittels Conjoint-Analyse - eine Fallstudie mit Choice-Based-Design, in: Gansser, O.; Krol, B. (Hrsg.): Markt- und Absatzprognosen, Wiesbaden.
+
+Chapman, C; McDonnell Feit, E. (2014): R for Marketing Research and Analytics, Springer. (Kapitel 8 und Kapitel 12)
+
+**Ergänzende Literatur:**
+
+Halfmann, M. (2018): Marketing-Controlling, Wiesbaden. 
+
+Henneking, K-M. (1998): Marketing-Controlling im Einzelhandel, Wiesbaden
+
+Reinke, S.; Tomczak, T. (2006): Handbuch Marketingcontrolling, 2. Aufl., Wiesbaden
+
+Bruhn, M. (2014): Marketing. Grundlagen für Studium und Praxis, Wiesbaden.
+
+Meffert, H.; Burmann, C.; Kirchgeorg, M. (2014): Marketing. Grundlagen marktorientierter Unternehmensführung, 12. Aufl., Wiesbaden. (S. 821 - 872)
+
+Zerres, C.; Zerres M. P. (2006): Handbuch Marketing-Controlling, 3. Aufl., Wiesbaden
+
+
+
+```{r finish--Kind-MC-Organisatorisches, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

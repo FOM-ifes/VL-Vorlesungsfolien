@@ -1,0 +1,198 @@
+```{r setup-Eval, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Bianca Krol
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Evaluation",  # Dateiname ohne Suffix
+    "Evaluation"       # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+# `r nextChapter()` Evaluationsforschung
+
+### Grundlagen: Definition
+
+**(Wissenschaftliche) Evaluation (nach Balzer, 2005): Bewertung eines Gegenstandes nach zuvor festgelegten Zielen und explizit auf den Sachverhalt bezogenen und begründeten Kriterien**
+
+  - Unter Zuhilfenahme sozialwissenschaftlicher Methoden und durch Personen, die dafür besonders qualifiziert sind
+  - systematisch und evidenzbasiert
+  - Rückmeldung verwertbarer Ergebnisse (Beschreibung, Interpretation, Empfehlung)
+  - Zum Zwecke der Unterstützung und Optimierung des Evaluationsgegenstandes
+ 
+<!-- entscheiden, ob diese Folie mit der Definition oder die darauf folgende -->
+
+### Grundlagen: Alternative Definition 
+
+Die **Evaluationsforschung** („evaluation research“) bzw. **wissenschaftliche Evaluation** („evaluation“) (nach **Bortz/Döring, 2016**)
+
+  - nutzt sozialwissenschaftliche Methoden, 
+  - um einen **Evaluationsgegenstand** (z. B. ein Produkt oder eine Maßnahme) unter Berücksichtigung der relevanten **Anspruchsgruppen** (z. B. Patienten, Angehörige, Produktenwickler, Evaluationsauftraggeber)
+  - anhand bestimmter **Evaluationskriterien** (z.B. Akzeptanz, Wirksamkeit, Effizienz, Nachhaltigkeit) und Maßgaben zu ihren Ausprägungen zu bewerten
+  - erfüllt im Ergebnis unterschiedliche Evaluationsfunktionen (z. B. Legitimations- oder Optimierungsfunktion), was eine aktive Evaluationsnutzung, d. h. ein praktisches Aufgreifen der laufenden
+und/oder abschließenden **Evaluationsergebnisse** verlangt (z. B. unterstützt durch schriftliche Reports, mündliche Berichte und/oder Workshops des Evaluationsteams für die relevanten Anspruchsgruppen)
+
+
+### Fragestellungen Evaluation
+
+```{r echo=FALSE, out.width = "60%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Fragestellung.png"))
+```
+
+### Zentrale Begriffe der Evaluationsforschung
+
+- Evaluationsgegenstand
+- Anspruchsgruppen/Stakeholder
+- Evaluationskriterien
+- Evaluationsfunktionen
+- Evaluationsnutzung
+
+
+### Durchführungsformen der Evaluation
+
+- **summativ**: Zusammenfassende Beurteilung der Wirksamkeit einer Intervention
+
+- **formativ**: Regelmäßige Erstellung von Zwischenergebnissen, um die laufende Intervention zu modifizieren oder zu verbessern
+
+- **intern**: Durchführung der Evaluation durch organisations angehörige Personen
+
+- **extern**: Evaluation durch Außenstehende
+
+### Formen der Evaluation: Konzept-, Prozess- und Ergebnisevaluation
+
+Unterschiedliche Erhebungszeitpunkte:
+
+- **Konzeptevaluation**: Bewertet das Konzept einer Maßnahme bereits im Vorfeld der Umsetzung
+
+- **Prozessevaluation**: Bewertet die Durchführung einer laufenden Maßnahme
+
+- **Ergebnisevaluation**: Bewertet die Effekte der Maßnahme
+
+### Standards für Evaluation
+
+Qualitätsstandards der Gesellschaft für Evaluation (**DeGEval**)^[[https://www.degeval.de/publikationen/standards-fuer-evaluation/](https://www.degeval.de/publikationen/standards-fuer-evaluation/)]:
+
+- 1. **Nützlichkeit**:"Die Nützlichkeitsstandards sollen sicherstellen, dass  die Evaluation sich an abgestimmten und geklärten Evaluationszwecken sowie soweit möglich am Informationsbedarf der vorgesehenen Nutzerinnen und Nutzer ausrichtet"
+
+- 2. **Durchführbarkeit**: "Die Durchführbarkeitsstandards sollen sicherstellen, dass eine Evaluation realistisch, gut durchdacht, diplomatisch und kostenbewusst ausgeführt wird"
+
+- 3. **Fairness**: "Die Fairnessstandards sollen sicherstellen, dass in einer Evaluation respektvoll und fair mit allen beteiligten und betroffenen Personen und Gruppen umgegangen wird"
+
+- 4. **Genauigkeit**: "Die Genauigkeitsstandards sollen sicherstellen, dass eine Evaluation gültige und nachvollziehbare Informationen und Ergebnisse zu dem jeweiligen Evaluationsgegenstand und den Evaluationsfragestellungen hervorbringt und vermittelt. In diesem Zusammenhang kommt wissenschaftlichen Gütekriterien eine besondere Bedeutung zu."  
+
+
+### Standards für Evalutaion: Nützlichkeit
+
+- **N1** - Identifizierung der Betiligten und Betroffenen
+- **N2** - Klärung der Evaluationszwecke
+- **N3** - Kompetenz und Glaubwürdigkeit des Evaluators/der Evaluatorin
+- **N4** - Auswahl und Umfang der Informationen
+- **N5** - Transparenz von Werthaltungen
+- **N6** - Vollständigkeit und Klarheit der Berichterstattung
+- **N7** - Rechtzeitigkeit der Evaluation
+- **N8** - Nutzung und Nutzen der Evaluation
+
+### Standards für Evalutaion: Durchführbarkeit
+
+- **D1** - Angemessene Verfahren
+- **D2** - Diplomatisches Vorgehen
+- **D3** - Effizienz von Evaluation
+
+### Standards für Evalutaion: Fairness
+
+- **F1** - Formale Vereinbarungen
+- **F2** - Schutz individueller Rechte
+- **F3** - Umfassende und faire Prüfung
+- **F4** - Unparteiische Durchführung und Berichterstattung
+- **F5** - Offenlegung von Ergebnissen und Berichten
+
+### Standards für Evalutaion: Genauigkeit
+
+- **G1** - Beschreibung des Evaluationsgegenstandes
+- **G2** - Kontextanalyse
+- **G3** - Beschreibung von Zwecken und Vorgehen
+- **G4** - Angabe von Informationsquellen
+- **G5** - Valide und reliable Informationen
+- **G6** - Systematische Fehlerprüfung
+- **G7** - Angemessene Analyse qualitativer und quantitativer Informationen
+- **G8** - Begründete Bewertungen und Schlussfolgerungen
+- **G9** - Meta-Evaluation  
+
+### Standards für Evaluation: Überblick (I)
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "DeGEval1.png"))
+```
+
+### Standards für Evaluation: Überblick (II)
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "DeGEval2.png"))
+```
+
+### Phasen einer Evaluationsstudie
+
+**Fünf-Phasen-Modell** (Döring/Bortz, 2014)
+
+1. Initiierungsphase 
+
+2. Konzeptionsphase 
+
+3. Planungsphase
+
+4. Realisierungsphase
+
+5. Abschlussphase
+
+### Phasen einer Evaluationsstudie: Initiierungsphase
+
+- Evaluationsmöglichkeiten identifizieren
+- potenzielle Evaluationsprojekte akquirieren
+- Evaluationsziele kritisch hinterfragen
+
+### Phasen einer Evaluationsstudie: Konzeptionsphase
+
+- Evaluationskonzept bzw. Projektangebot ausarbeiten
+- Sicherstellen der Evaluationsstandards von Beginn an
+- Verbindliche Vereinbarungen zwischen Evaluierenden und Auftraggebenden
+- Abschluss eines Evaluationsvertrages
+
+### Phasen einer Evaluationsstudie: Planungsphase
+
+**Detailplanung** 
+
+- Formulierung von Evaluationsfragen und Evaluationshypothesen
+- Untersuchungsplanung und Untersuchungsdesign
+- Stichprobenpläne und Instrumente
+- organisatorische Projektplanung (bspw. Rekrutierung des Evaluationsteams)
+
+... in enger Absprache mit den Stakeholdern.
+
+### Phasen einer Evaluationsstudie: Realisierungsphase
+
+- erheben, analysieren und interpretieren der Evaluationsdaten
+- iteratives Vorgehen: Rücksprünge in die Planungsphase 
+
+Besondere Bedeutung der Evaluationsstandards beachten:
+
+- Durchführbarkeit und Fairness bei Datenerhebung
+- Genauigkeit bei Datenauswertung und Dateninterpretation
+
+### Phasen einer Evaluationsstudie: Abschlussphase
+
+- kommunizieren der Ergebnisse und
+- Vorbereitung ihrer prakrtischen Umsetzung 
+- ggf. wissenschaftliche Bewertung der Evaluation: Systematische Meta-Evaluation
+- publizieren der Ergebnisse
+
+
+
+```{r finish-Eval, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

@@ -1,0 +1,7 @@
+### Vorläufiger Zeitplan {.shrink}
+
+```{r, echo=FALSE, out.width = "95%", fig.align="center", cache=FALSE}
+
+knitr::asis_output(makeTimetable(Vorlesungstermine), cacheable=FALSE)
+
+```

@@ -1,0 +1,307 @@
+```{r setup-NaiveBayes, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "NaiveBayes",  # Dateiname ohne Suffix
+    "NaiveBayes"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+# `r nextChapter()` Naive Bayes
+
+### Vorhersage des Geschlechts
+
+Die Größe (in cm) einer Person ist ungefähr normalverteilt. Z. B. in Deutschland ungefähr mit $\mu_{\text{Mann}}=178$, $\mu_{\text{Frau}}=165$.^[[Statistisches Bundesamt](https://www.destatis.de/DE/ZahlenFakten/GesellschaftStaat/Gesundheit/GesundheitszustandRelevantesVerhalten/Tabellen/Koerpermasse.html)], mit einer jeweiligen Standardabweichung von $sd_{\text{Mann}}=sd_{\text{Frau}}=7$.^[In Wirklichkeit ist die Standardabweichung bei den Männern ein wenig größer als bei den Frauen.]
+
+Kann man anhand der Größe einer Person das Geschlecht vorhersagen?
+
+### Größenverteilung je Geschlecht
+```{r, echo=FALSE, fig.align="center", out.width="65%", message=FALSE}
+library(klaR)
+set.seed(1896)
+n <- 1000
+daten <- data.frame(Geschlecht=rep(c("Frau", "Mann"), each=n), Groesse=c(rnorm(n, 165,7), rnorm(n, 178,7)))
+nb_geschlecht <- NaiveBayes(Geschlecht~Groesse, data=daten)
+plot(nb_geschlecht, lwd=2, main="Größenverteilung", col=c("red", "blue"), cex=1.5, lty = c(1,1))
+
+rm(daten)
+rm(n)
+rm(nb_geschlecht)
+```
+
+
+### Übung `r nextExercise()`: Geschlecht und Größe (I/III) {.exercise type=A-B-C-D-E answer=A}
+
+Angenommen, Sie wissen, dass eine Person 155cm groß ist. Welche Aussage stimmt?
+
+A.  Die Person ist ziemlich sicher eine Frau.
+B.  Die Person ist wahrscheinlich eine Frau.
+C.  Die Wahrscheinlichkeit, dass die Person eine Frau ist, ist in etwa so groß wie die, dass die Person ein Mann ist.
+D.  Die Person ist wahrscheinlich ein Mann.
+E.  Die Person ist ziemlich sicher ein Mann.
+
+::: {.notes}
+***A***: nur ganz wenige Männer sind so klein, bei Frauen kommt eine solche Größe öfter vor. Siehe z. B. `xpnorm()`.
+:::
+
+### Übung `r nextExercise()`: Geschlecht und Größe (II/III) {.exercise type=A-B-C-D-E answer=C}
+
+Angenommen, Sie wissen, dass eine Person 171,5cm groß ist. Welche Aussage stimmt?
+
+A.  Die Person ist ziemlich sicher eine Frau.
+B.  Die Person ist wahrscheinlich eine Frau.
+C.  Die Wahrscheinlichkeit, dass die Person eine Frau ist, ist in etwa so groß wie die, dass die Person ein Mann ist.
+D.  Die Person ist wahrscheinlich ein Mann.
+E.  Die Person ist ziemlich sicher ein Mann.
+
+::: {.notes}
+***C***: Die 171,5cm liegt genau zwischen den beiden Mittelwerten.
+:::
+
+
+### Übung `r nextExercise()`: Geschlecht und Größe (III/III) {.exercise type=A-B-C-D-E answer=B}
+
+Angenommen, Sie wissen, dass eine Person 171,5cm groß ist, und Sie sind in einer Veranstaltung, die zu 80\% von Frauen besucht wird.  Welche Aussage stimmt?
+
+A.  Die Person ist ziemlich sicher eine Frau.
+B.  Die Person ist wahrscheinlich eine Frau.
+C.  Die Wahrscheinlichkeit, dass die Person eine Frau ist, ist in etwa so groß wie die, dass die Person ein Mann ist.
+D.  Die Person ist wahrscheinlich ein Mann.
+E.  Die Person ist ziemlich sicher ein Mann.
+
+::: {.notes}
+***B***: Die 171,5cm liegt zwar immer noch genau zwischen den beiden Mittelwerten, aber da deutlich mehr Frauen in der Veranstaltung sind, wird es wohl eher eine Frau sein.
+:::
+
+### Klassifikation
+
+- Eine kategoriale, abhängige Variable $y$ (Klasse) mit einer oder mehreren unabhängigen Variablen $x$.
+- Gesucht: $P(y=k|x)$, d. h. die Wahrscheinlichkeit, dass $y$ die Klasse $k$ ist, gegeben die $x$ Werte. Klassifikation/ Vorhersage über eine Arg-Max Regel, d. h. $\hat{y}=\arg \max_k P(y=k|x)$, d. h. die Klasse mit der höchsten *a posteriori* Wahrscheinlichkeit wird genommen.
+- Häufig einfacher zu bestimmen: $P(x|y=k)$, z. B. wenn $x$ normalverteilt ist.
+
+### Beispiele
+
+- Modellierung, ob ein Studierender das Studium erfolgreich abschließt.
+- Kündigungsprognose von Mitarbeiter\*innen.
+- Prognose, welche Partei eine Person wählen wird.
+- Vorhersage, welches Produkt ein Kunde als nächstes kauft.
+- Einordnen ob eine Email Spam ist.
+
+*Wo können Sie Klassifikationsverfahren einsetzen?*
+
+### Naive Bayes
+
+- Ausnutzen des **Satzes von Bayes**:
+$$P(y|x)=\frac{P(x|y)\cdot P(y)}{P(x)}$$
+- Naive Bayes: Die unabhängigen Variablen $x_j$ sind unabhängig^[Eine in der Regel nicht zutreffende Annahme! Trotzdem funktioniert das Verfahren häufig erstaunlich gut. Z. B. Hand, DJ, Yu, K (2001): Idiot's Bayes - Not So Stupid After All? International Statistical Review, 69(3), S. 385--398, [https://doi.org/10.1111/j.1751-5823.2001.tb00465.x](https://doi.org/10.1111/j.1751-5823.2001.tb00465.x).], bei numerischen Variablen normalverteilt^[Aber auch andere Annahmen oder Kerndichteschätzer sind möglich.].
+- $P(y)$ *a priori* Wahrscheinlichkeit von $y$.
+- $P(y|x)$ *a posteriori* Wahrscheinlichkeit von $y$, bei bekanntem $x$.
+
+
+### Vorbereitung: Trinkgeld und Rechnungshöhe
+
+Einlesen der "Tipping"^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie laden des Pakets `mosaic`.
+
+```{r, eval= FALSE, message=FALSE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+tips <- read.csv2("tips.csv")
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+
+library(mosaic) # Paket laden
+```
+
+### `NaiveBayes()` 
+
+Es gibt mehrere Implementierungen von Naive Bayes in R. Eine flexible Implementierung bietet das Paket `klaR`.
+
+```{r, eval=FALSE}
+# Einmalig installieren
+install.packages("klaR")
+```
+
+```{r}
+# Paket laden
+library(klaR)
+```
+
+### Training- und Testdaten
+
+Um die Güte eines Verfahrens zu testen, bietet es sich an den Datensatz in eine Trainings-^[auch Lernstichprobe genannt.] und eine Teststichprobe^[auch Evaluierungsstichprobe genannt.] aufzuteilen.
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- nrow(tips) # Anzahl Beobachtungen
+
+# Beobachtungsnummern für Training
+lern <- sample(1:n, size=round(n*(2/3)))
+
+train <- tips[lern,] # Trainingsdaten
+test <- tips[-lern,] # Testdaten - nicht Trainingsdaten
+```
+
+### Modell schätzen
+
+Können Sie anhand der Rechnungshöhe und der Tageszeit vorhersagen, welches Geschlecht der Rechnungszahlende wahrscheinlich haben wird?
+
+Modelliere das Geschlecht auf Basis der Rechnungshöhe und der Tageszeit:
+```{r}
+ergNB <- NaiveBayes(sex ~ total_bill + time,
+                     data = train)
+```
+
+### Parameterschätzung {.shrink}
+
+Grundlage der Schätzung sind die Kennzahlen der Stichprobe:
+```{r}
+# a priori
+tally( ~ sex, data = train, format = "proportion")
+# Numerisch
+mean(total_bill ~ sex, data = train)
+sd(total_bill ~ sex, data = train)
+# Kategorial
+tally(time ~ sex, data = train, format="proportion")
+```
+
+
+### Ergebnis Naive Bayes
+
+```{r, out.width="65%"}
+par(mfrow=c(1,2))
+plot(ergNB)
+```
+
+
+
+### a posteriori Wahrscheinlichkeit
+
+Anwenden des Modells auf den Testdaten:
+```{r}
+progNB <- predict(ergNB, newdata = test)
+```
+
+*a posteriori* Wahrscheinlichkeiten:
+```{r}
+head(progNB$posterior)
+```
+
+
+### Offene Übung `r nextExercise()`: a posteriori Wahrscheinlichkeit {.exercise type=essay}
+
+Warum ist in der Regel die a posteriori Wahrscheinlichkeit für `Male` größer als für `Female`?
+
+::: {.notes}
+Weil die a priori Wahrscheinlichkeit größer ist. `ergNB$apriori`:
+
+`r knitr::kable(ergNB$apriori)`
+
+:::
+
+### Vorhersagen
+
+Vorhergesagte Klassen:
+```{r}
+head(progNB$class)
+
+tally( ~ progNB$class)
+```
+
+
+### Fehlklassifikationsrate
+
+Wie oft entspricht die vorhergesagte Klasse der wahren Klasse bei den Testdaten? **Korrektklassifikationsrate**
+```{r}
+mean( ~ (progNB$class == test$sex))
+```
+
+Wie oft entspricht die vorhergesagte Klasse *nicht* der wahren Klasse bei den Testdaten? **Fehlklassifikationsrate**
+```{r}
+mean( ~ (progNB$class != test$sex))
+```
+
+
+### Offene Übung `r nextExercise()`: Fehlklassifikationsrate {.exercise type=essay}
+
+Wie hoch wäre die Fehlklassifikationsrate, wenn einfach die häufigste Klasse aus den Trainingsdaten zur Prognose verwendet worden wäre?
+
+::: {.notes}
+
+Da in den Trainingsdaten mehr `male` als `female` ist, würde die Prognose immer $\hat{y}_i=\text{male}$ lauten. Da in den Testdaten der Frauenanteil bei `r prop( ~ sex, success="Female", data=test)` liegt, wäre dies die Fehlklassifikationsrate.
+:::
+
+### Konfusionsmatrix
+
+```{r}
+tally(test$sex ~ progNB$class)
+```
+```{r, echo=FALSE}
+tt <- tally(test$sex ~ progNB$class)
+```
+
+
+### Übung `r nextExercise()`: Fehlklassifikationen {.exercise type=A-B-C-D answer=C}
+
+Wie viele Rechnungen, die in Wirklichkeit von einem Mann bezahlt wurden, werden fälschlicherweise einer Frau zugeordnet?
+
+A.  `r tt[1,1]` (Links oben)
+B.  `r tt[1,2]` (Rechts oben)
+C.  `r tt[2,1]` (Links unten)
+D.  `r tt[2,2]` (Rechts unten)
+
+::: {.notes}
+***C***: `r tt[2,1]`. In den Zeilen stehen die wahren Klassen, in den Spalten die prognostizierten.
+:::
+
+
+### Übung `r nextExercise()`: Interpretation {.exercise type=A-B-C-D answer=C}
+
+Was ist die beste Interpretation der a posteriori Wahrscheinlichkeit von `r progNB$posterior[1,1]` für `r colnames(progNB$posterior)[1]`?
+
+A.  Die Rechnungszahler\*in ist zu `r progNB$posterior[1,1]` `r colnames(progNB$posterior)[1]`.
+B.  Die Rechnungszahler\*in ist zu `r 1-progNB$posterior[1,1]` `r colnames(progNB$posterior)[1]`.
+C.  Bei der Rechnungshöhe und der Tagezeit können wir auf lange Sicht erwarten, dass `r progNB$posterior[1,1]` der Rechnungen von `r colnames(progNB$posterior)[1]` bezahlt werden.
+
+
+::: {.notes}
+Die Rechnungszahler\*in ist entweder eine Frau oder nicht. Wir können nur sagen, dass auf lange Sicht bei gegebenen $x$ der Anteil von $y=`r colnames(progNB$posterior)[1]`$ bei `r progNB$posterior[1,1]` in unserem Modell liegt (***C***).
+
+Nicht nur die Prognose ist unsicher, auch die Schätzwerte innerhalb des Modells (Anteile, Mittelwerte, Standardabweichungen) variieren mit der Stichprobe.
+:::
+
+### Offene Übung `r nextExercise()`: Modellierung Raucher {.exercise type=essay}
+
+Modellieren Sie die Wahrscheinlichkeit, dass es sich um einen Tisch mit Rauchern handelt als Funktion von Trinkgeld, Anzahl Personen und Tageszeit. Wie hoch ist die Fehlklassifikationsrate auf den Testdaten?
+
+```{r, include=FALSE}
+ergNBueb <- NaiveBayes(smoker ~ tip + size + time, data = tips)
+progNBueb <- predict(ergNBueb, newdata = test)
+```
+
+::: {.notes}
+`ergNBueb <- NaiveBayes(smoker ~ tip + size + time, data = tips)`  
+`progNBueb <- predict(ergNBueb, newdata = test)`    
+`mean( ~ (progNBueb$class != test$smoker))` 
+
+Die Fehlklassifikationsrate liegt bei `r mean( ~ (progNBueb$class != test$smoker))`.
+
+
+:::
+
+
+```{r finish-NaiveBayes, include=FALSE}
+rm(n)
+rm(train)
+rm(test)
+detach("package:klaR", unload = TRUE)
+rm(pathToImages)
+finalizePart(partname)
+```

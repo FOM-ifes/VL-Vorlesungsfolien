@@ -1,0 +1,436 @@
+```{r setup-Datenhandling, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Datenhandling",  # Dateiname ohne Suffix
+    "Datenhandling"     # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(knitr)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+# `r nextChapter()` Datenhandling
+
+```{r echo = FALSE}
+library(mosaic)
+inspect <- mosaic::inspect # Sonst wir arules::inspect() vielleicht genommen
+```
+
+### Cartoon: Datenbereinigung
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_02-2018.jpg", "cartoon0218.jpg", pathToImages)
+```
+"Vergiss nicht, Deine schmutzigen Daten aufzuräumen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/february/2018/results) &copy; J.B. Landers, Überschrift J.A. Morrow]
+
+
+### Datenvorverarbeitung
+
+Häufig müssen Daten vor der eigentlichen Analyse vorverarbeitet werden, z. B.:
+
+- Variablen auswählen: `select()`
+- Beobachtungen auswählen: `filter()`
+- Variablen verändern, neu erzeugen: `mutate()`
+- Beobachtungen zusammenfassen: `summarise()`
+- ...
+
+Das Paket `dplyr`^[wird mit `mosaic` installiert und geladen.] bietet dazu viele Möglichkeiten.
+
+Umfangreiche Dokumentation: [http://dplyr.tidyverse.org/index.html](http://dplyr.tidyverse.org/index.html)
+
+
+
+### Vorbereitung
+
+Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie laden des Pakets `mosaic`.
+
+```{r, eval=FALSE, message=FALSE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+tips <- read.csv2("tips.csv")
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+
+library(mosaic) # Paket laden
+```
+
+### Variablen auswählen: `select()`
+
+::: {.small}
+```{r, eval=FALSE}
+tips %>%
+  select(sex, total_bill) %>%
+  inspect()
+```
+```{r, echo=FALSE}
+tips %>%
+  dplyr::select(sex, total_bill) %>%
+  inspect()
+```
+:::
+
+
+### Logik 
+
+- Logisches Und ($\land$): `&`: Eine *und* Verknüpfung von zwei Aussagen ist genau dann wahr, wenn beide Aussagen wahr sind.
+- Logisches Oder ($\lor$): `|`: Eine *oder* Verknüpfung von zwei Aussagen ist genau dann wahr, wenn mindestens eine Aussage wahr ist.
+- Logische Verneinung ($\neg$): `!`
+- Wahr: `TRUE`, Falsch: `FALSE`
+
+Dabei wird vektorelementweise verglichen. Zusammenfassung durch Klammern.^[Über `all()` ($\forall$) und `any()` ($\exists$) lassen sich Wahrheitsvektoren zusammenfassen.]
+
+::: {.scriptsize} 
+
+```{r Logik}
+x <- c(TRUE, TRUE)
+y <- c(TRUE, FALSE)
+x & y
+x | y
+x | (!y)
+```
+
+:::
+
+### Übung `r nextExercise()`: Logik {.exercise type=A-B answer=A}
+
+Was ergibt: `(TRUE|FALSE) & (FALSE)`
+
+A.  `r (TRUE|FALSE)&(FALSE)`
+B.  `r !((TRUE|FALSE)&(FALSE))`
+
+::: {.notes}
+`TRUE` oder `FALSE` ergibt `TRUE`. `TRUE` und `FALSE` ergibt `FALSE`, hier also ***A***.
+:::
+
+### Übung `r nextExercise()`: Mengenlehre {.exercise type=yesno answer=no}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%", results=FALSE}
+# https://rstudio-pubs-static.s3.amazonaws.com/13301_6641d73cfac741a59c0a851feb99e98b.html
+VennDiagram::draw.pairwise.venn(30, 25, 10, category = c("Hundeliebhaber*in", "Katzenliebhaber*in"),
+                                lty = rep("blank", 2), fill = c("light blue", "pink"), cat.cex=rep(1.5,2), cex=rep(2,3),
+                                alpha = rep(0.5, 2), cat.pos = c(0, 0), cat.dist = rep(0.025, 2))
+```
+
+Stimmt die Aussage: Wenn Beobachtungen anhand einer *Und* ($\land$) Verknüpfung ausgewählt werden, so werden mindestens so viele Beobachtungen wie bei einer *Oder* ($\lor$) Verknüpfung ausgewählt?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+
+***Nein***: Während 10 Beobachtungen beide Bedingungen erfüllen ($\land$, in Mengenschreibweise $\cap$), erfüllen 45 mindestens eine ($\lor$, in Mengenschreibweise $\cup$).
+
+:::
+
+### Vergleichen
+
+- gleich, ($=$): `==`
+- ungleich ($\neq$): `!=`
+- kleiner, kleiner gleich ($<, \leq$): `<`, `<=`
+- größer, größer gleich ($>, \geq$): `>`, `>=`
+
+```{r Vergleich}
+4 == 5
+4 != 5
+4 <= 5
+4 > 5
+```
+
+### Beobachtungen auswählen: `filter()` {.shrink}
+
+```{r filter}
+tips %>%
+  filter(sex=="Female" & total_bill>20) %>%
+  inspect()
+```
+
+### Offene Übung `r nextExercise()`: Datensatz auswählen {.exercise type=essay}
+
+Erzeugen Sie einen Datensatz, der nur die Variable `tip` enthält, und zwar für die Tische, an denen zum Dinner geraucht wurde.
+
+```{r, include=FALSE}
+smokingdinner <- tips %>%
+  filter(time=="Dinner" & smoker=="Yes") %>%
+  dplyr::select(tip)
+```
+
+::: {.notes}
+`smokingdinner <- tips %>% filter(time=="Dinner" & smoker=="Yes") %>% select(tip)`  
+:::
+
+### Variablen verändern/erzeugen: `mutate()`
+
+::: {.small}
+
+
+```{r eval=FALSE}
+tips %>%
+  mutate(paid=total_bill+tip) %>%
+  select(paid) %>%
+  inspect()
+```
+```{r, echo=FALSE}
+tips %>%
+  mutate(paid=total_bill+tip) %>%
+  dplyr::select(paid) %>%
+  inspect()
+```
+
+:::
+
+### Übung `r nextExercise()`: Relative Trinkgeldhöhe {.exercise type=A-B-C answer=B}
+
+Wie viele Beobachtungen haben eine relative Trinkgeldhöhe $\frac{tip}{total\_bill}$ über $10\%$?
+
+A.  `r nrow(tips)` 
+B.  `r tips %>% mutate(rel=tip/total_bill) %>% filter(rel>0.1) %>% nrow()`
+C.  `r tips %>% mutate(rel=tip/total_bill) %>% filter(rel<=0.1) %>% nrow()`
+
+::: {.notes}
+
+***B***: `tips %>% mutate(rel=tip/total_bill) %>% filter(rel>0.1) %>% nrow()`
+
+:::
+
+
+### Variablen verändern: `case_when()`
+
+
+```{r eval=FALSE}
+tips %>%
+  mutate(bill = case_when(total_bill <= 10 ~ "low",
+                          total_bill <= 20 ~ "middle",
+                          total_bill > 20 ~ "high")) %>%
+  select(bill) %>%
+  table()
+```
+```{r echo=FALSE}
+tips %>%
+  dplyr::mutate(bill = case_when(total_bill <= 10 ~ "low",
+                          total_bill <= 20 ~ "middle",
+                          total_bill > 20 ~ "high")) %>%
+  dplyr::select(bill) %>%
+  table()
+```
+
+*Hinweis*: Anstelle der letzten Abfrage (`total_bill > 20`) hätte auch einfach `TRUE` verwendet werden können.
+
+### Übung `r nextExercise()`: Variablen erzeugen {.exercise type=A-B answer=A}
+
+Welcher Befehl ist richtig, wenn die Personen, die Raucher sind und Dinner gegessen haben, eine Gruppe sein sollen, alle anderen eine andere?
+
+A.  
+```{r, eval=FALSE}
+tips %>%
+  mutate(party = case_when((smoker=="Yes" & time=="Dinner") 
+                           ~ "Party",
+                           TRUE ~ "No Party"))
+```
+B.  
+```{r, eval=FALSE}
+tips %>%
+  mutate(party = case_when((smoker=="Yes" | time=="Dinner") 
+                           ~ "No Party",
+                           TRUE ~ "Party"))
+```
+
+::: {.notes}
+
+`smoker=="Yes" & time=="Dinner"` sind Raucher und Dinner, also ***A***.
+
+:::
+
+### Daten zusammenfassen: `summarise()`
+
+```{r summarise}
+tips %>%
+  summarise(mean_bill=mean(total_bill), n=n())
+```
+
+### Nach Gruppen zusammenfassen: `group_by()`
+
+```{r group_by}
+tips %>%
+  group_by(sex, time) %>%
+  summarise(mean_bill=mean(total_bill), n=n())
+```
+
+### Übung `r nextExercise()`: Datenvorverarbeitung {.exercise type=A-B-C-D answer=B}
+
+Mit welchem Befehl können Beobachtungen mit bestimmten Eigenschaften ausgewählt werden?
+
+A.  `select()`
+B.  `filter()`
+C.  `mutate()`
+D.  `summarise()`
+
+::: {.notes}
+
+`select` wählt Variablen aus, `mutate` verändert sie, `summarise` fasst sie zusammen. Beobachtungen werden daher mit `filter` (***B***) zusammengefasst.
+
+:::
+
+
+### Die obersten *n* Beobachtungen: `top_n()`
+
+```{r top_n}
+tips %>%
+  group_by(sex) %>%
+  top_n(n=3, tip) %>% 
+  arrange(-tip)
+```
+
+*Hinweis:* Auf diese Art und Weise können auch Datensätze balanciert werden.^[Vgl. geschichtete Stichprobe: `group_by() %>% sample_n()`]
+
+
+### Beobachtungen sortieren: `arrange()`
+
+```{r arrange}
+tips %>%
+  group_by(sex) %>%
+  top_n(n=3, tip) %>%
+  arrange(sex)
+```
+
+
+### Verknüpfen von Daten {.shrink}
+
+
+```{r, eval=FALSE}
+# ID (Zeilennummer, Schlüssel) erzeugen
+tipsID <- tips %>%
+  mutate(ID=row_number())
+
+# Zwei (Teil-)Datensätze erzeugen
+tips1 <- tipsID %>%
+  select(ID, total_bill)
+tips2 <- tipsID %>%
+  select(ID, tip)
+
+# Matche beide Tabellen, so dass nur Zeile von tip1 übrigbleiben,
+# die eine korrespondiere Zeile in tips2 haben
+tips1 %>%
+  inner_join(tips2, by = "ID") %>%
+  inspect()
+```
+```{r, echo=FALSE}
+# ID (Zeilennummer, Schlüssel) erzeugen
+tipsID <- tips %>%
+  mutate(ID=row_number())
+
+# Zwei (Teil-)Datensätze erzeugen
+tips1 <- tipsID %>%
+  dplyr::select(ID, total_bill)
+tips2 <- tipsID %>%
+  dplyr::select(ID, tip)
+
+# Innere Verknüpfung
+tips1 %>%
+  inner_join(tips2, by = "ID") %>%
+  inspect()
+```
+
+
+### Offene Übung `r nextExercise()`: Daten zusammenfassen {.exercise type=essay}
+
+Berechnen Sie den Mittelwert und die Standardabweichung der relativen Trinkgeldhöhe, je nachdem ob es sich um eine "Party" oder nicht gehandelt hat.
+
+```{r, include=FALSE}
+tips %>%
+  mutate(party = case_when((smoker=="Yes" & time=="Dinner") ~ "Party",
+                           TRUE ~ "No Party"),
+         rel_tip=tip/total_bill) %>%
+  group_by(party) %>%
+  summarise(mean=mean(rel_tip), sd=sd(rel_tip))
+```
+
+::: {.notes}
+tips %>% mutate(party = case_when((smoker=="Yes" & time=="Dinner") ~ "Party", TRUE ~ "No Party"), rel_tip=tip/total_bill) %>% group_by(party) %>% summarise(mean=mean(rel_tip), sd=sd(rel_tip))
+:::
+
+### Ausblick: Tidy Data
+
+Tidy data:^[[Wickham, H. (2014). Tidy data. Journal of Statistical Software, 59(10), 1-23.](http://dx.doi.org/10.18637/jss.v059.i10)]
+
+- Jede Variable ist eine Spalte.
+- Jede Beobachtung ist eine Zeile.
+- Jeder Wert ist eine Zelle.
+
+Herausforderungen:
+
+- *Breiter* Datensatz: Eine Variable über mehrere Spalten.
+- *Langer* Datensatz: Eine Beobachtung über mehrere Zeilen.
+
+```{r, eval=FALSE}
+# Ggfs. einmalig installieren
+install.packages("tidyr")
+# Paket laden
+library(tidyr)
+```
+```{r, echo=FALSE}
+library(tidyr)
+```
+
+
+
+### Langer Datensatz über `gather()`
+
+Überführt einen *breiten* Datensatz in einen *langen*:
+
+```{r, eval=FALSE}
+tips_long <- tips %>%
+  mutate(id = row_number()) %>%
+  select(id, tip, total_bill) %>%
+  gather(key = "Variable", value = "Wert", -id)
+
+str(tips_long)
+```
+```{r, echo=FALSE}
+tips_long <- tips %>%
+  mutate(id = row_number()) %>%
+  dplyr::select(id, tip, total_bill) %>%
+  gather(key = "Variable", value = "Wert", -id)
+
+str(tips_long)
+```
+
+### Breiter Datensatz über `spread()`
+
+Überführt einen *langen* Datensatz in einen *breiten*:
+```{r}
+tips_wide <- tips_long %>%
+  spread(key = "Variable", value="Wert")
+
+str(tips_wide)
+```
+
+### Übung `r nextExercise()`: Datenvorverarbeitung {.exercise type=A-B-C answer=A}
+
+Welcher Datensatz hat mehr Zeilen?
+
+A.  Ein langer.
+B.  Ein breiter.
+C.  Beide gleich.
+
+::: {.notes}
+
+In einem *langen* Datensatz stehen die Werte der Variablen untereinander, also ***A***.
+
+:::
+
+```{r finish-Datenhandling, include=FALSE}
+rm(tipsID)
+rm(tips1)
+rm(tips2)
+rm(pathToImages)
+# detach("package:tidyr",  unload = TRUE) ## Geht leider nicht!!!
+finalizePart()
+```

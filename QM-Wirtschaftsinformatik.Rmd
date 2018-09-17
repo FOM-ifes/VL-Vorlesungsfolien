@@ -1,0 +1,81 @@
+---
+title: "Quantitative Methoden der Wirtschaftsinformatik"
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "QMWI-",       # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+```
+
+```{r child = './Inhalte/QMWI-Organisatorisches.Rmd'}
+```
+
+```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
+```
+
+```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'}
+```
+
+```{r child = './Inhalte/Numerik/00-EinfuehrungInDieNumerik.Rmd'}
+```
+
+```{r child = './Inhalte/Numerik/10-Nullstellenberechnung.Rmd'}
+```
+
+```{r child = './Inhalte/Numerik/20-Polynominterpolation.Rmd'}
+```
+
+```{r child = './Inhalte/Grundlagen-QuantDat.Rmd'}
+```
+
+```{r child = './Inhalte/Einfuehrung-R.Rmd'}
+```
+
+```{r child = './Inhalte/Einfuehrung-EDA.Rmd'}
+```
+
+```{r child = './Inhalte/Einfuehrung-EDA-R.Rmd'}
+```
+
+```{r child = './Inhalte/Einfuehrung-Inferenz.Rmd'}
+```
+
+```{r child = './Inhalte/Einfuehrung-Normalverteilung.Rmd'}
+```
+
+```{r child = './Inhalte/Inferenz-Kategorial.Rmd'}
+```
+
+```{r child = './Inhalte/Inferenz-Numerisch.Rmd'}
+```
+
+```{r child = './Inhalte/Regression.Rmd'}
+```
+
+```{r child = './Inhalte/QMWI-Organisatorisches.Rmd'}
+```
+
+```{r child = './Inhalte/Abschluss.Rmd'}
+```
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

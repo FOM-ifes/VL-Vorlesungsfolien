@@ -1,0 +1,46 @@
+---
+title: "Mathematische Grundlagen der Wirtschaftsinformatik"
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "MGWI-",        # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+```
+
+```{r child = './Inhalte/MGWI-Organisatorisches.Rmd'}
+```
+
+```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
+```
+
+```{r child = './Inhalte/Organisatorisches/MGWI-Hinweise.Rmd'}
+```
+
+```{r child = './Inhalte/MGWI/Mengenlehre.Rmd'}
+```
+
+```{r child = './Inhalte/MGWI/Kombinatorik.Rmd'}
+```
+
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

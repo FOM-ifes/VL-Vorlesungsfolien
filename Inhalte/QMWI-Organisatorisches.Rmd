@@ -1,0 +1,65 @@
+```{r,  include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "QMWI-Organsisatorisches",      # Dateiname ohne Suffix
+    "Organisatorisches"             # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+
+```{r child = './Organisatorisches/Literatur.Rmd'}
+```
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- die grundlegenden mathematischen Methoden aus Statistik und Numerik anwenden und auf weitere wirtschaftsinformatische und informationstechnische Anwendungen (zum Beispiel Algorithmik) übertragen,
+- entsprechende Aufgaben / Übungen berechnen und lösen,
+- quantitative Inhalte identifizieren und die entsprechende Methodik auswählen,
+- die mathematische Fachterminologie verstehen,
+- Beweisverfahren einschätzen und bewerten,
+- die Anwendbarkeit quantitativer Methoden im Unternehmen beurteilen.
+
+
+```{r child = './Organisatorisches/QMWI-Wordcloud.Rmd', eval = FALSE}
+```
+
+
+### Prüfungsleistung
+
+- Klausur 90 Minuten
+
+
+Workload:
+
+- Präsenzstunden:	40,0 UE
+- Strukturiertes Eigenstudium	95,00 ZStd
+- Student Consulting/Praxistransfer:	0,00 ZStd
+- Workload gesamt:	125,0 ZStd
+- ECTS-Credit Punkte:	5
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```
+
+```{r, include=FALSE}
+abschluss <<- TRUE
+rm(pathToImages)
+```

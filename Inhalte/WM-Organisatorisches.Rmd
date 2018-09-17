@@ -1,0 +1,68 @@
+```{r,  include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "WM-Organisatorisches",  # Dateiname ohne Suffix
+    "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+
+```{r child = './Organisatorisches/Literatur.Rmd'}
+```
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- die  wissenschaftstheoretischen Grundlagen  qualitativer und quantitativer Forschung in den Wirtschaftswissenschaften erklären,
+-  beurteilen, für welche Fragestellungen in Theorie und Praxis qualitative oder quantitative Herangehensweisen geeignet sind,
+- empirische Analysen konzipieren und vorbereiten,
+- statistische Verfahren der quantitativen Datenanalyse anwenden,
+- die Statistik-Software R zur Datenanalyse verwenden,
+- selbständig ein passendes Forschungsdesign für wirtschaftswissenschaftliche Fragestellungen auswählen.
+
+
+```{r child = './Organisatorisches/Wordcloud.Rmd'}
+```
+
+
+### Prüfungsleistung/ Workload
+
+Prüfung:
+
+- $25\%$ **Sonstige Beteiligung**: **Postersession** zur Qualitativen Forschungsmethodik am letzten Vorlesungstermin. *Nähere Informationen folgen*.
+- $75\%$ **Klausur** 90 Minuten. Zur Vergabe von Credit Points muss die Klausur mit einer mindestens ausreichenden Leistung bestanden werden.
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+Workload:
+
+- Präsenzstunden:	44,0 UE
+- Strukturiertes Eigenstudium	92,00 ZStd
+- Workload gesamt:	125,0 ZStd
+- ECTS-Credit Punkte:	5
+
+
+```{r child = './Organisatorisches/VorbereitungMS.Rmd'}
+```
+
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```
+
+```{r, include=FALSE}
+abschluss <<- TRUE
+rm(pathToImages)
+```

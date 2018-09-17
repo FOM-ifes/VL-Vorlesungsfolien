@@ -1,0 +1,604 @@
+```{r setup-Wiederholung-R, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+#% Zur Wiederholung oder als Crashkurs
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Wiederholung-R.",    # Dateiname ohne Suffix
+    "EinfuehrungInferenz"   # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+```
+
+# `r nextChapter()` Wiederholung R
+
+
+### Cartoon: Computereinsatz in der Statistik
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
+```
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter - in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+
+### Warum R?
+
+> [...] she was also following a wider trend: for many academics [...] R is the data-analysis tool of choice.^[Tippmann, S.. Programming tools (2015): Adventures with R. A guide to the popular, free statistics and visualization software that gives scientists control of their own data analysis. Nature, 517, S. 109--110. [https://doi.org/10.1038%2F517109a](https://doi.org/10.1038%2F517109a)]
+
+Verbreitung z. B.: [http://r4stats.com/articles/popularity/](http://r4stats.com/articles/popularity/)
+
+**R ist eine weit verbreitete Eintrittskarte in das globale Datenzeitalter!**
+
+
+### Vorteile R
+
+- Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z. B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
+- Neue Methoden der Datenanalyse werden häufig in R entwickelt (auch Big Data, KI, etc.).
+- frei und offen; kostenlos
+- Schnittstellen zu sehr vielen Datenquellen/-banken (auch SocialMedia etc.)
+- Erweiterungen u. a. für Microsoft, Oracle, SAP Produkte, aber auch SPSS, SAS
+- unzählige Nutzer*innen weltweit in Unternehmen und Wissenschaft
+- Möglichkeiten für Reporting, Apps, etc.
+- numerische Stabilität / Genauigkeit
+- große Entwickler*innen-Gemeinde mit langer Geschichte (seit 1993); R Konsortium, u.a. IBM, Microsoft, TIPCO, Google, ...
+
+
+### R Installation
+
+1. R ([https://www.r-project.org/](https://www.r-project.org/))
+2. RStudio Desktop ([https://www.rstudio.com/](https://www.rstudio.com/))
+3. Installation von Zusatzpaketen in RStudio:
+
+```{r, eval=FALSE}
+install.packages("mosaic")
+```
+
+Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+
+
+### Code: mosaic
+
+```{r, eval = FALSE}
+analysiere( y  # ggfs. abhängige Variable
+            ~  x # unabhängige Variable(n)
+            | z, # ggfs. bedingende (gruppierende) Variable(n)
+            Optionen, # ggfs. weitere Optionen
+            data = daten ) # Datensatz 
+```
+
+`analysiere()`: Was soll R tun?^[Befehlsübersicht [hier](https://github.com/luebby/Datenanalyse-mit-R/blob/master/Installation/R-mosaic-Kurzreferenz.pdf)]
+
+
+*Hinweis*: unter macOS: `~: alt+n`, `|: alt+7`
+
+
+### Zentrale Fragen
+
+1. Was soll der Computer für mich tun?
+2. Was muss der Computer dafür wissen?
+
+```{r, eval = FALSE}
+meineanalyse(meiny ~ meinx, data = meinedaten)
+```
+
+
+### R Basics
+
+- R unterscheidet zwischen Groß- und Kleinbuchstaben.
+- R verwendet den Punkt `.` als Dezimaltrennzeichen.
+- Fehlende Werte werden in R durch `NA` kodiert.
+- Kommentare werden mit dem Rautezeichen `#` eingeleitet.
+- Eine Ergebniszuweisung erfolgt über `<-.`
+- `%>%` (Paket `dplyr`) übergibt Ergebnisse.
+- Hilfe zur Funktion `foo`: `?foo`
+
+
+### R im quantitativen Forschungsprozess
+
+1.  Forschungsfrage: Was soll untersucht werden?
+2.  Studiendesign: Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren, z.B. Paket [sampling](https://cran.r-project.org/package=sampling) und / oder Versuchsplanung, z.B. Paket [AlgDesign](https://cran.r-project.org/package=AlgDesign). Alternativ: Nutzung vorhandener Daten, z.B. CRAN Task View [Web Technologies and Services](https://cran.r-project.org/web/views/WebTechnologies.html).
+3.  Datenerhebung
+4.  Datenanalyse: Datenvorverarbeitung (u.a. Ausreißer, z.B. Paket [outliers](https://cran.r-project.org/package=outliers); fehlende Werte, z.B. Paket [VIM](https://cran.r-project.org/package=VIM)), Explorative Datenanalyse (Grafiken und Kennzahlen), z B. Paket [mosaic](https://cran.r-project.org/web/packages/mosaic/).
+5.  Inferenz: Schätzen und Testen; Modellierung, z. B. Paket [mosaic](https://cran.r-project.org/web/packages/mosaic/).
+6.  Schlussfolgerungen: (vorläufige) Antwort auf Forschungsfrage.
+
+
+### Vorbereitung Analyse
+
+[Dick De Veaux: How much is a Fireplace Worth?](http://community.amstat.org/HigherLogic/System/DownloadDocumentFile.ashx?DocumentFileKey=288c3e05-1ba5-450d-8ec8-62629b876557&forceDialog=0)^[Siehe auch: `?mosaicData::SaratogaHouses`]
+
+- `Preis`: Preis in $\$$.
+- `Wohnflaeche`: Wohnfläche in $m^2$.
+- `Alter`: Alter der Immobilie in Jahren.
+- `Klimaanlage`: Inwieweit eine (zentrale) Klimaanlage vorhanden ist.
+- `Kamin`: Inwieweit ein Kamin vorhanden ist.
+- `Heizung`: Heizsystem: Gas, Strom oder Öl.
+
+
+```{r, message=FALSE}
+# Paket laden
+library(mosaic)
+
+# URL
+daten_url <- "http://statistix.org/Data/SaratogaHouses.csv"
+
+# Daten einlesen
+Houses <- read.csv2(daten_url)
+```
+
+
+### `csv` Datei
+
+Dateiaufbau `SaratogaHouses.csv`^[Eine solche `csv` Datei kann z.B. durch Export aus Tabellenkalkulationsprogrammen erzeugt werden.]:
+
+- Erste Zeile: Variablennamen^[Tipp: Mit Buchstaben beginnen, keine Leer- oder Sonderzeichen, Umlaute vermeiden.]
+- Datenfeldtrennzeichen der Variablen: `;` (Semikolon)
+- Dezimaltrennzeichen: `,` (Komma)
+- Textkennzeichen: `"`(Anführungszeichen)
+
+*Hinweis*: Der Einlesebefehl in R hängt vom Dateiformat der Datei ab. Siehe z.B. `?read.table` oder Paket [readr](https://cran.r-project.org/package=readr). Alternative: in RStudio: `File -> Import Dataset`
+
+
+### Datenvorverarbeitung
+
+Häufig müssen Daten vor der eigentlichen Analyse vorverarbeitet werden, z. B.:
+
+- Variablen auswählen: `select()`
+- Beobachtungen auswählen: `filter()`
+- Variablen verändern, neu erzeugen: `mutate()`
+- Beobachtungen zusammenfassen: `summarise()`
+- ...
+
+Das Paket `dplyr`^[wird mit `mosaic` installiert und geladen.] bietet dazu viele Möglichkeiten.
+
+Umfangreiche Dokumentation: [http://dplyr.tidyverse.org/index.html](http://dplyr.tidyverse.org/index.html)
+
+
+### Inspizieren {.shrink}
+
+```{r, eval=FALSE}
+inspect(Houses)
+```
+```{r, echo=FALSE}
+mosaicCore:::inspect.data.frame(Houses)
+```
+
+
+### Übung  `r nextExercise()`: Skalenniveau {.exercise type=A-B-C-D answer=A}
+
+Welches Skalenniveau hat die Variable `Heizung`?
+
+A.  Kategorial - nominal.
+B.  Kategorial - ordinal.
+C.  Numerisch - intervallskaliert.
+D.  Numerisch - verhältnisskaliert.
+
+
+::: {.notes}
+
+Nominal mit drei Ausprägungen, also ***A***.
+:::
+
+
+### Eine Variable
+
+:::::: {.columns}
+::: {.column width="50%"}
+**meinx: kategorial**
+
+```{r, eval=FALSE}
+# Balkendiagramm
+bargraph( ~ Klimaanlage, 
+          data = Houses)
+# Tabelle
+tally( ~ Klimaanlage, 
+       data = Houses)
+# Anteil
+prop( ~ Klimaanlage, 
+      data = Houses, 
+      success = "Ja")
+```
+
+:::
+::: {.column width="50%"}
+**meinx: numerisch**
+
+```{r, eval=FALSE}
+# Histogramm
+histogram( ~ Preis, 
+           data = Houses)
+# Kennzahlen
+favstats( ~ Preis, 
+          data = Houses)
+# Mittelwert
+mean( ~ Preis, 
+      data = Houses)
+```
+:::
+::::::
+
+
+### Eine kategoriale Variable {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Balkendiagramm
+bargraph( ~ Klimaanlage, data = Houses)
+# Tabelle
+tally( ~ Klimaanlage, data = Houses)
+# Anteil
+prop( ~ Klimaanlage, data = Houses, success = "Ja")
+```
+
+
+### Eine numerische Variable {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Histogramm
+histogram( ~ Preis, data = Houses)
+# Kennzahlen
+favstats( ~ Preis, data = Houses)
+# Mittelwert
+mean( ~ Preis, data = Houses)
+```
+
+
+### Zwei Variablen
+
+:::::: {.columns}
+::: {.column width="50%"}
+**meinx, meiny: kategorial**
+```{r, eval=FALSE}
+# Mosaikplot
+mosaicplot(Kamin ~ Klimaanlage, 
+           data = Houses)
+# Kreuztabelle
+tally(Kamin ~ Klimaanlage, 
+      data = Houses)
+# Chi-Quadrat Test
+xchisq.test(Kamin ~ Klimaanlage, 
+            data = Houses)
+```
+
+:::
+::: {.column width="50%"}
+**meinx, meiny: metrisch**
+
+```{r, eval=FALSE}
+# Streudiagramm
+xyplot(Preis ~ Wohnflaeche, 
+       data = Houses)
+# Korrelation
+cor(Preis ~ Wohnflaeche, 
+    data = Houses)
+# Korrelationstest
+cor.test(Preis ~ Wohnflaeche, 
+         data = Houses)
+```
+:::
+::::::
+
+### Übung  `r nextExercise()`: Nullhypothese {.exercise type=A-B answer=A}
+
+Wie lautet beim Chi-Quadrat Unabhängikeitstest die Nullhypothese?
+
+A.  Die beiden Variablen sind abhängig. Die Verteilung der einen Variable hängt vom Wert der anderen Variable ab.
+B.  Die beiden Variablen sind unabhängig. Die Verteilung der einen Variable hängt nicht vom Wert der anderen Variable ab.
+
+::: {.notes}
+
+***B***: Die Nullhypothese $H_0$ lautet, es gibt keinen Zusammenhang, die Alternativhypothese $H_A$ ist das Gegenteil, es gibt einen Zusammenhang.
+
+:::
+
+### Zwei kategoriale Variablen (I/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Mosaikplot
+mosaicplot(Kamin ~ Klimaanlage, data = Houses)
+# Kreuztabelle
+tally(Kamin ~ Klimaanlage, data = Houses)
+
+```
+
+
+### Zwei kategoriale Variablen (II/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Chi-Quadrat Test
+xchisq.test(Kamin ~ Klimaanlage, data = Houses)
+```
+
+
+### Zwei numerische Variablen (I/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Streudiagramm
+xyplot(Preis ~ Wohnflaeche, data = Houses)
+# Korrelation
+cor(Preis ~ Wohnflaeche, data = Houses)
+```
+
+
+### Zwei numerische Variablen (II/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Korrelationstest
+cor.test(Preis ~ Wohnflaeche, data = Houses)
+```
+
+
+### Zwei Gruppen
+
+:::::: {.columns}
+::: {.column width="50%"}
+**meinx: binär, meiny: kategorial**
+```{r, eval=FALSE}
+# Balkendiagramm
+bargraph( ~ Kamin | Klimaanlage, 
+          data = Houses)
+# Anteile
+prop(Kamin ~ Klimaanlage, 
+     data = Houses,
+     success = "Ja")
+# Anteilstest
+prop.test(Kamin ~ Klimaanlage, 
+     data = Houses,
+     success = "Ja")
+```
+
+:::
+::: {.column width="50%"}
+**meinx: binär, meiny: numerisch**
+```{r,  eval=FALSE}
+# Histogramm
+histogram( ~ Preis | Kamin, 
+           data = Houses)
+# Mittelwerte
+mean(Preis ~ Kamin, 
+     data = Houses)
+
+# t-Test
+t.test(Preis ~ Kamin, 
+       data = Houses)
+```
+
+:::
+::::::
+
+
+### Zwei Gruppen, kategorial (I/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Balkendiagramm
+bargraph( ~ Kamin | Klimaanlage, data = Houses)
+# Anteile
+prop(Kamin ~ Klimaanlage, data = Houses, success = "Ja")
+```
+
+
+### Zwei Gruppen, kategorial (II/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Anteilstest
+prop.test(Kamin ~ Klimaanlage, data = Houses, success = "Ja")
+```
+
+### Zwei Gruppen, numerisch (I/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Histogramm
+histogram( ~ Preis | Kamin, data = Houses)
+# Mittelwerte
+mean(Preis ~ Kamin, data = Houses)
+```
+
+
+### Zwei Gruppen, numerisch (II/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# t-Test
+t.test(Preis ~ Kamin, data = Houses)
+```
+
+### Übung  `r nextExercise()`: p-Wert {.exercise type=yes-no answer=no}
+
+Kann die beobachtete Differenz der Mittelwerte der Preise der Stichprobe plausibel durch Zufall erklärt werden, wenn also eigentlich in der Population
+$$H_0: \mu_{\text{Kamin}}=\mu_{\text{kein Kamin}}$$
+gilt.
+
+- Ja.
+- Nein.
+
+::: {.notes}
+
+***Nein***: Der p-Wert (`p-value`) ist sehr klein, d.h. die beobachtete Differenz tritt innerhalb der normalen Variation sehr selten auf. Daher würde man hier $H_0$ verwerfen ($\alpha=5\%$).
+
+:::
+
+
+### Schema Hypothesentest
+
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
+```
+
+[Abbildung: Quelle: Blogbeitrag Allen Downey]{.small}^[[http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html](http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html)]
+
+**Alternative**: Verwende theoretische Verteilungsannahmen unter $H_0$, häufig approximativ oder asymptotisch.^[Bspw. $t-, \chi^2-, F-$ Verteilungen.]
+
+
+### Ablauf: Permutations- und Randomisationstest
+
+Vorraussetzung: Zufällige Stichprobe (Permutation) oder zufällige Zuordnung (Randomisation).
+
+Beispiel: Zwei-Stichproben-Fall:
+
+- Wiederhole z.B.  $10000 \times$
+    - Mische die $n_1+n_2$ Beobachtungen.
+    - Ordne zufällig $n_1$ Beobachtungen der ersten Stichprobe zu, die restlichen der zweiten.
+    - Berechne die Differenz der Mittelwerte $\bar{x}_1-\bar{x}_2$. Analog für andere Teststatistiken, z.B. Anteil.
+- Zeichne Histogramm der Verteilung der Teststatistik des Modells unter $H_0: \mu_1-\mu_2=0$. Vergleiche mit dem beobachteten Wert der Teststatistik (der Stichprobe).
+- Der p-Wert ist der Anteil der zufälligen Teststatistiken, die mindestens so groß sind wie der beobachtete Wert.^[Bei ungerichteten, zweiseitigen Tests im Absolutbetrag.] 
+
+
+### Permutationstest kategorial {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Reproduzierbarkeit
+set.seed(1896)
+# Anteilsdifferenz in Stichprobe
+pdiff_est <- diffprop(Kamin ~ Klimaanlage, success = "Ja", data = Houses)
+# Simuliere H_0: Permutiere Klima
+Nullvtlg <- do(10000) * 
+  diffprop(Kamin ~ shuffle(Klimaanlage), success = "Ja", data = Houses)
+# Histogramm Nullverteilung
+histogram( ~ diffprop, v=pdiff_est, data = Nullvtlg, xlim = c(-0.35, 0.35))
+# p-Wert
+prop( ~(abs(diffprop)>=abs(pdiff_est)), data = Nullvtlg )
+```
+
+
+### Permutationstest numerisch {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Reproduzierbarkeit
+set.seed(1896)
+# Mittelwertdifferenz in Stichprobe
+meandiff_est <- diffmean(Preis ~ Kamin, data = Houses)
+# Simuliere H_0: Permutiere Klima
+Nullvtlg <- do(10000) * 
+  diffmean(Preis ~ shuffle(Kamin), data = Houses)
+# Histogramm Nullverteilung
+histogram( ~ diffmean, v=meandiff_est, data = Nullvtlg, xlim = c(-75000, 75000))
+# p-Wert
+prop( ~(abs(diffmean)>=abs(meandiff_est)), data = Nullvtlg)
+```
+
+
+### Schema Bootstrap
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"bootstrap.png"))
+```
+
+::: {.small}
+Abbildung: Quelle: Lock, Robin, Patti Frazer Lock, Kari Lock Morgan, Eric F. Lock, and Dennis F. Lock (2012): Statistics: UnLOCKing the Power of Data. Wiley.
+:::
+
+
+### Ablauf: Bootstrap
+
+Vorraussetzungen: 
+
+- Zufällige Stichprobe oder zufällige Zuordnung. 
+- Nicht zu kleine Stichprobe.^[$n\geq 35$]
+
+Beispiel: Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise exaktere Bootstrap-Methoden.] für eine Stichprobe:
+
+- Wiederhole z.B.  $10000 \times$
+    - Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
+    - Berechne Statistik, z. B. Mittelwert $\bar{x}$ der Bootstrap-Stichprobe. Analog für andere Statistiken, z.B. Anteil.
+- Zeichne Histogramm der Bootstrap-Verteilung der Statistik.
+- Das $95\,\%$-Bootstrap-Perzentil-Intervall sind die mittleren $95\,\%$ der Bootstrap-Verteilung.
+
+
+### Bootstrap kategorial {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Reproduzierbarkeit
+set.seed(1896)
+# Simuliere Stichprobenziehung
+Bootvtlg <- do(10000) * 
+  diffprop(Kamin ~ Klimaanlage, success = "Ja", data = resample(Houses))
+# 95% Konfidenzintervall
+ci <- quantile( ~ diffprop, probs=c(0.025, 0.975), data = Bootvtlg)
+# Histogramm
+histogram( ~ diffprop, v=ci, data = Bootvtlg)
+```
+
+### Bootstrap numerisch {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+# Reproduzierbarkeit
+set.seed(1896)
+# Simuliere Stichprobenziehung
+Bootvtlg <- do(10000) * 
+  diffmean(Preis ~ Kamin, data = resample(Houses))
+# 95% Konfidenzintervall
+ci <- quantile( ~ diffmean, probs=c(0.025, 0.975), data = Bootvtlg)
+# Histogramm
+histogram( ~ diffmean, v=ci, data = Bootvtlg)
+
+```
+
+
+### Simulation und Resampling
+
+- **Permutationstest**, hier: simuliere zufällige Zuordnung^[d.h. ohne Zurücklegen]. Simuliere Verteilung einer Statistik unter der Annahme, dass kein Zusammenhang vorliegt (Modell $H_0$), u.a. zur Bestimmung von p-Werten.
+```{r, eval=FALSE}
+statistik(y ~ shuffle(x), data = Daten)
+```
+- **Bootstrap**, hier: simuliere zufälliges Ziehen einer Stichprobe^[d.h. mit Zurücklegen]. Schätze Verteilung einer Statistik der Stichprobe, u.a. zur Bestimmung von Konfidenzintervallen oder Standardfehlern.
+```{r, eval=FALSE}
+statistik(y ~ x, data = resample(Daten))
+```
+### Lineares Modell (I/III)
+
+```{r, fig.align="center", out.width="60%"}
+modnum <- lm(Preis ~ Wohnflaeche + Kamin, data = Houses)
+plotModel(modnum)
+```
+
+
+### Lineares Modell (II/III) {.shrink}
+```{r}
+summary(modnum)
+```
+
+
+### Lineares Modell (III/III) {.shrink}
+```{r}
+anova(modnum)
+```
+
+
+### Übung  `r nextExercise()`: Kovariablen {.exercise type=yes-no answer=no}
+
+Gegeben die Wohnfläche: Ist dann der (marginale) Effekt des Kamins in einem linearen Modell auf den Preis *signifikant* ($\alpha=5\%$)? 
+
+- Ja.
+- Nein.
+
+::: {.notes}
+
+***Nein***: Der p-Wert (`Pr(>|t|)`) bzw. (`Pr(>F)`) für $H_0: \beta_{\text{Kamin}}=0$ ist größer als $\alpha=5\%$.
+
+:::
+
+### Schlussmöglichkeiten
+
++-----------------------+------------------------+------------------------------+
+|                       | **zufällige** \        | **keine zufällige** \        |
+|                       | **Zuordnung**          | **Zuordnung**                |    
++=======================+========================+==============================+
+| **zufällige** \       | Kausalschluss, \       | kein Kausalschluss, \        |
+| **Stichprobe**        | generalisierbar \      | Aussage generalisierbar \    |
+|                       | für die Population     | für die Population           |
++-----------------------+------------------------+------------------------------+
+| **keine zufällige** \ | Kausalschluss, \       | kein Kausalschluss, \        |                    
+| **Stichprobe**        | nur für die Stichprobe | Aussage nur für die \        |
+|                       |                        | Stichprobe                   |
++-----------------------+------------------------+------------------------------+
+
+
+```{r finish--Wiederholung-R, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

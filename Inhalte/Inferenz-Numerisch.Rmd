@@ -1,0 +1,836 @@
+```{r setup-Inferenz-Numerisch, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Inferenz-Numerisch",  # Dateiname ohne Suffix
+    "EinfuehrungInferenz"    # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+# Workaround sample()
+sample <- mosaic::sample
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# Nur zur Sicherheit:
+if ("package:arulesViz" %in% search()) detach("package:arulesViz", unload=TRUE)
+if ("package:arules" %in% search()) detach("package:arules", unload=TRUE)
+```
+# `r nextChapter()` Inferenz numerischer Daten
+
+
+### Inferenz
+
+Idee: Schluss von einer (zufälligen/ randomisierten) Stichprobe auf eine Population:
+
+- Punktschätzung
+- Konfidenzintervall
+- Hypothesentest 
+
+Ziel: Aussagen treffen, die über die Stichprobe hinausgehen -- und dabei berücksichtigen, dass Variation allgegenwärtig ist und Schlussfolgerungen unsicher.^[Vgl. Moore, D. (2007) The Basic Practice of Statistics, 4th edn. New York: Freeman, S. xxviii.]
+
+
+### Übung `r nextExercise()`: Gültigkeit Inferenz {.exercise type=A-B-C-D-E answer=C}
+
+Wann ist aufgrund einer quantitativen Datenanalyse eine Kausalaussage  gerechtfertigt?
+
+A.  Nie.
+B.  Bei einer zufälligen Stichprobe.
+C.  Bei einer randomisierten Zuordnung innerhalb eines Experimentes.
+D.  Bei einem hohen Stichprobenumfang $n$.
+E.  Immer.
+
+::: {.notes}
+Um Einflüsse durch Kovariablen möglichst zu vermeiden, ist für einen Kausalschluss eine zufällige Zuordnung zu den Experimentalkonditionen nötig (***C***). Ein hoher Stichprobenumfang $n$ ist generell zu bevorzugen: er verkleinert den Standardfehler und damit das Konfidenzintervall, bei guten Tests sinkt die Wahrscheinlichkeit für einen Fehler 2. Art.
+:::
+
+
+
+### Testverfahren für numerische Daten 
+
+In diesem Kapitel werden simulationsbasierte Methoden für folgende Situationen vorgestellt. Die Verteilung hängt vom Mittelwert $\mu$ ab, d.h. Gleicheit bzw. Ungleichheit kann über $\mu$ analysiert werden.
+
+- **Test eines Mittelwerts**: Testet den Mittelwert eines Merkmals einer Stichprobe gegen eine hypothetisch richtigen Mittelwert der Population. 
+    - ungerichtet, zweiseitig: $H_0: \mu = \mu_0$, vs. $H_A: \mu \neq \mu_0$ 
+    - gerichtet, einseitig: 
+        - $H_0: \mu \geq \mu_0$, vs. $H_A: \mu < \mu_0$ 
+        - $H_0: \mu \leq \mu_0$, vs. $H_A: \mu > \mu_0$
+        
+        
+- **Vergleich zweier Mittelwerte unabhängiger Stichproben**: Testet die Mittelwerte eines Merkmals zweier Stichproben $A, B$  in der Population^[auch $\delta_0 \neq 0$ möglich].  
+    - ungerichtet, zweiseitig: $H_0: \mu_A = \mu_B \Leftrightarrow \mu_A-\mu_B=0$, vs. $H_A: \mu_A \neq \mu_B \Leftrightarrow \mu_A-\mu_B \neq 0$ 
+    - gerichtet, einseitig: 
+        - $H_0: \mu_A \leq \mu_B \Leftrightarrow \mu_A-\mu_B \leq 0$, vs. $H_A: \mu_A > \mu_B \Leftrightarrow \mu_A-\mu_B > 0$ 
+        - $H_0: \mu_A \geq \mu_B \Leftrightarrow \mu_A-\mu_B \geq 0$, vs. $H_A: \mu_A < \mu_B \Leftrightarrow \mu_A-\mu_B < 0$         
+        
+
+Dabei kann jeweils auch das Konfidenzintervall bestimmt werden.
+
+        
+### Verteilungsbasierte Tests 
+
+Für folgende zusätzliche Fragestellungen werden verteilungsbasierte Verfahren (kurz) erläutert:
+
+- **Gepaarter t-Test/ t-Test für abhängige Stichproben**: Testet die Differenz der Mittelwerte zweier Merkmale ($x_1, x_2$) einer Stichprobe mit einer hypothetisch richtigen Differenz in der Population^[häufig: $\delta_0=0$]. 
+    - ungerichtet, zweiseitig: $H_0: \mu_{x_1-x_2} = \delta_0$, vs. $H_A: \mu_{x_1-x_2} \neq \delta_0$ 
+    - gerichtet, einseitig: 
+        - $H_0: \mu_{x_1-x_2} \leq \delta_0$, vs. $H_A: \mu_{x_1-x_2} > \delta_0$ 
+        - $H_0: \mu_{x_1-x_2} \geq \delta_0$, vs. $H_A: \mu_{x_1-x_2} < \delta_0$ 
+- **Varianzanalyse/ Anova**: Testet die Gleicheit der Mittelwerte zweier oder mehr Stichproben (Merkmale) in der Population: $H_0: \mu_1 = \mu_2 = \ldots = \mu_K$ vs. $H_A:$ mindestens ein Mittelwert unterscheidet sich ($\mu_i \neq \mu_j$). 
+
+
+### Beispiele zur Inferenz numerischer Werte
+
+- Analyse des mittleren Workloads der Studierenden -- ggf. je nach Geschlecht oder Studiengang
+- Untersuchung des Humors^[latente Variable, daher Operationalisierung erforderlich] der Mitarbeiter\*innen, ggf. je Geschlecht oder Abteilung
+- Vergleich der Kaufkraft der Kund\*innen mit oder ohne Kundenkarte 
+- Analyse der Rendite von Investitionsalternativen
+- Vergleich der Mitarbeiter-Zufriedenheit zwischen Abteilungen
+
+*Wo können Sie die Verfahren einsetzen?*
+
+
+## Test eines Mittelwerts
+
+### Vorbereitungen
+
+Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie Laden des Pakets `mosaic`:
+
+```{r, eval = FALSE, message=FALSE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+tips <- read.csv2("tips.csv")
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+
+library(mosaic) # Paket laden
+```
+
+
+
+### Übung `r nextExercise()`: Statistik Rechnungshöhe {.exercise type=A-B answer=B}
+
+Durch welche Statistik kann die zentrale Tendenz der Variable Rechnungshöhe sinnvoll beschieben werden?
+
+A.  Anteil.
+B.  Arithmetischer Mittelwert.
+
+::: {.notes}
+Ein Lagemaß für numerische Daten ist der Mittelwert (***B***). Alternative Kennzahlen wären u. a. der Median. 
+:::
+
+
+### Übung `r nextExercise()`: Visualisierung Rechnungshöhe {.exercise type=A-B-C answer=A}
+
+Durch welche Grafik kann die Verteilung der Variable Rechnungshöhe *nicht* sinnvoll dargestellt werden?
+
+A.  Balkendiagramm.
+B.  Histogramm.
+C.  Boxplot.
+
+::: {.notes}
+Für numerisch stetige Merkmale ist das Balkendiagramm (***A***) nicht besonders geeignet -- eher für kategoriale oder numerisch diskrete Variablen. Histogramm und Boxplot hingegen eignen sich für numerische Daten.
+:::
+
+
+### Deskriptive Analyse Rechnungshöhe
+
+```{r, fig.align="center", out.width="33%"}
+histogram( ~ total_bill, data = tips)
+favstats( ~ total_bill, data = tips)
+```
+
+### Übung  `r nextExercise()`: Verteilung Rechnungshöhe {.exercise type=A-B-C-D-E answer=E}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ total_bill, data = tips)
+```
+
+Welche der folgenden Aussagen stimmt?
+
+A.  Die Rechnungshöhe ist gleichverteilt.
+B.  Die Rechnungshöhe ist multimodal.
+C.  Die Rechnungshöhe ist normalverteilt.
+D.  Die Rechnungshöhe ist linksschief.
+E.  Die Rechnungshöhe ist rechtsschief.
+
+::: {.notes}
+***E***: Linkssteil, rechtsschief -- wie häufig bei Umsätzen etc.: Viele machen wenig Umsatz, wenige viel.
+:::
+
+
+### Beträgt die mittlere Rechnungshöhe *signifikant* mehr als 15\$?
+
+$H_0$: Die mittlere Rechnungshöhe (`total_bill)` beträgt nicht mehr als 15\$; $\mu \leq 15$.
+$H_A$: Die mittlere Rechnungshöhe ist größer als 15\$; $\mu > 15$.
+
+*Annahme*: Das Merkmal Rechnungshöhe ist normalverteilt mit $\mu=15$ und $\sigma=sd=`r round(sd(tips$total_bill), 2)`$^[Hier nicht erfüllt, siehe oben.]. Das Signifikanzniveau betrage $\alpha=5\%$.
+
+```
+Lege die Zufallszahlen fest.
+Wiederhole 10000 Mal:
+  - Berechne den Mittelwert von n=244 normalverteilten
+      Zufallsvariablen mit Mittelwert 15 und 
+      Standardabweichung 8.90
+Speichere das Ergebnis im Datasatz"Nullvtlg". 
+```
+
+```{r }
+set.seed(1896)
+Nullvtlg <- do(10000) * mean(rnorm(mean = 15, 
+                              sd = 8.90,
+                              n =244))
+```
+
+
+### p-Wert zur Überprüfung der mittleren Rechnungshöhe
+
+```{r, out.width="25%"}
+histogram(~mean, Nullvtlg)
+```
+
+Anteil der Simulationen unter $H_0: \mu=15$ mit einem mindestens so großem Mittelwert wie in der Stichprobe ($\hat{\mu}=\bar{x}=`r round(mean(~total_bill, data = tips),2)`$):
+
+```{r}
+prop(~ mean >= mean(~total_bill, data = tips), data = Nullvtlg)
+```
+
+
+Die $H_0$ muss verworfen werden. Das beobachtete Stichprobenerereignis ist selten ($p<0.0001$) in den simulierten Verteilungen im Modell $H_0$.
+
+
+
+### Verteilungsbasierte Alternative: t-Test
+
+- Einstichproben-t-Test: eine Stichprobe, ein Merkmal: $t=\frac{\bar{x}-\mu_0}{\sqrt{\frac{\text{sd}^2}{n}}}=\frac{\bar{x}-\mu_0}{se}$.
+- t-Test für abhängige Stichproben, gepaarter t-Test: eine Stichprobe, zwei Merkmale, es wird die Differenz je Beobachtung analysiert.
+- t-Test für unabhängige Stichproben: zwei Stichproben, ein Merkmal.
+- Idee^[hier im Fall für zwei unabhängige Stichproben, analog für die anderen Fälle]: Setze Differenz der Mittelwerte ins Verhältnis zur Streuung der Schätzung (Standardfehler, $se$): 
+$$t=\frac{(\bar{x}_A-\bar{x}_B)}{\sqrt{\frac{\text{sd}^2_A}{{n_A}}+\frac{\text{sd}^2_B}{{n_B}}}}$$ Große Werte von $|t|$^[im zweiseitigen Fall] sind unter der Nullhypothese unwahrscheinlich.
+- Voraussetzung: Daten innerhalb der Stichprobe(n) unabhängig, identisch, normalverteilt.^[Überprüfung z.B. über Q-Q-Plot (`xqqmath()`).]
+
+
+
+### Einstichproben-t-Test
+
+```{r}
+t.test( ~ total_bill, # Variable, die analysiert wird
+        mu = 15, # Wert für mu0
+        alternative = "greater", # ein- oder zweiseitiger Test
+        data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Testergebnis Rechnungshöhe {.exercise type=yesno answer=yes}
+
+Wird die Nullhypothese $H_0: \mu \leq 15$ gegen $H_A: \mu > 15$ zum Signifikanzniveau $\alpha = 5\,\%$ verworfen?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+`p-value = 1.909e-15` $=1.909\cdot 10^{-15}=0.000000000000001909<0.05$, also ***Ja***.
+:::
+
+### Übung  `r nextExercise()`: Fehlerart t-Test {.exercise type=A-B answer=A}
+
+Angenommen, in Wirklichkeit gilt $\mu \leq 15$. Welcher Fehler wurde begangen?
+
+A.  Fehler 1. Art, $\alpha$-Fehler.
+B.  Fehler 2. Art, $\beta$-Fehler.
+
+::: {.notes}
+Wenn in Wirklichkeit $H_0$ gilt, die Testentscheidung aber $H_A$ lautet spricht man vom Fehler 1. Art (***A***). Die Wahrscheinlichkeit, einen solchen Fehler zu begehen, wird durch das Signifikanzniveau kontrolliert.
+:::
+
+### Übung  `r nextExercise()`: p-Wert {.exercise type=A-B-C answer=B}
+
+Was würde passieren, wenn die vorher festgelegte Hypothese^[Hypothesen dürfen **nicht** nach der Analyse angepasst werden!] nicht $H_0: \mu \leq 15$ gegen $H_A: \mu > 15$ sondern $H_0: \mu \leq 19.5$ gegen $H_A: \mu > 19.5$ lauten würde?
+
+A.  Der p-Wert wird kleiner.
+B.  Der p-Wert wird größer.
+C.  Der p-Wert ändert sich nicht.
+
+::: {.notes}
+Da die Abweichung von $\bar{x}$ zu $\mu_0$ kleiner wird, steigt der p-Wert (***B***): der beobachtete Wert der Stichprobe (Teststatistik) wird, wenn die Nullyhpothese gilt, wahrscheinlicher. Relativ kleine Abweichungen kommen zufällig häufiger vor als relativ große Abweichungen.
+
+`t.test( ~ total_bill, data=tips, mu=19.5, alternative="greater")`  
+
+:::
+
+
+### Übung  `r nextExercise()`: t-Test {.exercise type=A-B-C answer=B}
+
+Bei einem gerichteten Einstichproben t-Test für 
+$$H_0: \mu \leq 42 \quad vs. \quad H_A: \mu>42$$
+komme als Schätzwert der Stichprobe $\hat{\mu}=\bar{x}=40$ raus.
+
+Wird der t-Test die Nullhypothese verwerfen?
+
+A.  Ja.
+B.  Nein.
+C.  Vielleicht. Hängt von $\text{se}=\frac{\text{sd}}{\sqrt{n}}$ ab.
+
+::: {.notes}
+Nein (***B***), da $\hat{\mu}=40$ Teil der Nullhypothese ist. Falls $\hat{\mu}>42$ ist, ist *C* richtig.
+:::
+
+
+### Wiederholung: Ablauf des Bootstrapping
+
+Vorraussetzungen: 
+
+- Zufällige Stichprobe oder zufällige Zuordnung. 
+- Nicht zu kleine Stichprobe.^[$n\geq 35$]
+
+Beispiel: Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise exaktere Bootstrap-Methoden.] für eine Stichprobe:
+
+- Wiederhole z.B.  $10000 \times$
+    - Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
+    - Berechne Statistik, z. B. Mittelwert $\bar{x}$ der Bootstrap-Stichprobe. Analog für andere Statistiken, z.B. Anteil.
+- Zeichne Histogramm der Bootstrap-Verteilung der Statistik.
+- Das $95\,\%$-Bootstrap-Perzentil-Intervall sind die mittleren $95\,\%$ der Bootstrap-Verteilung.
+
+### Bootstrap Verteilung mittlere Rechnungshöhe
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896) # Reproduzierbarkeit
+
+# 10000 Bootstrap Stichproben, Mittelwert berechnen
+Bootvtlg <- do(10000) *
+  mean( ~ total_bill, data = resample(tips))
+
+histogram( ~ mean, data = Bootvtlg)
+```
+
+
+### Übung  `r nextExercise()`: Verteilung mittlere Rechnungshöhe {.exercise type=A-B-C-D-E answer=C}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ mean, data = Bootvtlg)
+```
+
+Welche der folgenden Aussagen stimmt?
+
+A.  Der Mittelwert der Rechnungshöhe ist gleichverteilt.
+B.  Der Mittelwert der Rechnungshöhe ist multimodal.
+C.  Der Mittelwert der Rechnungshöhe ist normalverteilt.
+D.  Der Mittelwert der Rechnungshöhe ist linksschief.
+E.  Der Mittelwert der Rechnungshöhe ist rechtsschief.
+
+::: {.notes}
+Der *Zentrale Grenzwertsatz* sagt, dass Mittelwerte von unabhängigen Zufallsstichroben i.d.R. gegen eine Normalverteilung konvergieren. Dies sieht man hier: ***C***.
+:::
+
+
+### Übung  `r nextExercise()`: Konfidenzintervall {.exercise type=yesno answer=no}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+confi <- quantile( ~ mean, probs = c(0.025, 0.975), data = Bootvtlg)
+histogram( ~ mean, v=confi , data = Bootvtlg)
+```
+
+```{r}
+quantile( ~ mean, probs = c(0.025, 0.975), data = Bootvtlg)
+```
+
+
+Stimmt die Aussage: Mit 95% Sicherheit überdeckt der Bereich `r floor(confi[1]*100)/100`\$ bis `r ceiling(confi[2]*100)/100`\$ eine zufällig ausgewählte Beobachtung?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+Konfidenzintervalle beziehen sich immer auf Populationswerte, daher ***Nein***. Auf lange Sicht erwarten wir, dass 95% der auf diese Art und Weise konstruierten Intervalle den wahren, unbekannten, festen Wert $\mu$ enthalten. Bei Normalverteilung liegen ca. 95% der Beobachtungen im Bereich $\bar{x} \pm 2\cdot \text{sd}$, das 95% Konfidenzintervall hingegen liegt ca. im Bereich $\bar{x} \pm 2\cdot se$. 
+:::
+
+
+## Test des Unterschieds zweier Mittelwerte
+
+
+### Boxplot Rechnungshöhe Raucher/ Nichtraucher
+
+Analyse des Unterschieds der Rechnungshöhe zwischen Rauchern und Nichtrauchern:
+
+```{r, fig.align="center", out.width="66%"}
+bwplot(total_bill ~ smoker, data = tips)
+```
+
+
+### Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher 
+
+In der Stichprobe wurden folgende (Mittel-)Werte beobachtet:
+
+```{r}
+# Mittelwert Stichprobe
+mean(total_bill ~ smoker, data = tips)
+
+# Differenz Mittelwert Stichprobe
+diffmean(total_bill ~ smoker, data = tips)
+```
+
+
+### Übung  `r nextExercise()`: Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher {.exercise type=A-B answer=B}
+
+Welche Aussage stimmt -- für die Stichprobe?
+
+A.  $\bar{x}_{\text{Smoker Yes}} - \bar{x}_{\text{Smoker No}} = 0$
+B.  $\bar{x}_{\text{Smoker Yes}} - \bar{x}_{\text{Smoker No}} \neq 0$
+
+::: {.notes}
+***B***: $\bar{x}_{\text{Smoker Yes}} - \bar{x}_{\text{Smoker No}}=`r round(diffmean(total_bill ~ smoker, data = tips),2)`>0$
+:::
+
+
+### Konfidenzintervall 
+
+Berechne das 95%-Konfidenzintervall zur Differenz der mittleren Rechnungshöhe von Raucher vs Nichtraucher:
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896) # Reproduzierbarkeit
+Bootvtlg <- do(10000) *
+  diffmean(total_bill ~ smoker, data = resample(tips))
+histogram( ~ diffmean, data = Bootvtlg)
+quantile( ~ diffmean, data = Bootvtlg, probs = c(0.025, 0.975))
+```
+
+
+### Übung  `r nextExercise()`: Testverfahren Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher {.exercise type=A-B answer=A}
+
+Welches ist das Testverfahren, um zu testen, ob die mittlere Rechnungshöhe in der Population bei Rauchern und Nichtrauchern gleich ist, d. h., die Forschungsthese lautet: Es gibt einen Unterschied im Mittelwert der Population?
+
+A.  Mittelwertsvergleich, ungerichtet.
+B.  Mittelwertsvergleich, gerichtet.
+
+
+::: {.notes}
+Ein Merkmal, zwei (unabhängige) Stichproben, Nullhypothese der Gleichheit, also ungerichtet, daher ***A***.
+:::
+
+
+### Übung `r nextExercise()`: Hypothese Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher {.exercise type=A-B-C-D-E answer=B}
+
+Wie lautet das richtige Hypothesenpaar?
+
+A.  $H_0: \mu_{\text{Smoker Yes}} \neq \mu_{\text{Smoker No}}$ vs. $H_A: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$
+B.  $H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$ vs. $H_A: \mu_{\text{Smoker Yes}} \neq \mu_{\text{Smoker No}}$ 
+C.  $H_0: \bar{x}_{\text{Smoker Yes}} \neq \bar{x}_{\text{Smoker No}}$ vs. $H_A: \bar{x}_{\text{Smoker Yes}} = \bar{x}_{\text{Smoker No}}$
+D.  $H_0: \bar{x}_{\text{Smoker Yes}} = \bar{x}_{\text{Smoker No}}$ vs. $H_A: \bar{x}_{\text{Smoker Yes}} \neq \bar{x}_{\text{Smoker No}}$
+E.  $H_0: \pi_{\text{Smoker Yes}} \neq \pi_{\text{Smoker No}}$ vs. $H_A: \pi_{\text{Smoker Yes}} = \pi_{\text{Smoker No}}$
+
+::: {.notes}
+Hypothesen beziehen sich immer auf die Population, damit sind *C* und *D* falsch. Hier geht es um einen Mittelwert und nicht um einen Anteil, damit ist *E* falsch. Die Nullhypothese lautet *kein Unterschied*, also ist *A* auch falsch. Richtig ist ***B***.
+:::
+
+
+### Wiederholung Ablauf: Permutations- und Randomisationstest
+
+Vorraussetzung: Zufällige Stichprobe (Permutation) oder zufällige Zuordnung (Randomisation).
+
+Beispiel: Zwei-Stichproben-Fall:
+
+- Wiederhole z.B.  $10000 \times$
+    - Mische die $n_A+n_B$ Beobachtungen.
+    - Ordne zufällig $n_A$ Beobachtungen der ersten Stichprobe zu, die restlichen der zweiten.
+    - Berechne die Differenz der Mittelwerte $\bar{x}_A-\bar{x}_B$. Analog für andere Teststatistiken, z.B. Anteil.
+- Zeichne Histogramm der Verteilung der Teststatistik des Modells unter $H_0: \mu_A-\mu_B=0$. Vergleiche mit dem beobachteten Wert der Teststatistik (der Stichprobe).
+- Der p-Wert ist der Anteil der zufälligen Teststatistiken, die mindestens so groß sind wie der beobachtete Wert.^[Bei ungerichteten, zweiseitigen Tests im Absolutbetrag.] 
+
+### Permutationstest Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896) # Reproduzierbarkeit
+Nullvtlg <- do(10000) *
+  diffmean(total_bill ~ shuffle(smoker), data = tips)
+
+histogram( ~ diffmean, data = Nullvtlg)
+```
+
+
+### p-Wert für den Permutationstest
+
+```{r}
+# Absolute Abweichung Stichprobe
+dm <- abs(diffmean(total_bill ~ smoker, data = tips))
+
+# Anteil Abweichungen unter H_0 größer als in Stichprobe
+prop( ~ abs(diffmean) >= dm, data = Nullvtlg)
+```
+
+Die $H_0$ kann nicht verworfen werden, da p-Wert $> 5\%$.
+
+### t-Test Rechnungshöhe Raucher/ Nichtraucher
+
+Alternativ kann der t-Test eingesetzt werden:
+
+```{r}
+t.test(total_bill ~ # Abhängige Variable
+            smoker, # Unabhängige Variable
+         data = tips) # Datensatz
+```
+
+
+### Übung  `r nextExercise()`: Testentscheidung Rechnungshöhe Raucher/ Nichtraucher {.shrink .exercise type=yesno answer=no}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ diffmean, v=dm, groups = (abs(diffmean) >= dm)  , data = Nullvtlg)
+```
+
+Sind die Daten unter der Nullhypothese $H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$ (sehr) unwahrscheinlich?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+`p-value = 0.2008`. Dieser ist größer als z. B. $\alpha=0.05$, die beobachtete Differenz ist also unter der Nullhypothese nicht besonders unwahrscheinlich, daher ***Nein***.
+:::
+
+
+
+## Zum Einfluss der Stichprobengröße auf den p-Wert
+
+
+### Stichprobengröße $n=100$ 
+
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+t.test(total_bill ~ smoker, 
+       data = sample(tips, size = 100))
+```
+
+### Stichprobengröße $n=200$ 
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+t.test(total_bill ~ smoker, 
+       data = sample(tips, size = 200))
+```
+
+
+### Übung  `r nextExercise()`: Stichprobengröße {.exercise type=A-B answer=A}
+
+Welche Auswirkungen hat, unter sonst gleichen Umständen, ein größerer Stichprobenumfang $n$?
+
+A.  Das Konfidenzintervall wird schmaler.
+B.  Das Konfidenzintervall wird breiter.
+
+::: {.notes}
+Mit zunehmenden Stichprobenumfang sinkt c.p. der Standardfehler $se$, d. h. dass Konfidenzintervall wird schmaler: ***A***. Gleichzeitig sinkt die Wahrscheinlichkeit für einen Fehler 2. Art.
+:::
+
+### Cartoon: Stichprobenumfang
+
+```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_10-2017.jpg", "cartoon1017.jpg", pathToImages)
+```
+"Da Joe der einzige war, der vorab eine Power-Analyse durchgeführt hatte, hatte er als einziger die nötige Größe, um den gewünschten Effekt zu erzielen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2017/results) &copy; J.B. Landers, Überschrift G. Snow]
+
+## Effektgröße
+
+### Effektgröße: Vorbereitung
+
+Der p-Wert gibt (nur) die Wahrscheinlichkeit der Teststatistik unter der Nullhypothese an. Er sagt nicht, wie groß/ relevant ein Unterschied ist. Mit größerem Stichprobenumfang $n$ sinkt der p-Wert.
+
+**Cohens d**^[Anwendbar für den Vergleich zweier Mittelwerte. Es gibt auch weitere Effektgrößen. Siehe z.B. Paket [compute.es](https://cran.r-project.org/package=compute.es).] ist ein Maß für die Überlappung: $$d=\frac{\bar{x}_A-\bar{x}_B}{\text{sd}_{\text{pool}}}$$ mit $${\text{sd}_{\text{pool}}=\sqrt{\frac{1}{n_A+n_B-2}\left((n_A-1)\cdot\text{sd}^2_A+(n_B-1)\cdot\text{sd}^2_B \right)}}$$
+
+
+```{r, eval=FALSE}
+# Einmalige Installation 
+install.packages("lsr")
+
+# Paket laden
+library(lsr)
+```
+
+```{r load-library-lsr, echo=FALSE}
+library(lsr)
+```
+
+
+### Effektgröße Rauchen
+
+Daumenregel:
+
+- $|d|\geq 0.2$ kleiner Effekt.
+- $|d|\geq 0.5$ mittlerer Effekt.
+- $|d|\geq 0.8$ großer Effekt. 
+
+
+```{r print-cohens-d}
+cohensD(total_bill ~ smoker, data=tips)
+```
+
+
+### Beispiel Effektgrößen
+
+```{r plot-cohens-d, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- 1000
+x <- rnorm(n)
+x02 <- rnorm(n, mean=0.2)
+x05 <- rnorm(n, mean=0.5)
+x08 <- rnorm(n, mean=0.8)
+x11 <- rnorm(n, mean=1.1)
+
+cohendata <- data.frame(x=c(x, x02, x, x05, x, x08, x, x11), 
+                   g=rep(c(rep(c("1","2"), each=n)), 4),
+                   d=c(rep("d=0.2", 2*n), rep("d=0.5", 2*n), rep("d=0.8", 2*n) , rep("d=1.1", 2*n)))
+
+densityplot(~x|d, groups=g, data=cohendata)
+
+rm(n,x,x02,x05,x08,x11,cohendata)
+```
+
+
+### Unter $H_0$ (d. h. $d=0$) sind p-Werte gleichverteilt
+
+```{r plot-p-value, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+pvalue <- runif(10000)
+gf_histogram(~pvalue, bins=20, breaks=seq(0,1, by=0.025), fill=~pvalue<0.05) %>%
+  gf_vline(xintercept = 0.05)
+rm(pvalue)
+```
+
+### Power-Analyse: Simulation $d, n$ und p-Wert
+
+```{r plot-p-value-n-d, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- c(30,100)
+d <- c(0.2, 0.5, 0.8)
+pvalue <- matrix(nrow=10000*6, ncol = 3)
+zaehler <- 1
+for(i in 1:10000)
+  for(j in n)
+    for(k in d)
+    {
+      x0 <- rnorm(j)
+      x1 <- rnorm(j, mean=k)
+      pvalue[zaehler,1] <- j
+      pvalue[zaehler,2] <- k
+      pvalue[zaehler,3] <- t.test(x0,x1)$p.value
+      zaehler <- zaehler+1
+    }
+pvalsim <- data.frame(n=paste0("n=",pvalue[,1]), d=paste0("d=",pvalue[,2]), pvalue=pvalue[,3])
+
+gf_histogram(~pvalue, data = pvalsim, bins=20, breaks=seq(0,1, by=0.025), fill=~pvalue<0.05) %>%
+  gf_vline(xintercept = 0.05) %>%
+  gf_facet_grid(n~d)
+
+rm(n)
+rm(d)
+rm(pvalue)
+rm(zaehler)
+rm(i)
+rm(j)
+rm(k)
+rm(pvalsim)
+```
+
+
+### Übung  `r nextExercise()`: Effektgröße und Power {.exercise type=A-B-C answer=A}
+
+Welche Aussage stimmt? 
+
+A.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, sinkt mit der Effektgröße.
+B.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, steigt mit der Effektgröße.
+C.  Effektgröße und Wahrscheinlichkeit Fehler 2. Art stehen in keinem Zusammenhang.
+
+
+
+::: {.notes}
+Je größer in der Population der Effekt ist ($H_1$), desto eher wird $H_0$ verworfen, also ***A***. Gleichzeitig sinkt die Wahrscheinlichkeit für einen Fehler 2. Art ($H_0$ wird nicht verworfen, obwohl $H_0$ nicht gilt) mit zunehmenden Stichprobenumfang. $d$ und $n$ bestimmen die *Power* eines Tests.
+:::
+
+
+## Test des Unterschieds der Mittelwerte von gepaarten Stichproben
+
+
+### Gepaarter t-Test {.shrink}
+
+Zeigen die Daten, dass die mittlere relative Trinkgeldhöhe signifikant über 10% liegt? Betrachte dazu je Beobachtung die Differenz $x_d = x_\text{tip} - 0.1 \cdot x_\text{total\_bill}$:
+
+Differenz bilden:
+```{r}
+tips <- tips %>%
+  mutate(t_diff = tip - 0.1*total_bill)
+```
+
+t-Test der Differenz durchführen:
+```{r}
+t.test( ~ t_diff, data=tips, alternative="greater")
+```
+
+
+### Übung  `r nextExercise()`: Gepaarter t-Test {.exercise type=A-B-C answer=C}
+
+Was sagt der `p-value < 2.2e-16` aus?
+
+A.  Die Wahrscheinlichkeit, dass die Nullhypothese stimmt, ist kleiner als $2.2 \cdot 10^{-16}$.
+B.  Die Wahrscheinlichkeit, dass die Alternativhypothese stimmt, ist kleiner als $2.2 \cdot 10^{-16}$.
+C.  Weder A noch B.
+
+::: {.notes}
+***C***: Der p-Wert gibt an, wie wahrscheinlich bei $n=244$ Beobachtungen (und der gegebenen Streuung) ein Mittelwert mindestens so groß wie $|\bar{x}_d|=`r round(mean( ~I(tip-0.1*total_bill), data=tips),2)`$ ist, wenn in Wirklichkeit gilt $\mu_d=0$.
+
+I.d.R. $P(\delta^*|H_0) \neq P(H_0|\delta^*)$: $P(\text{Papst}|\text{Mann}) \neq P(\text{Mann}|\text{Papst})$.
+:::
+
+
+
+
+## Test des Unterschieds von zwei oder mehr Mittelwerten
+
+
+### Zusammenhang Trinkgeld und Wochentag
+
+Anayse der Rechnungshöhe je Wochentag:
+```{r, fig.align="center", out.width="50%"}
+xyplot(tip ~ day, data = tips)
+```
+
+
+### Varianzanalyse (ANOVA) 
+
+
+- Vergleich des Lagemaßes $\mu_i$ bei zwei oder mehr Stichproben. Ein- oder mehrfaktoriell möglich, bei mehr als einem Einfluss auch Wechselwirkungen. 
+- Nullhypothese: Lagemaß $\mu_i$ für alle Gruppen gleich.
+- Die **Gesamtstreuung** ($SST$) wird zerlegt in die **Streuung zwischen den Stichproben**/Gruppen ($SSG$) und die **Streuung innerhalb der Stichproben**/Gruppen ($SSE$): 
+$$ \underbrace{\sum_{i=i}^n(x_i-\bar{x})^2}_{SST}=\underbrace{\sum_{j=1}^K n_j(\bar{x}_j-\bar{x})^2}_{SSG}+\underbrace{\sum_{j=1}^K \sum_{i=i}^{n_j}(x_{i,j}-\bar{x}_j)^2}_{SSE}$$
+
+- Ist das Verhältnis der Streuung zwischen den Gruppen im Verhältnis zur Streuung innerhalb der Gruppen groß (Teststatistik $F$), so ist dies unter der Nullhypothese unwahrscheinlich.
+- Voraussetzung: Daten innerhalb der Stichproben/ Gruppen unabhängig, identisch, normalverteilt.
+
+
+### Beispiele $F$^[Video [https://www.causeweb.org](https://www.causeweb.org): [Crawford S &copy; Use ANOVA](https://www.causeweb.org/cause/resources/library/r2222/)] 
+
+```{r, echo=FALSE, fig.align="center", out.width="80%"}
+n <- 30
+x1 <- (rnorm(n) %>% scale())*sqrt(n/3)
+x2 <- (rnorm(n) %>% scale())*sqrt(n/3)
+x3 <- (rnorm(n) %>% scale())*sqrt(n/3)
+
+panel.mean <- function(x, y, ...) {
+  # Vgl. https://stat.ethz.ch/pipermail/r-help/2005-November/081980.html
+  tmp <- mean(y~x)
+  panel.points(tmp, pch = 20, col="red", cex=2, ...)
+}
+
+anovadat1 <- data.frame(x=c(x1+1, x2, x3), Gruppe=factor(rep(c("A","B","C"), each=n)), stat="F=1") %>% mutate(x=x-mean(x))
+anovadat2 <- data.frame(x=c(x1, x2-sqrt(6), x3), Gruppe=factor(rep(c("A","B","C"), each=n)), stat="F=6 (a)") %>% mutate(x=x-mean(x))
+anovadat3 <- data.frame(x=c(x1-sqrt(2), x2+sqrt(2), x3), Gruppe=factor(rep(c("A","B","C"), each=n)), stat="F=6 (b)")  %>% mutate(x=x-mean(x))
+anovadat4 <- data.frame(x=c(x1, x2+sqrt(20), x3-sqrt(20)), Gruppe=factor(rep(c("A","B","C"), each=n)), stat="F=60") %>% mutate(x=x-mean(x))
+anovadat <- rbind(anovadat1, anovadat4, anovadat2, anovadat3)
+
+xyplot(x~Gruppe|stat, data=anovadat, ylab=NULL,
+       panel=function(...){
+         panel.xyplot(...)
+         panel.mean(...)
+         panel.abline(h=0)
+       })
+
+rm(n, x1,x2,x3, anovadat, anovadat1, anovadat2, anovadat3, anovadat4)
+```
+
+
+
+### Varianzanalyse in R
+
+```{r}
+# Speichere Ergebnis der Varianzanalyse aov() in "ergaov"
+ergaov <- aov(tip ~ # Abhängige Variable
+                day, # Unabhängige Variable
+              data = tips) # Datensatz
+
+# Zeige Zusammenfassung von "ergaov"
+summary(ergaov)
+```
+
+
+### Übung  `r nextExercise()`: Testentscheidung ANOVA {.exercise type=A-B-C answer=B}
+
+Wird die Nullhypothese 
+$H_0: \mu_{\text{Fri}}=\mu_{\text{Sat}}=\mu_{\text{Sun}}=\mu_{\text{Thu}}$ verworfen, d. h., wird anhand der Stichprobenunterschiede der Mittelwerte
+```{r}
+mean(tip ~ day, data=tips)
+```
+auf mindestens einen Unterschied in den Mittelwerten in der Population geschlossen ($\alpha=0.05$)?
+
+A.  Ja.
+B.  Nein. 
+C.  Weiß nicht.
+
+::: {.notes}
+***B***: Der p-Wert (`Pr(>F)`) liegt bei $0.174>0.05$, also kann $H_0$ zum üblichen Signifikanzniveau von $\alpha=0.05$ nicht verworfen werden.
+:::
+
+
+### Multiples Testen
+
+Wenn man statt einer ANOVA alle $\binom 42=\frac{4\cdot (4-1)}{2}=6$ Kombinationen (d. h. Donnerstag und Freitag, Donnerstag und Samstag usw.) ausprobiert hätte, hätte sich der $\alpha$-Fehler kumuliert^[hier: $\alpha=0.05$]:
+$$P(\text{Fehler 1. Art})=1-(1-0.05)^6= 0.265$$
+Das globale Signifikanzniveau $\alpha=0.05$ wäre nicht eingehalten!^[Adjustierung z.B. über Funktion `p.adjust()`.]
+
+**p-Hacking**: Wenn viele Hypothesen getestet werden, werden auch zufällig welche *signifikant* sein.
+
+### Offene Übung `r nextExercise()`: Trinkgeld Mann/ Frau {.exercise type=essay}
+
+Analysieren Sie die Höhe des Trinkgeldes und inwieweit sich dies zwischen den Geschlechtern unterscheidet.
+
+::: {.notes}
+`bwplot(tip~sex, data=tips)`  
+`favstats(tip~sex, data=tips)`  
+`t.test(tip~sex, data=tips)`  
+Auch wenn Median und Mittelwert bei den Männern leicht höher sind, kann $H_0: \mu_{Male}=\mu_{Female}$ nicht verworfen werden.
+:::
+
+```{r child = './useR/useR-post.Rmd', eval = showuseR}
+```
+
+
+
+## Zusammenfassung
+
+### Überblick zu den Simulationstechniken für numerische Variablen
+
+
+- **Einfache Simulation** zur Überprüfung eines Mittelwertes. 
+    - Beispiel: Wie hoch ist der Mittelwert der Rechnungshöhe (in der Population)? 
+    - Vorgehen: Simuliere wiederholt Zufallszahlen (unter Annahmen) und gucke wie wahrscheinlich der beobachtete Mittelwert ist.
+
+- **Permutationstest** zur Überprüfung eines Unterschieds zweier Verteilungen.
+    - Beispiel: Unterscheidet sich der Mittelwert der Rechnungshöhe (in der Population) zwischen Rauchern und Nichtrauchern?
+    - Vorgehen: Simuliere wiederholt zufällige Zuordnung und gucke wie wahrscheinlich die beobachtete Differenz der Mittelwerte ist.
+
+
+- **Bootstrap** zur Berechnung eines Konfidenzintervalls für einen Mittelwert oder einen Mittelwertsdifferenz.
+    - Beispiel: Was sind plausible Werte für den Mittelwert der Rechnungshöhe in der Population?
+    - Vorgehen: Simuliere wiederholt zufällige Stichprobe durch Ziehen mit Zurücklegen und berechne jeweils Mittelwert oder Mittelwertsunterschied.
+
+
+### Alternativen zur simulationsbasierten Inferenz
+
+- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils `t.test()`, der auf theoretischen bzw. asymptotisch approximativen Verteilunsanahmen aufbaut. 
+  
+- Die Variananalyse `aov()` testet den Unterschied von zwei oder mehr Gruppen hinsichtlich eines Mittelwerts; sie basiert auf theoretischen bzw. asymptotisch approximativen Verteilunsanahmen.
+
+- Überprüfung der Annahmen z.B. über Shapiro-Wilk Test (Normalverteilung, `shapiro.test()`) und Bartlett’s Test (gleiche Varianzen, `bartlett.test()`). 
+
+- Darüberhinaus gibt es weitere nicht-parametrische Testverfahren: Wilcoxon Test (`wilcox.test()`) bzw. Kruskal-Wallis Test (`kruskal.test()`). 
+
+
+```{r finish-Inferenz-numerischer-Daten, include=FALSE}
+rm(confi)
+rm(pathToImages)
+detach("package:lsr", unload=TRUE)
+rm(sample)
+finalizePart(partname)
+```

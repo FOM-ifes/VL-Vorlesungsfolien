@@ -1,0 +1,5 @@
+### Literatur (Auswahl)
+
+- Christiaans,Thomas; Ross, Matthias: *Wirtschaftsmathematik für das Bachelor-Studium*, Springer Gabler, 2013 [https://www.openintro.org/stat/textbook.php?stat_book=isrs](https://www.openintro.org/stat/textbook.php?stat_book=isrs)
+- Hartmann, Peter: *Mathematik für Informatiker Taschenbuch*, 6. Auflage, Springer Vieweg, 2015, ISBN: 978-3658034153
+- Luderer, Bernd; Würker, Uwe: *Einstieg in die Wirtschaftsmathematik*, 9. Auflage, Springer Gabler Verlag, 2015

@@ -1,0 +1,471 @@
+% ===========================================================================
+% sections.tex
+% ============---------------------------------------------------------------
+%
+% (C) in 2017-18 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% ---------------------------------------------------------------------------
+%
+% 13.07.2018 
+%
+% ---------------------------------------------------------------------------
+%
+\def\imagepath{images/}
+\def\backgroundimage{\imagepath./hintergrund}
+\def\lineimage{\imagepath./linie}
+\def\logoimage{\imagepath./logo}
+\def\titlebackgroundimage{\imagepath./titlehintergrund}
+%
+\def\logowidth{1cm}
+\def\logoheight{1cm}
+\def\logoxshift{-0.7cm}
+\def\logoyshift{-0.7cm}
+%
+\def\titleboxwidth{0.5\linewidth}
+\def\sectiontitleboxwidth{0.75\linewidth}
+\def\sectionpagewidth{0.5\myPaperWidth}
+\def\sectionpageheight{0.25\myPaperHeight}
+\def\subsectionpagewidth{0.5\myPaperWidth}
+\def\subsectionpageheight{0.25\myPaperHeight}
+%
+\def\myleftskip{0.4cm}
+\def\myrightskip{0.0cm}
+\def\mysepsize{0.6em}
+
+% My FrameTitleBox ...
+\newsavebox{\myftbox}
+\newlength{\myftboxwidth}
+\newlength{\myftboxmaxwidth}
+\setlength{\myftboxmaxwidth}{390pt}
+\def\myftboxscale{1.0}
+
+% ---------------------------------------------------------------------------
+
+% ---------------------------------------------------------------------------
+\usepackage{ragged2e} % Liefert FlushRight-Umgebung
+% ---------------------------------------------------------------------------
+\usepackage{ifthen}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.3}
+\usepackage{xspace}
+\usepackage{array}
+\usepackage{xstring}
+
+\ifstrempty{\insertinstitute}{%
+  \institute{FOM}%
+}{\relax}
+
+% ---------------------------------------------------------------------------
+%
+% Übungen und offene Übungen haben bei der FOM einen etwas anderen 
+% Hintergrund beim Frametitle. Hier wird ein Schalter dazu erzeugt und
+% und auf die normale Darstellun (false) gesetzt.
+%
+\newif\ifnpbtexercisemode
+\npbtexercisemodefalse
+%  \npbtexercisemodetrue
+
+
+
+% ---------------------------------------------------------------------------
+%
+% Die sich regelmässig wiederholenden Bildelemente werden in pgf gespeichert
+% und wiederverwendet. Dazu werden die folgenden Bezeichner verwendet:
+%
+% npbtlogo                :
+% npbtlogoline            :
+% npbtalternativelogoline :
+%
+% Mit dem Befehl "\updateNPBTimages" werden diese Bezeichner auf die aktuellen
+% Werte gesetzt, falls diese durch themes geändert werden/wurden.
+%
+\newcommand*{\updateNPBTimages}{%
+  \pgfdeclareimage[width=1.4\logowidth,height=1.4\logoheight]{npbtlogo}{\logoimage}
+  \pgfdeclareimage[width=0.86\paperwidth]{npbtlogoline}{\lineimage}
+  \pgfdeclareimage[width=0.86\paperwidth, height=1.25em]{npbtalternativelogoline}{\titlebackgroundimage}
+}
+
+\updateNPBTimages
+
+% ---------------------------------------------------------------------------
+%
+% logoline
+%
+
+\newcommand{\logoline}{%
+  \pgfuseimage{npbtlogoline}
+}
+
+\newcommand{\putLogo}{%
+  \node[%
+    shift={(\logoxshift,\logoyshift)},
+    inner sep=0pt
+  ] at (current page.north east){%
+      \pgfuseimage{npbtlogo}
+  };%
+}
+
+\newcommand{\setLogo}{%
+  \begin{tikzpicture}[%
+      remember picture, 
+      overlay
+    ]
+      \putLogo%
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------------------
+%
+% title page:
+%
+\defbeamertemplate{title page}{minimal}
+{
+  \inserttitle
+  \par
+  
+  \insertinstitute ~\xspace -- \insertdate
+  \par
+  
+  \insertauthor
+  \par
+}
+
+\defbeamertemplate{title page}{normal}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[inner sep=0pt] at (current page.center){%
+              \includegraphics[width=\myPaperWidth,height=\myPaperHeight]{\backgroundimage}%
+      };%
+    \putLogo%
+    \node[%
+      anchor=south east,
+      xshift=-1.95cm,
+      yshift=3.65cm
+    ] at (current page.south east){%
+        \begin{minipage}[b]{\titleboxwidth}
+            \begin{flushright} % XXXX
+                {\usebeamercolor[fg]{title in titlepage}%
+                 \usebeamerfont{title in titlepage} \inserttitle}
+                \par
+                \vspace*{0.7em}
+                {\usebeamercolor[fg]{institute in titlepage}%
+                 \usebeamerfont{institute in titlepage} \insertinstitute ~\xspace -- \insertdate}
+                \usebeamerfont{institute in titlepage}\par
+                {\usebeamercolor[fg]{author in titlepage}%
+                 \usebeamerfont{author in titlepage} \insertauthor}
+            \end{flushright} % XXXX
+        \end{minipage}    
+    };%
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------------------
+%
+% Frame title template:
+%
+\defbeamertemplate{headline}{sectioninhead}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[%
+      %ht=3.00em, %3.25em, %3em sollten eigentlich etwa 1,29168ex sein
+      ht=6.0ex,
+      dp=1ex,
+      sep=0.1pt, %
+      leftskip=\myleftskip, %
+      rightskip=\myrightskip, %
+  ]{headline}
+    {%
+      \vspace*{3ex}% Keine Ahnung wieso, aber ...
+      \vspace*{-4.5ex}% ... es hat den Effekt, den ich haben will.
+      \usebeamercolor[fg]{section in head}%
+      \usebeamerfont{section in head}%
+      \thesection.~\NoHyper\insertsection\endNoHyper\phantom{X}%
+    }%
+  \end{beamercolorbox}%
+  \nointerlineskip%
+% Hier gehört die Kapitelbezeichnung rein!
+}
+
+\defbeamertemplate{headline}{nosectioninhead}{%
+  \nointerlineskip%
+  \begin{beamercolorbox}[%
+      ht=6.0ex,
+      dp=1ex,
+      sep=0.1pt, %
+      leftskip=\myleftskip, %
+      rightskip=\myrightskip, %
+  ]{headline}
+  \phantom{X}
+  \end{beamercolorbox}
+}
+
+\defbeamertemplate{headline}{minimal}{
+\relax%
+}
+
+%
+% ---------------------------------------------------------------------------
+%
+\defbeamertemplate{frametitle}{minimal}{%
+  \usebeamercolor[fg]{frametitle in head}%
+  \usebeamerfont{frametitle in head}%
+  \insertframetitle%
+}
+
+\defbeamertemplate{frametitle}{normal}{%
+  \npbtexercisemodefalse%
+  \makeatletter%
+  \expandarg%
+  \IfSubStr*{\beamer@frametitle}{bung}{\npbtexercisemodetrue}{}%
+  \IfBeginWith*{\beamer@frametitle}{Offene}{\npbtexercisemodetrue}{}%
+  \makeatother%
+  \savebox{\myftbox}{%
+      \ifnpbtexercisemode\usebeamercolor[fg]{frametitle in head exercise}\else\usebeamercolor[fg]{frametitle in head}\fi%
+      \ifnpbtexercisemode\usebeamerfont{frametitle in head exercise}\else\usebeamerfont{frametitle in head}\fi%
+      \insertframetitle}% end of savebox!
+  \ifnpbtexercisemode{%
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=west, inner sep=0pt, yshift=-\logoheight+5pt] at (current page.north west){%
+            \pgfuseimage{npbtalternativelogoline}
+          };%
+    \end{tikzpicture}%
+    \vskip-43pt%
+  }\else\fi% end of ifnpbtexercisemode
+  \settowidth{\myftboxwidth}{\usebox{\myftbox}}%
+  \vskip6pt\vskip0pt%
+  \begin{beamercolorbox}[%
+      ht=1.20em, %
+      sep=0pt, %
+      leftskip=\myleftskip, %
+      rightskip=\myrightskip, %
+      wd=\paperwidth %
+    ]{frametitle}%
+      \ifdim\myftboxwidth>\myftboxmaxwidth%
+        \resizebox{\myftboxmaxwidth}{!}{\usebox{\myftbox}}\\[-0.85em]
+      \else%
+        \usebox{\myftbox}\\[-0.85em]
+      \fi
+      \ifnpbtexercisemode\else\logoline\fi%
+  \end{beamercolorbox}%
+  \begin{tikzpicture}[%
+      remember picture, %
+      overlay %
+    ]
+      \putLogo%
+  \end{tikzpicture}%
+  \vskip-1.05em\vskip0pt%
+}
+
+% ---------------------------------------------------------------------------
+%
+% Footline template
+%
+\defbeamertemplate{footline}{nofootline}{%
+  \relax%
+}
+
+\defbeamertemplate{footline}{normal}{% Skip first frame == Title frame !!!
+%    \leavevmode%
+    \ifthenelse{\equal{\insertframenumber}{1}}{%
+    }{%
+      \begin{beamercolorbox}[%
+          ht=0.08ex,
+          leftskip=\myleftskip,
+          rightskip=\myrightskip
+        ]{footline}
+        \logoline%
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[%
+          ht=1.25ex, 
+          %dp=2.25ex,
+          dp=1.35ex,
+          leftskip=\myleftskip,
+          rightskip=\myrightskip
+        ]{footline}
+        {%
+          {%
+            \usebeamercolor{date in footline}%
+            \usebeamerfont{date in footline}%
+            \insertdate  %
+          }%
+          \hfill%
+          {%
+            {%
+              \usebeamercolor{author in footline}%
+              \usebeamerfont{author in footline}%
+              \insertshortauthor  %
+            }%
+            {%
+              \usebeamercolor{separator in footline}%
+              \usebeamerfont{separator in footline}%
+              \hspace{\mysepsize}$|$\hspace{\mysepsize}%
+            }%
+            {%
+              \usebeamercolor{title in footline}%
+              \usebeamerfont{title in footline}%
+              \inserttitle  %
+            }%
+          }%
+          \hfill%
+          \vspace*{-0.9em}%
+          \raggedleft{%
+            \usebeamercolor{number in footline}%
+            \usebeamerfont{number in footline}%
+            \insertframenumber \hspace*{0.3cm}%
+          }%
+        }%
+      \end{beamercolorbox}
+      \vspace*{0.2cm}
+    }
+}
+
+% ---------------------------------------------------------------------------
+%
+% Section page template
+%
+%\setbeamertemplate{section page}
+%{
+%    \begin{centering}
+%    \begin{beamercolorbox}[sep=12pt,center]{section title}
+%      \usebeamerfont{section title}\insertsection\par
+%    \end{beamercolorbox}
+%    \end{centering}
+%}
+% ********
+% FIX ME: Orginal aus dem PPTX: 4,41cm von rechts, 10,23cm vob oben ist eine 3,47cm hohe und
+% ======= 18,85cm breite Box die von rechts unten her gefüllt wird!
+% ********
+
+\defbeamertemplate{section page}{minimal}
+{
+  \vfill\insertsectionhead\vfill
+}
+
+\defbeamertemplate{section page}{normal}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east,xshift=-1cm,yshift=1.5cm] at (current page.south east){%
+        \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
+          \begin{FlushRight}
+              \usebeamercolor{sectionnumber title}%
+              \usebeamerfont{sectionnumber title}\insertsectionnumber %
+              \usebeamercolor{section title}%
+              \usebeamerfont{section title}\insertsectionhead\par
+          \end{FlushRight}
+        \end{minipage}
+    };%
+  \end{tikzpicture}
+}
+
+% ---------------------------------------------------------------------------
+%
+% Subsection page template
+%
+\defbeamertemplate{subsection page}{minimal}
+{
+  \vfill\insertsubsectionhead\vfill
+}
+
+\defbeamertemplate{subsection page}{normal}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east,xshift=-1cm,yshift=1.5cm] at (current page.south east){%
+        \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
+          \begin{FlushRight}
+              \usebeamercolor{sectionnumber title}%
+              \usebeamerfont{sectionnumber title}\insertsubsectionnumber %
+              \usebeamercolor{section title}%
+              \usebeamerfont{section title}\insertsubsectionhead\par
+          \end{FlushRight}
+        \end{minipage}
+    };%
+  \end{tikzpicture}
+}
+
+% ---------------------------------------------------------------------------
+%
+% Note page (default) updated!
+%
+\defbeamertemplate{note page}{mydefault}
+{%
+  {%
+    \scriptsize
+    \usebeamerfont{note title}\usebeamercolor[fg]{note title}%
+    \ifbeamercolorempty[bg]{note title}{}{%
+      \insertvrule{.25\paperheight}{note title.bg}%
+      \vskip-.25\paperheight%
+      \nointerlineskip%
+    }%
+    \vbox{%
+      \hspace*{.6875\paperwidth}\insertslideintonotes{0.25}%
+      \vskip-0.25\paperheight%
+      \nointerlineskip
+      \begin{pgfpicture}{0cm}{0cm}{0cm}{0cm}
+        \begin{pgflowlevelscope}{\pgftransformrotate{90}}
+          {\pgftransformshift{\pgfpoint{-2cm}{0.2cm}}%
+          \pgftext[base,left]{\usebeamerfont{note date}\usebeamercolor[fg]{note date}\the\year-\ifnum\month<10\relax0\fi\the\month-\ifnum\day<10\relax0\fi\the\day}}
+        \end{pgflowlevelscope}
+      \end{pgfpicture}
+    }%
+    \nointerlineskip
+    \vbox to .25\paperheight{\vskip0.5em
+      \hbox{\insertshorttitle[width=8cm]}%
+      \setbox\beamer@tempbox=\hbox{\insertsection}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip4pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\begin{minipage}[t]{7.5cm}\def\breakhere{}\insertsection\end{minipage}}\fi%
+      }%
+      \setbox\beamer@tempbox=\hbox{\insertsubsection}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip17.4pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\begin{minipage}[t]{7.5cm}\def\breakhere{}\insertsubsection\end{minipage}}\fi%
+      }%
+      \setbox\beamer@tempbox=\hbox{\insertshortframetitle}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip30.8pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\insertshortframetitle[width=7cm]}\fi%
+      }%
+      \vfil}%
+  }%
+  \ifbeamercolorempty[bg]{note page}{}{%
+    \nointerlineskip%
+    \insertvrule{.75\paperheight}{note page.bg}%
+    \vskip-.75\paperheight%
+  }%
+  \vskip.25em
+  \nointerlineskip
+  %
+  %\textwidth=10.8cm%
+  \textwidth=13.8cm%
+  \hsize=\textwidth%
+  %
+  \insertnote
+}
+%
+% ---------------------------------------------------------------------------
+% Minimal Setup
+%
+%\setbeamertemplate{subsection page}[minimal]
+%\setbeamertemplate{note page}[mydefault]
+%\setbeamertemplate{title page}[minimal]
+%\setbeamertemplate{headline}[minimal]
+%\setbeamertemplate{footline}[nofootline]
+%\setbeamertemplate{frametitle}[minimal]
+%\setbeamertemplate{section page}[minimal]
+%
+% ---------------------------------------------------------------------------
+% Normal Setup
+%
+\setbeamertemplate{subsection page}[normal]
+\setbeamertemplate{note page}[mydefault]
+\setbeamertemplate{title page}[normal]
+\setbeamertemplate{headline}[sectioninhead]
+\setbeamertemplate{footline}[normal]
+\setbeamertemplate{frametitle}[normal]
+\setbeamertemplate{section page}[normal]
+%
+% ===========================================================================
+%

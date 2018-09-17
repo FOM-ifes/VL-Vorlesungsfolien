@@ -1,0 +1,124 @@
+% --------------------------------------------------------------------
+% moreblocks.tex (Release 1.1)
+% ==============------------------------------------------------------
+% (C) in 2015 by Norman markgraf
+%  
+% Release 1.0 nm (05.06.2015) Initial Concept
+% Release 1.1 nm (05.06.2015) First real good Release
+% --------------------------------------------------------------------
+\usepackage{etoolbox} % to use \undef{...}
+\makeatletter
+% --------------------------------------------------------------------
+%
+% Bemerkung(en)
+%
+\def\th@myremarkstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=orange,fg=white}
+    \setbeamercolor{block body example}{bg=orange!20,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{myremarkstyle}
+\newtheorem*{Bemerkung}{Bemerkung}
+\newtheorem*{Bemerkungen}{Bemerkungen}
+% --------------------------------------------------------------------
+%
+% Beweis
+%
+\def\th@mybeweisstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=blue,fg=white}
+    \setbeamercolor{block body example}{bg=blue!20,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{mybeweisstyle}
+\undef{\Beweis}
+%\undef{\theorem}
+\newtheorem{Beweis}{Beweis}
+
+% --------------------------------------------------------------------
+%
+% Definition
+%
+\def\th@mydefinitionstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=red,fg=white}
+    \setbeamercolor{block body example}{bg=red!20,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{mydefinitionstyle}
+\undef{\Definition}
+\undef{\definition}
+\newtheorem{Definition}{Definition}
+\newtheorem{definition}{Definition}
+% --------------------------------------------------------------------
+%
+% Satz
+%
+\def\th@mysatzstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=blue,fg=white}
+    \setbeamercolor{block body example}{bg=blue!20,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{mysatzstyle}
+\undef{\Satz}
+%\undef{\theorem}
+\newtheorem{Satz}{Satz}
+%\newtheorem{definition}{Definition}
+% --------------------------------------------------------------------
+%
+% Lemma
+%
+\def\th@mylemmastyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=blue!60,fg=darkgray!20}
+    \setbeamercolor{block body example}{bg=blue!5,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{mylemmastyle}
+\undef{\Lemma}
+\newtheorem{Lemma}{Lemma}
+% --------------------------------------------------------------------
+%
+% Lösung
+%
+\def\th@mysolutionstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=green!60,fg=darkgray!5}
+    \setbeamercolor{block body example}{bg=green!5,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{mysolutionstyle}
+\undef{\Loesung}
+\newtheorem{Loesung}{Lösung}
+% --------------------------------------------------------------------
+%
+% Übung
+%
+\def\th@myexercisestyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=green!75!blue!15,fg=darkgray!75}
+    \setbeamercolor{block body example}{bg=green!15,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{myexercisestyle}
+\undef{\Uebung}
+\newtheorem{Uebung}{Übung}
+% --------------------------------------------------------------------
+%
+% Fakt
+%
+\def\th@myfactstyle{%
+    \normalfont % body font
+    \setbeamercolor{block title example}{bg=green!60,fg=darkgray!5}
+    \setbeamercolor{block body example}{bg=green!5,fg=black}
+    \def\inserttheoremblockenv{exampleblock}
+}
+\theoremstyle{myfactstyle}
+\undef{\Fakt}
+\newtheorem{Fakt}{Fakt}
+\undef{\Fakten}
+\newtheorem{Fakten}{Fakten}
+% --------------------------------------------------------------------
+\makeatother

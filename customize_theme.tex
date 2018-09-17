@@ -1,0 +1,52 @@
+% ===========================================================================
+% customize_theme.tex
+% ===================--------------------------------------------------------
+%
+% (C) in 2017 by Norman Markgraf  [nm] (nmarkgraf(at)hotmail(dot)com)
+%            and Karsten Lübke    [KL] (karsten.luebke(at)fom(dot).de)
+%
+% ---------------------------------------------------------------------------
+% Release 1.0 (nm) 04. Sep. 2017 - Initial Commit
+% Release 1.1 (nm) 15. Sep. 2017 - Verbesserung der Einrückung von A.  bei
+%                                  enumerate Umgebungen.
+%
+% ---------------------------------------------------------------------------
+
+% ---------------------------------------------------------------------------
+% Anpassungen der Titlebox für die Skripte
+% ---------------------------------------------------------------------------
+\def\titleboxwidth{0.7\linewidth}
+
+% ---------------------------------------------------------------------------
+% Ergänzung von KL für ein besseres Inhaltsverzeichnis
+% ---------------------------------------------------------------------------
+\usepackage{etoolbox}
+\makeatletter
+%\patchcmd{\beamer@sectionintoc}{\vskip1.5em}{\vskip0.5em}{}{}
+%
+% Je größer die Werte um so näher rücken die Spiegelstriche zusammen!
+%
+\patchcmd{\beamer@sectionintoc}{\vskip1.5em}{\vskip0.3em}{}{}% für \renewcommand{\sfdefault}{phv}
+\makeatother
+
+% ---------------------------------------------------------------------------
+% Besseres einrücken von A. bei Aufzählungen
+% ---------------------------------------------------------------------------
+
+\makeatletter
+\def\beamer@@@enum@[#1]{% partly copied from enumerate.sty
+  \@enLab{}\let\@enThe\@enQmark
+  \@enloop#1\@enum@
+  \ifx\@enThe\@enQmark\@warning{The counter will not be printed.%
+    ^^J\space\@spaces\@spaces\@spaces The label is: \the\@enLab}\fi
+  \def\insertenumlabel{\the\@enLab}
+  \def\beamer@enumtempl{enumerate mini template}%
+   \expandafter\let\csname the\@enumctr\endcsname\@enThe
+%  \csname c@\@enumctr\endcsname7
+%  \expandafter\settowidth
+%            \csname leftmargin\romannumeral\@enumdepth\endcsname
+%            {\the\@enLab\hspace{\labelsep}}%
+  \beamer@enum@}
+
+\makeatother
+% ===========================================================================

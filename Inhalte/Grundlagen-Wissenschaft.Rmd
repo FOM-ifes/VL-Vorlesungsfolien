@@ -1,0 +1,326 @@
+```{r setup-Grundlagen-wissenschaft, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "0-Grundlagen-Wissenschaft",  # Dateiname ohne Suffix
+    "Grundlagen"                  # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+library(mosaic)
+```
+
+<!-- \mode<all>\addtocounter{section}{-1}\renewcommand{\Sinnspruch}{\begin{quote}\small  \end{quote} }\mode<*> -->
+
+# `r nextChapter()` Wissenschaftliche Grundlagen
+
+<!-- ::: {.Sinnspruch} -->
+<!-- In God we trust; all others bring data. -->
+
+<!-- [W. Edwards Deming (zugeschrieben)]{.Quelle} -->
+<!-- ::: -->
+
+
+### Wissenschaft (I/II)
+
+> Science is a particular way of knowing about the world. In science, explanations are limited to those based on observations and experiments that can be substantiated by other scientists. Explanations that cannot be based on empirical evidence are not part of science^[Hier: Natur- und Sozialwissenschaften.].  
+>
+> Fact: In science, an observation that has been repeatedly confirmed and for all practical purposes is accepted as "true." Truth in science, however, is never final, and what is accepted as a fact today may be modified or even discarded tomorrow.  
+>
+> Hypothesis: A tentative statement about the natural world leading to deductions that can be tested. If the deductions are verified, it becomes more probable that the hypothesis is correct. If the deductions are incorrect, the original hypothesis can be abandoned or modified. Hypotheses can be used to build more complex inferences and explanations.
+
+### Wissenschaft (II/II)
+
+> Law^[Hier: Modell.]: A descriptive generalization about how some aspect of the natural world behaves under stated circumstances.
+>
+> Theory: In science, a well-substantiated explanation of some aspect of the naturalworld that can incorporate facts, laws, inferences, and tested hypotheses.
+
+
+Quelle: Science and Creationism: A View from the National Academy of Sciences, Second Edition (1999)^[[https://doi.org/10.17226/6024](https://doi.org/10.17226/6024)]
+
+### Kognitives Modell Datenanalyse
+
+```{r echo=FALSE, out.width = "60%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Sinn3.png"))
+```
+
+- Schema: Ein mentales Modell, dass die ganze Bandbreite der Information über ein Thema beinhaltet
+- Modell: Repräsentation eines Ausschnitts innerhalb des Themas
+- Daten: Messungen der Realität^[[http://vita.had.co.nz/papers/sensemaking.html](http://vita.had.co.nz/papers/sensemaking.html)]
+
+
+### Übung `r nextExercise()`: Daten {.exercise type=yesno answer=yes}
+
+Stimmt die Aussage: Daten und deren Analyse sind ein zentraler Bestandteil natur- und sozialwissenschaftlicher Argumentation?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+> Explanations that cannot be based on empirical evidence are not part of science.
+
+*Empiricial evidence* sind Daten und deren Analyse, also ***Ja***.
+:::
+
+### Realität
+
+Es gibt unterschiedliche Zugänge zur Realität:
+
+- Laut dem **wissenschaftlichen Realismus** existiert eine reale Welt unabhängig von der Sicht des Betrachtenden. Häufig: Quantitative Methoden.
+
+- Im **Konstruktivismus** wird angenommen, dass Wissen über die Wirklichkeit erst durch Wahrnehmung erschaffen wird. Häufig: Qualitative Methoden.
+
+
+Weitere Erkenntnistheorien sind u.a. Empirismus^[Quelle des Wissens ist (vorrangig) die Sinneserfahrung.] und Rationalismus^[Quelle des Wissens ist (vorrangig) reines Denken.].
+
+
+- Die Realität ist komplex, teilweise verdeckt und dynamisch (siehe auch Chaosforschung).
+
+### Theorie
+
+- Eine Theorie ist eine strukturierte Sammlung von Hypothesen.
+
+- Sie schlägt eine vorläufige Antwort auf eine offene Frage vor.
+
+- Sie lässt sich kaum in ihrem vollen Umfang (auf einmal) prüfen.
+
+- Häufig sind Theorien zumeist an kausalen Beziehungen interessiert.
+
+- Gute Theorien ermöglichen Erklärungen, Vorhersagen, Nutzen.
+
+
+### Offene Übung `r nextExercise()`: Theorie {.exercise type=essay}
+
+Welche Theorie kennen Sie?
+
+::: {.notes}
+Hier gibt es natürlich sehr viele unterschiedliche: Evolutionstheorie, Prinzipal-Agent-Theorie, Triebtheorie, Theorie komplexer Systeme...
+
+Alle wollen Realität beschreiben und erklären und sind daher auch für die Praxis relevant.
+
+:::
+
+### Hypothese
+
+Eine Hypothese ist eine aus der Theorie oder Beobachtung abgeleitete Aussage.
+
+- Sie sind weniger umfangreich als Theorien.
+
+- Sie stellen Vermutungen über einen Sachverhalt an.
+
+- Sie ist eine provisorische Antwort auf ein wissenschaftliches Problem.
+
+- Sie lassen sich überprüfen (sind also potentiell "falsifizierbar", man kann zeigen, dass sie falsch sind). Hypothesen sind (nach Karl Popper) nie beweisbar/bestätigbar, man kann höchstens zeigen, dass sie falsch sind.
+
+*Kennzeichen einer wissenschaftlichen Hypothese:*
+
+- Sie ist eine allgemeingültige über den Einzelfall hinausgehende Behauptungen.
+
+- Häufig: Formalstruktur eines Konditionalsatz, Implikation: wenn $x$ (Antezedens), dann $y$ (Konsequenz). 
+
+ 
+### Modelle
+
+Modelle sind ganz allgemein vereinfachte Darstellungen relevanter Teile der Realität. Die Repräsentation der Realität durch Modelle ermöglicht eine einfachere Analyse.
+
+- Darstellung von Modellen
+  - graphisch (Pfadiagramme)^[Beispiel: Kundenzufriedenheit [http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction](http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction)]
+  - verbal
+  - In der Wissenschaft verwendet man häufig: **mathematisch-statistische Modelle** zur Beschreibung der Realität. 
+    - Das Instrumentarium der Mathematik kann eingesetzt werden, um zu optimieren.
+    - Mathematisch formulierte Modelle lassen sich gut statistisch überprüfen und ermöglichen Prognosen.
+    - Statistische Modelle sind mathematische Modelle, die mit Hilfe von Daten gewonnen werden.
+
+
+### Offene Übung `r nextExercise()`: Hypothese {.exercise type=essay}
+
+- Folgende Zahlen folgen einer Regel: $2, 4, 6$.
+
+- Wie lautet die Regel?
+
+- Sie können Zahlentripel vorschlagen, um die Regel zu prüfen!^[Wason, P. C. (1960): *On the failure to eliminate hypotheses in a conceptual task*. Quarterly journal of experimental psychology, 12(3), 129-140. [http://dx.doi.org/10.1080/17470216008416717](http://dx.doi.org/10.1080/17470216008416717)]
+
+::: {.notes}
+Die Regel lautet im Artikel: die folgende Zahl ist größer. Viele denken an die Regel $+2$ (in Varianten), manche an eine Lucas-Folge ($a_{n+1}=a_n+a_{n-1}$, mit $a_0=2$, $a_1=4$ folgt damit $a_2=6$ und $a_3=10$), versuchen diese aber nicht zu falsifizieren, d. h., sie schlagen $8, 10, 12, \ldots$ vor aber nicht $7, 8, 9$ (um der tatsächlichen Regel näher zu kommen) oder $3, 2, 1$ (um zu falsifizieren) (siehe auch: https://de.wikipedia.org/wiki/Peter_Wason#2-4-6-Aufgabe)
+
+Welche Vielzahl von mathematisch gut begründeten Folgen es mit dem Anfang "2,4,6" gibt, kann man hier nachschlagen: <https://oeis.org/search?q=2%2C4%2C6&language=german&go=Suche>
+
+Dazu kommen dann noch die nicht konstruktiven Regeln, à la "die folgende Zahl ist größer"!
+:::
+
+
+### Wissenschaftliche Schlusstechniken / Generierung von Hypothesen
+
+:::::::::::::: {.columns}
+::: {.column width="33%"}
+**Induktion**: 
+
+Generalisierung von in der Realität beobachteten Regelmäßigkeiten zu einer allgemeineren Vermutungen. 
+
+
+
+**Häufig:** *Hypothesenbildung*.
+
+
+
+**Beispiele:** Pawlow, Freud
+
+:::
+::: {.column width="33%"}
+**Deduktion**: 
+
+Ableitung von Aussagen aus anderen (allgemeineren) Aussagen mit Hilfe logischer Regeln. 
+
+
+
+**Häufig:** *Hypothesenprüfung.*
+
+:::
+::: {.column width="33%"}
+**Abduktion**: 
+
+Verknüpfung von Einzelbeobachtungen und Erkennen von Regeln. 
+
+:::
+::::::::::::::
+
+
+### Beispiel Schlusstechniken
+
+- *Induktion*: Hm, ich habe schon 30 Bohnen aus dem Sack gezogen... Alle weiß. Noch 30 Bohnen... schon wieder alle weiß. Ich hab's: Die Bohnen müssen alle weiß sein!
+
+- *Deduktion*: Ich habe die Bohnen in den Sack gefüllt. Sie waren alle weiß. Jetzt nehme ich eine Bohne aus dem Sack: sie ist weiß!
+
+- *Abduktion*: Vor mir steht ein Sack; ich sehe, dass Bohnen darin sind. Ich finde eine weiße Bohne irgendwo im Raum auf dem Boden. Daraus schließe ich: Die Bohne muss aus dem Sack sein!
+
+Quelle: Walach, H. (2013): *Psychologie: Wissenschaftstheorie, philosophische Grundlagen und Geschichte; ein Lehrbuch*.
+Stuttgart: Kohlhammer.
+
+
+### Übung `r nextExercise()`: Schlusstechniken {.exercise type=A-B answer=A}
+
+Eine Dozentin hat mehrfach beobachtet, dass ihre Studierenden interessiert am Fach Statistik sind. Nun schließt sie, dass alle Studierenden interessiert am Fach Statistik sind. Welche Schlussart liegt vor?
+
+A.  Induktion.
+B.  Deduktion.
+
+::: {.notes}
+***A***, Induktion. Sie hat empirisch etwas wiederholt beobachtet und daraus eine allgemeine Regel gewonnen.
+:::
+
+
+### Falsifikationsprinzip
+
+- **Induktionsproblematik**: Kann durch Induktion von Einzelbeobachtungen *sicher* auf ein allgemeines Gesetz -- auch in Zukunft -- geschlossen werden? 
+- **Falsifikationsprinzip**: Obwohl es nicht möglich ist, die Richtigkeit einer wissenschaftlichen Theorie auf Basis einer begrenzten Menge von Daten zu beweisen, ist es möglich zu beweisen, dass eine Theorie falsch ist. Wissenschaftliche Aussagen sollen daher nach Karl Popper empirisch widerlegbar sein. Beispiel: Kann man die Hypothese beweisen, dass alle Schwäne weiß sind?
+    - Das ist kaum/nicht möglich, man müsste die ganze Welt bereisen (und die Zukunft und die Vergangenheit). Und selbst dann: wer weiß, vielleicht habe ich einen übersehen?
+    - Zu zeigen, dass die Hypothese falsch ist, ist einfach: Ein schwarzer Schwan reicht, um zu zeigen, dass die Behauptung, alle Schwäne seien weiß, falsch ist!
+    
+### Übung `r nextExercise()`: Beweis {.exercise type=A-B-C answer=B}
+
+Hat sie die Aussage "alle Studierenden sind interessiert an Statistik" endgültig bewiesen?
+
+A.  Ja.
+B.  Nein.
+C.  Vielleicht.
+
+::: {.notes}
+***B***, nein, sie hat die Aussage "Alle Studierenden sind interessiert an Statistik" nicht endgültig bewiesen, da es immer noch möglich ist, dass es Studierende gibt, die nicht an Statistik interessiert sind. Vielleicht woanders, zu einem anderen Zeitpunkt ...
+:::
+
+
+### Forschungsprozess
+
+- **Planung**: Formulierung der Forschungsfrage: Forschungsidee, Informationssammlung, Forschungsfrage und -hypothesen.
+
+- **Datenerhebung**: Primär- oder Sekundärerhebung^[Digitalisierung!], Operationalisierung, Versuchsplanung und -durchführung, Datenerhebung, Datenbeschaffung.
+
+- **Datenaufbereitung** und **Datenanalyse**: Fehlende Werte, Ausreißer, Explorative Datenanalyse,  Inferenzstatistik, Modellierung.
+
+- **Interpretation**: Was sagt das Ergebnis aus? Schlussfolgerung, Mitteilung der Ergebnisse.
+
+### Übung `r nextExercise()`: Literatur {.exercise type=A-B-C-D answer=A}
+
+An welcher Stelle des Forschungsprozesses ist Literaturrecherche besonders zentral?
+
+A.  Zu Beginn.
+B.  Bei der Datenerhebung.
+C.  Bei der Datenauswertung.
+D.  Zum Ende.
+
+::: {.notes}
+Insbesondere zu Beginn ist Literaturrecherche wichtig, damit Sie ein Bild über den Stand der Forschung, das Vorgehen anderer etc. erhalten. Natürlich auch später, aber gerade zu Beginn, daher ***A***.
+:::
+
+
+### Forschen
+
+Gütekriterien für Forschung:
+
+- **Ethische Aspekte**: Können negative Folgen, z. B. bei befragten/ untersuchten Personen auftreten? Auch: Datenschutz.
+
+- **Transparenz**: Das Vorgehen ist klar dokumentiert und nachprüfbar (und damit prinzipiell **reproduzierbar**)?
+
+- **Objektivität**: Sind die Ergebnisse unabhängig von der Person? Kommen andere zum selben Ergebnis?
+
+- **Interne Validität**: Keine anderen Erklärungen für die Ergebnisse? Ist der behauptete Zusammenhang richtig?
+
+- **Externe Validität**: Übertragbarkeit der Ergebnisse? Zeigt sich der behauptete Zusammenhang auch in anderen Situationen?
+
+
+### Übung `r nextExercise()`: Wissenschaftliches Arbeiten {.exercise type=A-B-C-D answer=D}
+
+Was ist ein unabdingbares Merkmal wissenschaftlichen Arbeitens?
+
+A.  Spektakuläre Ergebnisse.
+B.  Bestätigung der Forschungshypothese.
+C.  Kein Praxisbezug.
+D.  Keines der in A -- C genannten.
+
+::: {.notes}
+Alles der in *A*, *B* und *C* genannten Merkmale kann ein Merkmal einer wissenschaftlichen Arbeit sein, aber keines muss, daher ***D***.
+:::
+
+
+### Übung `r nextExercise()`: Reproduzierbarkeit {.exercise type=A-B-C-D answer=D}
+
+Das Forschungsergebnis der Dozentin "Statistik weckt das Interesse der Studierenden" kann nicht reproduziert werden. Welcher Aspekt wissenschaftlichen Arbeitens könnte verletzt sein?
+
+A.  Nur Objektivität.
+B.  Nur interne Validität.
+C.  Nur externe Validität.
+D.  Alle in A -- C genannten.
+
+::: {.notes}
+Alle der in *A*, *B*, *C* genannten Probleme können aufgetreten sein, daher ***D***.
+:::
+
+
+### Qualitative und Quantitative Forschung
+
+- **Quantitative Methoden**
+    - Messung und numerische Beschreibung der Wirklichkeit.^[Vgl. wissenschaftlichen Realismus.]
+    - Allgemeingültige Gesetze für die Grundgesamtheit.
+    - Ein Ausschnitt der beobachteten sozialen Vielfalt wird auf Skalen abgebildet, und es wird mit Häufigkeiten, Mittelwerten, Wahrscheinlichkeiten des Auftretens von Merkmalsausprägungen operiert.
+- **Qualitative Methoden**
+    - Verbalisierung der Erfahrungswirklichkeit.^[Vgl. Konstruktivismus.]
+    - Wirklichkeitsinterpretationen sind durch spezifische soziale Handlungsweisen geprägt und strukturieren gleichzeitig das soziale Handeln der Einzelperson vor. 
+    - Untersuchungsgegenstand soll möglichst in seinem natürlichen Umfeld detailliert, ganzheitlich und umfassend erfasst werden.
+    
+### Cartoon: Statistik
+
+```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_07-2017.jpg", "cartoon0717.jpg", pathToImages)
+```
+"Traue Dich, in die Daten einzutauchen, navigiere mit Statistik und tauche erfrischt mit sinnvollen Erkenntnissen wieder auf."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2017/results) &copy; J.B. Landers, Überschrift D. Nandy]
+
+```{r finish-Grundlagen-wissenschaft, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

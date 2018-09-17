@@ -1,0 +1,76 @@
+%
+% beamerfonttheme.tex / myfonts.tex
+%
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\ifxetex% XeLaTeX Fontsetting                                               %
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+\usepackage{xltxtra}
+% Now done via _output.yaml ! 
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
+\else%    pdf-LaTeX Fontsetting                                             % 
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% # Latin Modern
+% Die LaTeX Standardschrift ist die Latin Modern (lmodern Paket).
+% If Latin Modern is not available for your distribution you must install the
+% package cm-super instead. Otherwise your fonts will look horrible in the PDF
+%
+  \usepackage{lmodern}
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+%
+% needed for all T1 fonts!
+  \usepackage[T1]{fontenc} 	% sonst wird OT1 coding ausgegeben 
+%							% und dann funktioniert Myriad (pmy) nicht mehr
+  \usepackage{textcomp} 		% sonst wird OT1 coding ausgegeben 
+%							% und dann funktioniert Myriad (pmy) nicht mehr
+
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% # Palantino: Serifen für die Mathematischen Formeln (pplx, pplj)
+\ifxetex\relax\else
+\usepackage[%
+  osf,
+  sc
+]{mathpazo} 
+\fi
+%\renewcommand{\sfdefault}{pplx}
+%\renewcommand{\sfdefault}{pplj}
+%
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% # Schrifttype eulervm / Euler Virtual Math
+%
+% URL: 
+% http://ftp.riken.jp/tex-archive/fonts/eulervm/doc/latex/eulervm/eulervm.pdf
+%  Zitat: Do not use the Euler math fonts in conjunction with the default 
+%         Computer Modern text fonts – this is ugly!
+  \usepackage[                           %% --- EulerVM (MATH)
+    small,       %for smaller Fonts
+    OT1,
+%   euler-digits % digits in euler fonts style
+  ]{eulervm}
+% 
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% \DeclareSymbolFont{operators}   {OT1}{cmr} {m}{n}
+  \DeclareSymbolFont{letters}     {OML}{zplm} {m}{it}
+% \DeclareSymbolFont{symbols}     {OMS}{cmsy}{m}{n}
+% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+% ---------------------------------------------------------------------------
+% eurosym für das Euro-Symbol
+% =======
+%
+% Als Option "official" für das "offizelle" Eurosymbol
+%
+%\usepackage[official]{eurosym}
+%
+\usepackage{eurosym}
+% Eurosymbol auch in mathematischen Formeln richtig darstellen
+%
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+%
+% \euro in UTF-8 als Standard-Eurozeichen definieren
+%
+  \DeclareUnicodeCharacter{20AC}{\euro}
+
+%
+\fi
+% ---------------------------------------------------------------------------

@@ -1,0 +1,103 @@
+beamer_presentation:
+  latex_engine: pdflatex
+  template: NULL
+  toc: false
+  md_extensions: +raw_tex+header_attributes
+  fig_caption: false
+  highlight: tango
+  keep_tex: true
+  slide_level: 3
+  includes:
+    in_header: header.tex
+    before_body: before.tex
+  pandoc_args:
+    - './private.yaml'
+    - -V
+    - papersize=A4
+    - -V
+    - fontsize=12pt
+    - -V
+    - lang=de
+    - -V
+    - linkcolor=blue
+    - -V
+    - urlcolor=blue
+    - -V
+    - theme=NPBT
+    - -V
+    - colortheme=FOM
+    - -V
+    - outertheme=FOM
+    - --filter
+    - pandoc-filter/typography.py
+    - --filter
+    - pandoc-filter/style.py
+beamer_presentation_loop:
+  template: NULL
+  toc: false
+  md_extensions: +raw_tex+header_attributes
+  fig_caption: false
+  highlight: tango
+  keep_tex: true
+  slide_level: 3
+  includes:
+    in_header: header-loop.tex
+    before_body: before-loop.tex
+  pandoc_args:
+    - './private.yaml'
+    - -V
+    - papersize=A4
+    - -V
+    - fontsize=12pt
+    - -V
+    - lang=de
+    - -V
+    - linkcolor=blue
+    - -V
+    - urlcolor=blue
+    - -V
+    - theme=NPBT
+    - -V
+    - colortheme=FOM
+    - -V
+    - outertheme=FOM
+    - --filter
+    - pandoc-filter/typography.py
+    - --filter
+    - pandoc-filter/style.py
+powerpoint_presentation:
+  slide_level: 2
+ioslides_presentation:
+  toc: true    
+  slide_level: 2
+  fig_caption: false
+  highlight: tango
+  pandoc_args:
+    - './private.yaml'
+    - --filter
+    - pandoc-filter/typography.py
+slidy_presentation:
+  toc: true
+  slide_level: 2
+  fig_caption: false
+  highlight: tango
+  pandoc_args:
+    - './private.yaml'
+    - --filter
+    - pandoc-filter/typography.py
+revealjs_presentation:
+  theme: night
+  highlight: tango
+  center: false
+  pandoc_args:
+    - './private.yaml'
+    - --filter
+    - pandoc-filter/typography.py
+revealjs::revealjs_presentation:
+  theme: night
+  highlight: tango
+  center: false
+  pandoc_args:
+    - './private.yaml'
+    - --filter
+    - pandoc-filter/typography.py

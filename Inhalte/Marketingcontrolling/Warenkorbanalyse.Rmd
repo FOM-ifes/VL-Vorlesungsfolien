@@ -1,0 +1,379 @@
+```{r setup-Warenkorbanalyse, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "Warenkorbanalyse",  # Dateiname ohne Suffix
+    "Marketingcontrolling"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+rm(inspect)
+
+library(mosaic)
+library(arules)
+library(arulesViz)
+```
+
+# `r nextChapter()` Warenkorbanalyse
+
+### Lernziele 
+
+- Einsatz und Ziel der Warenkorbanalyse verstehen.
+- Daten für die Warenkorbanalyse einlesen. 
+- Anwendung der Warenkorbanalyse.
+- Interpretation und Schlussfolgerungen der Warenkorbanalyse.
+- Evaluation des Einsates der Warenkorbanalyse in der Marketing Controlling Praxis.
+
+
+### Warenkorbanalyse 
+
+Die Warenkorbanalyse ist eine Methode, die die beim Einkauf gemeinsam gekauften Produkte oder Produktkategorien aus einem Handelssortiment untersucht.
+
+**Ziel**  
+Strukturen in den Daten finden, so genannte Regeln, die beschreiben, welche Produkte oder Produktkategorien gemeinsam oder eben nicht gemeinsam gekauft werden.
+
+**Beispiel**  
+Wenn ein Kunde Windeln und Bier kauft, kauft er auch Chips.
+
+**Methode**  
+*Assoziationsanalyse* - oder auch **Warenkorbanalyse**.
+
+**Anwendung**  
+Werden solche Regeln gefunden, kann das Ergebnis beispielsweise für Verbundplatzierungen im Verkaufsraum oder in der Werbung verwendet werden.
+
+
+
+### Laden der Pakete und Download der Daten {.shrink}
+
+
+```{r}
+library(mosaic)
+library(arules)
+library(arulesViz)
+
+# Laden Datensatz
+data(Groceries)
+
+# Dataframe aus Transaktionsdaten generieren 
+groceries<-as(Groceries, 'data.frame')
+```
+
+
+### Betrachten der Daten {.shrink}
+
+```{r}
+# Betrachten der Warengruppen der ersten 6 Transaktionen
+groceries[1:6,]
+
+```
+
+
+### Datenaufbau {.shrink}
+
+```{r}
+summary(Groceries)
+```
+
+
+### Interpretation der Zusammenfassung
+
+1. Bei dem Datensatz handelt es sich um Transaktionsdaten mit 9835 Transaktionen und 169 Warengruppen (items).
+
+2. Auflistung der fünf am häufigsten gekauften Warengruppen mit der Anzahl der Transaktionen, in denen sie vorkommen. 
+
+3. Verteilung der „Länge“ der Transaktionen.
+
+4.  Zusätzlich zu den Bezeichnungen der Warengruppen (labels) sind Informationen zur Sortimentshierarchie vorhanden sind (level1 und level2). 
+
+
+
+### Länge der Transaktionen {.shrink}
+
+
+```{r}
+# Welche Transaktionen sind größer 25?
+which(size(Groceries) > 25)
+# Histogramm der Transaktionslängen
+hist(size(Groceries))
+```
+
+### Häufigste Warengruppen {.shrink}
+
+```{r}
+# Relative Häufigkeiten der häufigsten Produkte, 
+# hier nach relativer Häufigkeit größer 0,1 gefiltert.
+itemFrequencyPlot(Groceries, support=0.1)
+```
+
+
+### Die 20 häufigsten Warengruppen {.shrink}
+
+```{r}
+itemFrequencyPlot(Groceries, topN=20)
+```
+
+
+### Assoziationsanalyse
+
+Im nächsten Schritt wird mit statistischen Methoden nach Strukturen in den Daten gesucht. Als Grundlage werden **Ähnlichkeitsmatrizen** erstellt, die für jedes Warengruppenpaar die Häufigkeit des gemeinsamen Vorkommens in Transaktionen bestimmen. 
+
+Solch eine **Ähnlichkeitsmatrix** ist zum Beispiel eine **Kreuztabelle** in der es für jedes Produkt eine Spalte und eine Zeile gibt. 
+
+In den Zellen in der Tabelle steht jeweils die Häufigkeit, wie oft dieses Produktpaar gemeinsam in Transaktionen in den Daten vorkommt.
+
+
+### Häufigkeiten der gemeinsamen Käufe {.shrink}
+
+```{r}
+# Kreuztabelle als ct speichern
+ct<-crossTable(Groceries)
+
+# Ausgabe der Zeilen 1:5 und Spalten 14:17 (Bsp.)
+ct[1:5,14:17]
+```
+
+=> Frankfurter und Zitrusfrüchte werden in 64 Transaktionen zusammen gekauft, Frankfurter und grapes in 21 usw.
+
+
+### Clusteranalyse
+
+Auf Basis der **Ähnlichkeitsmatrix** wird dann z.B. mit Mehrdimensionaler Skalierung oder hierarchischen Clusteranalysen nach Strukturen in den Daten gesucht. 
+
+Die **hierarchische Clusteranalyse** liefert dann ein Dendrogram, siehe folgende Abbildung, in der ähnliche Produkte miteinander gruppiert indentifiziert werden können.
+
+Ähnliche Produkte (also Produkte, die zusammen gekauft werden) werden zusammen in Gruppen geclustert. Je länger die vertikale Verbindungslinie ist, die zwei Warengruppen zusammenfasst, um so unterschiedlicher sind diese.
+
+
+### Dendrogram {.shrink}
+
+```{r}
+diss <- dissimilarity(Groceries[, itemFrequency(Groceries) > 0.03],
+method = "Jaccard", which = "items") 
+hc <- hclust(diss, method = "ward.D")
+plot(hc)
+```
+
+### Assoziationsregeln {.shrink}
+
+Es werden Regeln gesucht und an den Daten geprüft, die das Kaufverhalten der Kunden beschreiben. 
+
+Solch eine Regel ist zum Beispiel „Wenn ein Kunde Windeln und Bier kauft, kauft er auch Chips.“
+
+Für diese Regeln lassen sich statistische Maßzahlen berechnen, die die Güte und Bedeutung der Regeln beschreiben:
+
+**Support** ist das Signifikanzmaß der Regel. Es gibt an, wie oft die gefundene Regel in den Daten anzuwenden ist. Bsp.: Wie oft kommen Windeln, Bier und Chips in einer Transaktion gemeinsam vor?
+
+**Confidence** ist das Qualitätsmaß der Regel. Es beschreibt, wie oft die Regel richtig ist. Bsp.: Wie oft ist in einer Transaktion Chips enthalten, wenn auch Windeln und Bier enthalten sind?
+
+**Lift** ist das Maß der Bedeutung der Regel. Es sagt aus wie oft die Confidence den Erwartungswert übersteigt. Bsp.: Wie ist die Häufigkeit des gemeinsamen Vorkommens von Windeln, Bier und Chips im Verhältlnis zur erwarteten Häufigkeit des Vorkommens, wenn die Ereignisse stochastisch unabhängig sind?
+
+
+### Übung `r nextExercise()`: Vergleich Support und Confidence {.exercise type=yesno answer=no}
+
+Stimmt die Aussage: Die Confidenz ist stets größer als der Support: *Confidence*($A \rightarrow B$)>*Support*($B$)?
+
+- Ja.
+- Nein.
+
+<div class="notes">
+***Nein***, nur wenn *Lift*>1: z. B. könnten $10\,\%$ aller Kunden Gemüse kaufen, aber nur $5\,\%$ aller Kunden von Korn.
+</div>
+
+
+### Algorithmen
+
+In den Daten werden zunächst alle möglichen **Regeln** gesammelt, die einen Mindestwert an Support und Confidence haben. Die Mindestwerte werden dabei vom Nutzer vorgegeben. Da es sich bei Transaktionsdaten um große Datenmengen handelt und häufig große Anzahlen von Produkten enthalten sind, wird die Suche nach Regeln zu einem komplexen Problem. 
+
+Sind die **Assoziationsregeln** gefunden, können Sie vom Nutzer genauer untersucht werden und z.B. nach den oben genannten Kennzahlen sortiert betrachtet werden, oder es werden die Regeln für spezielle Warenkategorien genauer betrachtet.
+
+
+### Regeln {.shrink}
+
+```{r}
+apriori(Groceries)
+```
+ 
+ 
+### Regeln mit Limitationen {.shrink}
+
+```{r}
+# Support, confidence und minimale Länge festlegen
+grules<-apriori(Groceries, parameter = list(support = 0.009, confidence = 0.25, minlen = 2))
+grules
+```
+
+
+### Übung `r nextExercise()`: Limitation {.exercise type=A-B-C answer=A}
+
+Was passiert, wenn der minimale Support erhöht wird, z. B. `supp=0.02`?
+
+A.  Es werden weniger Regeln gefunden.
+B.  Es werden mehr Regeln gefunden.
+C.  Es werden genauso viele Regeln gefunden.
+
+<div class="notes">
+***A*** Im Beispiel wird statt 224 Regeln nur noch 49 gefunden.
+</div>
+
+
+### Bewertung der Regeln {.shrink}
+
+```{r}
+summary(grules)
+```
+
+
+### Analyse der Regeln {.shrink}
+
+
+```{r}
+# Analyse der ersten 10 Regeln
+inspect(grules[1:10])
+```
+
+
+### Regelanalyse Interpretation 
+
+Regeln sollten nicht einfach unreflektiert übernommen werden. 
+
+Grundsätzlich sollte man unterscheiden zwischen:
+
+**Handlungsfähigkeit**  
+Regeln sollten einen klaren und nützlichen Einblick in die Realität bieten. 
+
+**Trivial**  
+Alle Regeln, die so offensichtlich sind, dass sie nicht erwähnenswert sind, sind klar, aber nicht nützlich.
+
+**Unerklärlichkeit**  
+Wenn der Zusammenhang zwischen den Elementen so unklar ist, dass es zusätzlicher Forschung bedarf, um herauszufinden, wie die Informationen für Aktionen genutzt werden können.
+
+
+### Analyse der Top5 Regeln {.shrink}
+
+```{r}
+# Welches sind die top 5 Regeln?  
+top5<-sort(grules, by = "lift")[1:5]
+inspect(top5)
+```
+
+
+### Übung `r nextExercise()`: Interpretation Support {.exercise type=A-B-C-D answer=B}
+
+Wie lautet die richtige Interpretation von *Support*({citrus fruit,other vegetables} => {root vegetables})=0.012302999?
+
+A.  0.010371124 aller Transaktionen enthalten {citrus fruit,other vegetables} oder {root vegetables}.
+B.  0.010371124 aller Transaktionen enthalten {citrus fruit,other vegetables} und {root vegetables}.
+C.  0.010371124 der Transaktionen von {citrus fruit,other vegetables} enthalten auch {root vegetables}.
+D.  0.010371124 der Transaktionen von {root vegetables} enthalten auch {citrus fruit,other vegetables}.
+
+<div class="notes">
+***B***
+</div>
+
+### Übung `r nextExercise()`: Interpretation Confidence {.exercise type=A-B-C-D answer=C}
+
+Wie lautet die richtige Interpretation von *Confidence*({citrus fruit,other vegetables} => {root vegetables})=0.3591549?
+
+A.  0.3591549 aller Transaktionen enthalten {citrus fruit,other vegetables} oder {root vegetables}.
+B.  0.3591549 aller Transaktionen enthalten {citrus fruit,other vegetables} und {root vegetables}.
+C.  0.3591549 der Transaktionen von {citrus fruit,other vegetables} enthalten auch {root vegetables}.
+D.  0.3591549 der Transaktionen von {root vegetables} enthalten auch {citrus fruit,other vegetables}.
+
+<div class="notes">
+***C***
+</div>
+
+### Übung `r nextExercise()`: Interpretation Lift {.exercise type=yesno answer=yes}
+
+Simmt die Aussage: Kunden die {citrus fruit,other vegetable} kaufen, kaufen $3.295045\times$ häufiger {root vegetables} als unter Unabhängigkeit zu erwarten wäre.
+
+- Ja.
+- Nein.
+
+<div class="notes">
+***Ja***, *Lift*({citrus fruit,other vegetabl} => {root vegetables})=3.29504.
+</div>
+
+
+### Regeln mit hohem Support und hoher Confidence {.shrink}
+
+```{r}
+inspect(sort(sort(grules, by ="support"),by ="confidence")[1:5])
+```
+
+
+### Übung `r nextExercise()`: Relevanz {.exercise type=A-B-C answer=A}
+
+Woran können Sie am ehesten erkennen, ob eine Regel relevant ist, d.h., viele Transaktionen betrifft?
+
+A.  An einem hohen Support.
+B.  An einer hohen Konfidenz.
+C.  An einem hohen Lift.
+
+<div class="notes">
+***A***, Support, da dieser sagt, wie oft eine Regel auftaucht.
+</div>
+
+
+### Übung `r nextExercise()`: Verbundwirkung {.exercise type=A-B-C answer=C}
+
+Woran können Sie am ehesten erkennen, ob es eine hohe Assoziation/ Verbundwirkung zwischen den Items gibt.
+
+A.  An einem hohen Support.
+B.  An einer hohen Konfidenz.
+C.  An einem hohen Lift.
+
+<div class="notes">
+***C***, Lift, da hier die Steigerung der relativen Häufigkeit gemessen wird.
+</div>
+
+
+### Übung `r nextExercise()`: Empfehlung {.exercise type=A-B-C answer=B}
+
+Angenommen der Kunde hat Produkt $A$ im Warenkorb. Aus Kundensicht, welches Produkt $B$ sollten Sie empfehlen?
+
+A.  Das mit dem höchsten Support.
+B.  Das mit der höchsten Konfidenz.
+C.  Das mit dem höchsten Lift.
+
+<div class="notes">
+***B***, da die Konfidenz sagt, wie viele der Kunden von $A$ auch $B$ gekauft haben.
+</div>
+
+
+### Streudiagramm der top10Regeln {.shrink}
+
+```{r}
+top10<-sort(grules, by = "lift")[1:10]
+plot(top10)
+```
+
+
+### Netzwerk der Top5Regeln {.shrink}
+
+```{r}
+plot(top10, method="graph")
+```
+
+
+
+
+### Literatur
+
+- Michael Hahsler, Kurt Hornik, Thomas Reutterer: Warenkorbanalyse mit Hilfe der Statistik-Software R, Innovationen in Marketing, S.144-163, 2006.
+- Michael Hahsler, Bettina Grün, Kurt Hornik, Christian Buchta, Introduciton to arules – A computational environment for mining association rules and frequent item sets. (Link zum PDF)
+- Rakesh Agrawal, Ramakrishnan Srikant, Fast algorithms for mining association rules, Proceedings of the 20th VLDB Conference Santiago, Chile, 1994
+
+
+```{r finish-Warenkorbanalyse, include=FALSE}
+rm(pathToImages)
+detach("package:arulesViz", unload = TRUE)
+detach("package:arules", unload = TRUE)
+finalizePart(partname)
+```
+

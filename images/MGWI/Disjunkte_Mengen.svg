@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="341.62381"
+   height="190.23695"
+   id="svg3369">
+  <defs
+     id="defs3371" />
+  <g
+     transform="translate(-237.75952,-431.55375)"
+     id="layer1">
+    <path
+       d="m 269,464.86218 a 72,74.5 0 1 1 -144,0 72,74.5 0 1 1 144,0 z"
+       transform="matrix(1.00695,0,0,0.973161,119.43961,59.119339)"
+       id="path3766"
+       style="fill:#ffd5d5;stroke:#d40000;stroke-width:5.05000019;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       d="m 269,464.86218 a 72,74.5 0 1 1 -144,0 72,74.5 0 1 1 144,0 z"
+       transform="matrix(1.00695,0,0,0.973161,300.96495,59.119339)"
+       id="path3766-1"
+       style="fill:#d7e3f4;stroke:#2c5aa0;stroke-width:5.05000019;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       x="317.80893"
+       y="616.79071"
+       id="text3821"
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#d40000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans"><tspan
+         x="317.80893"
+         y="616.79071"
+         id="tspan3823">A</tspan></text>
+    <text
+       x="498.88864"
+       y="616.79071"
+       id="text3825"
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#0044aa;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans"><tspan
+         x="498.88864"
+         y="616.79071"
+         id="tspan3827">B</tspan></text>
+  </g>
+</svg>

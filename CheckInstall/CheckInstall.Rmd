@@ -1,0 +1,164 @@
+---
+title: "Check your LaTeX/R Installation"
+author: "Norman Markgraf and Karsten Lübke"
+date: "24 Januar 2018"
+output: 
+    pdf_document:
+        template: NULL
+        keep_tex: yes
+        md_extensions: +raw_tex+header_attributes
+        includes:
+            in_header: ci-header.tex
+            before_body: ci-before.tex
+documentclass: scrreprt
+papersize: A4
+lang: en
+fontsize: 12pt
+classoption: 
+    - oneside 
+    - notitlepage
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+
+latexPackages <- tribble(
+    ~Package,             ~UsePackage, 
+# ----------------------+------------------
+    "beamerarticle",       TRUE,
+    "etoolbox",            TRUE,
+    "ifthen",              TRUE,
+    "lmodern",             TRUE,
+    "ifpdf",               TRUE,
+    "geometry",            TRUE,
+    "ifvtex",              TRUE,
+    "ifxetex",             TRUE,
+    "pgfcore",             TRUE,
+    "graphicx",            TRUE,
+    "graphics",            TRUE,
+    "trig",                TRUE,
+    "xcolor",              TRUE,
+    "xxcolor",             TRUE,
+    "hyperref",            TRUE,
+    "ifluatex",            TRUE,
+    "amssymb",             TRUE,
+    "amsfonts",            TRUE,
+    "amsmath",             TRUE,
+    "amsbsy",              TRUE,
+    "amsopn",              TRUE,
+    "amsthm",              TRUE,
+    "xspace",              TRUE,
+    "pgfpages",            TRUE,
+    "pgfplots",            TRUE,
+    "pgffor",              TRUE,
+    "framed",              TRUE,
+    "verbatimbox",         TRUE,
+    "readarray",           TRUE,
+    "listofitems",         TRUE,
+    "tikz",                TRUE,
+    "mathpazo",            TRUE,
+    "palatino",            TRUE,
+    "caption",             TRUE,
+#    "helvetic",            TRUE,
+    "textcomp",            TRUE
+# ----------------------+------------------
+)
+
+latexPackages %>% arrange(Package) -> latexPackages
+
+file.remove("ci-header.tex")
+file.remove("ci-before.tex")
+file.remove("ci-body.tex")
+
+fileConnHeader <- file("ci-header.tex", encoding = "utf-8", open="at")
+fileConnBefore <- file("ci-before.tex", encoding = "utf-8", open="at")
+fileConnBody <- file("ci-body.tex", encoding = "utf-8", open="at")
+
+for(i in seq_along(latexPackages$Package)) {
+    pkt <- latexPackages$Package[i]
+    if (latexPackages$UsePackage[i]) {
+        writeLines(paste0("\\usepackage{",pkt,"}"), fileConnHeader)
+    }
+    writeLines(paste0("\\edef\\",pkt,"Info{\\csname ver@",pkt,".sty\\endcsname}"), fileConnBefore)
+    writeLines(paste0("\\item[",pkt,"] 	\\",pkt,"Info"), fileConnBody)
+}
+
+writeLines(paste0("\\makeatletter\n\\@beginparpenalty=10000\n\\newcommand{\\nolisttopbreak}{\\vspace{\\topsep}\\nobreak\\@afterheading}\n\\makeatother"), fileConnHeader)
+close(fileConnHeader)
+close(fileConnBefore)
+close(fileConnBody)
+
+```
+<!--
+\include{distributioncheck}
+-->
+\pdftexbanner
+
+# LaTeX
+\nolisttopbreak
+\begin{description}
+    \input{ci-body}
+\end{description}
+
+
+# R
+
+```{r, echo=FALSE}
+sessionInfo()
+```
+
+
+# R Pakete
+
+```{r, echo=FALSE, width=78}
+needed_pkgs_df <- read.csv("../prelude/prelude.csv", stringsAsFactors = FALSE)
+for (pkg in needed_pkgs_df$packages)
+   cat(pkg, " Version: ", packageDescription(pkg, fields = "Version"), "\n")
+```
+
+
+# Pandoc
+
+## Rmarkdown uses pandoc:
+
+```{r, echo=FALSE}
+library(rmarkdown)
+if (pandoc_available())
+  cat("pandoc", as.character(pandoc_version()), "is available!\n")
+
+```
+
+## System found pandoc:
+```{r, echo=FALSE}
+  cat(readLines(pipe("pandoc -v")), sep="\n")
+```
+
+## Path to pandoc:
+```{r, echo=FALSE}
+if (.Platform$OS.type == "unix") {
+    cat(readLines(pipe("which pandoc")), sep="\n")
+} else {
+    cat(readLines(pipe("where pandoc")), sep="\n")
+}
+
+```
+
+
+# Local OS
+
+## System informations
+```{r, echo=FALSE}
+sys <- Sys.info()
+if (sys["sysname"] == "Windows") {
+  win.version()
+} else {
+  x <- sys["sysname"]; names(x) <- NULL; cat(x, sep="\n") 
+  x <- sys["release"]; names(x) <- NULL; cat(x, sep="\n")
+  x <- sys["version"]; names(x) <- NULL; cat(x, sep="\n")
+}
+
+```

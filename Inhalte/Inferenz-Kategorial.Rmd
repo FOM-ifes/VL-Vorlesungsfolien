@@ -1,0 +1,549 @@
+```{r setup-Inferenz-Kategorial, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Inferenz-Kategorial",  # Dateiname ohne Suffix
+    "EinfuehrungInferenz"                # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+
+# `r nextChapter()` Inferenz kategorialer Daten
+
+
+### Übung `r nextExercise()`: Statistik Essenszeit {.exercise type=A-B answer=A}
+
+Durch welche Statistik kann die Verteilung der Variable Essenzeit (Lunch/ Dinner) sinvoll beschrieben werden?
+
+A.  Anteil.
+B.  Arithmetischer Mittelwert.
+
+::: {.notes}
+Für kategoriale Daten ist der Anteil (***A***) eine geeignete Zusammenfassung.
+:::
+
+
+### Übung `r nextExercise()`: Visualisierung Essenszeit {.exercise type=A-B-C answer=A}
+
+Durch welche Grafik kann die Verteilung der Variable Essenzeit (Lunch/ Dinner) sinnvoll dargestellt werden?
+
+A.  Balkendiagramm.
+B.  Histogramm.
+C.  Boxplot.
+
+::: {.notes}
+Für kategoriale, nominale Daten ist das Balkendiagramm (***A***) eine geeignete Visualisierung.
+:::
+
+
+### Übung `r nextExercise()`: Gültigkeit Inferenz {.exercise type=A-B-C-D-E answer=B}
+
+Wann ist aufgrund einer quantitativen Datenanalyse eine Aussage über die Population gerechtfertigt?
+
+A.  Nie.
+B.  Bei einer zufälligen Stichprobe.
+C.  Bei einer randomisierten Zuordnung innerhalb eines Experimentes.
+D.  Bei einem hohen Stichprobenumfang $n$.
+E.  Immer.
+
+::: {.notes}
+Zum Schluss von einer Stichprobe auf die Population wird eine zufällige Stichprobe (***B***) benötigt -- andernfalls könnte diese verzerrt sein. Ein hoher Stichprobenumfang $n$ ist generell zu bevorzugen: er verkleinert den Standardfehler und damit das Konfidenzintervall sowie bei guten Tests sinkt die Wahrscheinlichkeit für einen Fehler 2. Art.
+:::
+
+
+### Überblick: Testverfahren für kategoriale Daten
+
+Die Verteilung hängt vom Anteil $\pi$ ab, d.h. Gleicheit bzw. Ungleichheit kann über $\pi$ analysiert werden.
+
+- **Test eines Anteilswertes**: Test ob der Anteil
+eines (binären^[kategorial mit zwei Ausprägungen]) Merkmals in der Population einem bestimmten Wert entspricht. Mögliche Hypothesen:
+    - ungerichtet / zweiseitig: $H_0: \pi=\pi_0$ vs. $H_A: \pi \neq \pi_0$. 
+    - gerichtet / einseitig:
+        - $H_0: \pi \leq \pi_0$ vs.  $H_A: \pi>\pi_0$. 
+        - $H_0: \pi \geq \pi_0$ vs.  $H_A: \pi<\pi_0$. 
+- **Test zweier Anteilswerte**: Vergleicht zwei Anteilswerte. Mögliche Hypothesen:
+    - ungerichtet / zweiseitig: $H_0: \pi_A=\pi_B$ vs. $H_A: \pi_A \neq \pi_B$.
+    - gerichtet / einseitig:
+        - $H_0: \pi_A \leq \pi_B$ vs.  $H_A: \pi_A>\pi_B$. 
+        - $H_0: \pi_A \geq \pi_B$ vs.  $H_A: \pi_A<\pi_B$.
+- **Test für mehr als zwei Anteilswerte** bzw. zum  Zusammenhang zweier nominaler Merkmale: Hypothese $H_0$: Die Merkmale sind unabhängig, es gibt keinen Zusammenhang. $H_A$: Die Merkmale sind nicht unabhängig, es gibt einen Zusammenhang. 
+
+
+### Beispiele
+
+- Analyse des Anteils der Studierenden, die die Vorlesung nachbereiten -- ggf. je nach Geschlecht oder Studiengang.
+- Untersuchung des Anteils der Mitarbeiter\*innen, die während der Arbeit SocialMedia nutzen -- ggf. je nach Geschlecht.
+- Analyse des Anteils der betrügerischen Versicherungsvorgänge -- ggf. je nach Vertragsart.
+- Vergleich des Anteils der Dividendenzahlenden Unternehmen je Index.
+- Anteil von "Blockbuster-Movies" pro Film-Genre (s. Datensatz [ggplot2movies](https://cran.r-project.org/package=ggplot2movies)).
+
+*Wo können Sie die Verfahren einsetzen?*
+
+
+### Wiederholung: Schema Hypothesentest
+
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
+```
+
+[Abbildung: Quelle: Blogbeitrag Allen Downey]{.small}^[[http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html](http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html)]
+
+**Alternative**: Verwende theoretische Verteilungsannahmen unter $H_0$, häufig approximativ oder asymptotisch.^[Bspw. Binomial- oder $\chi^2-$Verteilungen.]
+
+
+### Wiederholung: Schema Bootstrap
+
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"bootstrap.png"))
+```
+
+\small{Abbildung: Quelle: Lock, Robin, Patti Frazer Lock, Kari Lock Morgan, Eric F. Lock, and Dennis F. Lock (2012): Statistics: UnLOCKing the Power of Data. Wiley.}
+
+
+### Frauenanteil der Rechnungszahler*innen: Einlesen der Daten
+
+Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten:
+```{r, eval =FALSE, message = FALSE}
+# Herunterladen 
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+
+# Einlesen in R
+tips <- read.csv2("tips.csv")
+
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+
+library(mosaic) # Paket mosaic laden
+```
+
+### Frauenanteil der Rechnungszahler*innen: Deskriptive Analyse 
+
+Tabelle:
+```{r}
+tally( ~ sex, data=tips) 
+```
+
+Balkendiagramm:
+```{r,  fig.align="center", out.width="30%"}
+bargraph( ~ sex, data = tips, type = "percent")
+```
+
+
+### Übung  `r nextExercise()`: Testverfahren Frauenanteil der Rechnungszahler\*innen {.exercise type=A-B answer=A}
+
+Welches ist das richtige Testverfahren, um die Forschungsthese zu untersuchen, dass der Anteil der Rechnungszahlerinnen , d.h. `sex=="Female"`, nicht bei 50\% liegt -- in der Population?
+
+A.  Test eines Anteilswertes.
+B.  Test zweier Anteilswerte.
+
+::: {.notes}
+Da es um den Anteil eines Merkmals geht, ist ***A*** richtig. Für *B* benötigt man zwei nominale Merkmale (oder klassifizierte metrische Merkmale).
+
+Beachte: es geht hier um den Anteil der insgesamt von Frauen bezahlten Rechnungen, nicht darum, ob z. B. bei einem Pärchen der Mann oder die Frau zahlt.
+:::
+
+## Test eines Anteilwerts
+
+### Übung `r nextExercise()`: Hypothesen Frauenanteil der Rechnungszahler\*innen {.exercise type=A-B-C answer=A}
+
+Wie lautet das korrekte Hypothesenpaar für die Forschungsfrage, ob der Anteil der Frauen unter den Rechnungszahlenden nicht bei 50% liegt?
+
+A.  $H_0: \pi=0.5$ vs. $H_A: \pi \neq 0.5$ 
+B.  $H_0: \pi \leq 0.5$ vs. $H_A: \pi > 0.5$
+C.  $H_0: \pi \geq 0.5$ vs. $H_A: \pi < 0.5$
+
+::: {.notes}
+Da keine Richtung vorgeben ist, es also egal ist, ob mehr oder weniger als 50\% der Rechnungszahler\*innen Frauen sind, ist ***A*** korrekt.
+:::
+
+### Simulation der Frauenanteils unter $H_0$
+
+```
+Lege die Zufallszahlen fest.
+Wiederhole 10000 Mal:
+  - Wirf 244 faire zweiseitige Münzen.
+Speichere das Ergebnis als Datensatz "Nullvtlg"
+```
+
+\vspace{1cm}
+
+```{r}
+set.seed(1896)  # Zufallszahlengenerator setzen
+
+Nullvtlg <- do(10000) *  # 10000 Wiederholungen
+  rflip(n=nrow(tips))  # n-facher Münzwurf
+```
+
+### Simulierte Stichproben des Frauenanteils
+
+Visualisierung der Verteilung des Frauenanteils wenn das Modell $H_0: \pi=0.5$ stimmt: 
+
+```{r,  fig.align="center", out.width="60%"}
+histogram( ~ prop, data = Nullvtlg)
+```
+
+### Ist der beobachtete Wert selten unter der $H_0$?
+
+Beobachteter Frauenanteil $\hat{\pi}=p$:
+
+```{r}
+propdach <- prop( ~ sex, data = tips, 
+                   success = "Female")
+propdach
+```
+
+Quantile für extreme Werte in der Verteilung unter $H_0: \pi=0.5$:
+
+```{r}
+quantile( ~ prop, data = Nullvtlg, 
+          probs=c(0.025, 0.975))
+```
+
+
+### Übung `r nextExercise()`: Interpretation Simulationsergebnis {.shrink .exercise type=A-B answer=B}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ prop, v=propdach, data = Nullvtlg, xlim=c(0.3,0.7))
+```
+
+Welche der folgenden Aussagen stimmt?
+
+A.  Ein Frauenanteil von `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` in der Stichprobe ist unter der Annahme, der Anteil in der Population liegt bei $0.5$, ein üblicher Wert.
+B.  Ein Frauenanteil von `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` in der Stichprobe ist unter der Annahme, der Anteil in der Population liegt bei $0.5$, kein üblicher Wert.
+
+::: {.notes}
+***B***, da in 95% der Simulationen Werte zwischen `r round(quantile( ~ prop, data = Nullvtlg,probs=c(0.025)),2)` und `r round(quantile( ~ prop, data = Nullvtlg,probs=c(0.975)),2)` auftreten.  `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` liegt nicht darin.
+
+Diese Werte werden auch **Kritische Werte** genannt: sollte der beobachtete Anteil $p$ außerhalb dieser kritischen Werte liegen, wird $H_0$ verworfen - zum Niveau $\alpha$.
+:::
+
+
+### p-Wert des Frauenanteils
+
+Berechne unter der Annahme der $H_0$, dass der Frauenanteil $\pi=1/2$ beträgt, die Wahrscheinlichkeit der beobachteten Teststatistik $p$ (oder noch extremerer Werte):
+
+```{r}
+# Abweichung zu p_0=0.5
+abw0 <- abs(propdach - 0.5)
+
+# Anteil Simulationen mit min.
+# so großer absoluter Abweichung zu 0.5
+pvalue <- prop( ~ abs(prop-0.5) >= abw0, 
+                data = Nullvtlg)
+
+pvalue
+```
+
+Der p-Wert ist sehr klein ($p<0.001$).
+
+### Bootstraping für den Frauenanteil
+
+```
+Lege die Zufallszahlen fest.
+Wiederhole 10000 Mal:
+  - Berechne den Anteil der Frauen,
+  - Der Datensatz "tips" soll dabei jedes Mal resampelt werden.
+Speichere das Ergebnis als Datensatz "Bootvtlg"
+```
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+Bootvtlg <- do(10000) *
+  prop( ~ sex, data = resample(tips), success = "Female")
+```
+
+### Bootstrap Verteilung
+
+Visualisierung der Verteilung des Frauenanteils in den Bootstrap-Stichproben:
+
+```{r,  fig.align="center", out.width="40%"}
+histogram( ~ prop_Female, data = Bootvtlg)
+```
+
+95\% Bootstrap Konfidenzintervall:
+```{r}
+quantile( ~ prop_Female, data = Bootvtlg, probs = c(0.025, 0.975))
+```
+
+### "Klassischer" Test des Anteilswertes
+
+Berechnung des p-Werts und des Konfidenzintervalls unter Verwendung theoretischer Verteilungsannahmen:
+
+```{r, eval = FALSE}
+prop.test( ~ sex, # Variable, die gestestet wird
+           p = 0.5, # hypothetischer Wert p_0
+           success = "Female", # Auf was soll getestet werden?
+           alternative = "two.sided", # Alternativhypothese
+           data = tips) # Datensatz
+```
+
+### Ergebnis Test des Anteilswertes
+
+```{r, echo = FALSE}
+prop.test( ~ sex, # Variable die gestestet wird
+           p = 0.5, # hypothetischer Wert p_0
+           success = "Female", # Auf was soll getestet werden?
+           alternative = "two.sided", # Alternativhypothese
+           data = tips) # Datensatz
+```
+
+
+### Übung  `r nextExercise()`: Testergebnis: Stichprobenanteil {.exercise type=A-B-C-D-E answer=D}
+
+Wie hoch ist der Anteil der Frauen unter den Rechnungszahler*innen in der Stichprobe?
+
+A.  $19.51\%$
+B.  $29.72\%$
+C.  $42.05\%$
+D.  $35.66\%$ 
+E.  $50.00\%$
+
+```{r, include = FALSE}
+res <- prop.test( ~ sex, # Variable die gestestet wird
+           p=0.5, # hypothetischer Wert p_0
+           alternative = "two.sided", # Alternativhypothese
+           data=tips) # Datensatz
+```
+
+::: {.notes}
+$\hat{\pi}=`r res$estimate`$ (`sample estimates`). Also ist ***D*** korrekt.
+:::
+
+
+### Übung  `r nextExercise()`: Testergebnis: Testentscheidung {.exercise type=yesno answer=yes}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ prop, v=propdach, data = Nullvtlg, xlim=c(0.3,0.7))
+```
+
+Kann bzw. muss die Nullhypothese $H_0: \pi=0.5$ verworfen werden? ($\alpha=0.05$)
+
+- Ja.
+- Nein.
+
+::: {.notes}
+ `p-value = 9.995e-06` $=9.995\cdot 10^{-6}=0.000009995$. Der p-Wert ist also kleiner als $\alpha$, also ***Ja***. 
+ 
+:::
+
+
+## Test des Unterschieds zweier Anteilswerte
+
+### Zusammenhang von Geschlecht und Tageszeit
+
+Hängen Frauenanteil (der Rechungszahler\*innen) und Tageszeit (mittags vs. abends) zusammen?^[Video Using Randomization to Analyze a Gender Discrimination Study [https://youtu.be/2pHhjx9hyM4](https://youtu.be/2pHhjx9hyM4)]
+
+```{r}
+prop(sex ~ time, success = "Female", data = tips)
+diffdach <- diffprop(sex ~ time, success = "Female", data = tips)
+diffdach
+```
+
+Anteilsunterschied in der Stichprobe:
+
+$$\hat{\pi}_{\text{Lunch}}-\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[2]`-`r round(prop(sex ~ time, success = "Female", data = tips), 2)[1]`=`r round(diffprop(sex ~ time, success = "Female", data = tips), 2)`$$
+
+
+### Permutationstest Geschlecht je Tageszeit
+
+```
+Wiederhole 10000 Mal:
+  - Berechne den Unterschied im Frauenanteil (mittags vs. abends);
+  - dabei soll das Merkmal Zeit jeweils permutiert werden.
+Speichere das Ergebnis im Datensatz "Nullvtlg".
+```
+
+\vspace{1cm}
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+
+Nullvtlg <- do(10000) * diffprop(sex ~ shuffle(time), 
+                                 success = "Female", data = tips)
+```
+
+Berechne die Grenzwerte für seltene Ereignisse:
+
+```{r}
+quantile( ~ diffprop, data = Nullvtlg, probs = c(0.025, 0.975))
+```
+
+
+
+### Verteilung unter $H_0$
+
+Simulierte Verteilung des Anteilsunterschieds unter der Annahme der Geleichheit ($H_0$):
+
+```{r, eval = FALSE}
+histogram( ~ diffprop, data = Nullvtlg)
+```
+
+
+```{r, fig.align="center", out.width="50%", echo = FALSE}
+histogram( ~ diffprop, 
+           data = Nullvtlg,
+           v = c(quantile( ~ diffprop, data = Nullvtlg, probs = c(0.025, 0.975))[1],
+                 quantile( ~ diffprop, data = Nullvtlg, probs = c(0.025, 0.975))[2]))
+```
+
+Die vertikalen Linien markieren die jeweils 2.5\% extremsten simulierten Stichproben.
+
+### `r nextExercise()`: Bestimmung p-Wert {.exercise type=A-B answer=B}
+
+Für welches Hypothesenpaar erhalten Sie den p-Wert über:
+
+```{r}
+prop( ~ abs(diffprop) >= abs(diffdach), data = Nullvtlg)
+```
+
+A.  Für $H_0: \hat{\pi}_{\text{Lunch}}-\hat{\pi}_{\text{Dinner}}=0$.
+B.  Für $H_0: \pi_{\text{Lunch}}-\pi_{\text{Dinner}}=0$.
+
+::: {.notes}
+Hypothesentests schließen immer von der Stichprobe auf die Population, also ***B***.
+:::
+
+
+### Offene Übung `r nextExercise()`: Geschlecht je Tageszeit {.exercise type=essay}
+
+Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Hypothesen und die Antwort auf die Forschungsfrage.
+
+::: {.notes}
+Die Forschungsfrage lautete: Ist der Frauenanteil unter den Rechnungszahler\*innen beim Lunch genau so hoch wie beim Dinner oder unterscheidet er sich?
+
+Mit $\pi$: Frauenanteil unter den Rechnungszahler\*innen:
+
+- $H_0: \pi_{\text{Lunch}}=\pi_{\text{Dinner}}$
+- $H_A: \pi_{\text{Lunch}}\neq\pi_{\text{Dinner}}$
+
+In der Stichprobe unterscheidet sich der Anteil: $\hat{\pi}_{\text{Lunch}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[2]`$ bzw. $\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[1]`$. 
+
+Mit einem p-Wert von `r prop( ~ abs(diffprop) >= abs(diffdach), data = Nullvtlg)` wird die Nullhypothese zum Niveau $\alpha=0.05$ verworfen, und es wird auf einen signifikanten Unterschied im Frauenanteil unter den Rechnungszahler\*innen geschlossen.
+:::
+
+
+## Test des Unterschieds von zwei oder mehr Anteilswerten
+
+### Anzahl der Raucher\*innen je Wochentag
+
+Unterscheidet sich die Raucherquote je nach Wochentag? Anders gefragt: Gibt es einen Zusammenhang der Merkmale *smoker* und *day*?
+
+```{r}
+tally(smoker ~ # abhängige Variable
+         day, # unabhängige Variable
+       data = tips) # Datensatz
+```
+
+### Verteilung Raucher\*innen je Wochentag
+
+```{r,  fig.align="center", out.width="60%"}
+mosaicplot(smoker ~ day, data = tips) 
+```
+
+### Chi-Quadrat-Unabhängigkeitstest ($\chi^2$-Test)
+
+- Hier greifen wir auf klassischen Test zurück: den *Chi-Quadrat-Unabhängigkeitstest*.^[Eine Simulation ist aber analog möglich.]
+- Der $\chi^2$-Unahängigkeitstest testet u.a. den Zusammenhang zweier kategorialer (nominaler) Variablen.^[Es gibt weitere Varianten des $\chi^2$-Tests.]
+- Dabei werden die **beobachteten** Häufigkeiten $O$ (*observerd*) der Merkmalsausprägungskombinationen mit den **unter Unabhängigkeit erwarteten** Werten $E$ (*expected*) verglichen: $$\chi^2=\sum_i^{\text{Zeilen}}\sum_j^{\text{Spalten}} \frac{(O_{ij}-E_{ij})^2}{E_{ij}}$$
+- Nullhypothese:  Die beiden nominalen Variablen sind unabhängig voneinander, d.h., die Verteilung der einen Variable hängt nicht vom Wert der anderen Variable ab. Große Werte von $\chi^2$ sind unter $H_0$ unwahrscheinlich.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Chi-Square For Us](https://www.causeweb.org/cause/resources/fun/songs/chi-square-us)]
+
+
+### Übung  `r nextExercise()`: $\chi^2$-Teststatistik {.exercise type=A-B-C answer=C}
+
+Eine Forscherin stellt innerhalb einer Untersuchung eine Abweichung zwischen beobachtet $O$ und erwartet $E$ von $42$ fest.
+
+Welche Aussage stimmt?
+
+A.  Die Abweichung ist groß.
+B.  Die Abweichung ist klein.
+C.  Weiß nicht.
+
+::: {.notes}
+Eine Abweichung von $E-O=42$ kann groß oder klein sein, je nach dem wie viel man erwartet: Eine Abweichung von $42$ ist bei einer unter Unabhängigkeit erwarteten Häufigkeit von $50$ viel, bei $5.000.000$ wenig. Daher wird in der Teststatistik durch $E$ relativiert, also ***C***. Mit Hilfe einer $\chi^2$-Verteilung oder Permutationsmethoden kann dann für alle Zellen zusammen entschieden werden, wie wahrscheinlich eine solche Abweichung unter $H_0$ ist.
+:::
+
+### Übung  `r nextExercise()`: Testverfahren {.exercise type=A-B answer=B}
+
+Welches ist das richtige Testverfahren, um die Forschungsthese zu untersuchen, dass es einen Zusammenhang zwischen Rauchen und Wochentag gibt?
+
+A.  Test eines Anteilswertes.
+B.  Chi-Quadrat-Unabhängigkeitstest.
+
+::: {.notes}
+Da hier zwei nominale Merkmale vorliegen, deren Zusammenhang untersucht werden soll: ***B***.
+:::
+
+### Chi-Quadrat-Test
+
+::: {.scriptsize}
+
+```{r}
+xchisq.test(smoker ~ day, data = tips)
+```
+
+:::
+
+### Übung  `r nextExercise()`: Testergebnis: Testentscheidung {.exercise type=yesno answer=no}
+
+Bestätigen die Daten die Nullhypothese?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: die Nullhypothese wird **nie** bestätigt, sondern bei einem p-Wert ($>\alpha$) *nicht verworfen*. Die Aussage ist also immer falsch -- unabhängig vom Testergebnis.
+
+Hier ist der p-Wert mit `p-value = 1.057e-05` $=1.057\cdot 10^{-05}$ sehr klein. Der Wert der Teststatistik der Stichprobe, `X-squared = 25.787`, ist unter der Nullhypothese der Unabhängigkeit in der Population also unwahrscheinlich. Damit würde $H_0$ würde zu den üblichen Signifikanzniveaus hier sogar verworfen und auf auf die Alternative geschlossen.
+:::
+
+### Offene Übung `r nextExercise()`: Mahlzeit und Rauchen {.exercise type=essay}
+
+Untersuchen Sie den Zusammenhang zwischen der Mahlzeit (Tageszeit) und Rauchen am Tisch.
+
+::: {.notes}
+`xchisq.test(smoker~time, data=tips)`: Mit einem p-Wert von `r xchisq.test(smoker~time, data=tips)$p.value` würde die Nullhypothese der Unabhängigkeit von Tageszeit und Rauchen nicht verworfen.
+:::
+
+
+## Zusammenfassung
+
+### Überblick zu den Simulationstechniken für kategoriale Variablen
+
+
+- **Einfache Simulation** zur Überprüfung eines Anteils 
+    - Beispiel: Wie hoch ist der Frauenanteil (in der Population)? 
+    - Vorgehen: Simuliere wiederholt Münzwurf ($H_0$) und gucke wie wahrscheinlich der beobachtete Frauenanteil ist.
+
+- **Permutationstest** zur Überprüfung eines Unterschieds zweier Verteilungen. 
+    - Beispiel: Unterscheidet sich der Frauenanteil (in der Population) mittags von der abends?
+    - Vorgehen: Simuliere wiederholt zufällige Zuordnung und gucke wie wahrscheinlich die beobachtete Differenz der Frauenanteile ist.
+
+
+- **Bootstrap** zur Berechnung eines Konfidenzintervalls für einen Anteil oder einen Anteilsunterschied.
+    - Beispiel: Was sind plausible Werte für den Frauenanteil bzw. die Differenz in der Population?
+    - Vorgehen: Simuliere wiederholt zufällige Stichprobe durch Ziehen mit Zurücklegen und berechne jeweils Anteil oder Anteilsunterschied.
+
+
+### Alternativen zur simulationsbasierten Inferenz
+
+- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils `binom.test()` bzw. `prop.test()`, die auf theoretischen bzw. asymptotisch approximativen Verteilunsanahmen aufbaut.
+  
+- Der $\chi^2$-Test (`xchisq.test()`) testet u.a. den Zusammenhang zweier nominaler Variablen auch mit mehr als jeweils zwei Ausprägungen; er basiert auf theoretischen bzw. bzw. asymptotisch approximativen Verteilungsannahmen. Darüberhinaus gibt es als nicht-parametrische Alternative den Fisher-Test (`fisher.test()`).
+
+
+
+```{r finish-Inferenz-Kategorial, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

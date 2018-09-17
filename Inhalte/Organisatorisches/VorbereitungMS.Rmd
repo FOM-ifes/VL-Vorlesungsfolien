@@ -1,0 +1,18 @@
+### Vorbereitung
+
+Im Onlinecampus finden Sie den eLearning Kompaktkurs Statistik  
+(Mein Institut / Veranstaltungsübersicht / Komp.kurs Statistik):
+
+- [Kompaktkurs Statistik](https://campus.bildungscentrum.de/nfcampus/Course.do?action=read&n=5220&m=1496576)
+ 
+Wenn Sie die Inhalte des Faches Statistik noch einmal wiederholen wollen, da weite Teile dieses Moduls darauf aufbauen, finden Sie u. a. folgende Selbstlernunterlagen im Online Campus:
+
+- Interaktive Lerneinheit zur Selbsteinschätzung in Statistik
+- Wörterbuch Statistik
+- Formelsammlung
+- Skripte:
+    - Datenerhebung & Daten
+    - Deskriptive Statistik
+    - Zusammenhangsanalyse
+    - Teststatistiken und  wissenschaftliche Methoden
+    

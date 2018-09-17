@@ -1,0 +1,441 @@
+```{r setup-Logistische-Regression, include=FALSE}
+source("../prelude.R")
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "LogistischeRegression",  # Dateiname ohne Suffix
+    "Regression"                # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(knitr)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+# `r nextChapter()` Logistische Regression
+
+
+### Übung `r nextExercise()`: Skalenniveau Raucher Ja/ Nein{.exercise type=A-B-C-D answer=A}
+
+Welches Skalennvieau hat die Variable Raucher?
+
+A.  Kategorial - nominal.
+B.  Kategorial - ordinal.
+C.  Numerisch - diskret.
+D.  Numerisch - stetig.
+
+
+::: {.notes}
+***A***: Es kann nur unterschieden werden, ob geraucht wurde oder nicht. Da es hier nur zwei mögliche Ausprägungen gibt, wird die Variable auch *binär* genannt.
+:::
+
+
+### Modellierung: Logistische Regression
+
+$$y=f(x) + \epsilon $$
+
+Hier nur für eine unabhängige Variable:
+
+- Lineare Regression: abhängige Variable $y$ numerisch: $y_i=\beta_0 + \beta_1 \cdot x_i + \epsilon_i$
+- **Logistische Regression**: **abhängige Variable** $y$ **binär**, d.h. kategorial mit zwei Merkmalsausprägungen $y_i \in \{0,1\}$. $p_i$ sei die Wahrscheinlichkeit, dass $y_i=1$, dann: $logit(p_i)=\ln(\frac{p_i}{1-p_i})=\beta_0 + \beta_1 \cdot x_i$.  
+`glm(family='binomial')`
+
+
+### Beispiele
+
+- Modellierung, ob ein Studierender das Studium erfolgreich abschließt.
+- Kündigungsprognose von Mitarbeiter\*innen.
+- Prognose, ob ein Kunde ein Produkt kaufen wird auf Basis der Kundendaten.
+- Modellierung der Kreditausfallwahrscheinlichkeit auf Basis von Bankdaten.
+- Vorhersage, ob ein Fall zu einem Hochkostenfall wird auf Basis der Analyse von Versichertendaten.
+
+*Wo können Sie dies Verfahren einsetzen?*
+
+
+### Vorbereitung: Rechnungshöhe und Geschlecht
+
+Einlesen der "Tipping"^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie laden des Pakets `mosaic`. Zufallszahlengenerator setzen.
+
+```{r, eval= FALSE, message=FALSE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+tips <- read.csv2("tips.csv")
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+
+library(mosaic) # Paket laden
+```
+
+
+### Anteil Männer Rechnungszahler
+
+Modellierung durch die Rechnungshöhe. 
+
+```{r, fig.align="center", out.width="40%"}
+xyplot( (sex=="Male") ~ total_bill, 
+        data = tips)
+```
+
+Beachte: Die Geschlechtsverteilung am Tisch ist unbekannt. Sollte z. B. nur Frauen oder nur Männer am Tisch sein ist die Wahrscheinlichkeit $0$ bzw. $1$.^[Inhaltlich wäre vielleicht die Frage interessanter: Ein Mann und eine Frau sitzen am Tisch: wie wahrscheinlich ist es, dass der Mann zahlt?]
+
+
+### Modellierung Logit
+
+$$p(y=1)=\frac{e^\eta}{1+e^\eta}=\frac{e^{\beta_0 + \beta_1 \cdot x}}{1+e^{\beta_0 + \beta_1 \cdot x}} = \frac{1}{1+e^{-(\beta_0 + \beta_1 \cdot x)}}$$
+```{r, echo=FALSE, fig.align="center", out.width="33%"}
+eta <- seq(-10,10,by = 0.1)
+y <- 1/(1+exp(-eta))
+xyplot(y ~ eta, xlab = expression(eta), ylab = "p(y=1)", type = "l")  
+```
+
+Schätze $\beta$ anhand der Daten: $\hat{\beta}$.
+
+- $\beta_1>0$: Wahrscheinlichkeit $p(y=1)$ steigt mit $x$.
+- $\beta_1<0$: Wahrscheinlichkeit $p(y=1)$ fällt mit $x$.
+
+
+### Vorbereitung: Modellierung Geschlecht Rechnungszahler
+
+R modelliert $y$ anhand der *Faktorstufen*: In der logistischen Regression ist die erste Ausprägung die $0$, alle weiteren $1$
+
+```{r}
+# Referenzklasse festlegen
+tips$sex<- relevel(tips$sex, ref="Female")
+# Kontrolle
+levels(tips$sex)
+```
+
+
+### Logistische Regression: Geschlecht auf Rechnungshöhe (I/II)
+
+```{r, eval=FALSE}
+# Speichere Ergebnis der Regression glm() in "ergglm1"
+ergglm1 <- glm(sex ~ # abhängige Variable
+                 total_bill, # unabghängige Variable(n)
+              data = tips, # Datensatz
+              # Abhängige Variable binomial,
+              # Verknüpfung Logit
+              family = binomial("logit"))
+              
+
+summary(ergglm1)
+```
+
+
+### Logistische Regression: Geschlecht auf Rechnungshöhe (II/II) {.shrink}
+
+```{r, echo=FALSE}
+# Speichere Ergebnis der Regression glm() in "ergglm1"
+ergglm1 <- glm(sex ~ # abhängige Variable
+                 total_bill, # unabghängige Variable(n)
+              data = tips, # Datensatz
+              # Abhängige Variable binomial,
+              # Verknüpfung Logit
+              family = binomial("logit"))
+              
+
+summary(ergglm1)
+```
+
+
+### Ergebnis Logistische Regression: Geschlecht auf Rechnungshöhe
+
+```{r, fig.align="center", out.width="66%"}
+plotModel(ergglm1)
+```
+
+
+### Übung `r nextExercise()`: Regressionskoeffizienten {.exercise type=A-B-C answer=A}
+
+Welche der folgenden Aussagen stimmt?
+
+A.  In der Stichprobe steigt die Wahrscheinlichkeit, dass ein Mann zahlt, mit der Rechnungshöhe.
+B.  In der Stichprobe sinkt die Wahrscheinlichkeit, dass ein Mann zahlt, mit der Rechnungshöhe.
+C.  In der Stichprobe ist die Wahrscheinlichkeit, dass ein Mann zahlt, unverändert mit der Rechnungshöhe.
+
+::: {.notes}
+Da $\hat{\beta}_1=`r round(coef(ergglm1)[2],2)`>0$ steigt die Wahrscheinlichkeit, dass ein Mann zahlt, mit zunehmender Rechnungshöhe, damit stimmt ***A***.
+:::
+
+
+### Bootstrap Regressionkoeffizient (I/II)
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+
+Bootvtlg <- do(10000) *
+  glm(sex ~ total_bill, 
+           data = resample(tips),
+           family = binomial("logit"))
+```
+
+
+### Bootstrap Regressionkoeffizient (II/II)
+
+```{r,  fig.align="center", out.width="40%"}
+histogram( ~ total_bill, data = Bootvtlg)
+quantile( ~ total_bill, data = Bootvtlg, 
+          probs = c(0.025, 0.975))
+```
+
+
+### Übung `r nextExercise()`: Inferenz: Nullhypothese {.exercise type=A-B-C-D answer=A}
+
+Wie lautet die Nullhypothese, wenn die Variable $x$ keinen Einfluss auf $p(y=1)$ in der Population hat:
+
+A.  $H_0: \beta_1=0$
+B.  $H_0: \beta_1=1$
+C.  $H_0: \hat{\beta}_1=0$
+D.  $H_0: \hat{\beta}_1=1$
+
+::: {.notes}
+$H_0$ bezieht sich immer auf die Population, damit sind *C* und *D* falsch. Da es um die Veränderung im Zusammenhang mit $x$ geht, stimmt ***A***: 
+$$p(y=1)=\frac{e^\eta}{1+e^\eta}= \frac{1}{1+e^{-(\beta_0 + \beta_1 \cdot x)}}$$ ändert sich nicht mit $x$, wenn $\beta_1=0$ ist.
+:::
+
+
+### Permutationstest Regressionskoeffizient (I/II)
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+Nullvtlg <- do(10000) *
+  glm(sex ~ shuffle(total_bill), 
+           data = tips,
+           family = binomial("logit"))
+```
+
+
+### Permutationstest Regressionskoeffizient  (II/II)
+
+```{r,  fig.align="center", out.width="33%"}
+histogram( ~ total_bill, data = Nullvtlg)
+
+prop( ~ abs(total_bill) >= coef(ergglm1)[2], 
+      data=Nullvtlg )
+```
+
+
+### Übung `r nextExercise()`: Inferenz Rechnungshöhe {.exercise type=yesno answer=yes}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ total_bill, v=coef(ergglm1)[2], groups=abs(total_bill) >= coef(ergglm1)[2], data = Nullvtlg)
+```
+
+
+Ist der geschätzte Koffizient der Stichprobe im Modell $\beta_1=0$ unwahrscheinlich?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+Der p-Wert ist mit `r round(prop( ~ abs(total_bill) >= coef(ergglm1)[2], data=Nullvtlg),2)` relativ klein (z. B. kleiner als $\alpha=0.05$), d.h., das Ergebnis der Stichprobe ist, wenn in der Population $H_0: \beta_1=0$ gilt, unwahrscheinlich, also ***Ja***. 
+:::
+
+
+### Modellierung Geschlecht durch Anzahl Personen {.shrink}
+
+```{r}
+ergglm2 <- glm(sex ~ size, 
+              data = tips,
+              family = binomial("logit"))
+              
+summary(ergglm2)
+```
+
+
+### Übung `r nextExercise()`: Ergebnis Geschlecht durch Anzahl Personen {.exercise type=A-B-C answer=A}
+
+Bei welcher Gruppengröße ist im Modell die Wahrscheinlichkeit am höchsten, dass eine *Frau* zahlt?
+
+A.  $1$ Person.
+B.  $2$ Personen.
+C.  $4$ Personen.
+
+::: {.notes}
+Da $\hat{\beta}_1=`r round(coef(ergglm2)[2],2)`>0$ gilt, steigt die Wahrscheinlichkeit, dass ein Mann zahlt ($P(y=1)$) mit zunehmender Personenzahl. Die Wahrscheinlichkeit, dass eine Frau zahlt ($P(y=0)$) ist damit bei möglichst wenigen Personen am höchsten, daher ***A***.
+:::
+
+
+### Übung `r nextExercise()`: Inferenz  Modellierung Geschlecht durch Anzahl Personen {.exercise type=yesno answer=no}
+
+Ist in dem Modell der Einfluss der Variable `size` *signifikant* (zum Niveau $\alpha = 5\%$)?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***, da der p-Wert (`Pr(>|z|)`) mit $`r summary(ergglm2)$coefficients[2,4]`>0.05$ ist, kann $H_0$ nicht verworfen werden.
+:::
+
+
+### Vorhersagen Logistische Regression
+
+Wahrscheinlichkeit, dass ein Mann zahlt, bei $4$ Personen:
+
+```{r}
+predict(ergglm2, 
+        newdata = data.frame(size=4), 
+        type="response")
+```
+
+
+### Gütemaße Logistische Regression
+
+Verbreitete Gütemaße für ein Klassifikationsmodell (d.h., wenn $y$ kategorial ist) sind z.B.:
+
+- Korrektklassifikationsrate (engl.: Accuracy): Anteil der richtig vorhergesagten (d.h. klassifizierten) Beobachtungen.
+- Kappa: Cohen’s Kappa vergleicht die beobachtete Korrektklassifikationsrate mit einer zufällig erwarteten.
+
+Diese können u.a. zur Variablenwahl und Modellvergleichen herangezogen werden.^[Siehe z. B. Paket [caret](https://topepo.github.io/caret/).].
+
+### Modellierung Geschlecht durch Tageszeit {.shrink}
+
+```{r}
+ergglm3 <- glm(sex ~ time, data = tips,
+              family = binomial("logit"))
+summary(ergglm3)
+```
+
+
+### Übung `r nextExercise()`: Ergebnis Modellierung Geschlecht durch Tageszeit {.exercise type=A-B-C answer=B}
+
+Wann ist im Modell die Wahrscheinlichkeit am höchsten, dass ein Mann zahlt?
+
+A.  Lunch.
+B.  Dinner.
+C.  Beide gleich.
+
+::: {.notes}
+ $\hat{\beta}_{timeLunch}=`r round(coef(ergglm3)[2],2)`<0$. Daher fällt die Wahrscheinlichkeit, dass ein Mann zahlt, wenn Lunch ist. Also ist sie beim Dinner (***B***) höher.
+:::
+
+
+### Übung `r nextExercise()`: Inferenz Modellierung Geschlecht durch Tageszeit {.exercise type=yesno answer=yes}
+
+Kann im Modell die Nullhypothese $\beta_{\text{time}}=0$ (zum Niveau $\alpha = 5\,\%$) verworfen werden?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***, da der p-Wert mit $`r summary(ergglm3)$coefficients[2,4]`<0.05$ ist, kann $H_0$ verworfen werden.
+:::
+
+### Odds Ratio
+
++------------------------+-----------------------+---------------------------+
+|                        | **Variable B: Ja **   | **Variable B: Nein**      |
++========================+=======================+===========================+
+| **Variable A: Ja **    | z.B. $n_{11}=100$     |  z.B. $n_{12}=200$        |
++-----------------------+------------------------+---------------------------+
+| **Variable A: Nein **  | z.B. $n_{21}=150$     |  z.B. $n_{22}=550$        |                    
++-----------------------+------------------------+---------------------------+
+
+- Die Chance (*Odds*) für "Ja" bei $A$ beträgt $\frac{n_{11}+n_{12}}{n_{21}+n_{22}}=\frac{100+200}{150+550}$.
+- Das Chancenverhältnis (*Odds Ratio*) für "Ja" bei $A$, wenn $B$ "Ja" ist, beträgt dann:
+$$OR=\frac{\frac{n_{11}}{n_{21}}}{\frac{n_{12}}{n_{22}}}=\frac{\frac{100}{150}}{\frac{200}{550}}=\frac{55000}{30000}\approx1.83$$
+D.h., die Chance für "A=Ja" ist, wenn "B=Ja" ist, 1.83 mal so hoch, wie wenn "B=Nein" ist.
+
+
+### Odds Ratio aus Logistischer Regression
+
+Chancenverhältnis:
+
+$$OR=\frac{\frac{p_{\text{Lunch}}}{1-p_{\text{Lunch}}}}{\frac{p_{\text{Dinner}}}{1-p_{\text{Dinner}}}}=e^{\beta_{\text{time}}}$$
+```{r}
+exp(coef(ergglm3))
+```
+
+Die Chance, dass beim Lunch ein Mann zahlt, ist `r round(exp(coef(ergglm3))[2],2)` mal so groß wie beim Dinner.
+
+
+### Übung `r nextExercise()`: Odds Ratio {.exercise type=A-B-C answer=C}
+
+Bei welchem Odds Ratio ändert sich das Chancenverhältnis *nicht*?
+
+A.  Bei $OR=0$
+B.  Bei $OR=0.5$
+C.  Bei $OR=1$
+
+::: {.notes}
+***C***: Bei $OR=1$ gilt, dass Zähler und Nenner gleich sind, d.h., die Chance, (Odd) $\frac{p}{1-p}$, ändert sich nicht.
+:::
+
+
+### Multiple Logistische Regression
+
+```{r}
+ergglm4 <- glm(sex ~ 
+                 total_bill + size + time,
+              data = tips,
+              family = binomial("logit"))
+              
+exp(coef(ergglm4)) # Odds Ratio
+```
+
+
+### Koeffizienten Multiple Logistische Regression {.shrink}
+
+```{r}
+summary(ergglm4)
+```
+
+
+### Übung `r nextExercise()`: Ergebnis Multiple Logistische Regression {.exercise type=A-B-C-D-E answer=D}
+
+Welche Werte erhöhen die Wahrscheinlichkeit im Modell, dass ein Mann zahlt?
+
+A.  Nur steigende Rechnungshöhe.
+B.  Nur fallende Personenanzahl.
+C.  Nur Dinner.
+D.  Steigende Rechnungshöhe, fallende Personenzahl und Dinner.
+E.  Keine der Werte.
+
+::: {.notes}
+Der Koeffizient für Rechnungshöhe ist positiv, also steigt die Wahrscheinlichkeit, dass ein Mann zahlt, wenn die Rechnungshöhe steigt. Der Koeffizient für die Anzahl Personen ist negativ, also fällt die Wahrscheinlichkeit, wenn die Anzahl Personen steigt -- und steigt, wenn diese fällt. Der Koeffizient für `time=="Lunch"` ist negativ, also fällt die Wahrscheinlichkeit, wenn Lunch ist, damit ist sie beim Dinner höher. Jeweils unter sonst gleichen Umständen. Also ***D***.
+:::
+
+
+### Übung `r nextExercise()`: Inferenz Multiple Logistische Regression {.exercise type=A-B-C-D-E answer=C}
+
+Welche Variablen sind *signifikant* (zum Niveau $\alpha = 5\%$)?
+
+A.  Nur Rechnungshöhe.
+B.  Nur Personenanzahl.
+C.  Nur Tageszeit.
+D.  Rechnungshöhe, Personenzahl und Tageszeit.
+E.  Keine der Variablen.
+
+::: {.notes}
+Da nur der p-Wert für `time` mit $`r summary(ergglm4)$coefficients[4,4]`<0.05$ ist, kann $H_0$ nur dort verworfen werden, also ***C***.
+:::
+
+
+### Offene Übung `r nextExercise()`: Modellierung Geschlecht {.exercise type=essay}
+
+Modellieren Sie die Wahrscheinlichkeit, dass es sich bei dem Rechnungszahler um einen Mann handelt als Funktion der Variablen `total_bill`, `smoker`, `day`.
+
+```{r, include=FALSE}
+ergglmUeb <- glm(sex ~ total_bill + smoker + day, data = tips, family = binomial("logit"))
+summary(ergglmUeb)
+exp(coef(ergglmUeb))
+```
+
+::: {.notes}
+`ergglmUeb <- glm(sex ~ total_bill + smoker + day, data = tips, family = binomial("logit"))`  
+`summary(ergglmUeb)`  
+`exp(coef(ergglmUeb))` 
+
+Rechnungshöhe und `day=="Sun"` sind zum Niveau $\alpha=0.1$ signifikant. Mit steigender Rechnungshöhe steigt die Wahrscheinlichkeit, dass ein Mann zahlt, am Sonntag ist die Wahrscheinlichkeit höher als am Referenztag, dem Freitag (jeweils c.p.).
+:::
+
+
+```{r finish-Logistische-Regression, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

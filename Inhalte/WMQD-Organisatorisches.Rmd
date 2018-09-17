@@ -1,0 +1,67 @@
+```{r,  include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "WMQD-Organisatorisches",        # Dateiname ohne Suffix
+    "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+
+```{r child = './Organisatorisches/Literatur.Rmd'}
+```
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- die Grundlagen und Grundbegriffe quantitativer Datenanalyse beschreiben,
+- Methoden der deskriptiven und induktiven Statistik auswählen und anwenden,
+- die Ergebnisse statistischer Methoden interpretieren,
+- den Bezug von wirtschaftswissenschaftlichen Forschungsfragen sowie Forschungshypothesen zu quantitativen Methoden herstellen,
+- grundlegende quantitative Methoden in einer wissenschaftlichen Arbeit diskutieren,
+- eine empirisch quantitative wissenschaftliche Arbeit durchführen und verfassen, insbes. auch in Vorbereitung auf die Projektarbeiten und die Abschlussarbeit,
+- Auswertungen mit R durchführen.
+
+
+```{r child = './Organisatorisches/Wordcloud.Rmd'}
+```
+
+
+### Prüfungsleistung
+
+- Seminararbeit (ca. 1500 Wörter)
+- Klausur 60 Minuten
+
+Seminararbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
+
+Workload:
+
+- Präsenzstunden:	64,0 UE
+- Strukturiertes Eigenstudium	97,00 ZStd
+- Student Consulting/Praxistransfer:	55,00 ZStd
+- Workload gesamt:	200,0 ZStd
+- ECTS-Credit Punkte:	8
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```
+
+```{r, include=FALSE}
+abschluss <<- TRUE
+rm(pathToImages)
+```

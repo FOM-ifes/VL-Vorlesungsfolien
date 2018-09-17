@@ -1,0 +1,41 @@
+---
+title: "Skript-Vorlage"
+mainfont: "Palatino Linotype"
+sansfont: "Arial"
+monofont: "Consolas"
+mathfont: "STIX Two Text"
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "VOR-",        # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+```
+
+```{r child = './Inhalte/Kind-Vorlage.Rmd'}
+```
+
+<!-- ` ``{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
+`` ` -->
+
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

@@ -1,0 +1,208 @@
+```{r setup-EinfuehrungInR-WI, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "00-EinfuehrungInR",  # Dateiname ohne Suffix
+    "EinfuehrungInR-WI"   # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(mosaicCalc)
+
+```
+
+# `r nextChapter()` Ein kurze Einführung in R
+
+
+### Warum R?
+
+> [...] she was also following a wider trend: for many academics [...] R is the data-analysis tool of choice.^[Tippmann, S.. Programming tools (2015): Adventures with R. A guide to the popular, free statistics and visualization software that gives scientists control of their own data analysis. Nature, 517, S. 109--110. [https://doi.org/10.1038%2F517109a](https://doi.org/10.1038%2F517109a)]
+
+Verbreitung z. B.: [http://r4stats.com/articles/popularity/](http://r4stats.com/articles/popularity/)
+
+**R ist eine weit verbreitete Eintrittskarte in das globale Datenzeitalter!**
+
+### Vorteile R
+
+- Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z. B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
+- Neue Methoden der Datenanalyse werden häufig in R entwickelt (auch Big Data, KI, etc.).
+- frei und offen; kostenlos
+- Schnittstellen zu sehr vielen Datenquellen/-banken (auch SocialMedia etc.)
+- Erweiterungen u. a. für Microsoft, Oracle, SAP Produkte, aber auch SPSS, SAS
+- unzählige Nutzer*innen weltweit in Unternehmen und Wissenschaft
+- Möglichkeiten für Reporting, Apps, etc.
+- numerische Stabilität / Genauigkeit
+- große Entwickler*innen-Gemeinde mit langer Geschichte (seit 1993); R Konsortium, u.\ a. IBM, Microsoft, TIPCO, Google, ...
+
+
+### R und co.
+
+- **R** [https://www.r-project.org/](https://www.r-project.org/): ist das Basisprogramm
+- **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z. B. Dokumentenerstellung etc.
+- **mosaic** [https://cran.r-project.org/web/packages/mosaic/](https://cran.r-project.org/web/packages/mosaic/): ist ein Zusatzpaket, welches u. a. eine vereinheitlichte R Syntax bietet
+
+
+### R Installation
+
+1. R ([https://www.r-project.org/](https://www.r-project.org/))
+2. RStudio Desktop ([https://www.rstudio.com/](https://www.rstudio.com/))
+3. Installation von Zusatzpaketen in RStudio:
+
+```{r, eval=FALSE}
+install.packages("mosaic")
+```
+
+Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+
+
+### Warum Code? Politik
+ 
+ > Ich glaube, dass die Fähigkeit zum Programmieren eine der Basisfähigkeiten von jungen Menschen wird, neben Lesen, Schreiben, Rechnen. Die werden nicht wegfallen. Aber Programmieren wird nochmal dazu kommen.^[[Rede von Bundeskanzlerin Merkel zur Deutsch-Französischen Digitalkonferenz am 13. Dezember 2016.](https://www.bundeskanzlerin.de/Content/DE/Rede/2016/12/2016-12-13-deutsch-franzoesische-digitalkonferenz.html)]
+
+ 
+### Warum Code? Wirtschaft
+ 
+> Der Prozess, eine komplexe Aufgabe auf eine Reihe einfacher Anweisungen zu reduzieren - genau darum geht es beim Programmieren -, ist eine Fähigkeit, die in vielen Aspekten des modernen Lebens nützlich ist, nicht nur für professionelle Informatiker und Programmierer.^[[Facebooks Forschungschef Yann LeCun](http://www.faz.net/aktuell/wirtschaft/netzwirtschaft/facebook-ki-experte-yann-lecun-fordert-informatik-als-pflichtfach-15058261.html)]
+
+> I think everyone should learn how to program a computer, because it teaches you how to think.^[[Steve Jobs](http://www.businessinsider.com/the-best-quotes-from-the-lost-steve-jobs-interview-showing-this-weekend-2011-11?IR=T)]
+
+
+### Warum Code? Lehre
+
+> Don’t fence off students from the computation pool, throw them in! Computing skills are essential to working with data in the 21st century. Given this fact, we feel that to shield students from computing is to ultimately do them a disservice.^[[Ismay, C, Kim, A (2017): ModernDive ](http://moderndive.com/index.html#intro-instructors)]
+
+
+### Vorteile Code
+
+- Dokumentation des Vorgehens
+- (Einfache) Nachvollziehbarkeit, Wiederholung
+- Möglichkeit zur Automatisierung und Übertragung
+- "Direkte" Kommunikation mit dem Programm/ Computer
+- Speziell R: unzählige Literatur und Hilfe/ Tutorials im Internet
+
+
+# Die erste Schritte in R
+
+### Die ersten Schritte / **R** als Taschenrechner
+:::::::::::::: {.columns}
+::: {.column width="49%"}
+```{r}
+# Punkt- vor Strichrechnung
+2 * 3 + 2 - 25/5 + 2^3
+```
+```{r}
+# Trigometrische Funktionen
+cos(pi/2)^2 + sin(pi/2)^2
+```
+```{r}
+# Logarithmen & Exponetialfunktion
+log(exp(3))
+```
+```{r}
+# Unendlich
+1/0
+```
+:::
+::: {.column width="49%"}
+```{r}
+# Not a Number (keine Zahl)
+0/0
+```
+```{r}
+# Not Available; ein fehleder Wert
+NA
+```
+```{r}
+# Vektoren (combine)
+c(1, 4:8)
+```
+```{r}
+# Vektor/Liste ohne Inhalt
+c()
+```
+:::
+::::::::::::::
+
+### Übung {.exercise}
+
+Berechnen Sie folgende Ausdrücke mit R:
+
+A.  $3 \cdot \sqrt{97}$
+B.  $\sqrt{\pi}$
+C.  $\exp(\pi)$
+D.  $\pi^3$
+
+### Übung {.exercise}
+
+Die folgenden R-Ausdrücke können Sie so in R (z.B. per Copy&Paste) einfügen:
+```{r eval=FALSE}
+alpha <- 7
+beta <- 3
+x <- 9
+```
+
+Aus den Werten berechnen wir nun einen neuen Wert:
+```{r eval=FALSE}
+res <- atan(sqrt(alpha^2-beta)+tan(x/alpha+beta/x))
+```
+
+A.  Ändern Sie den Wert für `alpha` in 17 und berechnen Sie `res` neu! Wie lautet der Wert von `res` nun?
+B.  Ändern Sie nun `beta` in $6.6$ und berechnen Sie `res` neu!
+C.  Ändern Sie nun `x` in $1$ und berechnen Sie `res` neu!
+D.  Ändern Sie nun `x` in $-1$ und berechnen Sie `res` neu!
+
+
+### Mathematische Funktionen in R
+
+Eine Funktion erstellen, hier $f(x) = x^2-2x+1$:
+```{r}
+f <- makeFun(x^2-2*x+1 ~ x)
+```
+
+Graph der Funktion $f$ auf dem Intervall $I=[-2; 3]$:
+```{r}
+plotFun(f, xlim=range(-2,3))
+```
+
+### Übung: {.exercise}
+
+Wenn Sie folgendes eingeben:
+
+```{r eval=FALSE}
+plotFun(A*x^2 ~ A, A.lim=range(-2,3), x=10)
+```
+
+erhalten wir eine gerade Linie. Warum?
+
+### Graphischer Vergleich zweier Funktionen:
+
+```{r}
+g <- makeFun(x^4-4*x^3+6*x^2-4*x+1 ~ x)
+r <- makeFun(f(x)-g(x) ~ x)
+plotFun(f, xlim=range(-2, 3), col="blue", add=FALSE, ylab="f(x), g(x), r(x)") +
+  plotFun(g, col="green", add=TRUE) +
+  plotFun(r, col="red", add=TRUE)
+
+```
+
+### Etwas kompliziertere Funktionen
+
+```{r}
+f <- makeFun(sin(x*y) ~ x & y)
+plotFun(f(x,y) ~ x & y, x.lim=c(-2,2), y.lim=c(-2,2), xlim=c(-2.5,2.5), ylim=c(-2.5, 2.5) )
+```
+
+
+
+```{r finish-EinfuehrungInR-WI, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```
+
+

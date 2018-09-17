@@ -1,0 +1,150 @@
+% ===========================================================================
+% header.tex
+% ==========-----------------------------------------------------------------
+%
+% (C) in 2017 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% ---------------------------------------------------------------------------
+%%\AtBeginSection[]{\relax}
+
+\def\logowidth{1.3cm}
+\def\logoheight{1.3cm}
+\def\logoxshift{-0.85cm}
+\def\logoyshift{-0.85cm}
+
+\newcommand\Sinnspruch{\relax}
+\newcommand\SinnspruchReset{\renewcommand{\Sinnspruch}{\relax}}
+\AtBeginSection[]{%
+  %
+  % New section, not section in headline
+  %
+  \setbeamertemplate{headline}[nosectioninhead]
+  %
+  \begin{frame}
+    \frametitle{}
+    \vspace*{1.2em}
+    {\raggedleft\textit{\Sinnspruch}}
+    \vspace*{7cm}
+    \begin{tikzpicture}[remember picture, overlay]
+      \putLogo%
+      \node[% section title
+          xshift=\logoxshift-6.6cm,
+          %anchor=south east,
+          yshift=3.8cm, 
+          inner sep=0pt
+      ] at (current page.south east){%
+%          \fbox{
+            \makebox[\sectiontitleboxwidth][r]{%
+              {%
+                \usebeamercolor{sectionnumber title}%
+                \usebeamerfont{sectionnumber title}\insertsectionnumber\hspace*{0.15em}%
+              }%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
+              }
+            }% makebox
+%          }% fbox
+    };% war mal -3pt
+     \node[% 
+        anchor=west, 
+        inner sep=0pt, % 13pt 
+        xshift=13pt,
+        yshift=-\logoheight-12pt
+      ] at (current page.north west){
+            \logoline
+          };
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{headline}[sectioninhead]
+%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
+\AtBeginSubsection[]{%
+  %
+  % New subsection, not section in headline
+  %
+  \setbeamertemplate{headline}[nosectioninhead]
+  %
+  \begin{frame}
+    \frametitle{}
+    \vspace*{1.2em}
+    {\raggedleft\textit{\Sinnspruch}}
+    \vspace*{7cm}
+    \begin{tikzpicture}[remember picture, overlay]
+%    \node[inner sep=0pt] at (current page.center){%
+%              \includegraphics[width=\myPaperWidth,height=\myPaperHeight]{\backgroundimage}%
+%      };%
+      \node[% Logo
+        shift={(\logoxshift,\logoyshift)},
+        inner sep=0pt] at (current page.north east){%
+              \includegraphics[%
+                  width=\logowidth,
+                  height=\logoheight
+              ]{\logoimage}%
+      };% ,xshift=-1cm,yshift=4cm
+      \node[% section title
+          xshift=\logoxshift-6.6cm,
+          %anchor=south east,
+          yshift=3.8cm, 
+          inner sep=0pt
+      ] at (current page.south east){%
+%          \fbox{
+            \makebox[\sectiontitleboxwidth][r]{%
+              {%
+                \usebeamercolor{sectionnumber title}%
+                \usebeamerfont{sectionnumber title}\insertsectionnumber.%\insertsubsectionnumber\hspace*{0.15em}%
+              }%
+              {%
+                \usebeamercolor{subsectionnumber title}%
+                \usebeamerfont{subsectionnumber title}\insertsubsectionnumber\hspace*{0.15em}%
+              }%
+              {%
+                \usebeamercolor[fg]{subsection title}%
+                \usebeamerfont{subsection title}\NoHyper\insertsubsectionhead\endNoHyper%
+              }
+            }% makebox
+%          }% fbox
+    };% war mal -3pt
+     \node[% 
+        anchor=west, 
+        inner sep=0pt, % 13pt 
+        xshift=13pt,
+        yshift=-\logoheight-12pt
+      ] at (current page.north west){
+            \logoline
+          };
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{headline}[sectioninhead]
+%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
+
+
+\setbeamertemplate{section in toc}{%
+    \leavevmode\leftskip=2.75ex%
+  \llap{%
+    \usebeamerfont*{section number projected}%
+    \usebeamercolor[bg]{section number projected}%
+    \vrule width2.50ex height2.05ex depth.4ex%
+    \hskip-2.50ex%
+    \hbox to2.50ex{\hfil\color{fg}\inserttocsectionnumber\hfil}}%
+  \kern1.35ex\inserttocsection\par}
+
+%
+% BUGFIX für caption bug in 2018!
+% 
+% see: https://tex.stackexchange.com/questions/426088/texlive-pretest-2018-beamer-and-subfig-collide/426090#426090
+% see: https://www.mrunix.de/forums/showthread.php?77329-Undefined-control-sequence-magyar-captionfix-beim-Laden-von-subfig-in-beamer
+% see: https://gitlab.com/axelsommerfeldt/caption/issues?state=opened
+%
+\makeatletter
+\let\@@magyar@captionfix\relax
+\makeatother
+
+\InputIfFileExists{include-notes.tex}{\relax}{\relax}
+\InputIfFileExists{header_costums.tex}{\relax}{\relax}
+% ===========================================================================

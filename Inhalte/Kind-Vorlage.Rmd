@@ -1,0 +1,58 @@
+```{r setup-Kind-Vorlage, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf (nmarkgraf@hotmail.com)
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Kind-Vorlage",  # Dateiname ohne Suffix
+    "Vorlage"        # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` Vorlage
+ 
+ 
+### Dies ist eine Vorlage für eine Folie
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+
+Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu 
+
+### Offene Übung `r nextExercise()`: Das ist eine Vorlage für eine Übungsfolie {.exercise type=essay}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+
+Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec qu 
+
+### Etwas Mathematik
+
+$$
+  \int\limits_0^x f(y) \, \text{d} y = \sum_{n=1}{\infty} a_n \cdot x \neq \frac{123456}{123}
+$$
+
+### Etwas Rmarkdown
+
+```{r tidy=TRUE}
+x <- c(1,2,3,4,5,6,7,8,9,111)
+mean(x)
+y <- c(1,2,3,4,5,6,7,8,9,10)
+mean(y)
+```
+
+### Etwas Rmarkdown (plot)
+
+```{r tidy=TRUE, out.width="75%"}
+plot(x,y)
+```
+
+```{r finish--Kind-Vorlage, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

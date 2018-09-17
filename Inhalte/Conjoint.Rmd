@@ -1,0 +1,440 @@
+```{r setup-Conjoint, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser (oliver.gansser@fom.de)
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Conjoint",  # Dateiname ohne Suffix
+    "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+
+```
+
+# `r nextChapter()` Conjointanalyse
+
+### Lernziele
+
+- Einsatz und Ziel der Conjoint Analyse verstehen.
+- Daten für die Conjoint-Analyse aufbereiten.
+- Anwendung der Conjoint Analyse.
+- Interpretation und Schlussfolgerungen der Conjontanalyse.
+- Evaluation des Einsates der Conjoint Analyse in der Marketing Controlling Praxis.
+
+
+### Einführung Conjointanalyse 
+ 
+Häufig stellt sich im operativen Marketing das Problem der Preis- bzw. Nutzenbestimmung für ein bestimmtes Produkt oder einen Produktbestandteil. Kunden wägen Angebote gegeneinander ab und entscheiden sich auf der Basis eines Vergleichs
+von Produkteigenschaften, die ihnen wichtig sind, für oder gegen den Kauf. In der Praxis ist es deshalb sehr wichtig zu wissen, welche Produkteigenschaften welchen Umfang an Nutzen stiften und wie hoch die Preisbereitschaft für ein Produkt insgesamt ist.
+
+Typische Fragen, die sich in diesem Zusammenhang stellen, sind 
+
+- Welchen Preisaufschlag wird ein Kunde für ein **Mehr an Qualität, Service oder Design** akzeptieren?
+- Wie viel ist der Kunde bereit, für eine Sonderausstattung **mehr zu bezahlen**?
+- Welcher **Wert wird einer Anbietermarke** im Vergleich zu den Marken der Konkurrenz beigemessen?
+- Welche **Produktmerkmale** sind für Kunden essenziell, welche hingegen zweitrangig?
+ 
+ 
+### Probleme der Informationsbeschaffung durch direkte Befragung
+
+- Wert einzelener Merkmale schwer zu quantifizieren
+- Gefahr unehrlicher Antworten (bei Preisbereitschaft)
+- Keine Abwägung zwischen Nutzen und Kostenm, wenn Preis im Fokus. 
+
+
+### Einsatz von Conjointanalysen
+
+- Conjoint-Analysen werden in der Praxis vorwiegend bei der **Preisfestsetzung**, der **Neuproduktplanung** und für die **Nachfragersegmentierung** eingesetzt.
+
+- Sie gelten im Vergleich zu anderen Verfahren durch die indirekte Datenerhebung als **realitätsnahe Form** der Präferenzmessung mit einer höheren Validität als andere Verfahren.
+
+- Bei der Conjoint-Analyse werden, je nach Vorgehen, ein oder mehrere Produktkonzepte zur Einschätzung einer Stichprobe von Auskunftspersonen vorgelegt. 
+
+- Die Produkte werden dabei durch Merkmale definiert, die ein bestimmtes Set an Ausprägungen besitzen. 
+
+- Somit identifiziert die Auskunftsperson **Teilnutzenwerte** für jede Merkmalsausprägung. 
+
+- So kann aufgrund der gemessenen Präferenzen eine Prognose erstellen werden, welches Produkt eine Auskunftsperson bevorzugt und in Zukunft wahrscheinlich kaufen wird.
+
+
+### Zielsetzung von Conjointanalysen
+ 
+Zielsetzung von Conjoint-Analysen im Falle von Präferenzprognosen sind die **Vorhersage zukünftiger Kaufentscheidungen**. 
+
+- Um diese Vorhersagen zu berechnen, können **Kaufentscheidungsmodelle** angewendet werden. 
+- Dabei werden für verschiedene hypothetische Produktalternativen **Gesamtnutzenwerte** geschätzt, die anschließend in Auswahlwahrscheinlichkeiten transformiert werden.
+- Bei allen Modellen erfolgt die Wahlentscheidung nach dem **Nutzenmaximierungsprinzip**, so dass Alternativen mit höherem Nutzen solchen Alternativen mit niedrigerem Nutzen vorgezogen werden. 
+
+
+### Modelle der Nutzenschätzung
+
+-	**Max Utility-Modell**: Die Alternative mit dem höchsten Gesamtnutzen bekommt die Wahlwahrscheinlichkeit 1. Alle anderen Alternativen bekommen die Wahlwahrscheinlichkeit 0. Bei mehreren Alternativen mit dem gleichen Gesamtnutzen wird die Wahlwahrscheinlichkeit gleich verteilt.
+-	**BTL-Modell** (nach Bradley, Terry und Luce): Die Wahlwahrscheinlichkeit errechnet sich aus dem Quotient von Gesamtnutzen einer Alternative und der Summe der Gesamtnutzen aller Alternativen.
+-	**Logit-Modell**: Für jede Alternative wird nicht der Gesamtnutzen, sondern der e-transformierte Gesamtnutzen (Eulersche Zahl e = 2,718281828459045235...) der Alternative berechnet. Die Wahlwahrscheinlichkeit errechnet sich dann aus dem Quotient von e-transformiertem Gesamtnutzen einer Alternative und der Summe der e-transformierten Gesamtnutzen aller Alternativen.
+
+
+### Nachteil von Entscheidungsmodellen
+
+Die Nutzung solcher Entscheidungsmodelle für Prognosezwecke ist dann **problematisch**, wenn keine Informationen über die realen Kaufentscheidungprozesse der Konsumenten vorliegen. 
+
+Der Marktforscher müsste sich für seine Prognosen folglich für eines der Entscheidungsmodelle entscheiden. Da in den seltensten Fällen mit gleichen Wahlwahrscheinlichkeiten bei den Auskunftspersonen zu rechnen ist, führt die Modellauswahl zwangsläufig zu einer Prognose, die individuell vom Marktforscher durch seine Auswahl beeinflusst wird. Dieser Nachteil besteht bei der Gruppe der **traditionellen Conjoint-Analysen**, bei denen die beurteilten Alternativen in eine Präferenzrangfolge der Auskunftsperson gebracht werden oder mittels Rating-Skalen bewertet 
+
+
+### Choice-Based Conjoint-Analysen
+
+Bei Choice-Based Conjoint-Analysen werden den Auskunftspersonen verschiedenen **Choice-Sets** angeboten, aus der sie jeweils die für sie attraktivste Alternative auswählen.
+
+Ein **Choice-Set** besteht dabei aus zwei **hypothetischen Auswahl-Alternativen** und der Möglichkeit der **Nichtwahl**, also die Wahl keiner der Alternativen. Diese letzte Option gewährleistet bei der Nutzenschätzung, dass nur kaufrelevante Alternativen in die Berechnung eingehen. So kann vermutet werden, dass bei der der Choice-Based Conjoint-Analyse das natürliche Kaufverhalten der Auskunftsperson analysiert wird.
+
+Dabei werden aus Präferenzen (Gesamtnutzen) die **Präferenzbeiträge (Teilnutzen)** der einzelnen Merkmalsausprägungen geschätzt, wobei die Beurteilungsobjekte auf der Grundlage experimenteller Designs konstruiert werden 
+
+
+### Prozess der Choice-Based Conjoint-Analysen
+
+1.	Charakterisierung des Entscheidungsprozesses
+2.	Identifizieren und Beschreiben der Merkmale
+3.	Entwicklung eines experimentellen Design
+4.	Entwicklung des Fragebogen
+5.	Sammeln der Daten
+6.	Schätzmodell
+7.	Interpretation der Ergebnisse zur Entscheidungsunterstützung
+
+
+### Übung `r nextExercise()`: Anforderungen an Auswahl der Merkmale {.exercise type=A-B-C-D-E-F-G-H answer=D-E-F-G-H}
+
+Welchen Aussagen stimmen Sie zu?
+
+A.  Die Merkmale müssen für die Kaufentscheidung nicht relevant sein.
+B. 	Die Anzahl der Merkmale sollt möglichst hoch sein. 
+C.	Die Auskunftspersonen können überfordert werden.
+D.	Die Merkmale sollten einen direkten Einfluss auf den Gesamtnutzen der Alternative haben.
+E. 	Die Merkmale sollten unabhängig voneinander und damit nicht redundant sein.
+F.	Die Merkmale sollten vom Unternehmen beeinflussbar und realisierbar sein.
+G.	Die Formulierung der Merkmale und Merkmalsausprägungen sollte objektiv und ohne Interpretationsspielraum sein. 
+H.	Aus den definierten Merkmalen und Ausprägungen sollten realistischen Alternativkonzepte möglich sein. 
+
+
+<div class="notes">
+**D-E sind richtig**
+</div>
+
+### Übung `r nextExercise()`: Anforderungen an die Merkamalsausprägungen {.exercise type=A-B-C-D-E answer=A-C-D}
+
+Welchen Aussagen stimmen Sie zu?
+
+A.	Die Entscheidungssituation muss durch die Ausprägungen realistisch abgebildet werden.
+B.	Die Ausprägungen müssen nicht unbedingt einen Nutzenbeitrag zur Präferenzbildung leisten.
+C.	Die Anzahl der Ausprägungen je Merkmal sollte möglichst hoch sein.
+D.	Die Ausprägungen sollten vollständig sein und sich gegenseitig ausschließen.
+
+<div class="notes">
+**A, C und D sind richtig**
+</div>
+
+
+### Fallstudie
+
+
+Als Fallstudie dient das Produkt „Digitale Lernform“ im Rahmen der beruflichen Weiterbildung. Die Studie wurde bei 172 Probanden aus Teilnehmern der TÜV SÜD Akademie im Bereich der beruflichen Weiterbildung in dem Zeitraum von 01.02.2014 bis 31.03.2014 durchgeführt. 
+
+Quelle: 
+
+Gansser, O.; Füller, S. R. (2015): Präferenzprognosen mittels Conjoint-Analyse - eine Fallstudie mit Choice-Based-Design, in: Gansser, O.; Krol, B. (Hrsg.): Markt- und Absatzprognosen, Wiesbaden.
+
+
+### Merkmale und Beschreibung der Merkmalsausprägungen
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Merkmale.png"))
+```
+
+
+### Merkmale und Beschreibung der Merkmalsausprägungen
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Kurznotation.png"))
+```
+
+
+### Erstellung orthogonal fraktionierter Choice-Sets mit der Statistik-Software R
+
+Schritte:
+
+1.	Erstellung eines **vollständigen Designs**,
+2.	Erstellung eines **fraktionierten Designs** mit orthogonaler Anordnung,
+3.	Kopieren des fraktionierten Designs von Auswahlalternative 1 für das Design der Auswahlalternative 2, 
+4.	Erstellung von finalen Choice-Sets mit Hilfe von Zufallszahlen.
+
+
+### 1 Erzeugung eines vollständigen Designs
+
+Bei der vorliegenden Fallstudie beinhaltet ein vollständiges Design **4x3x3x3 Kombinationsmöglichkeiten**, da ein Merkmal vier Ausprägungen und drei Merkmalen drei Ausprägungen umfasst. 
+
+Für die Erstellung des vollständigen Design wird über die Funktion **gen.factorial** ein **4x3x3x3 Design** mit den Variablenbezeichnungen **"Ort", "SL", "ML" und "Unt"** und dem Argument, dass alle Variablen Faktoren, mit nominaler Ausprägung sind, eine Matrix mit der Bezeichnung **vd** (vollständiges Design) erzeugt. 
+
+Code:
+
+```{r}
+library(AlgDesign)
+vd <- gen.factorial(c(4,3,3,3), 
+                    varNames=c("Ort", "SL", "ML", "Unt"), 
+                    factors="all")
+
+```
+
+
+### Ausgabe des vollständigen Designs (esten 16 Zeilen)
+
+
+```{r echo=FALSE}
+library(AlgDesign)
+vd <- gen.factorial(c(4,3,3,3), varNames=c("Ort", "SL", "ML", "Unt"), factors="all")
+vd[1:16,]
+```
+
+
+### Ausgabe des vollständigen Designs (letzte 16 Zeilen)
+
+
+```{r echo=FALSE}
+library(AlgDesign)
+vd <- gen.factorial(c(4,3,3,3), varNames=c("Ort", "SL", "ML", "Unt"), factors="all")
+vd[92:108,]
+```
+
+
+### 2 Erstellung eines fraktionierten Designs mit orthogonaler Anordnung
+
+```{r}
+set.seed(1986) # Initialisierung eines Zufallsgeneraturs
+fd <- optFederov(~.,vd,16) # Erstellung eines fraktionierten Designs 
+                           # mit 16 Alternativzeilen
+alt1 <- fd$design  # Zuweisung des Designs zu einer Matrix alt1 
+```
+
+
+### Ausgabe von alt1
+
+```{r echo=FALSE}
+alt1
+```
+
+
+### 3 Kopieren des fraktionierten Designs von alt1 für alt2
+
+Da die Probanden bei der Choice-Based Conjoint-Analyse bei jeder Auswahlentscheidung zwischen zwei Auswahlalternativen entscheiden müssen, wird das fraktionierte Design der Auswahlalternative 1 in eine zweite Matrix geschrieben, die der Matrix alt2 zugewiesen wird. 
+
+Somit sind nun zwei identische fraktionierte Designs (alt1 und alt2) als Matrix vorhanden.
+
+Code: 
+
+```{r}
+alt2 <- alt1
+```
+
+
+### 4 Erstellung von finalen Choice-Sets 
+
+Beiden Matrizen Zufallszahlen werden je Zeile generiert, die in eine weitere Spalte z (Zufallszahl) je Matrix geschrieben werden. Beide Matrizen werden in einem letzten Schritt auf Basis der je Zeile zugeordneten Zufallszahlen mit dem Argument „order“ aufsteigend sortiert. 
+
+```{r}
+alt1 <- transform(alt1,z1=runif(16))
+alt2 <- transform(alt2,z2=runif(16))
+alt1_sort <- alt1[order(alt1$z1),]
+alt2_sort <- alt2[order(alt2$z2),]
+```
+
+Sollten eine oder mehrere Zeilen gleiche Stimuli aufweisen, muss der Schritt 4 so oft wiederholt werden, bis jedes Choice-Set aus unterschiedlichen Stimuli besteht. 
+
+
+### Ausgabe Choice-Set 1 als Beispiel
+
+```{r echo=FALSE}
+
+alt1_sort
+
+```
+
+
+### Einlesen der Original Choice-Sets aus Projekt
+
+Da die Zufallsinitionalisierung für diese Conjointanalyse 2014 durchgeführt wurde, werden bei erneuter Fraktionierung andere Zeilen ausgewählt als dies 2014 der Fall war. Aus diesem Grunde werden beiden Choice-Sets zum Download zur Verfügung gestellt. 
+
+Code:
+
+```{r}
+load(url("http://gansser.de/data/conjoint/alt1_o.Rdata"))
+load(url("http://gansser.de/data/conjoint/alt2_o.Rdata"))
+
+```
+
+
+### Ausgabe Original Choice-Set 1 mir Recodierung {.shrink}
+
+```{r}
+alt1_o
+```
+
+
+### Ausgabe Original Choice-Set 2 mir Recodierung {.shrink}
+
+```{r}
+alt2_o
+```
+
+
+### Präsentation der Stimuli bei den Befragungsteilnehmern
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Stimuli.png"))
+```
+
+
+### Vorlage Choice-Set 1
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Choice-Set1.png"))
+```
+
+
+### Dateneingabe 
+
+Von jeder Auskunftsperson liegen 16 Entscheidungen zwischen **Alternative 1**, **Alternative 2** oder **„Ich wähle keines der beiden Konzepte“** vor. 
+
+Diese Informationen müssen nun in eine Datenmatrix geschrieben werden, die in einem nächsten Schritt als Dateninput für die Nutzenfunktion verwendet wird.
+
+
+### Einlesen der Daten {.shrink}
+
+```{r}
+load(url("http://gansser.de/data/conjoint/conjoint_data.Rdata"))
+conjoint_data[1:12,] # Output der Daten für die ersten vier Personen
+```
+
+
+### Erklärung der Dateneingabematrix
+
+Die Spalte APN setzt sich zusammen aus der Nummer der Auskunftsperson und der Nummer des Choice-Sets. 
+
+Am Beispiel der ersten Auskunftsperson bedeuten die ersten drei Ziffern die Auskunftsperson Nr. 1 und die letzten zwei Ziffern, dass es sich um das erste, zweite, drieet und vierte Choice-Set im Fragebogen handelt. 
+
+In der Spalte E wird die **Entscheidung der Probanden** gespeichert. 
+
+- Steht in der Zelle eine 1, dann wurde das in dieser Zeile definierte Choice-Set gewählt. 
+- Andernfalls enthält die Zelle eine 0 für die Nicht-Wahl. 
+    
+Pro Choice-Set gibt es genau drei Zeilen. 
+
+- Die erste Zeile jeweils für die Ausprägungen von **Alternative 1**, 
+- die zweite Zeile jeweils für die **Alternative 2** und die 
+- dritte Zeile für die **Nicht-Auswahl**. 
+    
+Bei der Spalte K handelt es sich um die spezifische Alternativkonstante, bei der die Ziffer 1 eine Auswahlalternative darstellt und die Ziffer 0 die Nicht-Auswahl.
+
+
+### Schätzung der Nutzenfunktion
+
+Zur Schätzung der **Nutzenfunktion** für Choice-Based Conjoint-Analysen mit mehr als zwei Alternativen stellt das Verfahren der Multinomialen Logit-Analyse das wichtigste Verfahren dar. 
+
+Mit dem Paket „survival“ wird in R mit der Funktion clogit () ein konditionales **Logit-Modell** angewendet. 
+
+Dabei wird die **Wahrscheinlichkeit** errechnet, mit der eine gezeigte Produktalternative gewählt wird 
+
+
+### Code für die Nutzenschätzung {.shrink}
+
+
+```{r}
+library(survival) # Paket vorher installieren mit install.packages("")
+clogout <- clogit(E~K+Ort+SL+ML+Unt+strata(APN), data=conjoint_data)
+clogout
+
+```
+
+
+### Übung `r nextExercise()`: Interpretation der Ergebnisse {.exercise type=A-B-C-D answer=C}
+
+Welcher Aussage stimmen Sie zu?
+
+A.  Die Chance, dass sich jemand für Online als Schulungsort entscheidet ist nicht verfügbar.
+B.  Die Chance, dass sich jemand für die Präsentschulung entscheidet im Vergleich zur Onlineschulung ist um das 1,6-fache höher.
+C.  Die Chance, dass sich jemand für die Präsenzschulung entscheidet im Vergleich zur Onlineschulung ist um das 5,7-fache höher. 
+D.  Die Chance, dass sich jemand für die Präsenzschulung entscheidet im Vergleich zur Onlineschulung ist gleich groß.
+
+<div class="notes">
+***D***
+</div>
+
+
+### Übung `r nextExercise()`: Reihenfolge der Präferenzen {.exercise type=A-B-C-D answer=B}
+
+Für welche Präferenzreihenfolge würden Sie sich entscheiden?
+
+A.  Ort:Online-Präsenz, SL: Wiki, ML: Podcast, Unt: Digital
+B.  Ort:Präsenz, SL: Social Community, ML: Lern-App, Unt: Papier & Digital
+C.  Ort:online, Rest egal
+D.  Ort:ONline, SL: Wiki, ML: Podcast, Unt: Papier & Digital
+
+<div class="notes">
+***B***
+</div>
+
+
+### Interprataion der Schätzparameter
+
+-	In der Spalte **coef** werden die sogenannten Logit-Koeffizienten ausgegeben, die die logarithmierten Odds darstellen.
+-	In der Spalte **exp(coef)** werden die Effekt-Koeffizienten (auch **Odds Ratios** genannt) ausgegeben, berechnet als Exponentialfunktion aus ecoef. Diese dienen als Effektgrößen für die Koeffizienten. Bei nominalen Merkmalen gibt die Odds Ratio einer Variable beziehungsweise Merkmalsausprägung die Chancen des Odds einer Merkmalsausprägung im Vergleich zur Basiskategorie an, also das Chancenverhältnis.
+-	Die Standardabweichung der Koeffizienten wird in der Spalte se(coef) ausgegeben.
+-	In der Spalte **z** wir der Prüfwert z aus der z-Statistik angegeben. 
+-	Mit dem **p-Value** in der letzten Spalte wird angezeigt, ob die **Odds Ratio** signifikant von 1 verschieden ist.
+
+
+### Präferenztabelle mit Rangfolge
+
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Rangfolge.png"))
+```
+
+
+### Relevanz der Merkmale
+
+**Relevanz** = $\frac{ Spannweite (coef) }{ sum Spannweite (coef) }$  
+
+
+
+- Das Merkmal mit der höchsten Spannweite hat folglich den **größten Effekt** auf die Auswahlwahrscheinlichkeit eines Seminarangebotes.
+
+- Änderungen bei dem Merkmal mit dem größten Effekt wirken sich auch am stärksten auf das Verhalten der Kunden aus, da eine **Variation der Ausprägung** dieses Merkmals einen bedeutsamen Einfluss auf die Höhe des Gesamtnutzenwertes hat 
+
+
+###  Relative Wichtigkeit der Merkmale
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Wichtigkeit.png"))
+```
+
+### Übung `r nextExercise()`: Reihenfolge der Präferenzen {.exercise type=A-B-C-D answer=B}
+
+Für welche Präferenzreihenfolge würden Sie sich entscheiden?
+
+A.  Ort:Online-Präsenz, SL: Wiki, ML: Podcast, Unt: Digital
+B.  Ort:Präsenz, SL: Social Community, ML: Lern-App, Unt: Papier & Digital
+C.  Ort:online, Rest egal
+D.  Ort:ONline, SL: Wiki, ML: Podcast, Unt: Papier & Digital
+
+<div class="notes">
+***B***
+</div>
+
+
+ 
+```{r finish--Kind-Conjoint, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

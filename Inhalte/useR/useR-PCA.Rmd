@@ -1,0 +1,6 @@
+### Quantitativer Forschungsprozess am Beispiel useR! (Fortsetzung) 
+
+Innerhalb Schritt *4. Datenanalyse*:
+
+PCA, um die Items der *Unified theory of acceptance and use of technology* ^[Vgl. Venkatesh, V., Thong, J. Y., & Xu, X. (2012). Consumer acceptance and use of information technology: extending the unified theory of acceptance and use of technology. MIS quarterly, 157-178.] zu den Konstrukten zusammenzufassen.
+

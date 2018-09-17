@@ -1,0 +1,25 @@
+### Themen der Vorlesung
+
+```{r, echo=FALSE, fig.align="center", out.width="80%"}
+library(wordcloud)
+
+set.seed(2009)
+
+themen1 <- c("Zufall", "Polynome", "Nullstellen", "Modellierung", "Daten")
+themen2 <- c("p-Wert", "Nullhypothese", "Alternativhypothese", "Beobachtungsstudie", "Experiment",
+            "Population", "Stichprobe", "Bootstrap", "Permutationstest", "Regression", "Fehler 1. Art",
+            "Fehler 2. Art", "Simulation", "Verteilung", "Anteil", 
+            "Balkendiagramm", "Histogramm", "Streudiagramm", "Numerische Daten", "Kategoriale Daten",
+            "Punktschätzer","Konfidenzintervall","Hypothesentest", "Mittelwert", "Varianz", "z-Wert",
+            "Normalverteilung", "Teststatistik", "Validität", "Reliabilität", "Repräsentativität", "Reproduzierbarkeit",
+            "Datenschutz","R", "Korrelation", "Unabhängigkeit", "Randomisierung",
+            "Standardfehler")
+wordcloud(words = c(themen1, themen2), freq=c(rep(2, length(themen1)),rep(0.5, length(themen2))), 
+          random.color=TRUE, scale = c(1,.5), rot.per=.1, colors=brewer.pal(6, "Dark2"))
+
+rm("themen1")
+rm("themen2")
+detach("package:wordcloud", unload=TRUE)
+detach("package:RColorBrewer", unload = TRUE)
+```
+

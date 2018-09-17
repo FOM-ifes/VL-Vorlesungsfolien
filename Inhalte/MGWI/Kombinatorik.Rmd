@@ -1,0 +1,707 @@
+```{r setup-MGDWI-Kombinatorik, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "Kombinatorik",  # Dateiname ohne Suffix
+    "MGWI"          # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+```
+
+# Kombinatorik oder die Kunst des Zählens 
+
+### Was ist Kombinatorik?
+
+Die **Kombinatorik** ist ein Teilgebiet der Mathematik, welches sich
+mit der Bestimmung der Anzahl von möglichen *Anordnungen* oder
+*Auswahlen* von
+
+- *unterscheidbaren* oder *nicht unterscheidbaren* Objekten
+- *mit* oder *ohne* Beachtung der *Reihenfolge*
+
+beschäftigt. 
+
+In der Mathematik finden sich einige Anwendungen für die Kombinatorik:
+
+- Bestimmung der Anzahl von Teilmengen 
+- Bestimmung der Größe von Mengen (z.B. der Potenzmenge) 
+- Berechnung von Wahrscheinlichkeiten (sofern alle Ereignisse gleich Wahrscheinlich sind) 
+
+  
+### Was ist Kombinatorik?
+
+Ein paar Beispiele für die Frage nach der Anzahl:
+
+- Wie viele und welche Möglichkeiten gibt es aus 12 Personen 2er-Teams zu bilden? 
+- Wie viele und welche Fälle sind zu beachten, wenn ein Objekt, durch zwei 
+	Eigenschaften gekennzeichnet ist, von  denen eine vier und die andere drei 
+	Ausprägungen haben kann? 
+- Wie viele Passworte kann man bilden, wenn das Passwort 6-8 Zeichen lang ist und 
+	mindestens eine Ziffer enthält?
+
+### Beziehung Kombinatorik zur Wahrscheinlichkeitsrechnung
+
+Mit Hilfe der Kombinatorik werden Wahrscheinlichkeiten abgeleitet.
+
+Dabei wir mit der Kombinatorik die Anzahl der gesuchten/guten/gewünschten Ereignisse
+ins Verhältnis zur Gesamtzahl der Ereignisse gesetzt.
+
+#### für die Frage nach der (abgeleiteten) Wahrscheinlichkeit {.examples}
+- 	Wir groß ist die Wahrscheinlichkeit einen Sechser im Lotto zu erreichen? (Und mit Superzahl?) 
+- 	Wie groß ist die Wahrscheinlichkeit, dass auf einer Feier zwei Personen am gleichen Tag (im Jahr) Geburtstag haben?
+
+### Zur Erinnerung
+	
+#### Gleichmächtigkeit {.definition}
+Seien $A$ und $B$ zwei Mengen. 
+Wir sagen $A$ ist **gleichmächtig** zu $B$, wenn es eine *bijektive* Abbildung 
+$f:\, A \to B$ gibt.
+		 
+In diesem Fall schreiben wir $|A|= |B|$ (oder auch $\#A = \#B$).
+
+#### endliche Mengen und deren Elementanzahl {.definition}
+Ist eine Menge $A$ gleichmächtig mit einer *natürlichen Zahl* -- wie sie *von Neumann* 
+definiert hat --, so schreiben wir auch
+
+\begin{equation*}
+	|A| = n,\quad \text{ für ein } n \in \mathbf{N}
+\end{equation*} 
+
+und nennen die Menge **endlich**.
+	
+### Zur Erinnerung
+	
+#### Von Neumann und Gleichmächtigkeit {.example}	
+Die Menge $A=\{x, y, z\}$ ist gleichmächtig zur Menge $3=\{ \emptyset, \{ \emptyset \}, \{ \emptyset, \{ \emptyset \} \} \}$,
+denn:
+
+- $\displaystyle x \leftrightarrow \emptyset$, 
+- $\displaystyle y \leftrightarrow \{ \emptyset \}$,
+- $\displaystyle z \leftrightarrow \{ \emptyset, \{ \emptyset \} \}$ 
+
+Darum schreiben wir auch $|A|=3$ mit der *natürlichen Zahl* 3 und sagen:
+
+- Die Menge $A$ hat $3$ Elemente.
+
+#### Abzählbare Mengen {.definition}
+
+Jede Menge, die gleichmächtig zu $\mathbf{N}$ oder einem  Element aus $\mathbf{N}$ ist, 
+nennen wir **abzählbar**.
+
+
+### Summenregel für endliche Mengen
+\small
+
+#### Summenregel (für endliche Mengen) {.theorem}
+Für beliebige Mengen $A$ und $B$ gilt:\vspace*{-.5em}
+\begin{equation*} 
+	|A \cup B| = |A| + |B| - |A \cap B| 
+\end{equation*}
+		
+Ist $A \cap B = \emptyset$, so gilt:\vspace*{-.5em}
+\begin{equation*} 
+	|A \cup B| = |A| + |B| 
+\end{equation*}
+
+\small
+
+#### Kurze Wörter {.example}
+Die Anzahl aller Wörter die aus drei Kleinbuchstaben bestehen und mit einem Vokal (a,e,i,o,u) 
+anfangen oder enden ist:\vspace*{-.5em}
+\begin{equation*}
+	5 \cdot 26^2 + 26^2 \cdot 5 - 5 \cdot 26 \cdot 5 = 6\,110
+\end{equation*}
+
+#### Mengen {.example}
+Sei $A=\{a, b, c, d\}$ und $B=\{x, y, z\}$. Dann ist:\vspace*{-.5em}
+\begin{equation*}
+	|A|=4,\, |B|=3,\, |A \cup B|= |A| + |B| = 7\text{, da }|A \cap B| = 0
+\end{equation*}
+
+### Einstufiger Auswahl-/Entscheidungsprozess
+\small 
+Die Summenformel bestimmt die Anzahl der Alternativen, die in einer 
+einfachen Entscheidung gewählt werden können. 
+Wenn die unterschiedlichen Mengen von Alternativen, die berücksichtigt 
+werden, Schnittmengen aufweisen, sollen deren Elemente nur einfach
+berücksichtigt werden. 
+
+#### Übung {.exercise}
+
+Mailing-Aktion eines Versandhauses:
+
+* $A=${Menge aller Besteller/innen, die in den letzten vier Wochen bestellt haben}
+* $B=${Menge aller Besteller/innen von Haushaltsartikeln}
+* $C=${Menge aller Bestellerinnen}
+
+Wie viele Mails werden versendet, wenn an alle Kunden, die zumindest
+zu einer der Mengen gehören, berücksichtigt werden?
+
+
+
+**Tipp:** Skizzieren Sie die Situation mit Hilfe eines Mengendiagramms!
+
+### Prinzip von Inklusion und Exklusion
+
+Die *Summenregel* liefert für zwei Mengen $A$ und $B$ die Formel:\vspace*{-1.5em}
+\begin{equation*}
+	|A \cup B| = |A| + |B| - |A \cap B|
+\end{equation*}
+Für drei Mengen $A$, $B$, $C$ erhalten wir:\vspace*{-1.5em}
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+\begin{align*}
+	|A \cup B \cup C| 	&= |A| + |B| + |C| \\
+						&\phantom{=} - |A \cap B| - |A \cap C| - |B \cap C| \\
+						&\phantom{=} + |A \cap B \cap C|
+\end{align*}
+
+:::
+::: {.column width="40%"}
+
+```{r echo=FALSE, out.width = "55%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "2000px-Inclusion-exclusion.png"))
+```
+
+:::
+::::::
+
+\vspace*{-0.7em}
+
+#### Prinzip von Inklusion und Exklusion {.theorem}
+
+Sei $X = \bigcup_{i=1}^n A_i$ eine *endliche Menge* die sich als eine Vereinigung von $n$ Teilmengen 
+$A_1,A_2, \ldots, A_n$ schreiben lässt. 
+Zu einer *Indexmenge* $I \subseteq \{1,2,\ldots,n\}$ sei $A_I:= \bigcap_{i \in I} A_i$ 
+der Schnitt über alle durch die Elemente der Indexmenge bezeichneten Teilmengen, 
+wobei $A_\emptyset = X$ entspricht. Dann gilt
+\begin{equation*}
+	|X| = \sum_{\emptyset \not= I \subseteq \{1,\ldots,n\}} \left( -1\right)^{|I|+1}|A_I|~.
+\end{equation*}
+
+
+### Produktregel für endliche Mengen
+	
+#### Produktregel (für endliche Mengen) {.theorem}
+		
+Für beliebige Mengen $A$ und $B$ gilt:\vspace*{-.7em}
+\begin{equation*} 
+	|A \times B| = |A| \cdot |B| 
+\end{equation*}
+
+#### Routenplanung {.example}
+
+Herr Besserwisser will von Berlin nach Dortmund.
+
+* Für die Strecke von Berlin nach Hannover kennt er 5 Routen.
+* Für die Strecke Hannover nach Dortmund ist er mit 3 Routen vertraut.
+	
+Wie viele Möglichkeiten hat Herr Besserwisser von Berlin über Hannover
+nach Dortmund zu fahren?
+
+Die Entscheidung erfolgt in zwei *unabhängigen* Schritten:
+	
+- **1. Schritt:** 
+	Entscheidung für die Route von Berlin nach Hannover aus den 
+	fünf Möglichkeiten.
+- **2. Schritt:** 
+	Die Tour von Hannover nach Dortmund hat drei Optionen.
+
+Insgesamt also $5 \cdot 3 = 15$ mögliche Routen.
+
+### Produktregel für mehr als zwei Mengen
+	
+#### Produktregel {.theorem}
+
+Sei $k\in\mathbf{N}$ und $A_1,\dots,A_k$ Mengen. Dann gilt:
+
+\begin{equation*} 
+	\left| A_1 \times A_2 \times \cdots \times A_k\right| = \prod_{i=1}^{k} \left| A_i \right| 
+\end{equation*}
+		
+	
+#### In Worten: {.remark}
+	
+Die Mächtigkeit des kartesischen Produktes mehrerer Mengen ist gleich 
+dem Produkt der Mächtigkeit des Einzelmengen. 
+
+	
+#### Kurze Wörter {.example}
+
+Die Anzahl der Wörter der Länge 3 aus Kleinbuchstaben und Ziffern, 
+die mit einem Buchstaben anfangen ist:
+\begin{equation*}
+	26 \cdot 36 \cdot 36 = 33\,696
+\end{equation*}
+	
+### Beispiel:
+
+::: {.small}
+	
+#### Einfache Passworte aus 6-8 Zeichen {.example}
+
+Eine Anwendung der Summen- und Produktregel ist die Anzahl aller
+Passwörter mit 6-8 Zeichen zu bestimmen. 
+	
+	
+* Da die Schnittmenge der Passworte mit 6, 7 oder 8 Zeichen leer ist, 
+	können die Mächtigkeiten der Mengen addiert werden. 
+* Die Anzahl der Möglichkeiten, die $n$-te Stelle im Passwort zu belegen, 
+	ist *unabhängig* von den Belegungen der vorangehenden Stellen.
+
+Also können wir die Anzahl der Möglichkeiten multiplizieren. 
+
+* Die Anzahl der möglichen Passworte hängt nur vom Zeichenvorrat ab. 
+
+* Nehmen wir an, dass nur Großbuchstaben zulässig sind, d.h. es gibt 26 Zeichen. 
+	
+Somit ist\vspace*{-1.8em}
+\begin{align*}
+	|\{\text{6-stellige Passworte}\}| = 26^6 &= \phantom{208}\,308\,915\,776, \\
+	|\{\text{7-stellige Passworte}\}| = 26^7 &= \phantom{20}8\,031\,810\,176, \\
+	|\{\text{8-stellige Passworte}\}| = 26^8 &= 208\,827\,064\,576.\\[.4em]
+\text{Die Anzahl insgesamt ist also \hfil} 26^6+ 26^7+ 26^8  &=217\,167\,790\,528.
+\end{align*}
+
+#### {.endblock}
+
+:::
+
+### Permutationen
+	
+#### ($k$-)Permutation, Variation {.definition}
+
+Eine Auswahl von $k$ Objekten aus einer Menge von $n$ Elementen,
+bei der *die Reihenfolge eine Rolle spielt*, nennt man 
+**geordnete Auswahl** (auch **Variation** oder 
+**$k$-Permutation**). 
+
+  
+
+Der Spezialfall $k=n$, bei dem alle Elemente ausgewählt und angeordnet werden, heißt 
+**Permutation**.
+
+  
+
+#### Permutationen {.examples}
+
+- Der Sektion Ringen des Sportvereins mit $12$ Ringern macht
+	einen internen Wettkampf. 
+	Wie viele Möglichkeiten gibt es für die Besetzung des 
+	ersten, zweiten und dritten Platzes?
+
+
+- Wie viele Möglichkeiten gibt es, $5$ Bücher auf einem 
+	Regalbrett anzuordnen? 
+
+### Kombination
+	
+#### Kombination {.definition}
+
+Eine Auswahl von $k$ Objekten aus einer Menge von $n$ Elementen
+*ohne Beachtung der Reihenfolge*, nennt man 
+**ungeordnete Auswahl** oder **Kombination**.
+
+#### Kombination {.examples}
+
+- In der Sektion Ringen des Sportvereins mit 12 Mitgliedern 
+	soll in dem Turnier jedes Mitglied gegen jedes andere 
+	kämpfen.	
+	Wie viele Kämpfe sind notwendig?
+
+- *Der Klassiker:* Wie viele Möglichkeiten gibt es, 6 Zahlen 
+	aus den natürlichen Zahlen von 1 bis 49 zu ziehen? 
+
+### Anzahl der Permutationen
+	
+Gegeben ist die Menge $A=\{a,b,c,d,e\}$.
+	
+	
+Wie viele Möglichkeiten für 3-Permutationen aus $A$ gibt es?
+
+- Für die Ziehung des ersten Objekts gibt es 5 Möglichkeiten.
+    Die verbleibende Menge hat 4 Elemente.
+- Für die Ziehung des zweiten Objekts gibt noch 4 Möglichkeiten.
+	Es bleiben 3 Elemente zur Auswahl.
+- 	Für die Ziehung des dritten Objekts gibt noch 3 Möglichkeiten.
+
+### Anzahl der Permutationen
+	
+Allgemein gilt:
+	
+	
+Werden $k$ Elemente aus einer Menge mit $n$ Elementen unter
+Beachtung der Reihenfolge (als *$k$-Permutation*) gezogen, so gibt 
+es für die
+	
+\begin{tabular}{lcl}
+		erste Ziehung  	& $n$     	& Alternativen \\  
+		zweite Ziehung 	& $(n-1)$ 	& Alternativen \\  
+		dritte Ziehung 	& $(n-2)$ 	& Alternativen \\  
+		$\quad $\vdots 	& \vdots 	& Alternativen \\ 
+		$k$-te Ziehung 	& $(n-k+1)$	& Alternativen 
+\end{tabular}
+	
+Die Anzahl der möglichen $k$-Permutationen ergibt sich durch
+Multiplikation der Alternativen auf jeder Stufe des
+Ziehungsprozesses.
+
+### Satz zur Anzahl der Permutationen
+	
+#### Anzahl der Permutationen {.theorem}
+Die Anzahl der $k$-Permutationen aus einer Menge mit $n$ Elementen
+wird als $P(n,k)$ bezeichnet und ist gegeben durch:
+\begin{equation*} 
+	P(n,k) 	= n \cdot (n-1) \cdot (n-2) \cdot \dots \cdot (n-k+1)   
+			= \frac{n!}{(n-k)!} 
+\end{equation*}
+
+Man spricht hier auch von einer **geordneten Auswahl**.
+
+Speziell gibt es 
+		
+\begin{equation*} 
+	P(n,n) 	= n \cdot (n-1) \cdot (n-2) \cdot \dots \cdot 2 \cdot 1   
+			= n! 
+\end{equation*}
+		
+verschiedene Anordnungen der $n$ Elemente.
+
+
+#### Traveling Salesman Problem {.example}
+Ein Geschäftsreisender besucht nacheinander $n$ Orte. 
+Dann gibt es $n!$ mögliche Reiserouten!
+
+### Beispiel: Die Besetzung der Siegertreppe beim Ringkampf
+	
+Zwölf Ringer kämpfen um den ersten, zweiten und dritten Platz
+
+- Für den ersten Platz gibt es zwölf Kandidaten
+
+- Ist der erste Platz vergeben, verbleiben 11 Kandidaten für Platz 2 
+
+- Für den dritten Platz bleiben dann noch 10 Kandidaten
+
+Damit ergeben sich $12 \cdot 11 \cdot 10 = 1320$ Möglichkeiten, wie das 
+Siegerpodest besetzt sein kann. 
+
+Anwendung der Formel:
+\begin{align*}
+	P(12,3) &= \frac{12!}{(12-3)!} \\ 
+			&= \frac{1 \cdot 2 \cdot 3 \cdot \dots \cdot 9 \cdot 10 \cdot 11 \cdot 12}{1 \cdot 2 \cdot 3 \cdot \dots \cdot 9} \\
+			&= 10 \cdot 11 \cdot 12 = 1320
+\end{align*}
+
+### Beispiel: Die Anordnung der Bücher
+	
+Fünf Bücher sind auf einem Regalbrett anzuordnen
+\begin{itemize}
+		\item 	Mit jedem eingestellten Buch verringert sich die Anzahl 
+				der Optionen für den nächsten Platz auf dem Brett um eins.
+		\item 	Für den fünften Platz existiert schließlich nur noch ein Buch.
+\end{itemize}
+
+
+Es gibt damit: $1 \cdot 2 \cdot 3 \cdot 4 \cdot 5$   $= 120$  Möglichkeiten
+	
+\begin{align*}
+		P(5,5) 	&= \frac{5!}{(5-5)!} = 5! \qquad (\text{denn }0!=1) \\
+				&= 1 \cdot 2 \cdot 3 \cdot 4 \cdot 5 = 120
+\end{align*}
+
+### Anzahl von Kombinationen
+	
+Gegeben ist die Gruppe von Schachspielern $S=\{a,b,c,d\}$.
+	
+Wie viele Möglichkeiten für zweier Gruppen von Spielern aus $S$ gibt es?
+
+- Bekannt ist, dass es $3 \cdot 4 = 12$ Möglichkeiten von 
+    Paarungen gibt, wenn die Reihenfolge eine Rolle spielt.
+			 
+- Da aber z.B. $(a,b) = (b,a)$ ist, werden dabei alle zweier Gruppen doppelt gezählt.
+
+- Die Anzahl der geordneten Auswahlen ist also durch $2$ zu teilen.	
+
+  
+
+Folgende Paarungen ergeben sich: 
+
+\begin{equation*}
+	\{a,b\}, \{a,c\}, \{a,d\}, \{b,c\}, \{b,d\}, \{c,d\}
+\end{equation*}
+	
+*Da bei den Kombinationen die Reihenfolge der Elemente keine Bedeutung hat, können sie als Mengen angesehen werden.*
+	
+	
+### Anzahl von Kombinationen
+
+Allgemein gilt:
+	
+	
+Die Bestimmung der Anzahl der möglichen Kombinationen von $k$
+Elementen aus einer Menge von $n$ Elementen kann in zwei Schritte
+zerlegt werden: 
+	
+1. Die Anzahl der $k$-Permutationen ermittelt. 
+2. Diese Anzahl durch die Anzahl der Permutationen der
+	$k$ Elemente geteilt, da diese für die Kombination 
+	gleichwertig sind.
+	Die Anzahl der Permutationen von $k$ Elementen ist 
+	gegeben durch: $k!$
+
+#### Anzahl von Kombinationen {.theorem}
+Die Anzahl der möglichen Kombinationen von $k$ Elementen aus
+einer Menge mit $n$ Elementen wird als $C(n,k)$ bezeichnet und ist
+gegeben durch:
+
+\begin{equation*} 
+	C(n,k) = \frac{P(n,k)}{k!} = \frac{n!}{(n-k)!} \cdot \frac{1}{k!} = \frac{n!}{k!(n-k)!} 
+\end{equation*}
+
+Für $k>n$ ist $C(n,k) = 0$.
+
+
+### Binomialkoeffizienten
+	
+#### Binomialkoeffizienten {.definition}
+
+Für zwei natürliche Zahlen $n$ und $k$ mit $k \leq n$ heißt die Zahl
+		
+\begin{equation*}
+	\binom{n}{k} := \frac{n!}{k! \cdot (n-k)!}
+\end{equation*}
+	
+der \textbf{Binomialkoeffizient $n$ über $k$}. 
+
+Für $k>n$ ist der Binomialkoeffizient gleich Null.
+
+#### Binomialkoeffizienten {.example}
+	
+Berechnen Sie:
+	
+* $\binom{5}{0}$, $\binom{5}{1}$, $\binom{5}{2}$, $\binom{5}{3}$, $\binom{5}{4}$ und $\binom{5}{5}$
+		
+### Rechenregeln für Binomialkoeffizienten
+	
+Für Binomialkoeffizienten gelten die folgenden Regeln ($n,k \in \mathbf{N}$ und $k \leq n$):
+	
+\textbf{Wichtige Werte: (Randwerte)}
+\begin{equation*}
+	\binom{n}{0} = \binom{n}{n} = 1
+\end{equation*}  
+	
+\textbf{Summe:}
+\begin{equation*}
+	\binom{n}{1} = \binom{n}{n-1} =  \sum_{j=1}^{n-1} 1 = n
+\end{equation*}  
+
+\textbf{Gauß'sche-Summen:}
+\begin{equation*}
+	\binom{n}{2} = \binom{n}{n-2} = \sum_{j=1}^{n-1} j =  \frac{n\cdot(n-1)}{2}
+\end{equation*} 
+
+	
+### Rechenregeln für Binomialkoeffizienten (forts.)
+
+\textbf{Symmetrieeigenschaft:}
+\begin{equation*}
+	\binom{n}{n-k} = \binom{n}{k} 
+\end{equation*}
+$\Longrightarrow$ Die Auswahl von $k$ aus $n$ Objekten ist gleichbedeutend von der Bestimmung 
+von $n-k$ Objekten, die nicht ausgewählt werden!
+
+\textbf{Anzahl \textit{aller} Teilmengen einer $n$-elementigen Menge:}
+\begin{equation*}
+	\sum_{k=0}^{n} \binom{n}{k} = 2^n
+\end{equation*}
+
+\textbf{Additionseigenschaft:}
+\begin{equation*}
+	\binom{n}{k} + \binom{n}{k+1} = \binom{n+1}{k+1} 
+\end{equation*}
+	
+
+### Das Pascal'sche Dreieck
+	
+\begin{columns}
+		\begin{column}{0.74\textwidth}
+			\begin{tabular}{ccccccccccccc}
+				&	&	&	&	&	& 1	&	&	&	& 	& \\  
+				&	&	&	&	&	&	&	&	&	&	&	\\
+				&	&	&	&	& 1	&	& 1	&	&	& 	& \\  
+				&	&	&	&	&	&	&	&	&	&	&	\\
+				&	&	&	& 1	&	& 2	&	& 1	&	& 	& \\  
+				&	&	&	&	&	&	&	&	&	&	&	\\
+				&	&	& 1	&	& 3	&	& 3	&	& 1	& 	& \\  
+				&	&	&	&	&	&	&	&	&	&	&	\\
+				&	& 1	&	& 4	&	& 6	&	& 4	&	& 1 & \\
+				&	&	&	&	&	&	&	&	&	&	&	\\
+				& 1	&	& 5	&	& 10&	& 10&	& 5	&	& 1
+			\end{tabular}
+		\end{column}
+		\begin{column}{0.24\textwidth}
+			\personDB{Pascal}
+		\end{column}
+\end{columns}
+
+  
+
+#### {.remark}
+Das Pascal'sche Dreieck war jedoch schon früher bekannt und wird deshalb 
+auch heute noch nach anderen \glqq Entdeckern\grqq\xspace benannt. 
+In China spricht man vom \textit{Yang-Hui-Dreieck}, 
+in Italien vom \textit{Tartaglia-Dreieck} und 
+im Iran vom \textit{Chayy\={a}m-Dreieck}.
+
+### Erweiterung der binomischen Formeln
+\newcommand{\mycolor}{\color{blue}}	
+Es ist:
+\begin{align*}
+		(a+b)^0 &= {\mycolor 1}\\
+		(a+b)^1 &= {\mycolor 1 \cdot} a \; + {\mycolor 1 \, \cdot} \phantom{a}\;b\\
+		(a+b)^2 &= {\mycolor 1 \cdot} a^2 + {\mycolor 2} \cdot a\;b + \phantom{0} {\mycolor 1 \, \cdot} \phantom{a}b^2\\ 
+		(a+b)^3 &= {\mycolor 1 \cdot} a^3 + {\mycolor 3} \cdot a^2b + \phantom{0} {\mycolor 3}   \cdot a\;b^2 + \phantom{0}{\mycolor  1 \, \cdot} \,\phantom{a}b^3 \\ 
+		(a+b)^4 &= {\mycolor 1 \cdot} a^4 + {\mycolor 4} \cdot a^3b + \phantom{0} {\mycolor 6}   \cdot a^2b^2 + \phantom{0}{\mycolor  4}   \cdot a\;b^3 + {\mycolor 1 \, \cdot}\phantom{a}b^4 \\
+		(a+b)^5 &= {\mycolor 1 \cdot} a^5 + {\mycolor 5} \cdot a^4b + 			 {\mycolor 10}   \cdot a^3b^2 +            {\mycolor 10}   \cdot a^2b^3 + {\mycolor 5 \cdot}ab^4 + {\mycolor 1 \cdot}\phantom{a}b^5
+\end{align*}
+	
+### Der binomische Lehrsatz
+	
+\begin{columns}
+	\begin{column}[t]{0.74\textwidth}
+		\begin{Satz}[Newton's binomische Formeln]
+			Für zwei (reelle) Zahlen $a$ und $b$ und eine natürliche Zahl $n$ gilt der \textbf{binomische Lehrsatz}:
+			\begin{equation*}
+				(a+b)^n = \sum_{k=0}^n {\color{blue} \binom{n}{k} }  a^{n-k}  b^k
+			\end{equation*}
+		\end{Satz}
+	\end{column}
+	\begin{column}[t]{0.24\textwidth}
+	\vspace*{-1em}
+	\personDB{Newton}
+	\end{column}
+\end{columns}
+
+  
+
+\small
+
+#### Potenzieren ohne Taschenrechner {.example}
+\vspace*{-0.5em}
+\begin{align*}
+	101^5 	&= (100+1)^5 \\
+			&= {\color{blue} 1} \cdot 100^0\cdot 1^5 + {\color{blue} 5} \cdot 100^1\cdot 1^4 + {\color{blue} 10} \cdot 100^2\cdot 1^3 + {\color{blue} 10} \cdot 100^3\cdot 1^2 + \\
+			&\qquad + {\color{blue} 5} \cdot 100^4\cdot 1^1 + {\color{blue} 1} \cdot 100^5\cdot 1^0\\
+			&= {\color{blue} 1} + {\color{blue} 5} 00 + {\color{blue} 10} 0\,000 + {\color{blue} 10} \,000\,000 + {\color{blue} 5} 00\,000\,000 + {\color{blue} 1} 0\,000\,000\,000 \\
+			&= 10\,510\,100\,501
+\end{align*}
+
+
+### Wiederholte Verwendung der Objekte 
+
+Elemente können in Kombinationen und Variationen der Grundgesamtheit auch mehrfach 
+vorkommen:
+
+\begin{itemize}
+		\item 	Passworte können mehrfach identische Zeichen enthalten  
+				(Reihenfolge ist bedeutsam)
+		\item 	Verteilung von Bonuspunkten auf mehrere Kandidaten  
+				(Reihenfolge der Punktevergabe ist irrelevant)
+\end{itemize}
+	
+Kann ein Objekt mehrfach verwendet werden, ändern sich die Zählregeln der Kombinatorik
+	
+\begin{itemize}
+		\item 	Bei relevanter Reihenfolge Rückgriff auf die Produktregel  
+				(Anzahl der Möglichkeiten pro Element wird multipliziert)
+		\item 	Bei irrelevanter Reihenfolge würde dies gleiche Ergebnisse
+				mehrfach zählen
+\end{itemize}
+			
+Man nennt das **Ziehung mit Zurücklegen**.
+				  
+### Ziehung mit Zurücklegen ohne Beachtung der Reihenfolge
+
+Es können 4 Bonuspunkte auf 5 Kandidaten $(A, B, C, D, E)$ verteilt werden.
+	
+	
+Relevant ist nur die Anzahl der Punkte, die ein Kandidat erhält.
+Für jede Punktvergabe gibt es 5 Optionen $(A, B, C, D, E)$.
+Vier Punktvergaben finden statt.
+	
+*Rückführung auf Auswahl ohne Zurücklegen:*
+
+Ein Kandidat kann bis zu viermal ($k$-mal) bepunktet werden:
+\begin{enumerate}[1.)]
+		\item 	Er ist unter den fünf $(n)$ Kandidaten, aus denen gewählt 
+				wird.
+		\item 	Es verbleiben ihm $3$ $(k-1)$ weitere Optionen, Punkte zu 
+				erlangen.
+\end{enumerate}
+
+Damit ergeben sich $8$ $(n+k-1)$ Optionen, aus denen ohne Wiederholung gewählt wird:
+\begin{equation*} 
+	\binom{5+4-1}{4} = \frac{8!}{4!(8-4)!}
+					 =\frac{8 \cdot 7 \cdot 6 \cdot 5}{4 \cdot 3 \cdot 2 \cdot 1} 
+					 = 70 
+\end{equation*}
+	
+### Beispiel
+
+#### Kombination mit Wiederholung {.example}
+
+Es gibt Gummibären in $n=6$ Farben. Für die Auswahl von $k=4$ Gummibären, die nicht alle
+verschiedenfarbig sein müssen, gibt es dann
+
+\begin{equation*}
+	\binom{6+4-1}{4} = \binom{9}{4} = \frac{9\cdot 8\cdot 7 \cdot 6}{1 \cdot 2 \cdot 3 \cdot 4} = 126
+\end{equation*}
+
+verschiedene Möglichkeiten.
+	
+### Regeln für Ziehungen mit Zurücklegen
+	
+#### Ziehungen mit Zurücklegen {.theorem}
+Die Anzahl der Möglichkeiten $k$ Elemente aus $n$ Elementen, auszuwählen, wobei jedes 
+Element \textit{mehrfach} in der Auswahl vorkommen kann, ist
+
+- bei Beachtung der Reihenfolge: 
+	\begin{equation*} 
+		n^k 
+	\end{equation*}	
+- falls die Reihenfolge keine Rolle spielt: 
+	\begin{equation*} 
+		\binom{n+k-1}{k} 
+	\end{equation*}
+	
+### Zusammenfassung der Zählregeln
+	
+Für die Anzahl der Möglichkeiten aus $n$ Objekten $k$ Objekte auszuwählen, gelten die 
+folgenden Regeln:
+	
+\begin{center}
+	\begin{tabular}{lcc}
+		\toprule
+		Auswahl & \textbf{mit} Beachtung	& \textbf{ohne} Beachtung 	\\
+		~		& der Reihenfolge			& der Reihenfolge 			\\
+		~		& (\textit{Variation})	 	& (\textit{Kombination}) 	\\
+		\midrule
+		ohne Zurücklegen & $\displaystyle\frac{n!}{(n-k)!}$	& $\displaystyle\binom{n}{k}$ \\
+		\midrule
+		mit  Zurücklegen & $\displaystyle n^k$			 	& $\displaystyle\binom{n+k-1}{k}$ \\
+		\bottomrule
+	\end{tabular}
+\end{center}
+
+```{r finish-Kombinatorik, include=FALSE}
+finalizePart(partname)
+```

@@ -1,0 +1,26 @@
+```{r setup-Abschluss, include=FALSE}
+source("../prelude.R")
+pathToImages = getPathToImages("Abschluss")
+
+```
+
+### Klausur
+
+- Prüfungsrelevant ist der gesamte Stoff der Vorlesung. Für die Wiederholungsprüfung gelten die gleichen Rahmendbedingungen wie für den regulären Prüfungstermin.
+- Lesen Sie sich erst die ganze Klausur in Ruhe durch und fangen Sie mit den Aufgaben an, die Sie sicher können.
+- Halten Sie sich nicht zu lange mit Aufgaben auf, die wenig Punkte bringen.
+
+::: {.center .Large}
+Viel Erfolg!
+:::
+
+### Des Lehrenden letzte Worte
+
+Song [https://www.causeweb.org](https://www.causeweb.org): [Lawrence Mark Lesser &copy; Doin' Statistics](https://www.causeweb.org/cause/resources/fun/songs/doin-statistics)
+
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Rplot.pdf"))
+```
+
+Siehe Blogbeitrag [Sebastian Sauer (20.12.2017) "Zusammenhang von Lernen und Noten im Statistikunterricht"](https://data-se.netlify.com/2017/12/20/zusammenhang-von-lernen-und-noten-im-statistikunterricht/)

@@ -1,0 +1,567 @@
+```{r setup-Einfuehrung-EDA-R, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Einfuehrung-EDA-R",  # Dateiname ohne Suffix
+    "Einfuehrung"         # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(gridExtra)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+
+# `r nextChapter()` Explorative Datenanalyse mit R
+ 
+ 
+### Analyse Trinkgelddaten 
+
+Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten:
+```{r, message = FALSE, eval = FALSE}
+# Herunterladen 
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+# Einlesen in R
+tips <- read.csv2("tips.csv")
+
+# Alternativ - heruntergeladene Datei einlesen:
+# tips <- read.csv2(file.choose()) 
+```
+
+
+### `csv` Datei
+
+Dateiaufbau `tips.csv`^[Eine solche `csv` Datei kann z.B. durch Export aus Tabellenkalkulationsprogrammen erzeugt werden.]:
+
+- Erste Zeile: Variablennamen^[Tipp: Mit Buchstaben beginnen, keine Leer- oder Sonderzeichen, Umlaute vermeiden.]
+- Datenfeldtrennzeichen der Variablen: `;` (Semikolon)
+- Dezimaltrennzeichen: `,` (Komma)
+- Textkennzeichen: `"`(Anführungszeichen)
+
+*Hinweis*: Der Einlesebefehl in R hängt vom Dateiformat der Datei ab. Siehe z.B. `?read.table` oder Paket [readr](https://cran.r-project.org/package=readr).
+
+### Variablen Trinkgelddaten
+
+Ein Kellner sammelte über mehrere Monate Daten über sein Trinkgeld:
+
+- `total_bill`: Rechnungshöhe in Dollar
+- `tip`: Trinkgeld in Dollar
+- `sex`: Geschlecht des Rechnungszahlenden
+- `smoker`: Gab es Raucher\*innen am Tisch?
+- `day`: Wochentag 
+- `time`: Tageszeit/ Mahlzeit
+- `size`: Anzahl Personen am Tisch
+
+
+### mosaic
+
+```{r mosaic, message=FALSE}
+# Ggfs. einmalig vorab installieren
+# install.packages("mosaic")
+
+# Paket mosaic laden
+library(mosaic)
+```
+
+### Trinkgelddaten {.shrink}
+
+```{r Trinkgelddaten_inspect_command, eval=FALSE}
+inspect(tips)
+```
+
+::: {.scriptsize}
+```{r  Trinkgelddaten_inspect_output, echo=FALSE, R.options=list(width=90)}
+(insp <- mosaic::inspect(tips))
+```
+:::
+
+
+### Übung `r nextExercise()`: Metrische Variablen {.exercise type=A-B-C-D-E answer=B}
+
+Wie viele metrische Variablen liegen vor?
+
+A.  2
+B.  3
+C.  4
+D.  7
+E.  244
+
+::: {.notes}
+Es liegen ***3 (Antwort B)*** metrische Variablen vor (`total_bill`, `tip`, `size`), die anderen sind kategoriale (bzw. nominalskalierte) Variablen. 7 ist die Gesamtzahl an Variablen und 244 ist die Anzahl der Beobachtungen.
+:::
+
+
+### Übung `r nextExercise()`: Datenerhebung {.exercise type=A-B answer=A}
+
+Was vermuten Sie: Um welche Form der Datenerhebung handelt es sich hier?
+
+A.  Beobachtungsstudie.
+B.  Experiment.
+
+Was folgt daraus?
+
+::: {.notes}
+Vermutlich liegt eine Beobachtungsstudie (***A***) vor (Sekundärerhebung: Nutzung vorhandener Daten.). D. h., es können keine unmittelbaren Kausalaussagen getroffen werden. Bei einer zufälligen Stichprobe kann auf die Population geschlossen werden.
+:::
+
+
+### Grafische Analysen in R (Übersicht)
+
+- `bargraph()`: Balkendiagramm
+- `histogram()`: Histogramm
+- `bwplot()`: Boxplot
+- `xyplot()`: Streudiagramm
+- `mosaicplot()`: Mosaikplot
+
+
+### Deskriptive Kennzahlen in R (Übersicht)
+
+- `favstats()`: Kennzahlen numerischer Variablen
+- `prop()`: Anteile
+- `tally()`: (Kreuz-)tabellierung
+- `cor()`: Korrelationskoeffizient
+
+
+## Analyse kategorialer Daten
+
+### Analyse: Geschlecht Rechnungszahler*in
+
+Analysiere über Balkendiagramm:
+
+```{r bargraph, fig.align="center", out.width="60%"}
+bargraph( ~ sex, # (unabhängige) Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Geschlechtsverteilung {.exercise type=A-B-C answer=B}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+bargraph( ~ sex, # (unabhängige) Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+
+Welche Aussage stimmt?
+
+A.  Bei einer Mehrheit der Stichprobe zahlt eine Frau.
+B.  Bei einer Mehrheit der Stichprobe zahlt ein Mann.
+C.  Weiß nicht.
+
+::: {.notes}
+***B*** ist korrekt, da der Balken für `Male` höher als der für `Female` ist. Auch bei `inspect` war schon zu erkennen, dass in der Mehrheit Männer bezahlt haben (``r insp$categorical$distribution[1]``).
+:::
+
+
+### Anteil Frauen
+
+Analysiere über Anteil:
+
+```{r}
+prop( ~ sex, # Variable, die analysiert wird
+      success = "Female", # Ausprägung
+      data = tips) # Datensatz
+```
+
+
+### Tabellierung
+
+Analysiere über Tabellen:
+
+Absolute Häufigkeit $h_i$:
+
+```{r tally-beispiel1}
+tally( ~ sex, # Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+Relative Häufigkeit $f_i=\frac{h_i}{n}$:
+
+```{r tally-beispiel2}
+tally( ~ sex, # Variable, die analysiert wird
+          format = "proportion", # Option: Anteile
+          data = tips) # Datensatz
+```
+
+
+### Gruppiertes Balkendiagramm
+
+```{r bargraph-group, fig.align="center", out.width="60%"}
+bargraph( ~ sex # Variable, die analysiert wird
+          | time,  # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+```
+
+### Übung `r nextExercise()`: Geschlecht nach Tageszeit {.exercise type=A-B-C answer=A}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+bargraph( ~ sex # Variable, die analysiert wird
+          | time,  # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+```
+
+Welche Aussage stimmt?
+
+A.  Beim Lunch zahlen mehr Frauen als Männer.
+B.  Beim Lunch zahlen weniger Frauen als Männer.
+C.  Beim Lunch zahlen gleich viele Frauen wie Männer.
+
+::: {.notes}
+Antwort ***A*** ist korrekt, im Bereich `Lunch` ist der Balken für `Female` etwas höher als der für `Male`. Aber man sieht auch, dass der Unterschied klein ist. In der nachfolgenden Kreuztabellierung sehen Sie dies auch in absoluten Zahlen und Anteilen ausgedrückt.
+:::
+
+
+### Kreuztabellierung Geschlecht nach Tageszeit {.shrink}
+
+Absolute Häufigkeit:
+
+```{r tally_group}
+tally( ~ sex # Variable, die analysiert wird
+          | time,  # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+
+```
+
+Releative Häufigkeit je Mahlzeit:
+
+```{r}
+tally( ~ sex # Variable, die analysiert wird
+          | time,  # Variable, nach der bedingt wird
+       format = "proportion", # Option: Anteile
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Raucher je Wochentag {.exercise type=A-B answer=A}
+
+Welcher Befehl führt eine Kreuztabellierung der Anteile der Raucher je Wochentag durch?
+
+A.  `tally( ~ smoker | day, format = 'proportion', data = tips)`
+B.  `tally( ~ day | smoker, format = 'proportion', data = tips)`
+
+::: {.notes}
+***A*** ist die korrekte Antwort.  
+In dieser Reihenfolge werden zeilenweise die Ausprägungen von `smoker` dargestellt
+und spaltenweise die Ausprägungen von `day`, grundsätzliches Formeleingabe `y ~ x | z`, hier `smoker` gruppiert nach `day`. Mit `format = ‘proportion’` werden die Anteile der Ausprägungen bezogen auf die jeweilige Spalte berechnet. 
+:::
+
+### Kreuztabellierung Raucher und Wochentag
+
+```{r}
+tally( ~ smoker | day, 
+       format = "proportion", data = tips)
+
+tally( ~ day | smoker, 
+       format = "proportion", data = tips)
+```
+
+### Übung `r nextExercise()`: Fehler {.exercise type=A-B-C-D answer=C}
+
+Was ist an diesem Befehl falsch?
+```{r, eval=FALSE, cache=FALSE}
+tally( ~ x data = daten)
+```
+
+A.  Es fehlt eine Option.
+B.  Es fehlt eine bedingende Variable.
+C.  Es fehlt ein Komma.
+D.  Gar nichts.
+
+::: {.notes}
+Antwort ***C*** ist korrekt, es fehlt ein Komma. Korrekt muss es heißen: `tally( ~ x, data = daten)`.
+:::
+
+
+
+### Offene Übung `r nextExercise()`: R Fehler {.exercise type=essay}
+
+Was ist an diesem Befehl falsch?
+
+```{r, eval=FALSE, cache=FALSE}
+Tally( ~ x, data = daten)
+```
+
+::: {.notes}
+R unterscheidet zwischen Groß- und Kleinschreibung, `Tally` gibt es nicht. Korrekt muss es heißen: `tally( ~ x, data = daten)`.
+:::
+
+## Analyse numerischer Daten
+
+### Übung `r nextExercise()`: Rechnungshöhe {.exercise type=A-B-C-D answer=B}
+
+Was gilt für die Variable Rechnungshöhe `total_bill`?
+
+A.  Es ist eine latente verhältnisskalierte Variable.
+B.  Es ist eine manifeste verhältnisskalierte Variable.
+C.  Es ist eine latente intervallskalierte Variable.
+D.  Es ist eine manifeste intervallskalierte Variable.
+
+
+::: {.notes}
+Die Rechnungshöhe lässt sich direkt messen, also ist sie manifest. Da es einen absoluten Nullpunkt gibt ist sie verhältnisskaliert, also stimmt ***B***.
+:::
+
+
+### Analyse Rechnungshöhe
+
+Analysiere über Histogramm:
+
+```{r histogram, fig.align="center", out.width="60%"}
+histogram( ~ total_bill, # Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Rechnungshöhe {.exercise type=A-B-C-D-E answer=E}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ total_bill, # Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+Welche der folgenden Aussagen stimmt?
+
+A.  Die Rechnungshöhe ist gleichverteilt.
+B.  Die Rechnungshöhe ist multimodal.
+C.  Die Rechnungshöhe ist normalverteilt.
+D.  Die Rechnungshöhe ist linksschief.
+E.  Die Rechnungshöhe ist rechtsschief.
+
+::: {.notes}
+Die Rechnungshöhe hat eine Spitze, ist also unimodal. Sie fällt nach rechts hin flacher ab, als sie links steigt, somit ist sie ***rechtsschief (E)***. Bei (annähernder) Gleichverteilung wären alle Balken etwa gleich hoch, die Normalverteilung ist symmetrisch.
+:::
+
+### Variablentransformation
+
+Ggfs. können Variablen durch Transformationen (z.B. $\sqrt(), \ln(), \ldots$) in Richtung einer symmetrischen Normalverteilung transformiert werden:
+
+```{r histogramlog, fig.align="center", out.width="60%"}
+histogram( ~ log(total_bill), # logarithmierte Variable
+          data = tips) # Datensatz
+```
+
+### Histogram: Anzahl der Rechtecke festlegen mit Option `nint=`
+
+```{r histogrambins, fig.align="center", out.width="80%", echo=FALSE}
+gh2  <- histogram(~total_bill, data=tips, nint= 2, main="nint= 2")
+gh10 <- histogram(~total_bill, data=tips, nint=10, main="nint=10")
+gh25 <- histogram(~total_bill, data=tips, nint=25, main="nint=25")
+gh50 <- histogram(~total_bill, data=tips, nint=50, main="nint=50")
+grid.arrange(gh2, gh10, gh25, gh50)
+```
+
+
+### Kennzahlen Rechnungshöhe
+
+Analysiere über Kennzahlen:
+
+
+```{r favstats}
+favstats( ~ total_bill, # Variable, die analysiert wird
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Kennzahlen {.exercise type=A-B-C answer=B}
+
+Welche Aussage stimmt?
+
+A.  Die durchschnittliche Rechnungshöhe ist kleiner als die Rechnungshöhe einer im Bezug auf die Rechnungshöhe typischen Rechnung.
+B.  Die durchschnittliche Rechnungshöhe ist größer als die Rechnungshöhe einer im Bezug auf die Rechnungshöhe typischen Rechnung.
+C.  Die durchschnittliche Rechnungshöhe ist gleich der Rechnungshöhe einer im Bezug auf die Rechnungshöhe typischen Rechnung.
+
+::: {.notes}
+Die durchschnittliche Rechnungshöhe ist der Mittelwert, hier also $`r round(mean(tips$total_bill),2)`$. Eine typische Rechnung wird mit dem Median beschrieben (da 50% der Beträge kleiner und 50% der Beträge größer sind), hier $`r round(median(tips$total_bill),2)`$. Daher ist Antwort ***B*** korrekt.
+:::
+
+
+### Rechnungshöhe je Geschlecht
+
+Histogramm je Geschlecht:
+
+```{r histogram_group, fig.align="center", out.width="60%"}
+histogram( ~ total_bill # Variable, die analysiert wird
+           | sex, # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Rechnungshöhe nach Geschlecht {.exercise type=A-B-C-D answer=A}
+
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+histogram( ~ total_bill # Variable, die analysiert wird
+           | sex, # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+```
+
+
+Welche Aussage stimmt nach der Abbildung?
+
+A.  Männer haben einen höheren Anteil an höheren Rechnungen.
+B.  Frauen haben einen höheren Anteil an höheren Rechnungen.
+C.  Die Verteilung ist bei den Frauen linksschief.
+D.  Die Verteilung ist bei den Männern linksschief.
+
+::: {.notes}
+Beide Verteilungen sind rechtsschief, somit können die Antworten 3 und 4 ausgeschlossen werden. Bei den Männern sind die Rechtecke ab 30$ höher, somit ist Antwort ***A*** korrekt.
+:::
+
+
+### Boxplot Rechnungshöhe abhängig vom Geschlecht
+
+Analysiere über Boxplot^[Beachte `~` "als Funktion von", `|` "bedingt, gruppiert nach".]:
+
+```{r boxplot-group, fig.align="center", out.width="50%"}
+bwplot(total_bill ~ # abhängige Variable
+          sex, # unabhängige Variable 
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Übung Boxplot {.exercise type=A-B-C-D answer=C}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+bwplot(total_bill ~ # abhängige Variable
+          sex, # unabhängige Variable 
+          data = tips) # Datensatz
+```
+
+Welche Aussage stimmt nach der Abbildung?
+
+A.  Der Mittelwert der Rechnungshöhe ist bei den Männern unter 20$.
+B.  Der Mittelwert der Rechnungshöhe ist bei den Männern über 20$.
+C.  Der Median der Rechnungshöhe ist bei den Männern unter 20$.
+D.  Der Median der Rechnungshöhe ist bei den Männern über 20$.
+
+::: {.notes}
+Die Mittelwerte werden in diesen Boxplots nicht mit ausgegeben, daher können die Antworten A und B nicht beurteilt werden. Der Median (der Punkt in der Box) liegt bei den Männern noch knapp unter 20$, somit ist Antwort ***C*** korrekt.
+:::
+
+### Kennzahlen gruppiert nach Geschlecht
+
+Zusammenfassende Kennzahlen je Geschlecht:
+
+```{r}
+favstats( ~  total_bill # Variable, die analysiert wird
+           | sex, # Variable, nach der bedingt wird
+          data = tips) # Datensatz
+```
+
+
+### Zusammenhang Trinkgeld und Rechnungshöhe
+
+Analysiere über Streudiagramm:
+
+```{r xyplot, fig.align="center", out.width="60%"}
+xyplot( tip # abhängige Variable
+        ~ total_bill, # unabhängige Variable
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Zusammenhang Rechnungshöhe und Trinkgeld {.exercise type=A-B-C answer=C}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+xyplot( tip # abhängige Variable
+        ~ total_bill, # unabhängige Variable
+          data = tips) # Datensatz
+```
+
+Welche Aussage stimmt?
+
+A.  Es scheint keinen Zusammenhang zwischen Rechnungshöhe und Trinkgeld zu geben.
+B.  Es scheint einen negativen Zusammenhang zwischen Rechnungshöhe und Trinkgeld zu geben.
+C.  Es scheint einen positiven Zusammenhang zwischen Rechnungshöhe und Trinkgeld zu geben.
+
+::: {.notes}
+Die Punktewolke erstreckt sich von links unten nach rechts oben, d. h., im Mittel werden bei größeren Rechnungsbeträgen auch die Trinkgelder höher. Antwort ***C*** ist somit korrekt.
+:::
+
+### Korrelation Rechnungshöhe und Trinkgeld
+
+Analysiere über Korrelationskoeffizienten:
+
+```{r cor,}
+cor( tip # abhängige Variable
+        ~ total_bill, # unabhängige Variable
+          data = tips) # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Rechnungs- und relative Trinkgeldhöhe (I/ II) {.exercise type=A-B answer=B}
+
+Welcher Befehl visualisiert den Zusammenhang zwischen Rechnungshöhe und der relativen Trinkgeldhöhe $\text{rel\_tip}=\frac{\text{tip}}{\text{total\_bill}}$
+
+
+A.  `xyplot( ~ rel_tip | total_bill, data=tips)`
+B.  `xyplot( rel_tip ~ total_bill, data=tips)`
+
+
+::: {.notes}
+Ein `xyplot()` benötigt immer eine abhängige und eine unabhängige Variable (`y ~ x`), damit ist Antwort ***B*** korrekt.
+
+:::
+
+### Zusammenhang Rechnungs- und relative Trinkgeldhöhe
+
+Variable `rel_tip` erzeugen:
+```{r}
+tips <- tips %>%
+  mutate(rel_tip = tip/total_bill)
+```
+
+Streudiagramm:
+```{r xyplot2, fig.align="center", out.width="35%"}
+xyplot(rel_tip ~  # abhängige Variable
+                total_bill, # unabhängige Variable
+          data = tips)      # Datensatz
+```
+
+
+### Übung `r nextExercise()`: Rechnungs- und relative Trinkgeldhöhe (II/ II) {.exercise type=A-B-C-D answer=A}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+xyplot(rel_tip ~ total_bill, # abhängige ~ unabhängige Variable
+          data = tips)                 # Datensatz
+```
+
+Welche Aussage stimmt ?
+
+A.  Es gibt Ausreißer nach oben bei der relativen Trinkgeldhöhe.
+B.  Es gibt Ausreißer nach unten bei der relativen Trinkgeldhöhe.
+C.  Es gibt Ausreißer nach oben bei der Rechnungshöhe.
+D.  Es gibt Ausreißer nach unten bei der Rechnungshöhe.
+
+::: {.notes}
+Es gibt Ausreißer nach oben bei der relativen Trinkgeldhöhe. Wie im dem Streudiagramm zu erkennen ist, gibt es einen (ca. 0.7) oder mehrere Ausreißer (ca. 0.7, 0.45, 0.35), je nachdem, wo Sie die Grenze legen. Bei der Rechnungshöhe sind keine Ausreißer zu erkennen. Antwort ***A*** ist somit korrekt.
+:::
+
+### Offene Übung `r nextExercise()`: Rechnungshöhe für Raucher bzw. Nichtraucher {.exercise type=essay}
+
+Was können Sie über die Verteilung der Rechnungshöhe für Raucher bzw. Nichtraucher aussagen?^[Video [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Describe the Distribution](https://www.causeweb.org/cause/resources/library/r12611)] 
+
+
+::: {.notes}
+
+Mit folgenden Befehlen können Sie eine explorative Datenanalyse vornehmen:
+
+`histogram(~ total_bill | smoker, data = tips)`  
+`bwplot(total_bill ~ smoker, data = tips)`  
+`favstats(total_bill ~ smoker, data = tips)`
+`iqr(total_bill ~ smoker, data = tips)`
+
+Beide Verteilungen sind rechtsschief (`histogram`), bei den Nichtrauchern scheint es mehr Ausreißer zu geben (`bwplot`). Im Mittel haben die Raucher eine etwas höhere Rechnungshöhe (`favstats`). Die Standardabweichung und der Interquartilsabstand sind bei den Rauchern höher.
+
+:::
+
+```{r finish-Einfuehrung-EDA-R, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

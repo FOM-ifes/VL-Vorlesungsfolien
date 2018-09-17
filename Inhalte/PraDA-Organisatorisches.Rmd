@@ -1,0 +1,119 @@
+```{r, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Sebastian Sauer
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "PraDA-Organisatorisches",  # Dateiname ohne Suffix
+    "Organisatorisches"         # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+
+```{r child = './Organisatorisches/Literatur.Rmd'}
+```
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- Den Ablauf eines Projekts aus der Datenanalyse in wesentlichen Schritten nachvollziehen,
+- Daten aufbereiten und ansprechend visualisieren,
+- Inferenzstatistik anwenden und kritisch hinterfragen,
+- klassische Vorhersagemethoden (Regression) anwenden,
+- ein Verfahren neuerer Vorhersagemethoden anwenden (baumbasierte Methoden),
+- modernen Methoden der angewandten Datenanalyse anwenden (z.B. Textmining) und
+- betriebswirtschaftliche Fragestellungen mittels datengetriebener Vorhersagemodellen beantworten.
+
+
+```{r child = './Organisatorisches/Wordcloud.Rmd', eval = FALSE}
+```
+
+
+### Prüfungsleistung/ Workload
+
+Prüfung:
+
+- $25\%$ **Sonstige Beteiligung**: **Datenanalyse**. *Nähere Informationen folgen*.
+- $75\%$ **Klausur** 90 Minuten. 
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+Workload:
+
+- Präsenzstunden:	52,0 UE
+- Strukturiertes Eigenstudium	136,00 ZStd
+- Workload gesamt:	175,0 ZStd
+- ECTS-Credit Punkte:	7
+
+
+```{r child = './Organisatorisches/VorbereitungMS.Rmd'}
+```
+
+
+### Beispiel für Datenanalyse in der Praxis 1
+
+*Kennen Computer Deine Persönlichkeit genauer als Deine Freunde?*
+
+::: {.footnotesize}
+Genauigkeit der Persönlichkeits-Einschätzung durch den Computer (Y-Achse) als Funktion der Anzahl der verfügbaren Facebook-Likes (X-Achse)
+
+```{r echo = FALSE, , out.width = "50%"}
+knitr::include_graphics(file.path(pathToImages, "Wu_etal_2015.png"))
+```
+  
+:::
+::: {.tiny}
+[Wu Youyou et al. PNAS 2015;112:1036-1040](http://www.pnas.org/content/112/4/1036.full), [Fig 2](http://www.pnas.org/content/112/4/1036/F2.expansion.html)
+©2015 by National Academy of Sciences, Genehmigte Reproduktion
+:::
+
+### Beispiel für Datenanalyse in der Praxis 2 {.shrink}
+
+
+*Überholt Uber in New York City die Taxi-Gesellschaften?*
+
+<div class="columns"><div class="column" width="50%">
+
+
+::: {.tiny}
+1,1 Mrd. Taxifahrten (2009-2015); helle Punkte zeigen mehr Taxifahrten an.
+
+```{r echo = FALSE, out.width = "70%"}
+knitr::include_graphics(file.path(pathToImages, "taxi_pickups_map.png"))
+```
+:::
+
+</div><div class="column" width="50%">
+
+::: {.tiny}
+Entwicklung der Fahren nach Taxigesellschaften aus NYC im Zeitverlauf: Uber ist im Aufwärtstrend.
+
+```{r echo = FALSE, out.width = "70%"}
+knitr::include_graphics(file.path(pathToImages, "nyc_taxi_uber_lyft.png"))
+```
+:::  
+</div></div>
+::: {.tiny}
+[©2015 Todd Schneider](http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/), Genehmigte Reproduktion
+
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```
+
+
+```{r include=FALSE}
+abschluss <<- TRUE
+rm(pathToImages)
+```
+:::
