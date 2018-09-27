@@ -455,6 +455,44 @@ favstats( ~  total_bill # Variable, die analysiert wird
 ```
 
 
+### Modellierung (I/II)
+
+Daten = Modell + Rest
+
+Modell: Gesamtmittelwert $\bar{x}$, d.h. keine die Rechnungshöhe modellierende Variable^[Dies kann in `mosaic` auch durch `y~1` geschrieben werden]:
+
+
+```{r}
+favstats(total_bill ~ 1, data = tips)
+```
+
+```{r, include=FALSE}
+f1 <- favstats(total_bill ~ 1, data = tips)
+```
+
+\[
+\sum_{i=1}^n(x_i-\bar{x})^2=(n-1) \cdot sd^2=(`r f1["n"]`-1) \cdot `r f1["sd"]`^2=`r round((f1["n"]-1)*f1["sd"]^2,2)`.
+\]
+
+### Modellierung (II/II) 
+
+Modell: Gruppenmittelwert $\bar{x}_j$ je Anzahl Personen $j=1, \ldots,6$, d.h. die Rechnungshöhe wird durch die jeweilige Anzahl Personen modelliert:
+
+::: {.scriptsize}
+```{r}
+favstats(total_bill ~ size, data = tips)
+```
+:::
+```{r, include=FALSE}
+f2 <- favstats(total_bill ~ size, data = tips)
+```
+
+\[
+\sum_{j=1}^K \sum_{i=i}^{n_j}(x_{i,j}-\bar{x}_j)^2=\sum_{j=1}^K (n_j-1) sd_j^2=`r round(sum((f2[,"n"]-1)*f2[,"sd"]^2),2)`
+\]
+
+Bei der Analyse `total_bill~size` ist der "Rest" kleiner als bei der Analyse `total_bill~1` (ohne erklärende Variable).^[Für dieses Reduzierung des Restes wird ein *Preis* gezahlt: In den einzelnen Gruppen sind weniger Beobachtungen.]
+
 ### Zusammenhang Trinkgeld und Rechnungshöhe
 
 Analysiere über Streudiagramm:

@@ -257,9 +257,9 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 Mit welchem Verfahren kann die Verteilung des Merkmals Stundenlohn sinnvoll visualisiert werden?
 
-A.  Balkendiagramm
-B.  Histogramm
-C.  Streudiagramm
+A.  Balkendiagramm.
+B.  Histogramm.
+C.  Streudiagramm.
 
 ::: {.notes}
 Es wird *ein* Merkmal analysiert, daher scheidet Streudiagramm aus. Stundenlohn ist ein metrisches, quasi-stetiges Merkmal, daher ist ein ***Histogramm (B)*** eine geeignete Graphik. Ein Balkendiagramm wird eher bei diskreten Merkmalen verwendet.
@@ -320,6 +320,12 @@ Stimmt die Aussage: Der Median ist das 50% Quantil einer Verteilung?
 - $VaR_{1\%}=(-)7500000€$: Mit einer Wahrscheinlichkeit von $1-1\%=99\%$ ist der Verlust nicht größer als $7500000€$ -- er könnte aber in maximal 1\% der Fälle größer sein.
 
 
+### Mittelwert als "Modell"
+
+- Idee: `Daten = Modell + Rest`.
+- Für Beobachtung $i$ gilt: $x_i = \bar{x} + (x_i-\bar{x})$.
+- Der "Rest" $x_i-\bar{x}$ beschreibt die Abweichung^[Zur Einschätzung ob die Abweichung groß oder klein ist wird die Streuung (s.u.) der Daten herangezogen.] der Beobachtung zum Mittelwert $\bar{x}$ (hier: "Modell").
+
 
 ### Arithmetischer Mittelwert und Median
 
@@ -375,7 +381,9 @@ d %>%
 p_mean_deltas
 ```
 
-
+\[
+\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0
+\]
 
 ### Übung `r nextExercise()`: Vergleich Median und Mittelwert {.exercise type=A-B-C answer=C}
 
@@ -432,16 +440,15 @@ Streuungsmaße sollen die Streuung/ Variation der Daten beschreiben:
 Daten: $20;18;24;40;24;22;21;23;20;28, \quad n=10, \quad \bar{x}=24$
 
 - Varianz: $s^2=\frac{1}{10-1}\left((20-24)^2+(18-24)^2+\ldots +(28-24)^2 )\right)=\frac{354}{9}\approx39,33$
-- Standardabweichung: $s = \sqrt{39,33} =6,27$
+- Standardabweichung: $sd = \sqrt{39,33} =6,27$
 - Interquartilsabstand:^[Hier sind aufgrund verschiedener Berechnungsmöglichkeiten der Quantile unterschiedliche Werte möglich. R gibt z.B. $3.75$ aus.] $IQR=24-20=4$
 - Spannweite: $40-18=22$.
-
 
 
 ### Varianz und SD als "Abweichungsquadrate"
 
 
-```{r delta-plot, echo = FALSE, out.width="60%"}
+```{r delta-plot, echo = FALSE, out.width="50%"}
 
 
 
@@ -475,7 +482,9 @@ d %>%
 p_mean_deltas_sq
 ```
 
-
+- Abweichungsquadrate als Kennzahl für "Rest":
+  - `Daten = Modell + Rest`: $x_i=\bar{x} + (x_i-\bar{x})$.
+  - Quadratsumme des Restes: $\sum_{i=1}^n (x_i-\bar{x})^2=(n-1) \cdot sd^2$.
 
 ### Beispiel: Abwanderungserkennung 
 
@@ -552,7 +561,7 @@ Bilden Sie Gruppen von 4-8 Personen und analysieren Sie die Anzahl Stunden, die 
 Welche Lage- und Streuungsmaße sind zulässig? 
 
 +---------------------+---------------------+--------------------------------+
-| **Skalennvieau**    | **Lagemaße**        | **Streuungsmaße**              |
+| **Skalenniveau**    | **Lagemaße**        | **Streuungsmaße**              |
 +=====================+=====================+================================+
 | **Nominal**         |                     |                                | 
 +---------------------+---------------------+--------------------------------+
@@ -565,7 +574,7 @@ Welche Lage- und Streuungsmaße sind zulässig?
 ::: {.notes}
 
 +---------------------+---------------------+-------------------------------------+
-| **Skalennvieau**    | **Lagemaße**        | **Streuungsmaße**                   |
+| **Skalenviveau**    | **Lagemaße**        | **Streuungsmaße**                   |
 +=====================+=====================+=====================================+
 | **Nominal**         | Modus               | *Entropie* (hier nicht behandelt)   | 
 +---------------------+---------------------+-------------------------------------+
@@ -687,7 +696,7 @@ tips %>%
 ### Beispielrechnung Kovarianz und Korrelation
 
 
-| $i$ | $x_i$ | $y_i$ | $x_i-\bar{x}$ |  $y_i-\bar{y}$ | $(x_i-\bar{x})^2$ |  $(y_i-\bar{y})^2$ | $(x_i-\bar{x}) (y_i-\bar{y_i})$ |
+| $i$ | $x_i$ | $y_i$ | $x_i-\bar{x}$ |  $y_i-\bar{y}$ | $(x_i-\bar{x})^2$ |  $(y_i-\bar{y})^2$ | $(x_i-\bar{x}) (y_i-\bar{y})$ |
 |:---:|:---:|:---:|:-------:|:------:|:------:|:-------:|:--------------:|
 |1|20|6|-4|-1|16|1|4|    
 |2|24|7|0|0|0|0|0|
