@@ -808,6 +808,81 @@ do(oft) * statistik(y ~ x, data = resample(Daten))
 ```
 
 
+### Übersicht Teststatistiken (Auswahl)
+
+
++---------------------+---------------------+-------------------------------------+
+| **Y**               | **X**               | **Teststatistik**                   |
++=====================+=====================+=====================================+
+| kategorial - binär  |                     | Anteil $p$                          | 
++---------------------+---------------------+-------------------------------------+
+| kategorial          |                     | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$ | 
++---------------------+---------------------+-------------------------------------+
+| numerisch           |                     | Mittelwert $\bar{x}$                |
++---------------------+---------------------+-------------------------------------+
+| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$         | 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | kategorial - binär  | Differenz Mittelwerte $\bar{x}_B-\bar{x}_A$| 
++---------------------+---------------------+-------------------------------------+
+| kategorial          | kategorial          | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$| 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen* und *innerhalb Gruppen*: $F$| 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | numerisch           | Korrelationskoefizient $r$ oder Steigung $\hat{\beta}$ lineare Regression | 
++---------------------+---------------------+-------------------------------------+
+| kategorial          | numerisch           | Steigung $\hat{\beta}$ logistische oder multinomiale Regression | 
++---------------------+---------------------+-------------------------------------+
+
+::: {.scriptsize}
+Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
+:::
+
+
+
+### Annahmen Inferenz
+
+- Vorraussetzung: Unabhängig, identisch verteilte Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
+- `Y~1`: (d. h. ohne unabhängige Variable): Modellierte Verteilung (z.B. Binomial- oder Normalverteilung) von $Y$ hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
+- `Y~X`: Die Modellierung der Verteilung von $Y$ hängt evt. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
+- Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ in der Modellierung berücksichtigt werden.
+
+**Verfahrensübersicht** (Mindmap): [https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference](https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference)
+
+### Übersicht Inferenzverfahren R mosaic (Auswahl)
+
+::: {.scriptsize}
+
++---------------------+---------------------+------------------------+-------------------+
+| **Y**               | **X**               | **Simulationsbasiert** | **Parametrisch** [^note1] |
++=====================+=====================+========================+===================+
+| kategorial - binär  |                     | `prop()`               | `binom.test()`    | 
++---------------------+---------------------+------------------------+-------------------+
+| kategorial          |                     | `xchisq.test()`        | `xchisq.test()`   |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           |                     | `mean()`               | `t.test()`        |
++---------------------+---------------------+------------------------+-------------------+
+| kategorial - binär  | kategorial - binär  | `diffprop()`           | `prop.test()`     | 
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | kategorial - binär  | `diffmean()`           | `t.test()`        | 
++---------------------+---------------------+------------------------+-------------------+
+| kategorial          | kategorial          | `xchisq.test()`        | `xchisq.test()`   |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | kategorial          | `aov()`                | `aov()`           |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | numerisch           | `cor()`, `lm()`        | `cor.test()`, `lm()` |
++---------------------+---------------------+------------------------+-------------------+
+| kategorial  - binär | numerisch           | `glm(family = binomial)` | `glm(family = binomial)` |
++---------------------+---------------------+------------------------+-------------------+
+
+- Permutationstest: `do(oft) * statistik(y ~ shuffle(x), data = Daten)`: Kritische Werte, p-Werte.
+- Bootstrap: `do(oft) * statistik(y ~ x, data = resample(Daten))`: Konfidenzintervall, Standardfehler.
+
+:::
+
+[^note1]: Verteilungsannahmen!
+
+
+
 ```{r finish-Einfuehrung-Inferenz, include=FALSE}
 rm(pathToImages)
 finalizePart(partname)
