@@ -133,8 +133,8 @@ Da $z=\frac{60-55}{15}=\frac{1}{3}>0$ gilt, stimmt ***C***.
 Bei einer Normalverteilung liegen ca. 
 
 - $68\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$
-- $95\%$ der Werte im Bereich  $\mu\pm 1 \cdot \sigma$ 
-- $99,7\%$ der Werte im Bereich  $\mu\pm 1 \cdot \sigma$.
+- $95\%$ der Werte im Bereich  $\mu\pm 2 \cdot \sigma$ 
+- $99,7\%$ der Werte im Bereich  $\mu\pm 3 \cdot \sigma$.
 
 ```{r, fig.align="center", out.width="40%"}
 xpnorm(c(-2,2)) # Standardnormalverteilung
