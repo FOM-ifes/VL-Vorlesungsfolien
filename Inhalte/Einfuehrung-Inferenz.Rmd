@@ -758,6 +758,13 @@ sd( ~ prop_Yes, data = Bootvtlg_smoker)
 
 ## Abschluss
 
+### Cartoon: Statistik
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_09-2018.jpg", "cartoon0918.jpg", pathToImages)
+```
+"Am Anfang ein bisschen schwer zu verdauen, aber sehr nahrhaft und voll mit Vitaminen $\alpha, \hat{\pi}, \bar{x}$ und besonders $\mu$ und $\sigma$."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/september/2018/results) &copy; J.B. Landers, Überschrift G. Baugher]
 
 ### Simulationsbasierte Inferenz als ein übergreifendes Prinzip
 
@@ -839,12 +846,12 @@ Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
 
 
 
-### Annahmen Inferenz
+### Grundlagen Inferenz
 
 - Vorraussetzung: Unabhängig, identisch verteilte Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
 - `Y~1`: (d. h. ohne unabhängige Variable): Modellierte Verteilung (z.B. Binomial- oder Normalverteilung) von $Y$ hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
 - `Y~X`: Die Modellierung der Verteilung von $Y$ hängt evt. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
-- Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ in der Modellierung berücksichtigt werden.
+- Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.
 
 **Verfahrensübersicht** (Mindmap): [https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference](https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference)
 

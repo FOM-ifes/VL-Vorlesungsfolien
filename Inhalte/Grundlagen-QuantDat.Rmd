@@ -137,12 +137,13 @@ Eine Messung ist valide, wenn die erhobenen Werte geeignete Kennzahlen für die 
 Merkmalsausprägungen können unterschieden und in eine Reihenfolge gebracht werden, die Abstände sind vergleichbar.
 
 - **Intervallskala**: Nullpunkt gesetzt, bspw. Zeitrechnung (Jahr 0)
-- **Verhältnisskala**: Nullpunkt gegeben, bspw. Gewicht
+- **Verhältnisskala**^[Auch Ratioskala]: Nullpunkt gegeben, bspw. Gewicht
 
 Weitere Unterscheidung:
 
 - **stetig**: beliebige Zwischenwerte im Intervall sind möglich, bspw. Größe
 - **diskret**: höchstens abzählbar viele Werte sind möglich, bspw. Anzahl Kinder
+
 
 
 ### Übung `r nextExercise()`: Skalenniveau (I/ II) {.exercise type=A-B-C-D answer=D}
@@ -184,6 +185,8 @@ Je nach Skalennvieau sind unterschiedliche Aussagen und Operationen möglich.
 - Kategorial - ordinal: $=, \neq, <,>$
 - Numerisch - intervall: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
 - Numerisch - verhältnis: $=, \neq, <,>, +,-, *, :$
+
+Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
 
 ### Datensatz
 
