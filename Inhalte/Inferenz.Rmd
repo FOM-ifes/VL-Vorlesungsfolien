@@ -1,0 +1,1435 @@
+
+```{r setup-Inferenzstatistik, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Inferenz",  # Dateiname ohne Suffix
+    "EinfuehrungInferenz"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# --------------------------------------------------------------------------
+
+library(mosaic)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+```
+
+# Inferenzstatistik
+
+## Einführendes Beispiel
+
+### Einführung: Ist die Münze gezinkt?
+
+Jemand lädt Sie zu einem Glücksspiel ein: Die Person wirft 10-mal eine Münze.
+Bei *Kopf* gewinnt die Person, bei *Zahl* gewinnen Sie.
+Die andere Person gewinnt 8 der 10 Würfe.
+Unterstützen die Daten den Schluss, dass die Münze gezinkt ist?
+
+Spielen Sie im Hörsaal den Versuch mit einer *fairen* Münze nach und zählen die Anzahl *Kopf*!
+(Jeweils 10 Würfe pro Spiel und mindestens 10 Spiele pro Person.)
+
+Zählen Sie dann aus, ob das Ereignis *(mind.) 8 von 10 Kopf* selten ist oder häufig. 
+
+Falls das Ereignis selten ist, so sprechen die Daten *gegen* die *Unschuldsvermutung*, dass die Münze im Glücksspiel fair war.
+
+
+### Die Verteilung der Stichproben aus dem Münzversuch
+
+So könnte die Verteilung Ihrer Ergebnisse aussehen, falls sie das Spiel (10 Würfe) wie hier $n=100$-mal wiederholt haben:
+
+
+```{r muenz-simu, echo = FALSE, out.width = "50%"}
+set.seed(1896) # Reproduzierbarkeit
+muenzverteilung <- do(100) * rflip(n = 10)
+muenzverteilung <- muenzverteilung %>%
+  mutate(heads = factor(heads, levels = 0:10))
+#prop(~heads >= 8, data = muenzverteilung)
+gf_props(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8-mal oder mehr Kopf") %>%
+  gf_refine(scale_x_discrete(drop = FALSE))
+```
+
+
+Das ist die *Verteilung* der Statistik (hier: Anteil $p$), wie sie sich gemäß eines hypothetischen Modells (hier: "Die Münze ist fair" $\Longleftrightarrow$ $\pi=0.5$) ergibt.
+
+
+### Übung `r nextExercise()`: Was ist ein häufiges Ereignis im Münzversuch? {.exercise type=A-B-C-D answer=B}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+gf_bar(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8-mal oder mehr Kopf") %>%
+  gf_refine(scale_x_discrete(drop=FALSE))
+```
+
+Welche der Aussagen stimmt?
+
+A.  Wirft man 100-mal 10 faire Münzen, so sind 0 bis 2 Treffer ein häufiges Ereignis.
+B.  Wirft man 100-mal 10 faire Münzen, so sind 4 bis 6 Treffer ein häufiges Ereignis.
+C.  Wirft man 100-mal 10 faire Münzen, so sind 8 bis 10 Treffer ein häufiges Ereignis.
+D.  Wirft man 100-mal 10 faire Münzen, so ist jede Anzahl an Treffern gleich häufig.
+
+
+::: {.notes}
+Antwort ***B*** ist korrekt. Wenn die Wahrscheinlichkeit *Kopf* bei einer Münze $\pi=1/2$ ist, so sollte bei sehr vielen Würfen die Anzahl der Treffer auch bei etwa $1/2$ sein. Wirft man die Münze nicht so häufig, kann die Anzahl der Treffer auch mal deutlich von $p=1/2$ abweichen.
+:::
+
+
+### Was ist eine Computersimulation?
+
+Man kann das Münzwerfen (allgemein: das Durchführen von Zufallsexperimenten) an den Computer delegieren; man spricht dann von einer *Simulation*:
+
+:::::: {.columns}
+::: {.column width="48%" .small}
+
+```
+Hey R,
+Wiederhole das Folgende 100 Mal:
+  - Wirf eine faire Münze 10 Mal,
+  - zähle jedes Mal die Anzahl 
+    der Treffer (Kopf).
+Ach ja, speichere das Ergebnis 
+  in einem neuen Datensatz.
+Jetzt mal los.
+```
+:::
+::: {.column width="48%" .small}
+
+Dazu verwenden wir wieder `mosaic`:
+```{r, eval = FALSE}
+# Paket laden, ggf. vorher 
+# einmalig installieren:
+# install.packages("mosaic")
+library(mosaic)
+set.seed(1896) # Reproduzierbarkeit
+muenzverteilung <- do(100) * 
+                   rflip(n = 10)
+``````
+
+:::
+:::::::
+
+
+### Cartoon: Simulation
+
+```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_10-2018.jpg", "cartoon1018.jpg", pathToImages)
+```
+"Bevor es Computer gab, musste man Zufallszahlen per Hand erzeugen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2018/results) &copy; J.B. Landers, Überschrift A. Bonifonte]
+
+
+## Modellierung und Simulation
+
+### Grundgedanken der Statistik
+
+- Innerhalb der Statistik wird versucht aus Daten Einsichten zu gewinnen.
+
+- Dabei wird berücksichtigt, dass ...
+
+    - Variation allgegenwärtig ist,
+    
+    - es neben dem Signal Rauschen gibt^[Daten = Modell + Rest],
+    
+    - Schlüsse unsicher sind.
+
+
+### Deskriptive Statistik vs. Inferenzstatistik    
+    
+- Die *deskriptive Statistik* fasst Daten einer Stichprobe zusammen.
+
+- Die *Inferenzstatistik* schließt von einer Stichprobe auf eine Grundgesamtheit.^[Induktion]
+
+\vspace{1cm}
+
+```{r fig-desk-vs.inf, out.width="70%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages,"desk_vs_inf-crop.png"))
+```
+
+
+### Inferenz
+
+[Idee:]{.cemph} Schluss von einer (zufälligen/ randomisierten) Stichprobe auf eine Population:
+
+- Punktschätzung
+- Konfidenzintervall
+- Hypothesentest
+
+[Ziel:]{.cemph} Aussagen treffen, die über die Stichprobe hinausgehen -- und dabei berücksichtigen, dass Variation allgegenwärtig ist und Schlussfolgerungen unsicher.^[Vgl. Moore, D. (2007) The Basic Practice of Statistics, 4th edn. New York: Freeman, S. xxviii.]
+
+
+### Dreieckstest
+
+- Drei gleich aussehende Proben, zwei sind gleich, eine **zufällige** ist anders.
+- Der/ die Kandidat*in muss herausfinden, welche Probe anders ist.^[vgl. ISO 4120 [https://www.iso.org/standard/33495.html](https://www.iso.org/standard/33495.html). Vgl. auch Single-Choice Klausur: 3 Antwortalternativen, 1 richtig.]
+
+```{r, echo=FALSE, fig.align="center", out.width="30%"}
+plot(c(1,2,3), y=c(1,sqrt(5),1), 
+     col=c("darkgreen", "red", "red"), 
+     pch=19, cex=8, ann=FALSE, axes=FALSE, xlim = c(0,4), ylim = c(0,3), asp = 1)
+```
+
+
+### Übung `r nextExercise()`: Skalenniveau {.exercise type=A-B answer=A}
+
+Welches Skalenniveau hat das Merkmal "Probe" mit den Werten "falsch" und "richtig"?
+
+A.  Kategorial
+B.  Numerisch
+
+
+::: {.notes}
+Es handelt sich um ein kategoriales Merkmal (***A***). Insbesondere gibt es nur zwei Ausprägungen. Dies nennt man *binär*. Es kann auch *logisch* modelliert werden: "Probe richtig?" Nein, Ja?, $0,1$.
+:::
+
+
+### Kneipe statt Hörsaal
+
+Im Rahmen einer Sonderveranstaltung der FOM Dortmund (6.10.2016)^[[https://www.fom.de/2016/oktober/kneipe-statt-hoersaal-chef-mit-humor-lohnt-sich.html](https://www.fom.de/2016/oktober/kneipe-statt-hoersaal-chef-mit-humor-lohnt-sich.html)] und Münster (9.11.2017) tippten von $n=34$ Teilnehmer\*innen $x=12$ im Rahmen eines Dreieckstest auf die richtige Probe, d. h. das *andere* Bier: Krombacher bzw. Perlenbacher.
+
+```{r echo=FALSE, out.width = "35%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"Lidl-WR20160919.png"))
+```
+[Abbildung: Quelle: Anzeige Westfälische Rundschau, 19.9.2016]{.small}
+
+Anhand dieses Beispiels werden die Themen Punktschätzung, Bereichsschätzung und Hypothesenprüfung behandelt.
+
+
+## Punktschätzung 
+
+### Punktschätzung -- Kneipe statt Hörsaal
+
+- Die $n=34$ Teilnehmer\*innen der Veranstaltung "Kneipe statt Hörsaal" sind (nur) eine **Stichprobe**.
+
+- Uns interessiert aber *allgemein*, ob ein Geschmacksunterschied vorliegt, d. h., wir wollen *generalisieren* auf eine **Population**.
+
+- Der Anteil derjenigen, die allgemein (d.h. in der Population) auf die richtige Probe tippen, wird mit $\pi$ bezeichnet, der Anteil derjenigen der Stichprobe mit $p$.
+
+- Da $\pi$ (in der Population) in der Regel unbekannt ist, muss es auf Basis der Stichprobe **geschätzt** werden: $\hat{\pi}$.
+
+
+### Übung `r nextExercise()`: Punktschätzung {.exercise type=A-B-C-D answer=C}
+
+Was wäre Ihrer Meinung nach ein vernünftiger Schätzer für $\pi$?
+
+A.  $\hat{\pi}=\frac{1}{2}$
+B.  $\hat{\pi}=\frac{1}{3}$
+C.  $\hat{\pi}=\frac{12}{34}$
+D.  Kann nicht angegeben werden.
+
+
+::: {.notes}
+Antwort ***C*** ist korrekt: In der vorliegenden Stichprobe haben $12$ von $34$ auf die richtige Probe getippt -- entweder weil sie den Unterschied schmeckten oder weil sie Glück hatten. Dieser Wert $12/34$ wird zur Punktschätzung verwendet.
+:::
+
+
+### Punktschätzung
+
+Der Wert der Stichprobe wird häufig als **Punktschätzer** (engl.: (point) estimate) für den interessierenden Wert der Population verwendet, z. B.:
+
+- Anteil (kategoriale Daten): Population $\pi$, Stichprobe $p$, Punktschätzer $\hat{\pi}=p$.
+
+- Arithmetischer Mittelwert (numerische Daten): Population $\mu$, Stichprobe $\bar{x}$, Punktschätzer $\hat{\mu}=\bar{x}$.
+
+- Korrelationskoeffizent (numerische Daten): Population $\rho$, Stichprobe $r$, Punktschätzer $\hat{\rho}=r$.
+
+Das Symbol *Dach* ($\hat{}$) zeigt, dass der *unbekannte, wahre* Wert *geschätzt* wurde. Punktschätzer sind Funktionen der Stichprobe.
+
+
+### Übung `r nextExercise()`: Ergebnis Punktschätzung {.exercise type=yesno answer=no}
+
+Wird mit Sicherheit in der Population $\pi=\hat{\pi}=p=\frac{12}{34}$ gelten?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+Eine andere Stichprobe würde evtl. ein anderes Ergebnis liefern, was in der Population gilt, wissen wir nicht, also ***Nein***.
+:::
+
+
+### Standardfehler
+
+- Punktschätzer variieren mit der Stichprobe. Der **Standardfehler** (engl.: standard error, $se$) beschreibt die Streuung (Standardabweichung) eines Schätzwertes, z.B. für den arithmetischen Mittelwert $\bar{x}$: $se=\frac{sd}{\sqrt{n}}$, d. h., $se$ sinkt (unter sonst gleichen Umständen; ceteris paribus -- c. p.) mit steigendem $n$.^[Die *Anzahl Freiheitsgrade* (engl.: degrees of freedom, $df$) gibt an, wie viele Beobachtungen dabei *frei* sind: Ist der Mittelwert von $n$ Beobachtungen bekannt, so ist $df=n-1$: $x_n=n\cdot\bar{x}-\sum_{i=1}^{n-1} x_i$.]
+
+- Aufgrund der Variation des Punktschätzers mit der Stichprobe und der damit verbundenen Unsicherheit gibt es auch die Bereichs- oder Intervallschätzer.
+
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+::: {.flush align=top-right}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+:::
+
+- Auch wenn Bohnen (Stichproben) aus dem gleichen Sack (Population) eingefüllt werden, schmeckt der Kaffee (Zusammenfassung, Schätzwert) aufgrund der zufälligen Variation der Bohnen anders.
+
+- Der Standardfehler beschreibt diese Variation. Aufgrund der Zusammenfassung variiert der Kaffee (z. B. $\bar{x}$, $p$) weniger als die Bohnen (Beobachtungen $x_i$).^[Skizze: Sebastian Sauer]
+
+
+### FOMshiny: Sampling {include-only=shiny}
+
+Ausgehend von der Population: Wie entwickelt sich die *Verteilung* einer Kennzahl der Stichprobe, z. B. Mittelwert oder Anteil?
+
+[https://fomshinyapps.shinyapps.io/Sampling/](https://fomshinyapps.shinyapps.io/Sampling/)
+
+
+## Konfidenzintervall
+
+### Stichprobenverteilung (I/ III)
+
+*Angenommen* unsere Stichprobe stammt aus einer Population mit $N=340000=220000+120000$ für die gilt $\pi=\frac{12}{34}=`r 12/34`$, d. h., $220000$ liegen falsch (`f`), $120000$ liegen richtig (`r`):
+
+```{r}
+population <- rep(factor(c("f","r")), c(220000, 120000))
+prop( ~ population, success = "r")
+```
+
+Dann variiert auch der Anteil in der Stichprobe: `sample` ($n=34$):
+
+```{r, eval=FALSE}
+prop( ~ sample(population, size = 34), success = "r")
+prop( ~ sample(population, size = 34), success = "r")
+```
+```{r, echo=FALSE}
+set.seed(1896)
+prop( ~ sample(population, size = 34), success = "r")
+prop( ~ sample(population, size = 34), success = "r")
+```
+
+
+### Stichprobenverteilung (II/ III)
+
+Simulation von $10000$ zufälligen Stichproben aus der Population:
+
+```
+Setze Zufallszahlengenerator
+Stiprovtlg soll sein:
+  Wiederhole 10000 Mal:
+    - Berechne den Anteil "r",
+    - Ziehe dafür eine Stichprobe vom Umfang 34 aus der Population
+```
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+Stiprovtlg <- do(10000)* prop( ~ sample(population, size = 34), 
+                               success = "r")
+```
+
+Simulierter Standardfehler:
+
+```{r}
+sd( ~ prop_r, data = Stiprovtlg)
+```
+
+
+### Stichprobenverteilung (III/ III)
+
+```{r, fig.align="center", out.width="60%"}
+gf_bar( ~ prop_r, data = Stiprovtlg)
+```
+
+
+### Übung `r nextExercise()`: Anteil {.exercise type=A-B-C answer=C}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+gf_bar( ~ prop_r, data = Stiprovtlg)
+```
+
+
+Wenn in der Population gilt $\pi=\frac{12}{34}$. Welcher Anteil $p$ kommt dann in den Stichproben am häufigsten vor?
+
+A.  $p=\frac{1}{2}$
+B.  $p=\frac{1}{3}$
+C.  $p=\frac{12}{34}$
+
+
+::: {.notes}
+***C***: Häufig stimmt in diesem Fall sogar $p=\hat{\pi}=\pi$, aber kleinere Abweichungen kommen häufig vor, größere Abweichungen selten. Was für unsere konkrete Stichprobe gilt, wissen wir nicht. 
+
+Bei (quasi-)stetigen Verteilungen gilt z. B. $\hat{\mu}\neq \mu$. 
+:::
+
+
+### Resampling 
+
+In der Regel kennen wir die Population nicht^[Genau genommen haben wir sie hier ja auch nur *simuliert*.]. Wir können aber unsere Stichprobe **resampeln** -- durch *Ziehen mit Zurücklegen*:
+
+::: {.small}
+
+```{r, eval=FALSE}
+stipro <- rep(factor(c("f","r")), c(22, 12))
+stipro
+```
+```{r, echo=FALSE}
+stipro <- rep(factor(c("f","r")), c(22, 12))
+names(stipro) <- 1:length(stipro)
+stipro
+```
+
+```{r, eval=FALSE}
+resample(stipro)
+```
+
+
+```{r, echo=FALSE}
+set.seed(1896)
+rstipro <- resample(stipro)
+rstipro <- stipro[sort(as.numeric(names(rstipro)))]
+rstipro
+```
+
+:::
+
+
+### Resampling: Anteil
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+do(3)* prop( ~ resample(stipro), success = "r")
+```
+
+
+### Schema: Bootstrap
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "bootstrap.png"))
+```
+
+[Abbildung: Quelle: Lock, Robin, Patti Frazer Lock, Kari Lock Morgan, Eric F. Lock, and Dennis F. Lock (2012): Statistics: UnLOCKing the Power of Data. Wiley.]{.small}
+
+
+### Ablauf: Bootstrap
+
+[Voraussetzungen:]{.cemph}
+
+- Zufällige Stichprobe oder zufällige Zuordnung. 
+- Nicht zu kleine Stichprobe.^[$n\geq 35$]
+
+[Beispiel:]{.cemph} Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise exaktere Bootstrap-Methoden.] für eine Stichprobe:
+
+- Wiederhole z.B.  $10000 \times$
+    - Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
+    - Berechne Statistik, z.B. Anteil der Bootstrap-Stichprobe. Analog für andere Statistiken, z.B. Mittelwert $\bar{x}$.
+- Zeichne Histogramm der Bootstrap-Verteilung der Statistik.
+- Das $95\,\%$-Bootstrap-Perzentil-Intervall sind die mittleren $95\,\%$ der Bootstrap-Verteilung.
+
+
+### FOMshiny: Resampling {include-only=shiny}
+
+Ausgehend von einer Stichprobe: Wie entsteht die Bootstrap-Verteilung?
+
+[https://fomshinyapps.shinyapps.io/Resampling/](https://fomshinyapps.shinyapps.io/Resampling/)
+
+
+### Übung `r nextExercise()`: Bootstrap {.exercise type=yesno answer=yes}
+
+Stimmt die Aussage: beim Resampeln kann eine Beobachtung mehrfach in einer Bootstrap-Stichprobe vorkommen?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***: Ziehen mit Zurücklegen heißt, jede einzelne Beobachtung der Originalstichprobe hat stets (d. h. während des Resampelns) die gleiche Wahrscheinlichkeit Teil der Bootstrap-Stichprobe zu sein. Manche Beobachtungen können also öfter vorkommen, andere gar nicht.
+:::
+
+
+### Bootstrap-Verteilung (I/ II)
+
+```
+Setze Zufallszahlengenerator
+Bootvtlg soll sein:
+  Wiederhole 10000 Mal:
+    - Berechne den Anteil "r",
+    - Der Datensatz "stipro" soll dabei jedes Mal resampelt werden.
+```
+
+```{r}
+set.seed(1896)
+Bootvtlg <- do(10000)* prop( ~ resample(stipro), 
+                             success = "r")
+```
+
+
+### Bootstrap-Verteilung  (II/ II)
+
+```{r, fig.align="center", out.width="60%"}
+gf_bar( ~ prop_r, data = Bootvtlg)
+```
+
+
+### Vergleich Sampling und Resampling
+
+Wenn die Verteilung der Stichprobe *ähnlich* der Population^[Die ja i.d.R. unbekannt ist! Wir können aber hoffen, dass die empirische Verteilung $F_n$ mit zunehmendem Stichprobenumfang $n$ der theoretischen Verteilung $F$ immer ähnlicher wird.] ist, dann kann diese über Resampling geschätzt werden:
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+p1 <- gf_bar( ~ prop_r, data = Stiprovtlg, title = "Stichprobenverteilung")
+p2 <- gf_bar( ~ prop_r, data = Bootvtlg, title ="Bootstrap-Verteilung")
+
+
+Stichprobenverteilung <- Stiprovtlg$prop_r
+Bootstrapverteilung <- Bootvtlg$prop_r
+values <- c(Stichprobenverteilung, Bootstrapverteilung)
+types <- c(rep("Stichprobenvtlg", length(Stichprobenverteilung)), rep("Bootstrapvtlg", length(Bootstrapverteilung)))
+df <- data.frame(values, types)
+
+
+
+gridExtra::grid.arrange(gridExtra::grid.arrange(p1,p2, ncol=2))
+```
+
+
+### Bootstrap-Konfidenzintervall
+
+- Ein Teil der Unsicherheit in statistischen Ergebnissen liegt in der Zufälligkeit der konkreten Stichprobe begründet.
+
+- Wir simulieren die zufällige Stichprobe (Sampling) durch zufälliges Resampling.
+
+- Das $95\,\%$-Konfidenzintervall ist der Bereich in dem $95\,\%$ unserer wiederholten Stichprobenkennzahlen liegen:
+
+```{r}
+quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+```
+
+
+### Übung `r nextExercise()`: Plausibler Wert {.exercise type=yesno answer=no}
+
+```{r}
+quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+```
+
+Bei der Stichprobe: Erscheint Ihnen ein Anteil von $\frac{1}{3}$ *unplausibel*?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Da dieser Wert vom Konfidenzintervall überdeckt wird, wir also beim Resampeln öfter Stichproben mit ca. einem solchen Wert hatten. Wir haben zumindest keine Indizien in unserer Stichprobe *gegen* $\frac{1}{3}$. 
+:::
+
+
+### Übung `r nextExercise()`: Konfidenzintervall {.exercise type=A-B answer=B}
+
+Worauf bezieht sich ein Konfidenzintervall?
+
+A.  Auf Werte von Beobachtungen $x_i$.
+B.  Auf Werte von Populationen, z. B. $\pi, \mu$.
+
+::: {.notes}
+***B***: Konfidenzintervalle beschreiben die Schätzunsicherheit.
+:::
+
+
+### Konfidenzintervall
+
+- Ein **Konfidenzintervall** gibt einen Bereich an, der den wahren, unbekannten Wert der Population mit einer gegebenen Sicherheit (z. B. $95\,\%=1-\alpha=100\,\%-5\,\%$) überdeckt, d. h., den Anteil der so konstruierten Konfidenzintervalle, die den Wert enthalten.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Call It Maybe](https://www.causeweb.org/cause/resources/fun/songs/call-it-maybe)]
+
+- Je größer die Sicherheit (z. B. $99\,\%$ statt $95\,\%$), desto breiter ist das Intervall.^[Häufig bei $n>30$: $95\,\%$-KI $\approx \delta^* \pm (2 \cdot se)$]
+
+- Je größer der Stichprobenumfang, desto kleiner das Konfidenzintervall (unter sonst gleichen Umständen): der Standardfehler $se$ fällt mit $n$.
+
+
+### Übung `r nextExercise()`: Breite des Konfidenzintervalls {.exercise type=yesno answer=no}
+
+Stimmt die Aussage: Die Breite eines Konfidenzintervalls hängt *nicht* von der Streuung der Beobachtungen ab?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+
+***Nein***: Neben der Unsicherheit in statistischen Ergebnissen durch die Zufälligkeit der Stichprobe gibt es natürlich auch die zufällige Variation der Beobachtungen.
+:::
+
+
+### Überdeckung durch Konfidenzintervalle
+
+```{r, echo=FALSE, , fig.align="center", out.width="80%"}
+set.seed(1896) # Reproduzierbarkeit
+CIsim(n=10, samples=100)    
+```
+
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+::: {.flush align=top-right}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+:::
+
+- Die Sicherheit (Konfidenz) drückt die *Performance* der Maschine nach Konstruktion aus: Wenn oft neue Bohnen (Stichproben) eingefüllt werden, wird in $1-\alpha$ der Fälle die wahre "Essenz" (z. B. $\pi$) innerhalb des Kaffees (Konfidenzintervall) liegen.
+- Ob dies bei unserem Kaffee der Fall ist, wissen wir nicht.^[Skizze: Sebastian Sauer]
+
+
+### FOMshiny: Konfidenzintervall {include-only=shiny}
+
+Einflussgrößen für ein Konfidenzintervall.
+
+[https://fomshinyapps.shinyapps.io/Konfidenzintervall/](https://fomshinyapps.shinyapps.io/Konfidenzintervall/)
+
+
+## Grundlagen des Hypothesenprüfens
+
+### Übung `r nextExercise()`: Dreieckstest {.exercise type=A-B-C-D-E answer=B}
+
+Wie groß ist die Wahrscheinlichkeit $\pi$, zufällig, d. h. ohne einen Unterschied zu schmecken, auf die richtige (sprich abweichende) Probe zu tippen?
+
+A.  $\pi=0$
+B.  $\pi=\rfrac{1}{3}$
+C.  $\pi=\rfrac{1}{2}$
+D.  $\pi=\rfrac{2}{3}$
+E.  $\pi=1$
+
+::: {.notes}
+Antwort ***B*** ist korrekt, da es 3 Proben gibt, eine davon anders ist und man durch Raten mit einer Wahrscheinlichkeit von $\frac{1}{3}$ zufällig richtig liegt.
+
+Angenommen Sie führen mit Freunden einen solchen Dreieckstest durch.
+
+Was würden Sie sagen wenn dort:
+
+- $p \approx \frac{1}{3}$ richtig tippen? "Wenn es einen Unterschied gibt, haben wir ihn nicht geschmeckt."
+- $p \approx \frac{2}{3}$ richtig tippen? "Vielleicht haben ein paar einen Unterschied geschmeckt, vielleicht auch nicht."
+- $p \approx \frac{3}{3}$ richtig tippen? "Wenn es keinen Unterschied gibt, haben wir aber viel Glück gehabt."
+
+Die genauen Einschätzungen hängen natürlich auch von der Anzahl $n$ Ihrer Freunde ab.  Bei $n=300$ wären Sie sicherer als bei $n=3$ ...
+:::
+
+
+### Nullhypothese
+
+- Wir gehen vorläufig davon aus, dass es *keinen* Unterschied gibt.
+
+- Diese inhaltliche Hypothese wird operationalisiert durch $\pi=\frac{1}{3}$.
+
+- Die Hypothese bezieht sich auf einen Wert der Population ($\pi$) -- nicht der (bekannten) Stichprobe ($p$).
+
+- Die **Nullhypothese** ($H_0$) ist in der Regel die, dass es *keinen* Unterschied, *keinen* Zusammenhang gibt.
+
+- Unter der Annahme der Nullhypothese können wir Daten simulieren.^[Video: Lady Tasting Tea [https://youtu.be/lgs7d5saFFc](https://youtu.be/lgs7d5saFFc)]
+
+
+### Simulation des Ratens im Bierversuch
+
+- [Modell:]{.cemph} Es gibt keinen Geschmacksunterschied. Dann muss geraten werden.
+- Der Trefferanteil im Modell liegt dann bei $1/3$.
+- [Simulation:]{.cemph} Wie ist die Verteilung der Treffer bei $n=34$, wenn geraten wird?
+
+
+```{r, eval=FALSE}
+rflip(n = 34, prob = 1/3)
+```
+```{r, echo=FALSE}
+set.seed(1896)
+# 34-facher Münzwurf mit Erfolgsw.keit 1/3
+rflip(n = 34, prob = 1/3)
+```
+
+
+### Simuliere Verteilung unter $H_0$
+
+```
+Setze Zufallszahlengenerator
+Nullvtlg soll sein:
+  Wiederhole 10000-mal:
+    - Wirf 34-mal eine dreiseitige Münze,
+    - zähle die Anzahl der Treffer.
+```
+
+```{r simu-Nullvtlg-DT, fig.align="center", out.width="40%"}
+set.seed(1896)  
+Nullvtlg <- do(10000) * rflip(n = 34, prob = 1/3)
+```
+
+
+### Verteilung unter $H_0$
+
+```{r, eval=FALSE, fig.align="center", out.width="80%"}
+gf_bar( ~ heads, data = Nullvtlg ) 
+```
+```{r barplotHeadNullvtlg, echo=FALSE, eval=TRUE, fig.align="center", out.width="80%"}
+Nullvtlg %>% mutate(heads = sprintf("%2s", 1:34)[heads]) -> Nullvtlg_c
+gf_bar( ~ heads, data = Nullvtlg_c ) 
+```
+
+
+### Übung `r nextExercise()`: Simulation (I/ II) {.exercise type=A-B-C-D answer=B}
+
+```{r ref.label="barplotHeadNullvtlg", echo=FALSE, fig.align="right", out.width="20%"}
+```
+
+Welche der Aussagen stimmt?
+
+A.  Wenn geraten wird, ist $x=12$ ein unüblicher, d. h. unwahrscheinlicher, Wert.
+B.  Wenn geraten wird, ist $x=12$ ein üblicher, d. h. wahrscheinlicher, Wert.
+C.  Wenn geraten wird, ist $x=10$ ein unüblicher, d. h. unwahrscheinlicher, Wert.
+D.  Wenn geraten wird, ist $x=20$ ein üblicher, d. h. wahrscheinlicher, Wert.
+
+::: {.notes}
+Antwort ***B*** ist korrekt. Wenn wir von $\pi=\frac{1}{3}$ ausgehen ("Raten"), dann kommt es recht oft vor, dass bei $n=34$ Versuchen $x=12$ richtig liegen. (Anteil in den Simulationsstudien hier: `r round(prop(~heads, success = 12, data=Nullvtlg),2)`). 10 und 12 Richtige kommen also relativ häufig vor, 20 relativ selten. 
+:::
+
+
+### Übung `r nextExercise()`: Simulation (II/ II) {.exercise type=A-B-C-D answer=D}
+
+```{r ref.label="barplotHeadNullvtlg", echo=FALSE, fig.align="right", out.width="20%"}
+```
+
+Bei welchem Wert für $x$ würden Sie bei $n=34$ am stärksten vermuten, dass ein Geschmacksunterschied vorliegt, d. h., dass $\pi>\frac{1}{3}$ ist?
+
+A.  Bei $x=5$.
+B.  Bei $x=10$.
+C.  Bei $x=15$.
+D.  Bei $x=20$.
+
+::: {.notes}
+Auf keinen Fall bei *A* und *B*, kleine Werte ($<34 \cdot \frac{1}{3}$) liefern keine Indizien für die Vermutung, dass $\pi>\frac{1}{3}$ ist. Evtl. bei *C*, aber ziemlich sicher bei ***D***.
+
+Wenn $x=20$ das Ergebnis Ihrer Stichprobe wäre, würde dieses nicht gut zum Modell "Raten" ($\pi=\frac{1}{3}, n=34$) passen.
+:::
+
+
+### Teststatistik und p-Wert
+
+- Anhand einer geeigneten **Teststatistik** $\delta$ werden die Stichprobendaten zusammengefasst. Ist die Wahrscheinlichkeit einer mindestens so großen Abweichung unter $H_0$ (sehr) klein, wird diese verworfen, andernfalls nicht.^[Song: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; P-Value is Low](https://www.causeweb.org/cause/resources/library/r12618)]
+
+- Der **p-Wert** ($p$) gibt an, wie viele Stichproben ein mindestens so extremes Ergebnis wie die beobachtete Stichprobe haben, wenn $H_0$ gilt.
+
+- Anders gesagt: Der p-Wert berechnet sich als die Wahrscheinlichkeit eines solchen oder extremeren Wertes der Teststatistik unter den Annahmen von $H_0$.
+
+- Der p-Wert wird bestimmt, *nachdem* die Daten vorliegen.
+
+
+### Schema der simulationsbasierten Inferenz
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
+```
+
+[Abbildung: Quelle: Blogbeitrag Allen Downey]{.small}^[[http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html](http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html)]
+
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+::: {.flush align=top-right}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+:::
+
+
+- Über Simulationen erzeugen wir Vorhersagen darüber, wie der Kaffee schmecken würde, wenn das Modell der Nullhypothese stimmen würde.
+
+- Wir vergleichen diese Vorhersagen mit dem Kaffee, den wir haben, der Stichprobe.
+
+- Der p-Wert zeigt, wie oft wir in den Vorhersagen einen Kaffee bekommen würden, der mindestens so extrem schmeckt, wie der, den wir haben.
+
+- Wenn unser Kaffee ganz anders schmeckt als vorhergesagt, haben wir Zweifel am angenommenen Modell der Kaffeemühle.^[Skizze: Sebastian Sauer]
+
+
+
+### Cartoon: Man kann die $H_0$ nicht bestätigen, höchstens nicht verwerfen
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_11-2016.jpg", "cartoon1116.jpg", pathToImages)
+```
+"Dr. Frankenstein akzeptierte die Nullhypothese zum letzten Mal."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2016/results) &copy; J.B. Landers, Überschrift A. Boito]
+
+
+### Nutzen und Grenzen des p-Werts
+
+- Der p-Wert bietet eine datenbasierte Möglichkeit zu überprüfen, ob die vorliegenden Daten durch ein zu überprüfendes Modell ($H_0$) plausibel erklärt werden können, d. h., bei wiederholten Stichproben relativ häufig vorkommen.
+
+- Der p-Wert ist definiert als Wahrscheinlichkeit des beobachteten Wertes der Teststatistik (oder noch extremerer Werte) unter der Annahme, dass die $H_0$ gilt ($p(\delta^*\,|\,H_0)$).
+
+- **Achtung**: Der p-Wert sagt nicht aus, wie wahrscheinlich die $H_0$ bei den vorliegenden Daten (Teststatistik) ist ($p(H_0\,|\,\delta^*)$). 
+
+- Der p-Wert sagt nicht, wie relevant ein Ergebnis ist (wie groß ein Effekt ist).
+
+- **Keine** Entscheidung sollte rein auf Basis des p-Wertes getroffen werden.
+
+- *Vor* der Testentscheidung **immer** eine explorative Datenanalyse durchführen.
+
+
+### p-Wert
+
+::::::::: {.columns}
+::: {.column width="40%" .small}
+
+```{r eval = FALSE, echo = TRUE}
+gf_bar( ~ heads, 
+        data = Nullvtlg)
+```
+:::
+::: {.column width="50%"}
+
+```{r muenze-null-graph, out.width = "95%", fig.align="center", echo = FALSE}
+gf_bar( ~ heads, 
+        data = Nullvtlg, 
+        fill = ~ ordered(heads >= 12)) %>% 
+  gf_labs(fill = "Mind. 12 Treffer") %>% 
+  gf_theme(legend.position = c(0.95,0.95), legend.justification = c(1,1))
+```
+:::
+:::::::::
+
+
+
+::::::::: {.columns}
+::: {.column width="40%" .small}
+
+```{r ref.label="muenze-null-prop", eval = FALSE, echo = TRUE}
+```
+:::
+::: {.column width="50%"}
+
+```{r muenze-null-prop, out.width = "90%", fig.align="center", echo = FALSE}
+prop( ~ heads >= 12, 
+      data = Nullvtlg)
+```
+:::
+:::::::::
+
+
+### Übung `r nextExercise()`: p-Wert {.exercise type=yesno answer=no}
+
+Liefern die Daten (starke) Indizien dafür, dass die Nullhypothese nicht gilt?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Der p-Wert ist hoch; das in der Stichprobe beobachtete Ergebnis ist nicht unüblich, wenn $H_0$ stimmen würde.
+:::
+
+
+### Hypothesen prüfen in Analogie zu Gerichtsverfahren {exclude=qmwinf,eufom}
+
+- Wir gehen von $H_0$ aus: Der Angeklagte ist unschuldig, da ist nichts.
+
+- Wenn die Indizien (Daten) gegen den Angeklagten ($H_0$) sprechen^[d. h. unter der Unschuldsvermutung (sehr) selten sind], haben wir berechtigten Zweifel an der Unschuld ($H_0$).
+
+- Wenn die Daten nicht ausreichen, um zu zeigen, dass der Angeklagte schuldig ist, so sagen wir nicht: er ist unschuldig. **Daher nie**: wir bestätigen die Nullhypothese, sondern nur, wir können die Nullhypothese nicht verwerfen. Die Abwesenheit von Belegen belegt nicht die Abwesenheit.
+
+
+### Verteilung p-Wert
+
+- Werden aus der Population verschiedene Stichproben gezogen, so ergeben sich auch verschiedene p-Werte.
+
+- Ein einzelner p-Wert beweist *nicht*, dass $H_0$ nicht stimmt: **Replikation**^[[https://twitter.com/CMU_Stats/status/1129448259628478471](https://twitter.com/CMU_Stats/status/1129448259628478471)]
+
+```{r, echo=FALSE, out.width = "60%", fig.align="center"}
+set.seed(1896)
+pNull <- do(10000)*binom.test(~sample(population, 34), success = "r", p=1/3, alternative = "greater") %>% pval()
+gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
+  gf_labs(x="p-Werte", y="Anzahl Stichproben", title="p-Wert Dreieckstest", subtitle=" mit simulierten Stichproben") %>%
+  gf_refine(theme(axis.text.x = element_text(angle=45, hjust=1)))
+```
+
+
+### Alternativhypothese und Signifikanz
+
+- Die **Alternativhypothese** $H_A, H_1$ ist das Gegenteil der Nullhypothese. Die Rollen von $H_0$ und $H_A$ können *nicht* vertauscht werden.
+
+- Alternativen können *einseitig*, *gerichtet* (z.B. $\pi>\pi_0$ bzw. $\pi<\pi_0$) oder *zweiseitig*, *ungerichtet* (z. B. $\pi \neq \pi_0$) sein.
+
+- Das *vorab* festgelegte **Signifikanzniveau** $\alpha$^[üblich: $\alpha=1\%, 5\%, 10\%$] eines Tests gibt die maximal zugebilligte Irrtumswahrscheinlichkeit dafür an, $H_0$ zu verwerfen, obwohl $H_0$ gilt.
+
+- Damit können *vorab* kritische Werte der Verteilung unter $H_0$ bestimmt werden: liegt der Wert der Teststatistik der Stichprobe außerhalb, wird $H_0$ verworfen, sonst nicht.
+
+- Auf Grundlage der Alternative kann eine geeignete Teststatistik und der nötige Stichprobenumfang bestimmt werden.
+
+- Ist der p-Wert $< \alpha$, so wird $H_0$ verworfen, ansonsten nicht.
+ 
+- Wird die $H_0$ verworfen, so nennt man das Ergebnis (statistisch) *signifikant* zum Niveau $\alpha$.
+
+
+### Cartoon: Signifikanzniveau
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_02-2017.jpg", "cartoon0217.jpg", pathToImages)
+```
+
+"Paläontologen haben schließlich doch den Ursprung des 5\% Signifikanzniveaus herausgefunden."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/february/2017/results) &copy; J.B. Landers, Überschrift M. Dunlap]
+
+
+### Übung `r nextExercise()`: Alternativhypothese {.exercise type=A-B-C answer=B}
+
+[Im Dreieckstest:]{.cemph} Was ist eine sinnvolle Alternativhypothese für die Fragestellung ob ein Unterschied vorliegt?
+
+A.  $H_A: \pi<\frac{1}{3}$
+B.  $H_A: \pi>\frac{1}{3}$
+C.  $H_A: \pi \neq \frac{1}{3}$
+
+::: {.notes}
+Wenn ein Geschmacksunterschied vorliegt, sollte $\pi>\frac{1}{3}$ sein, also ***B***.
+:::
+
+
+### Fehlerarten
+
+|   | Testentscheidung $H_0$ nicht verwerfen| Testentscheidung $H_0$ verwerfen  |
+|:---|:---:|:---:|
+| Realität: $H_0$  | Ok | **Fehler 1. Art**^[Auch $\alpha$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers wird durch das Signifikanzniveau nach oben beschränkt.] |
+| Realität: $H_A$  | **Fehler 2. Art**^[Auch $\beta$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers ist schwieriger zu bestimmen, aber siehe z. B. Paket [pwr](https://cran.r-project.org/package=pwr). Bei guten Tests sinkt sie mit größerem Stichprobenumfang $n$.]  | Ok  |
+
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Hypothesis on Trial](https://www.causeweb.org/cause/resources/fun/songs/hypothesis-trial)
+
+
+### Fehlerarten
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+p1 <- gf_dist("norm", mean=0, geom = "area", fill= ~(x>qnorm(0.95)), alpha = 0.5, 
+        title=expression(paste("Fehler 1. Art: Verteilung bei ", mu==0)),
+        subtitle=expression(H[0]:mu<=0 )) %>%
+  gf_refine(guides(fill=guide_legend(title=expression(paste(alpha,"-Fehler"))))) %>%
+  gf_vline(xintercept = ~qnorm(0.95)) %>%
+  gf_labs(x=expression(bar(x))) %>%
+  gf_dist("norm", mean=2, alpha = 0.5) %>% 
+  gf_refine(scale_fill_viridis_d()) %>%
+ gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
+            scale_y_continuous(limits = c(0, 0.5))) 
+
+
+p2 <- gf_dist("norm", mean=2, geom = "area", fill= ~(x<qnorm(0.95)), alpha = 0.5, 
+        title=expression(paste("Fehler 2. Art: Verteilung bei ", mu==2)),
+        subtitle=expression(H[0]:mu<=0 )) %>%
+  gf_refine(guides(fill=guide_legend(title=expression(paste(beta,"-Fehler"))))) %>%
+  gf_vline(xintercept = ~qnorm(0.95)) %>%
+  gf_labs(x=expression(bar(x))) %>%
+  gf_dist("norm", mean=0, alpha = 0.5) %>% 
+  gf_refine(scale_fill_viridis_d()) %>%
+  gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
+            scale_y_continuous(limits = c(0, 0.5))) 
+
+gridExtra::grid.arrange(p1,p2, nrow=2)
+```
+
+
+### FOMshiny: Stichprobenumfang {include-only=shiny}
+
+Zusammenhang des Stichprobenumfangs mit den Fehlerarten.
+
+[https://fomshinyapps.shinyapps.io/Stichprobenumfang/](https://fomshinyapps.shinyapps.io/Stichprobenumfang/)
+
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+::: {.flush align=top-right}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+:::
+
+
+- Wir kennen nach Konstruktion *vorab* die Performance: die Maschine (Hypothesenprüfung) sagt in höchstens $\alpha\cdot 100\,\%$ der Bohnen (Stichproben), wenn das Modell (Hypothese $H_0$) stimmt, dass es verworfen wird. Über die Power der Maschine können wir sehen, wie oft die Maschine sagt, dass das Modell verworfen wird, wenn es in Wirklichkeit nicht stimmt.
+
+- Ob *unser* Ergebnis, der Kaffee (Testentscheidung), stimmt, wissen wir nicht.
+
+- Was wir kennen, ist die Fehlerwahrscheinlichkeit der Maschine.^[Skizze: Sebastian Sauer]
+
+
+### Übung `r nextExercise()`: Fehlerart {.exercise type=A-B-C answer=B}
+
+Mit einem p-Wert von `r round(prop( ~ heads >=12, data = Nullvtlg), 2)` kann die Nullhypothese $H_0: \pi=\frac{1}{3}$ zum Signifikanzniveau $\alpha=0.05$ nicht verworfen werden. Angenommen, es gelte die Alternativhypothese $H_A: \pi>\frac{1}{3}$. Welche Aussage stimmt?
+
+A.  Es liegt ein Fehler 1. Art vor.
+B.  Es liegt ein Fehler 2. Art vor.
+C.  Es liegt kein Fehler vor.
+
+::: {.notes}
+***B***: Ein Fehler 2. Art liegt vor, wenn in Wirklichkeit $H_A$ gilt, die Testentscheidung aber lautet, dass $H_0$ nicht verworfen wird. I. d. R. kennen wir die Realität nicht, daher wissen wir nicht, ob ein solcher Fehler vorliegt. *Vorab* können wir aber durch eine Poweranalyse (siehe Literatur) die Wahrscheinlichkeit eines solchen Fehlers unter der Annahme eines gewissen Effekts (z. B. $\pi=\frac{2}{3}$) bestimmen und den nötigen Stichprobenumfang $n$ berechnen.
+:::
+
+
+### Wiederholung: Quantitativer Forschungsprozess
+
+```{r ref.label="forschungsprozess-image", echo=FALSE, out.width = "90%", fig.align="center"}
+```
+
+
+### Ablauf: Hypothesenprüfung
+
+1.  Inhaltliche Hypothese operationalisieren.
+2.  Nullhypothese $H_0$ (und Alternativhypothese $H_A$, Forschungsvermutung) festlegen. Dazu passende Teststatistik bestimmen: 
+    - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
+    - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
+    - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
+3.  Verteilung der Teststatistik unter $H_0$ bestimmen.
+4.  Prüfung über p-Wert: Ist der beobachtete Wert der Teststatistik der Stichprobe unter $H_0$ (sehr) selten?
+    - Nein: $H_0$ kann nicht verworfen werden. Abweichung *nicht signifikant*.
+    - Ja: $H_0$ wird verworfen. Abweichung *signifikant*.
+
+
+### ATOM^[Quelle: Wasserstein et al. (2019) Moving to a World Beyond "p < 0.05", The American Statistician, Vol. 73, Supplement 1, S. 1--19, [https://doi.org/10.1080/00031305.2019.1583913](https://doi.org/10.1080/00031305.2019.1583913)]
+
+Bei der statistischen Inferenz sollte folgendes beachtet werden:
+
+[A]{.cemph} 
+: (Accept uncertainty)
+: Anerkennung und Akzeptieren von Unsicherheit.
+
+[T]{.cemph} 
+: (thoughtful)
+: Beachte und bedenke die Umstände, was ist das Ziel und der Kontext, wie ist der Prozess, wie lautet das Modell, welche Annahmen und Vorrausetzungen hat es?
+
+[O]{.cemph} 
+: (open)
+: Offenheit und Transparenz (*Open Science*).
+
+[M]{.cemph} 
+: (modest)
+: Bescheidenheit.
+
+
+### Duhem-Quine-These und BENT {exclude=all include=master}
+
+Das Verwerfen einer inhaltlichen Hypothese muss nicht am Falschsein der Hypothese liegen:
+
+  - Die Operationalisierung kann falsch sein.
+  - Die Datenerhebung kann fehlerhaft sein.
+  - Die Teststatistik kann ungeeignet sein.
+  - Das verwendete statistische Modell kann falsch sein.
+  - ...
+
+\hspace{1cm}
+
+> One does not have evidence for a claim if nothing has been done to rule out ways the claim may be false. If data x agree with a claim C but the method used is practically guaranteed to find such agreement, and had little or no capability of finding flaws with C even if they exist, then we have *b*ad *e*vidence, *n*o *t*est (BENT).^[Blogbeitrag Debora G. May [Excursion 1 Tour I: Beyond Probabilism and Performance: Severity Requirement (1.1)](https://errorstatistics.com/2018/09/08/excursion-1-tour-i-beyond-probabilism-and-performance-severity-requirement/)]
+
+
+### Ausblick: Bayes-Statistik {include-only=master}
+
+- Die *frequentistische* Inferenzstatistik sagt z. B. *nicht*, wie wahrscheinlich die Hypothese $H$ ist. Sie sagt nur, wie oft auf lange Sicht $H_0$ irrtümlich verworfen wird und wie wahrscheinlich $\delta^*$ gegeben $H$ ist: $P(\delta^*\,|\,H)$.
+- Will man wissen, wie wahrscheinlich die Hypothese gegeben die (neuen) Daten ist, also $P(H\,|\,\delta^*)$, so ist dies auf Basis von *a priori*-Annahmen bzw. Wissen über $P(H)$, d. h. von Vorabinformationen, mit Hilfe des **Satz von Bayes** möglich:
+\[
+P(H\,|\,\delta^*)=\frac{P(\delta^*\,|\,H)\cdot P(H)}{P(\delta^*)}
+\]
+$P(H\,|\,\delta^*)$ ist dabei die *a posteriori*-Verteilung *gegeben die Daten* und $P(\delta^*\,|\,H)$ wird auch *Likelihood* genannt.
+- In Wissenschaft und Praxis gibt es viele Anwendungen und Erweiterungen auf Basis dieser **Bayes-Statistik**.^[In R: [https://cran.r-project.org/web/views/Bayesian.html](https://cran.r-project.org/web/views/Bayesian.html)]
+
+
+
+<!-- ### Sebastians Kaffeemühle {include-only=master} -->
+
+<!-- ::: {.flush align=top-right} -->
+
+<!-- ```{r echo=FALSE, out.width = "20%", fig.align="right"} -->
+<!-- knitr::include_graphics(file.path(pathToImages, "maschine.jpg")) -->
+<!-- ``` -->
+
+<!-- ::: -->
+
+<!-- Wenn wir zusätzlich zur *Evidenz* (unseren Daten unter dem angenommenen Modell) *a priori*-**Annahmen**^[Über die mensch sicherlich dann streiten kann, genauso wie über die anderen Annahmen des Modells.] über unsere Hypothesen oder Parameter einfüllen^[Diese können mehr oder weniger informativ (bis hin zu nicht-informativ) sein.], dann kann unsere Maschine auch eine Wahrscheinlichkeitsverteilung über die Hypothesen bzw. Parameter ausgeben: *a posteriori*. Dann wissen wir, wie unsicher wir über die Parameter und Hypothesen sind -- auf Basis unseres Vorwissens und den Daten.^[Skizze: Sebastian Sauer] -->
+
+
+
+### Beispiel Inferenz: Geschlecht und Klausurpunkte
+
+- [Inhaltliche Forschungsthese:]{.cemph} Es gibt einen Unterschied im Lernergebnis Statistik zwischen Männern und Frauen (ungerichtet).
+
+- [Mathematische Operationalisierung:]{.cemph} z. B. $\mu$ -- Mittelwert der Klausurpunktzahl in der Population.
+$$H_0: \mu_{\text{Mann}} =  \mu_{\text{Frau}} \quad vs. \quad  H_A: \mu_{\text{Mann}} \neq \mu_{\text{Frau}}$$
+- [Teststatistik:]{.cemph} Mittelwert der Klausurpunktzahl in der Stichprobe: $\bar{x}_{\text{Mann}}, \bar{x}_{\text{Frau}}$.
+
+- Sollte $\bar{x}_{\text{Mann}} \gg \bar{x}_{\text{Frau}}$ oder $\bar{x}_{\text{Mann}} \ll \bar{x}_{\text{Frau}}$ sein, ist dies, wenn die Nullhypothese gilt, unwahrscheinlich.^[Abhängig von Stichprobenumfang und Streuung.]
+
+- [Allgemeiner:]{.cemph} Es soll getestet werden, ob sich der Mittelwert eines Merkmals zwischen zwei Gruppen (in der Population) unterscheidet.
+
+
+### Beispiel Inferenz: Quizze und Klausurerfolg
+
+- [Inhaltliche Forschungsthese:]{.cemph} Studierende, die an den Quizzen teilnehmen, bestehen häufiger die Klausur (gerichtet^[Eine gerichtete Hypothese muss aber inhaltlich (z. B. Literatur) begründet sein!]).
+
+- [Mathematische Operationalisierung:]{.cemph} z. B. $\pi$: Anteil derjenigen, welche die Klausur bestehen, in der Population:
+$$H_0: \pi_{\text{Quiz}} \leq  \pi_{\text{kein Quiz}} \quad vs. \quad  H_A: \pi_{\text{Quiz}} > \pi_{\text{kein Quiz}}$$
+- [Teststatistik:]{.cemph} Anteil derjenigen, die die Klausur bestehen, in der Stichprobe: $p_{\text{Quiz}}, p_{\text{kein Quiz}}$.
+
+- Sollte $p_{\text{Quiz}} \gg p_{\text{kein Quiz}}$ sein, ist dies, wenn die Nullhypothese gilt, unwahrscheinlich.^[Abhängig vom Stichprobenumfang.] 
+
+- [Allgemeiner:]{.cemph} Es soll getestet werden, ob sich der Anteil eines Merkmals zwischen zwei Gruppen (in der Population) unterscheidet.
+
+
+### Cartoon: Signifikanz
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_04-2018.jpg", "cartoon0418.jpg", pathToImages)
+```
+"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Überschrift D. Nandy]
+
+
+### Hypothesenprüfung und Konfidenzintervall
+
+- Das Konfidenzintervall gibt auf Basis der Stichprobe einen Wertebereich für den Wert ($\delta$) an: $1-\alpha$ der Werte aus den Resampling-Stichproben liegen darin.
+
+- Anhand der Verteilung unter dem Modell der Nullhypothese ($\delta=\delta_0$) können wir einen Wertebereich für Werte der Stichprobe ($\delta^*$) bestimmen, wenn dieses Modell gilt: $1-\alpha$ der unter $H_0$ simulierten Werte liegen darin.
+
+- Häufig^[Hängt u.a. vom Verfahren ab. Es ist aber *theoretisch* möglich äquivalente Bereiche zu konstruieren.] entspricht der Bereich des Konfidenzintervalls dem Bereich für $\delta$, für den $H_0: \delta=\delta_0$ *nicht* verworfen wird.
+
+
+### Übung `r nextExercise()`: Konfidenzintervall und Hypothesentest{.exercise type=yesno answer=yes}
+
+Das simulierte Konfidenzintervall überdeckt folgenden Bereich:
+```{r}
+quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+```
+
+Würde $H_0: \pi=\frac{2}{3}$ (vermutlich)^[Da wir nicht *exakt* gerechnet, sondern auf Basis einer kleinen Stichprobe simuliert haben.] verworfen werden (Signifikanzniveau $\alpha=5\%$)?^[Hypothesen werden aus der Theorie hergeleitet. Hier z. B. $50\%$ schmecken den Unterschied, die anderen raten.]
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***, da $\pi=\frac{2}{3}$ *nicht* im Konfidenzintervall von `r floor(quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025))*100)/100` bis `r ceiling(quantile( ~ prop_r, data = Bootvtlg, probs = c(0.975))*100)/100` liegt.
+
+[Achtung:]{.cstrong} hier nur kleines $n$ und damit diskrete Schätzwerte.
+:::
+
+
+
+## Effektgröße
+
+### Effektgröße: Vorbereitung
+
+Der p-Wert gibt (nur) die Wahrscheinlichkeit der Teststatistik unter der Nullhypothese an. Er sagt nicht, wie groß/relevant ein Unterschied ist. Mit größerem Stichprobenumfang $n$ sinkt (c. p.) der p-Wert.
+
+**Cohens d**^[Anwendbar für den Vergleich zweier Mittelwerte. Es gibt auch weitere Effektgrößen. Siehe z. B. Paket [compute.es](https://cran.r-project.org/package=compute.es).] ist ein Maß für die Überlappung: $$d=\frac{\bar{x}_A-\bar{x}_B}{\text{sd}_{\text{pool}}}$$ mit $${\text{sd}_{\text{pool}}=\sqrt{\frac{1}{n_A+n_B-2}\left((n_A-1)\cdot\text{sd}^2_A+(n_B-1)\cdot\text{sd}^2_B \right)}}$$
+
+
+```{r, eval=FALSE}
+# Einmalige Installation 
+install.packages("lsr")
+
+# Paket laden
+library(lsr)
+```
+
+```{r load-library-lsr, echo=FALSE}
+library(lsr)
+```
+
+
+### Effektgröße: Rauchen
+
+Daumenregel:
+
+- $|d|\geq 0.2$ kleiner Effekt.
+- $|d|\geq 0.5$ mittlerer Effekt.
+- $|d|\geq 0.8$ großer Effekt. 
+
+Beispiel Trinkgelddaten `tips`:
+```{r print-cohens-d}
+cohensD(total_bill ~ smoker, data=tips)
+```
+
+
+### Beispiel: Effektgrößen
+
+```{r plot-cohens-d, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- 1000
+x <- scale(rnorm(n))
+x02 <- x+0.2
+x05 <- x+0.5
+x08 <- x+0.8
+x11 <- x+1.1
+
+cohendata <- data.frame(x=c(x, x02, x, x05, x, x08, x, x11), 
+                   Gruppe=rep(c(rep(c("A","B"), each=n)), 4),
+                   d=c(rep("d=0.2", 2*n), rep("d=0.5", 2*n), rep("d=0.8", 2*n) , rep("d=1.1", 2*n)))
+
+gf_fitdistr(gformula=~x|d, color=~ordered(Gruppe), data=cohendata, size = 2) %>%
+    gf_labs(y="f(x)", x="x", color = "Gruppe")
+
+rm(n,x,x02,x05,x08,x11,cohendata)
+```
+
+
+### FOMshiny: Mittelwertsvergleich {includeonly=shiny}
+
+Einflussgrößen beim Vergleich von Mittelwerten:
+
+[https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/](https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/)
+
+
+### Power-Analyse: Simulation $d, n$ und p-Wert
+
+```{r plot-p-value-n-d, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- c(30, 100)
+d <- c(0, 0.2, 0.5, 0.8)
+pvalue <- matrix(nrow=10000*8, ncol = 4)
+zaehler <- 1
+for(i in 1:10000)
+  for(j in n)
+    for(k in d)
+    {
+      x0 <- rnorm(j)
+      x1 <- rnorm(j, mean=k)
+      pvalue[zaehler,1] <- j
+      pvalue[zaehler,2] <- k
+      pvalue[zaehler,3] <- t.test(x0,x1)$p.value
+      zaehler <- zaehler+1
+    }
+pvalsim <- data.frame(n=paste0("n=",pvalue[,1]), d=paste0("d=",pvalue[,2]), pvalue=pvalue[,3])
+
+gf_histogram(~pvalue, data = pvalsim, bins=20, 
+             breaks=seq(0, 1, by=0.025), fill=~ordered(pvalue<0.05)) %>%
+  gf_refine(scale_y_log10()) %>%
+  gf_vline(xintercept = ~0.05) %>%
+  gf_facet_grid(n~d) %>%
+  gf_theme(legend.position="bottom") %>%
+  gf_labs(title="Ergebnis der Simulation mit logarithmischer y-Achse",
+          fill = "p-Wert < 0.05") %>% 
+  gf_refine(scale_x_continuous(name = "p-Wert", breaks = c(0, .5, 1)))
+
+
+```
+
+
+```{r rm-simu-values, echo=FALSE}
+rm(n)
+rm(d)
+rm(pvalue)
+rm(zaehler)
+rm(i)
+rm(j)
+rm(k)
+rm(pvalsim)
+```
+
+### Übung  `r nextExercise()`: Effektgröße und Power {.exercise type=A-B-C answer=A}
+
+Welche Aussage stimmt? 
+
+A.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, sinkt mit der Effektgröße.
+B.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, steigt mit der Effektgröße.
+C.  Effektgröße und Wahrscheinlichkeit Fehler 2. Art stehen in keinem Zusammenhang.
+
+::: {.notes}
+Je größer in der Population der Effekt ist ($H_A$), desto eher wird $H_0$ verworfen, also ***A***. Gleichzeitig sinkt die Wahrscheinlichkeit für einen Fehler 2. Art ($H_0$ wird nicht verworfen, obwohl $H_0$ nicht gilt) mit zunehmendem Stichprobenumfang. $d$ und $n$ bestimmen die *Power* eines Tests.
+:::
+
+
+### Cartoon: Stichprobenumfang
+
+```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_10-2017.jpg", "cartoon1017.jpg", pathToImages)
+```
+"Da Joe der einzige war, der vorab eine Power-Analyse durchgeführt hatte, hatte er als einziger die nötige Größe, um den gewünschten Effekt zu erzielen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2017/results) &copy; J.B. Landers, Überschrift G. Snow]
+
+
+## Zusammenfassung
+
+### Cartoon: Statistik
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_09-2018.jpg", "cartoon0918.jpg", pathToImages)
+```
+"Am Anfang ein bisschen schwer zu verdauen, aber sehr nahrhaft und voll mit Vitaminen $\alpha, \hat{\pi}, \bar{x}$ und besonders $\mu$ und $\sigma$."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/september/2018/results) &copy; J.B. Landers, Überschrift G. Baugher]
+
+
+### Verteilungen {.shrink}
+
+Allgemein sagt eine Verteilung, wie wahrscheinlich bzw. häufig Werte bzw. Wertebereiche sind.
+
+- Verteilung in der Population  
+Z. B. unter allen Studierenden: Wurde die Vorlesung nachgearbeitet? Wie hoch ist der Anteil derjenigen, die die Vorlesung nacharbeiten, unter allen Studierenden: $\pi$.
+- Verteilung in der Stichprobe  
+Z. B. in den vorliegenden Daten: Wurde die Vorlesung nachgearbeitet? Wie hoch ist der Anteil derjenigen, die die Vorlesung nacharbeiten, in der Stichprobe: $p$.
+- Stichprobenverteilung (Verteilung einer Statistik der Stichprobe)  
+Z. B.: Wie hoch ist der Anteil $p$ derjenigen, die nacharbeiten, in den zufälligen Stichproben?
+- Resampling-Verteilung (Schätzung der Verteilung einer Statistik der Stichprobe)  
+Z. B.: Wie hoch ist der Anteil $p$ derjenigen, die nacharbeiten, in den zufälligen Resampels der Stichprobe?
+- Verteilung unter $H_0$ (Wie sieht die Verteilung einer Statistik der Stichprobe aus, wenn das Modell der Nullhypothese stimmt?)  
+Z. B.: Verteilung von $p$, dem Anteil derjenigen, die nacharbeiten, in einer Stichprobe, wenn in der Population (hypothetisch) $\pi=0.8$ gilt.
+
+
+### Übung `r nextExercise()`: Verteilungen {.exercise type=A-B-C-D-E answer=B}
+
+Im Rahmen einer Datenanalyse: Welche Verteilung können Sie beobachten?
+
+
+A.  Verteilung in der Population
+B.  Verteilung in der Stichprobe
+C.  Stichprobenverteilung
+D.  Resampling-Verteilung
+E.  Verteilung unter $H_0$
+
+::: {.notes}
+***B***: Ihnen liegt eine Stichprobe vor, deren Verteilung Sie darstellen und deren Kennzahlen Sie berechnen können.
+
+Sie wollen anhand Ihrer Stichprobe auf die Population (*A*) schließen. Die Stichprobenverteilung (*C*) kennen Sie nicht: Ihnen liegt der Anteil, der Mittelwert ihrer Stichprobe, vor, nicht die, die bei anderen Stichproben möglich wären. Diese Verteilung können Sie aber durch Bootstrapping (*D*) simulieren (oder berechnen). 
+
+Ebenfalls simulieren (oder berechnen) können Sie die hypothetische Verteilung, wenn die Nullhypothese stimmen würde (*E*).
+:::
+
+
+### Simulationsbasierte Inferenz als ein übergreifendes Prinzip
+
+- Simulationsbasierte Inferenz bietet *ein* Verfahren für viele Fragen der Inferenzstatistik.
+
+**Alternative**: Test mit theoretischen Verteilungsannahmen unter $H_0$.^[Häufig approximativ oder asymptotisch, z. B. $t$-, $\chi^2$-, $F$-Verteilungen.]
+
+- Solche *klassischen* Tests basieren auf jeweils unterschiedlichen Methoden und Annahmen.
+
+- Nicht für jede Fragestellung sind die theoretischen Verteilungen bekannt.
+
+
+### Wiederholung: Schlussmöglichkeiten 
+
+Die Datenerhebung und die unmittelbar^[es gibt methodische Erweiterungen] möglichen Schlüsse stehen im Zusammenhang mit den wissenschaftlichen Gütekriterien:
+
+- Randomisierte Stichprobe: Externe Validität
+
+- Randomisierte Zuordnung innerhalb eines Experimentes: Interne Validität 
+
+
++-----------------------+------------------------+------------------------------+
+|                       | **zufällige** \        | **keine zufällige** \        |
+|                       | **Zuordnung**          | **Zuordnung**                |    
++=======================+========================+==============================+
+| **zufällige** \       | Kausalschluss, \       | kein Kausalschluss, \        |
+| **Stichprobe**        | generalisierbar \      | Aussage generalisierbar \    |
+|                       | für die Population     | für die Population           |
++-----------------------+------------------------+------------------------------+
+|                       |                        |                              |
++-----------------------+------------------------+------------------------------+
+| **keine zufällige** \ | Kausalschluss, \       | kein Kausalschluss, \        |                    
+| **Stichprobe**        | nur für die Stichprobe | Aussage nur für die \        |
+|                       |                        | Stichprobe                   |
++-----------------------+------------------------+------------------------------+
+
+
+### Überblick zu den Simulationstechniken
+
+- **Einfache Simulation** zur Überprüfung eines Anteils. 
+    - [Beispiel:]{.cemph} Wie hoch ist der Frauenanteil (in der Population)? 
+    - [Vorgehen:]{.cemph} Simuliere wiederholt Münzwurf ($H_0$) und schaue, wie wahrscheinlich der beobachtete Frauenanteil ist.
+
+- **Permutationstest** zur Überprüfung eines Unterschieds zweier Verteilungen. 
+    - [Beispiel:]{.cemph} Unterscheidet sich der Mittelwert (in der Population) von Rauchern und Nichtrauchern?
+    - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Zuordnung und schaue, wie wahrscheinlich die beobachtete Differenz der Mittelwerte ist.
+
+- **Bootstrap** zur Berechnung eines Konfidenzintervalls des Mittelwertes.
+
+    - [Beispiel:]{.cemph} Was sind plausible Mittelwerte der Rechnungshöhe beim Re-Sampling?
+    - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Stichprobe durch Ziehen mit Zurücklegen und berechne jeweils den Mittelwert.
+    
+
+
+### FOMshiny: Permutation {include-only=shiny}
+
+Entwicklung der Verteilung im Modell der Nullhypothese.
+
+[https://fomshinyapps.shinyapps.io/Permutation/](https://fomshinyapps.shinyapps.io/Permutation/)
+
+
+### Monte Carlo in R
+
+- **Permutationstest**, hier: Simuliere zufällige Zuordnung^[d. h. ohne Zurücklegen]. Simuliere Verteilung einer Statistik unter der Annahme, dass kein Unterschied vorliegt (Modell $H_0$), u. a. zur Bestimmung von p-Werten.
+
+```{r, eval=FALSE}
+do(oft) * statistik(y ~ shuffle(x), data = Daten)
+```
+
+- **Bootstrap**, hier: Simuliere zufälliges Ziehen einer Stichprobe^[d. h. mit Zurücklegen]. Schätze Verteilung einer Statistik der Stichprobe, u. a. zur Bestimmung von Konfidenzintervallen oder Standardfehlern.
+
+```{r, eval=FALSE}
+do(oft) * statistik(y ~ x, data = resample(Daten))
+```
+
+
+### Übersicht Teststatistiken (Auswahl)
+
++---------------------+---------------------+-------------------------------------+
+| **Y**               | **X**               | **Teststatistik**                   |
++=====================+=====================+=====================================+
+| kategorial - binär  |                     | Anteil $p$                          | 
++---------------------+---------------------+-------------------------------------+
+| kategorial          |                     | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$ | 
++---------------------+---------------------+-------------------------------------+
+| numerisch           |                     | Mittelwert $\bar{x}$                |
++---------------------+---------------------+-------------------------------------+
+| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$         | 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | kategorial - binär  | Differenz Mittelwerte $\bar{x}_B-\bar{x}_A$| 
++---------------------+---------------------+-------------------------------------+
+| kategorial          | kategorial          | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$| 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen* und *innerhalb Gruppen*: $F$| 
++---------------------+---------------------+-------------------------------------+
+| numerisch           | numerisch           | Korrelationskoefizient $r$ oder Steigung $\hat{\beta}$ lineare Regression | 
++---------------------+---------------------+-------------------------------------+
+| kategorial          | numerisch           | Steigung $\hat{\beta}$ logistische oder multinomiale Regression | 
++---------------------+---------------------+-------------------------------------+
+
+::: {.scriptsize}
+Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
+:::
+
+
+### Grundlagen Inferenz
+
+- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
+- `Y ~ 1` (d. h. ohne unabhängige Variable): Modellierte Verteilung von $Y$ (z. B. Binomial- oder Normalverteilung) hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
+- `Y ~ X`: Die Modellierung der Verteilung von $Y$ hängt evtl. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
+- Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.
+
+**Verfahrensübersicht** (Mindmap): [https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference](https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference)
+
+
+### Übersicht Inferenzverfahren R mosaic (Auswahl)
+
+::: {.scriptsize}
+
++---------------------+---------------------+------------------------+-------------------+
+| **Y**               | **X**               | **Simulationsbasiert** | **Parametrisch** [^note1] |
++=====================+=====================+========================+===================+
+| kategorial - binär  |                     | `prop()`               | `binom.test()`    | 
++---------------------+---------------------+------------------------+-------------------+
+| kategorial          |                     | `xchisq.test()`        | `xchisq.test()`   |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           |                     | `mean()`               | `t.test()`        |
++---------------------+---------------------+------------------------+-------------------+
+| kategorial - binär  | kategorial - binär  | `diffprop()`           | `prop.test()`     | 
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | kategorial - binär  | `diffmean()`           | `t.test()`        | 
++---------------------+---------------------+------------------------+-------------------+
+| kategorial          | kategorial          | `xchisq.test()`        | `xchisq.test()`   |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | kategorial          | `aov()`                | `aov()`           |
++---------------------+---------------------+------------------------+-------------------+
+| numerisch           | numerisch           | `cor()`, `lm()`        | `cor.test()`, `lm()` |
++---------------------+---------------------+------------------------+-------------------+
+| kategorial  - binär | numerisch           | `glm(family = binomial)` | `glm(family = binomial)` |
++---------------------+---------------------+------------------------+-------------------+
+
+- [Permutationstest:]{.cemph} `do(oft) * statistik(y ~ shuffle(x), data = Daten)`: Kritische Werte, p-Werte.
+- [Bootstrap:]{.cemph} `do(oft) * statistik(y ~ x, data = resample(Daten))`: Konfidenzintervall, Standardfehler.
+
+:::
+
+[^note1]: Verteilungsannahmen!
+
+
+```{r finish-Inferenzstatistik, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```
+

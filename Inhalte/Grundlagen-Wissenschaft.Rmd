@@ -1,4 +1,4 @@
-```{r setup-Grundlagen-wissenschaft, include=FALSE}
+```{r setup-Grundlagen-Wissenschaft, include=FALSE}
 # ---------------------------------------------------------------------------
 #% maintainer:
 #%   - Karsten Luebke
@@ -15,26 +15,127 @@ pathToImages = getPathToImages()
 library(mosaic)
 ```
 
-<!-- \mode<all>\addtocounter{section}{-1}\renewcommand{\Sinnspruch}{\begin{quote}\small  \end{quote} }\mode<*> -->
+# Wissenschaftliche Grundlagen
 
-# `r nextChapter()` Wissenschaftliche Grundlagen
+### Übung `r nextExercise()`: Ihr Erinnerungsvermögen {.exercise type=A-B-C}
 
-<!-- ::: {.Sinnspruch} -->
-<!-- In God we trust; all others bring data. -->
+Was glauben Sie: wann können **Sie** sich besser an Wörter erinnern, die Sie sich vorher einprägen mussten?
 
-<!-- [W. Edwards Deming (zugeschrieben)]{.Quelle} -->
-<!-- ::: -->
+A.  Nachdem ich ein Nickerchen gemacht habe.
+B.  Nachdem ich eine Koffeintablette genommen habe.
+C.  Egal.
+
+::: {.notes}
+Was für **Sie** gilt, kann Ihre Dozent\*in nicht wissen. 
+
+Die Wissenschaft kann aber versuchen herauszufinden, welche Zusammenhänge **allgemein** (z.B. im *Durchschnitt*) gelten. Systematische Daten sind dafür besser als einzelne Anekdoten.
+:::
+
+### Übung `r nextExercise()`: Erinnerungsvermögen allgemein {.exercise type=A-B-C, answer=A}
+
+Was glauben Sie: wann kann **mensch** sich besser an Wörter erinnern, die mensch sich vorher einprägen musste?
 
 
-### Wissenschaft (I/II)
+A.  Nach einem Nickerchen.
+B.  Nach einer Koffeintablette.
+C.  Egal.
+
+::: {.notes}
+Zur Beantwortung einer Forschungsfrage immer zuerst die Literatur recherchieren!
+
+Mednick, S. C., Cai, D. J., Kanady, J., & Drummond, S. P. (2008). Comparing the benefits of caffeine, naps and placebo on verbal, motor and perceptual memory. Behavioural Brain Research, 193(1), 79-86, [https://doi.org/10.1016/j.bbr.2008.04.028](https://doi.org/10.1016/j.bbr.2008.04.028), sagen z.B. Nickerchen (**A**).
+
+In dieser Vorlesung lernen Sie den **Prozess** kennen, der von der Forschungsfrage zur vorläufigen Antwort führt. Dabei geht es neben der Datenerhebung auch um die Datenanalyse.
+:::
+
+
+### Cartoon: Wahrsager\*innen
+
+```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_05-2019.jpg", "cartoon0519.jpg", pathToImages)
+```
+"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Überschrift M. Dunlap]
+
+
+### Übung `r nextExercise()`: Worterinnerung nach Behandlung {.exercise type=A-B-C, answer=C}
+
+Die Daten der Studie von Mednick et al. (2008)^[Datenquelle: [https://github.com/rpruim/Lock5withR](https://github.com/rpruim/Lock5withR)] sind wie folgt:
+
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+behandlung <- factor(rep(c("Schlaf", "Koffein"), each=12))
+woerter <- c(14,18,11,13,18,17,21,9,16,17,14,15,12,12,14,13,6,18,14,16,10,7,15,10)
+SchlafKoffein <- data.frame(behandlung=behandlung, woerer=woerter)
+gf_jitter(woerter~behandlung, data = SchlafKoffein, width=0.1, hight=0.1, size=5) %>%
+  gf_labs(x="Behandlung", y="Erinnerte Wörter")
+```
+
+Im Mittelwert konnten diejenigen mit der Koffeintablette `r mean(woerter~behandlung, data = SchlafKoffein)[1]` Wörter erinnern, die mit dem Schlaf `r mean(woerter~behandlung, data = SchlafKoffein)[2]`, d.h. im Mittelwert konnte die Schlafgruppe `r diffmean(woerter~behandlung, data = SchlafKoffein)` Wörter mehr erinnern.
+
+Welche Aussage stimmt?
+
+A.  Die Analyse beweist, dass Schlaf vorteilhaft gegenüber Koffeintabletten ist.
+B.  Das hier Schlaf besser ist als Koffein ist reiner Zufall, in Wirklichkeit ist Koffein besser.
+C.  Kann nicht endgültig entschieden werden.
+
+
+::: {.notes}
+In der Wissenschaft werden Aussagen kritisch überprüft, auch sind Aussagen immer vorläufig und nicht endgültig, daher ***C***. 
+
+Solange nicht versucht wurde, eine Aussage zu widerlegen, kann sie keinesfalls als belegt gelten.
+
+Wir können aber z.B. gucken, welche Unterschiede *zufällig* vorkommen würden, wenn es keinen Unterschied geben würde (Modellannahme).
+:::
+
+
+### Vergleich Daten und Modell
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+set.seed(1896)
+
+emp_effect <- diffmean(woerter~behandlung, data = SchlafKoffein)
+
+Nullvtlg <- do(1e04)* diffmean(woerter~shuffle(behandlung), data = SchlafKoffein)
+gf_histogram( ~ diffmean, data = Nullvtlg, center=0, binwidth = 0.8571428, fill=~abs(diffmean) >= emp_effect,
+              show.legend = FALSE) %>%
+  gf_vline(xintercept = ~emp_effect) %>%
+    gf_labs(x="Differenz Mittelwert erinnerte Wörter", y="Anzahl Simulationen",
+            title = "Im Modell vorhergesagte Differenzen - ", subtitle = "wenn es keinen Unterschied gibt") +
+  scale_fill_viridis_d() +
+  annotate(geom = "label", x =  emp_effect,
+           y = 2000, label = "empirischer\nWert")
+```
+
+
+### Übung `r nextExercise()`: Daten und Modell {.exercise type=A-B, answer=A}
+
+Der Anteil der Simulationen, in denen es zufällig einen Unterschied von mindestes drei erinnerten Wörtern im Mittelwert gibt, liegt bei `r prop( ~ abs(diffmean)>=3, data = Nullvtlg)`. 
+
+Was stimmt Ihrer Meinung nach?
+
+A.  Der beobachtete Unterschied von $3$ Wörtern ist eher selten, wenn es gar keinen Unterschied geben würde.
+B.  Es liegt ein Fehler vor: wenn es keinen Unterschied gibt, dürften wir auch keinen beobachten.
+
+
+::: {.notes}
+Auch wenn es keinen Unterschied gibt, kann es zufällig vorkommen, dass wir einen Unterschied sehen. Aber *wenn* es keinen Unterschied geben sollte, dann ist das Ergebnis dieser Stichprobe eher ungewöhnlich (***A***) - aber natürlich kein Beweis dafür, dass es einen gibt!
+
+In dieser Vorlesung lernen Sie, wie Sie Daten erheben können, welche Aussagen damit möglich sind, wie Sie Daten auswerten können und wie Sie Modelle mit und über Daten erstellen können.
+:::
+
+
+### Wissenschaft (I / II) {include-only=deprecated}
 
 > Science is a particular way of knowing about the world. In science, explanations are limited to those based on observations and experiments that can be substantiated by other scientists. Explanations that cannot be based on empirical evidence are not part of science^[Hier: Natur- und Sozialwissenschaften.].  
->
+
+
 > Fact: In science, an observation that has been repeatedly confirmed and for all practical purposes is accepted as "true." Truth in science, however, is never final, and what is accepted as a fact today may be modified or even discarded tomorrow.  
->
+
+
 > Hypothesis: A tentative statement about the natural world leading to deductions that can be tested. If the deductions are verified, it becomes more probable that the hypothesis is correct. If the deductions are incorrect, the original hypothesis can be abandoned or modified. Hypotheses can be used to build more complex inferences and explanations.
 
-### Wissenschaft (II/II)
+
+### Wissenschaft (II / II) {include-only=deprecated}
 
 > Law^[Hier: Modell.]: A descriptive generalization about how some aspect of the natural world behaves under stated circumstances.
 >
@@ -42,6 +143,7 @@ library(mosaic)
 
 
 Quelle: Science and Creationism: A View from the National Academy of Sciences, Second Edition (1999)^[[https://doi.org/10.17226/6024](https://doi.org/10.17226/6024)]
+
 
 ### Kognitives Modell Datenanalyse
 
@@ -62,10 +164,19 @@ Stimmt die Aussage: Daten und deren Analyse sind ein zentraler Bestandteil natur
 - Nein.
 
 ::: {.notes}
-> Explanations that cannot be based on empirical evidence are not part of science.
 
-*Empiricial evidence* sind Daten und deren Analyse, also ***Ja***.
+*Empirische Evidenz* liefern Daten und deren Analyse, also ***Ja***.
 :::
+
+
+### Cartoon: Data Science
+
+```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_03-2019.jpg", "cartoon0319.jpg", pathToImages)
+```
+"Viele Generationen von Data Science"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2019/results) &copy; J.B. Landers, Überschrift L. Poisson ]
+
 
 ### Realität
 
@@ -81,6 +192,7 @@ Weitere Erkenntnistheorien sind u.a. Empirismus^[Quelle des Wissens ist (vorrang
 
 - Die Realität ist komplex, teilweise verdeckt und dynamisch (siehe auch Chaosforschung).
 
+
 ### Theorie
 
 - Eine Theorie ist eine strukturierte Sammlung von Hypothesen.
@@ -94,9 +206,9 @@ Weitere Erkenntnistheorien sind u.a. Empirismus^[Quelle des Wissens ist (vorrang
 - Gute Theorien ermöglichen Erklärungen, Vorhersagen, Nutzen.
 
 
-### Offene Übung `r nextExercise()`: Theorie {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Theorie {.exercise type=essay include-only=deprecated}
 
-Welche Theorie kennen Sie?
+Welche Theorien kennen Sie?
 
 ::: {.notes}
 Hier gibt es natürlich sehr viele unterschiedliche: Evolutionstheorie, Prinzipal-Agent-Theorie, Triebtheorie, Theorie komplexer Systeme...
@@ -104,6 +216,7 @@ Hier gibt es natürlich sehr viele unterschiedliche: Evolutionstheorie, Prinzipa
 Alle wollen Realität beschreiben und erklären und sind daher auch für die Praxis relevant.
 
 :::
+
 
 ### Hypothese
 
@@ -119,9 +232,9 @@ Eine Hypothese ist eine aus der Theorie oder Beobachtung abgeleitete Aussage.
 
 *Kennzeichen einer wissenschaftlichen Hypothese:*
 
-- Sie ist eine allgemeingültige über den Einzelfall hinausgehende Behauptungen.
+- Sie ist eine allgemeingültige über den Einzelfall hinausgehende Behauptung.
 
-- Häufig: Formalstruktur eines Konditionalsatz, Implikation: wenn $x$ (Antezedens), dann $y$ (Konsequenz). 
+- Häufig: Formalstruktur eines Konditionalsatzes, Implikation: wenn $x$ (Antezedens), dann $y$ (Konsequenz). 
 
  
 ### Modelle
@@ -129,7 +242,7 @@ Eine Hypothese ist eine aus der Theorie oder Beobachtung abgeleitete Aussage.
 Modelle sind ganz allgemein vereinfachte Darstellungen relevanter Teile der Realität. Die Repräsentation der Realität durch Modelle ermöglicht eine einfachere Analyse.
 
 - Darstellung von Modellen
-  - graphisch (Pfadiagramme)^[Beispiel: Kundenzufriedenheit [http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction](http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction)]
+  - graphisch (Pfaddiagramme)^[Beispiel: Kundenzufriedenheit [http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction](http://www.theacsi.org/about-acsi/the-science-of-customer-satisfaction)]
   - verbal
   - In der Wissenschaft verwendet man häufig: **mathematisch-statistische Modelle** zur Beschreibung der Realität. 
     - Das Instrumentarium der Mathematik kann eingesetzt werden, um zu optimieren.
@@ -137,64 +250,53 @@ Modelle sind ganz allgemein vereinfachte Darstellungen relevanter Teile der Real
     - Statistische Modelle sind mathematische Modelle, die mit Hilfe von Daten gewonnen werden.
 
 
-### Offene Übung `r nextExercise()`: Hypothese {.exercise type=essay}
-
-- Folgende Zahlen folgen einer Regel: $2, 4, 6$.
-
-- Wie lautet die Regel?
-
-- Sie können Zahlentripel vorschlagen, um die Regel zu prüfen!^[Wason, P. C. (1960): *On the failure to eliminate hypotheses in a conceptual task*. Quarterly journal of experimental psychology, 12(3), 129-140. [http://dx.doi.org/10.1080/17470216008416717](http://dx.doi.org/10.1080/17470216008416717)]
-
-::: {.notes}
-Die Regel lautet im Artikel: die folgende Zahl ist größer. Viele denken an die Regel $+2$ (in Varianten), manche an eine Lucas-Folge ($a_{n+1}=a_n+a_{n-1}$, mit $a_0=2$, $a_1=4$ folgt damit $a_2=6$ und $a_3=10$), versuchen diese aber nicht zu falsifizieren, d. h., sie schlagen $8, 10, 12, \ldots$ vor aber nicht $7, 8, 9$ (um der tatsächlichen Regel näher zu kommen) oder $3, 2, 1$ (um zu falsifizieren) (siehe auch: https://de.wikipedia.org/wiki/Peter_Wason#2-4-6-Aufgabe)
-
-Welche Vielzahl von mathematisch gut begründeten Folgen es mit dem Anfang "2,4,6" gibt, kann man hier nachschlagen: <https://oeis.org/search?q=2%2C4%2C6&language=german&go=Suche>
-
-Dazu kommen dann noch die nicht konstruktiven Regeln, à la "die folgende Zahl ist größer"!
-:::
-
-
 ### Wissenschaftliche Schlusstechniken / Generierung von Hypothesen
 
 :::::::::::::: {.columns}
-::: {.column width="33%"}
-**Induktion**: 
+::::::: {.column width="32%"}
 
-Generalisierung von in der Realität beobachteten Regelmäßigkeiten zu einer allgemeineren Vermutungen. 
+#### Induktion 
 
+Generalisierung von in der Realität beobachteten Regelmäßigkeiten zu einer allgemeineren Vermutung. 
 
-
+::: {.spaceing top="2em"}
 **Häufig:** *Hypothesenbildung*.
-
-
-
-**Beispiele:** Pawlow, Freud
-
 :::
-::: {.column width="33%"}
-**Deduktion**: 
+
+::: {.spaceing top="2em"}
+**Beispiele:** Pawlow, Freud
+:::
+
+:::::::
+::::::: {.column width="32%"}
+#### Deduktion
 
 Ableitung von Aussagen aus anderen (allgemeineren) Aussagen mit Hilfe logischer Regeln. 
 
 
 
+::::: {.spaceing top=2em  bottom="2em"}
 **Häufig:** *Hypothesenprüfung.*
+:::::
 
-:::
-::: {.column width="33%"}
-**Abduktion**: 
 
+:::::::
+::::::: {.column width="32%"}
+#### Abduktion
+
+::::: {.spaceing bottom="7.6em"}
 Verknüpfung von Einzelbeobachtungen und Erkennen von Regeln. 
+:::::
 
-:::
+:::::::
 ::::::::::::::
 
 
 ### Beispiel Schlusstechniken
 
-- *Induktion*: Hm, ich habe schon 30 Bohnen aus dem Sack gezogen... Alle weiß. Noch 30 Bohnen... schon wieder alle weiß. Ich hab's: Die Bohnen müssen alle weiß sein!
+- *Induktion*: Hm, ich habe schon 30 Bohnen aus dem Sack gezogen..., alle weiß. Noch 30 Bohnen..., schon wieder alle weiß. Ich hab's: Die Bohnen müssen alle weiß sein!
 
-- *Deduktion*: Ich habe die Bohnen in den Sack gefüllt. Sie waren alle weiß. Jetzt nehme ich eine Bohne aus dem Sack: sie ist weiß!
+- *Deduktion*: Ich habe die Bohnen in den Sack gefüllt. Sie waren alle weiß. Jetzt nehme ich eine Bohne aus dem Sack: Sie ist weiß!
 
 - *Abduktion*: Vor mir steht ein Sack; ich sehe, dass Bohnen darin sind. Ich finde eine weiße Bohne irgendwo im Raum auf dem Boden. Daraus schließe ich: Die Bohne muss aus dem Sack sein!
 
@@ -218,9 +320,10 @@ B.  Deduktion.
 
 - **Induktionsproblematik**: Kann durch Induktion von Einzelbeobachtungen *sicher* auf ein allgemeines Gesetz -- auch in Zukunft -- geschlossen werden? 
 - **Falsifikationsprinzip**: Obwohl es nicht möglich ist, die Richtigkeit einer wissenschaftlichen Theorie auf Basis einer begrenzten Menge von Daten zu beweisen, ist es möglich zu beweisen, dass eine Theorie falsch ist. Wissenschaftliche Aussagen sollen daher nach Karl Popper empirisch widerlegbar sein. Beispiel: Kann man die Hypothese beweisen, dass alle Schwäne weiß sind?
-    - Das ist kaum/nicht möglich, man müsste die ganze Welt bereisen (und die Zukunft und die Vergangenheit). Und selbst dann: wer weiß, vielleicht habe ich einen übersehen?
+    - Das ist kaum/nicht möglich, man müsste die ganze Welt bereisen (und die Zukunft und die Vergangenheit). Und selbst dann: Wer weiß, vielleicht habe ich einen übersehen?
     - Zu zeigen, dass die Hypothese falsch ist, ist einfach: Ein schwarzer Schwan reicht, um zu zeigen, dass die Behauptung, alle Schwäne seien weiß, falsch ist!
-    
+
+
 ### Übung `r nextExercise()`: Beweis {.exercise type=A-B-C answer=B}
 
 Hat sie die Aussage "alle Studierenden sind interessiert an Statistik" endgültig bewiesen?
@@ -234,15 +337,16 @@ C.  Vielleicht.
 :::
 
 
-### Forschungsprozess
+### Forschungsprozess generell
 
 - **Planung**: Formulierung der Forschungsfrage: Forschungsidee, Informationssammlung, Forschungsfrage und -hypothesen.
 
-- **Datenerhebung**: Primär- oder Sekundärerhebung^[Digitalisierung!], Operationalisierung, Versuchsplanung und -durchführung, Datenerhebung, Datenbeschaffung.
+- **Datenerhebung**: Z.B. Beobachtung, Experiment, Umfrage, Interview.
 
-- **Datenaufbereitung** und **Datenanalyse**: Fehlende Werte, Ausreißer, Explorative Datenanalyse,  Inferenzstatistik, Modellierung.
+- **Datenaufbereitung** und **Datenanalyse**: Qualitativ und/oder quantitativ.
 
 - **Interpretation**: Was sagt das Ergebnis aus? Schlussfolgerung, Mitteilung der Ergebnisse.
+
 
 ### Übung `r nextExercise()`: Literatur {.exercise type=A-B-C-D answer=A}
 
@@ -262,7 +366,7 @@ Insbesondere zu Beginn ist Literaturrecherche wichtig, damit Sie ein Bild über 
 
 Gütekriterien für Forschung:
 
-- **Ethische Aspekte**: Können negative Folgen, z. B. bei befragten/ untersuchten Personen auftreten? Auch: Datenschutz.
+- **Ethische Aspekte**: Können negative Folgen, z. B. bei befragten/untersuchten Personen auftreten? Auch: Datenschutz.
 
 - **Transparenz**: Das Vorgehen ist klar dokumentiert und nachprüfbar (und damit prinzipiell **reproduzierbar**)?
 
@@ -271,6 +375,17 @@ Gütekriterien für Forschung:
 - **Interne Validität**: Keine anderen Erklärungen für die Ergebnisse? Ist der behauptete Zusammenhang richtig?
 
 - **Externe Validität**: Übertragbarkeit der Ergebnisse? Zeigt sich der behauptete Zusammenhang auch in anderen Situationen?
+
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+- Wie die Kaffemaschine *wirklich* funktioniert, wissen wir nicht, dafür verwenden wir Hypothesen und Modelle.^[Literatur!]
+- Wenn wir uns sicher sind, den Mechanismus in der Maschine gefunden zu haben, haben wir eine hohe interne Validität.
+- Wenn die Maschine auch woanders genauso funktioniert, haben wir eine hohe externe Validität.^[Skizze: Sebastian Sauer]
 
 
 ### Übung `r nextExercise()`: Wissenschaftliches Arbeiten {.exercise type=A-B-C-D answer=D}
@@ -311,16 +426,17 @@ Alle der in *A*, *B*, *C* genannten Probleme können aufgetreten sein, daher ***
     - Verbalisierung der Erfahrungswirklichkeit.^[Vgl. Konstruktivismus.]
     - Wirklichkeitsinterpretationen sind durch spezifische soziale Handlungsweisen geprägt und strukturieren gleichzeitig das soziale Handeln der Einzelperson vor. 
     - Untersuchungsgegenstand soll möglichst in seinem natürlichen Umfeld detailliert, ganzheitlich und umfassend erfasst werden.
-    
+
+
 ### Cartoon: Statistik
 
-```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_07-2017.jpg", "cartoon0717.jpg", pathToImages)
 ```
 "Traue Dich, in die Daten einzutauchen, navigiere mit Statistik und tauche erfrischt mit sinnvollen Erkenntnissen wieder auf."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2017/results) &copy; J.B. Landers, Überschrift D. Nandy]
 
-```{r finish-Grundlagen-wissenschaft, include=FALSE}
+```{r finish-Grundlagen-Wissenschaft, include=FALSE}
 rm(pathToImages)
 finalizePart(partname)
 ```

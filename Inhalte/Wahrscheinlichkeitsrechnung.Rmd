@@ -1,4 +1,4 @@
-```{r setup-Einfuehrung-Wahrscheinlichkeit, echo=FALSE}
+```{r setup-Wahrscheinlichkeitsrechnung, echo=FALSE}
 # ---------------------------------------------------------------------------
 #% maintainer:
 #%   - Karsten Luebke
@@ -6,7 +6,7 @@
 # ---------------------------------------------------------------------------
 source("../prelude.R")
 initPart(
-    "Einfuehrung-Wahrscheinlichkeit",  # Dateiname ohne Suffix
+    "Wahrscheinlichkeitsrechnung",  # Dateiname ohne Suffix
     "EinfuehrungInferenz"              # Verzeichnisname im Bilderverzeichnis 
     )
 pathToImages = getPathToImages()
@@ -16,7 +16,8 @@ library(mosaic)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
-# `r nextChapter()` Wahrscheinlichkeit
+# Wahrscheinlichkeitsrechnung
+
 
 ### Unsicherheit
 
@@ -34,6 +35,7 @@ Unsicherheit von Aussagen kann also die Vergangenheit, Gegenwart und Zukunft bet
 
 *Wo begegnet Ihnen Unsicherheit?*
 
+
 ### Zufallsexperiment
 
 - Ein Zufallsexperiment ist ein Vorgang bei dem unter (scheinbar) gleichen Voraussetzungen unterschiedliche Ereignisse eintreten können.
@@ -41,6 +43,7 @@ Unsicherheit von Aussagen kann also die Vergangenheit, Gegenwart und Zukunft bet
 - $\Omega$ (gr.: *Omega*) ist die Menge aller Elementarereignisse, z.B. $\Omega=\{(\text{"Die Münze zeigt Kopf"}), (\text{"Die Münze zeigt Zahl"})\}$, oder für die Anzahl Kunden $\Omega=\mathbb{N}_0=\{0, 1, 2, \ldots\}$.
 - Sei $A$ ein Ereignis, welches aus mehreren Elementarereignissen zusammengesetzt sein kann. z.B. Wurf eines Würfels mit $\Omega=\{\omega_1, \omega_2, \ldots \omega_6\}$ wobei $\omega_i$: "Würfel zeigt $i$" und $A=\{\omega_2, \omega_4, \omega_6\}$. Das gegenteilige Ergeignis (Komplement) ist dann $A^C=\{\omega\subset\Omega: \omega \notin A\}$. 
 - $W$ sei unser (Vor-)wissen, z.B. ein fairer, sechs seitiger Würfel. 
+
 
 ### Übung `r nextExercise()`: Ereignis {.exercise type=A-B answer=B}
 
@@ -55,6 +58,7 @@ Die Würfelseiten die *nicht* $2,4,6$ sind: $A^C=\{\omega_1, \omega_3, \omega_5\
 
 :::
 
+
 ### Notation von Ereignissen
 
 - $\Omega$ ist das sichere Ereignis^[Irgendwas wird passieren...], $\emptyset$ ist das ausgeschlossene Ereignis.
@@ -62,6 +66,7 @@ Die Würfelseiten die *nicht* $2,4,6$ sind: $A^C=\{\omega_1, \omega_3, \omega_5\
 - $A \cap B$ heißt $A$ *und* $B$: $A \cap B=\{w\in\Omega: \omega \in A \wedge \omega \in B\}$^[Durchschnitt, $\wedge$: logisches *und*.].
 - $A$ und $B$ heißen *disjunkt*, wenn $A \cap B=\emptyset$ (leere Menge) gilt.
 - Beispiel: $A \cap A^C=\emptyset, \quad A\cup A^C=\Omega$.
+
 
 ### Venn-Diagramm
 
@@ -79,6 +84,7 @@ VennDiagram::draw.triple.venn(100000, 25000, 20000,
 - Es gibt 35000 Hunde- *oder* Katzenliebhaber\*innen: $A \cup B$.
 - Es gibt 30000, die weder Hunde- noch Katzenliebhaber\*innen sind: $(A \cup B)^C$.
 
+
 ### Wahrscheinlichkeit
 
 Die **Wahrscheinlichkeit** $P$ eines Ereignisses ist ein Maß für die Unsicherheit: $P(A|W)\in[0,1]$, die Wahrscheinlichkeit von $A$, vor unserem Wissenshintergrund $W$. Wenn $W$ *klar* ist, wird es ggfs. nicht angegeben.
@@ -88,6 +94,7 @@ Für eine Wahrscheinlichkeit gelten folgende Axiome:
 - $0 \leq P(A|W) \leq 1$.
 - $P(\Omega|W)=1$.
 - $P(A \cup B|W)=P(A|W)+P(B|W)$ wenn $A\cap B=\emptyset$ gilt.
+
 
 ### Übung `r nextExercise()`: Teilmenge {.exercise type=A-B answer=A}
 
@@ -100,6 +107,7 @@ B.  $P(A|W)\geq P(B|W)$
 Die Wahrscheinlichkeit einer Teilmenge, z.B. Hundeliebhaber\*innen, kann nicht größer sein als die der Obermenge, z.B. Tierliebhaber\*innen (Lösung ***A***).
 :::
 
+
 ### Übung `r nextExercise()`: Komplement {.exercise type=yesno answer=yes}
 
 Stimmt die Aussage: $P(A^C|W)=1-P(A|W)$?
@@ -110,6 +118,7 @@ Stimmt die Aussage: $P(A^C|W)=1-P(A|W)$?
 ::: {.notes}
 ***Ja***: $P(A \cup A^C|W)=P(\Omega|W)=1$ und $A \cap A^C=\emptyset$. Damit $1=P(A\cup A^C|W)=P(A|W)+P(A^C|W) \Leftrightarrow P(A^C|W)=1-P(A|W)$
 :::
+
 
 ### Übung `r nextExercise()`: Interpretation Wahrscheinlichkeit {.exercise type=A-B-C answer=C}
 
@@ -123,6 +132,7 @@ C.  Bei einer Wetterlage und -prognose wie heute, hat es in 10\% der Fälle morg
 Wahrscheinlichkeiten beziehen sich auf die Unsicherheit bei Zufallsexperimenten. Hier also wie *oft* es in vergleichbaren Situationen geregnet hat, also ***C***. Am Ende des morgigen Tages hat sich unser Wissen $W^N$ geändert, d. h. wir (können) wissen ob es geregnet hat oder nicht, d. h. $P(\text{Regen}|W^N)\in\{0,1\}$.
 :::
 
+
 ### Cartoon: Wahrscheinlichkeit
 
 ```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
@@ -132,15 +142,13 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 "Na, das nenne ich mal eine 25\% Chance für gutes Wetter!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2016/results) &copy; J.B. Landers, Überschrift M. Huberty]
 
+
 ### Bedingte Wahrscheinlichkeit
-
-
 
 - Die bedingte Wahrscheinlichkeit von $A$ gegeben $B$, d. h., von $A$ unter der Bedingung $B$, ist die Wahrscheinlichkeit von $A$, wenn wir wissen, dass $B$ eingetreten ist: $$P(A|B,W)=\frac{P(A\cap B|W)}{P(B|W)}$$
 - Umgestellt: $$P(A\cap B|W)=P(A|B,W)\cdot{P(B|W)}$$.
 
 Sei $W$ ein fairer, sechseitiger Würfel mit $\Omega=\{\omega_1, \omega_2, \ldots \omega_6\}$: Mit $B=\{\omega_2, \omega_4,\omega_6\}$ und $A=\{\omega_2\}$ gilt $P(A|B,W)=\frac{\frac{1}{6}}{\frac{1}{2}}=\frac{1}{3}$ Wenn der Würfel eine gerade Zahl zeigt, ist dies in einem von drei Fällen eine $2$.
-
 
 
 ### Übung `r nextExercise()`: Bedingte Wahrscheinlichkeit {.exercise type=A-B-C answer=C}
@@ -155,10 +163,12 @@ C.  Keine pauschale Aussage möglich.
 ***C***: Die bedingte Wahrscheinlichkeit kann kleiner, größer oder gleich der unbedingten sein: Die Wahrscheinlichkeit eine $3$ zu würfeln ist kleiner als die unbedingte, wenn ich weiß dass eine gerade Zahl gewürfelt wurde, sie ist größer als die unbedingte, wenn ich weiß dass eine ungerade Zahl gewürfelt wurde. Sie ist unverändert, wenn sich $B$ z.B. auf den vorherigen Wurf bezieht -- wenn die Würfe *unabhängig* sind.
 :::
 
+
 ### Unabhängigkeit
 
 - Zwei Ereignisse sind **unabhängig**, wenn gilt: $$P(A \cap B|W)=P(A|W)\cdot P(B|W)$$
 - Wenn zwei Ereignisse unabhängig sind, gilt: $$P(A|B,W)=P(A|W), \quad P(B|A,W)=P(B|W)$$ D. h., dadurch, dass ein Ereignis eingetreten ist, ändert sich *nicht* die Wahrscheinlichkeit des anderen.^[Eine harte Forderung: Wenn in China ein Sack Reis umfällt...]
+
 
 ### Übung `r nextExercise()`: Unabhängigkeit {.exercise type=A-B-C-D answer=A}
 
@@ -173,6 +183,17 @@ D.  Bildungsabschluss und Gehalt.
 Tendenziell sind große Menschen schwerer, daher nicht B. Häufig ohne Lernen kein Klausurerfolg, daher nicht C. Es zeigt sich (*Tipp:* Recherschieren Sie dies nach!), dass Personen mit höheren Bildungsabschlüssen tendenziell höhere Gehälter erzielen können, daher nicht *D*. Wiederholtes Werfen einer fairen Münze sollte aber unabhängig sein, also ***A***.
 :::
 
+
+### Cartoon: Unabhängigkeit
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_08-2018.jpg", "cartoon0818.jpg", pathToImages)
+```
+
+"Nachdem Sie am selben Tag das Lotto 6 aus 49 und den Eurojackpot gewannen gingen Hans und Peter feiern."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2018/results) &copy; J.B. Landers, Überschrift Michael Albers (Übersetzung/ Anpassung KL)]
+
+
 ### Das Gesetz der großen Zahl
 
 Wenn ein Zufallsexperiment beliebig oft wiederholt werden kann^[z.B. beim (wiederholten) Glücksspiel], dann nähert sich die *empirische* Wahrscheinlichkeit^[d. h. die relative Häufigkeit des Ereignisses] der *theoretischen* Wahrscheinlichkeit^[z.B. bestimmbar, wenn alle Elementarereignisse die gleiche Wahrscheinlichkeit haben] an.
@@ -183,6 +204,7 @@ muenz <- rflip(500)
 anteil_kopf <- cumsum(attr(muenz, which="sequence")=="H")/1:length(attr(muenz, which="sequence"))
 plot(anteil_kopf, col=trellis.par.get("plot.line")$col, lwd=2, ylab="Anteil Kopf", xlab="Würfe", cex=2, main="Wurf einer fairen Münze", ylim=c(0,1), type="l")
 ```
+
 
 ### Übung `r nextExercise()`: Ziegenproblem {.exercise type=A-B-C answer=A}
 
@@ -202,6 +224,7 @@ Für jemanden, der erst kommt, nachdem die Tür geöffnet wurde und der nicht we
 P.S. Das Problem ist auch unter dem Namen *Monty-Hall-Problem* bekannt.
 :::
 
+
 ### Totale Wahrscheinlichkeit
 
 5\% der Bauteile von Lieferant "Gut und teuer" sind defekt, 20\% der Bauteile von "Schnell und billig". Sie bekommen 90\% der Bauteile von "Schnell und billig" ($W$). Wie groß ist die Wahrscheinlichkeit, dass ein Bauteil defekt ist.
@@ -209,6 +232,7 @@ P.S. Das Problem ist auch unter dem Namen *Monty-Hall-Problem* bekannt.
 - Angenommen Sie bekommen 10000 Teile. Dann sind $9000=10000\cdot 0,9$ von "Schnell und billig", $1000=10000\cdot (1-0,9)$ von "Gut und teuer".
 - Von den $9000$ "Schnell und billig" sind $9000\cdot 0,2=1800$ defekt, von den $1000$ "Gut und teuer" sind es $1000\cdot 0,05=50$. Macht zusammen $1800+50=1850$ von $10000$, also $P(\text{Defekt}|W)=\frac{1850}{10000}=0,185$: Man kann also aus den bedingten Einzelwahrscheinlichkeiten die Gesamtwahrscheinlichkeit berechnen: **Satz von der totalen Wahrscheinlichkeit**^[Funktioniert analog für mehrere Ereignisse $B_i$ mit $\Omega =\cup_i B_i$ mit $B_i \cap B_j=\emptyset \forall i \neq j$.]
 $$P(A|W)=P(A|B,W) \cdot P(B|W) + P(A|B^C,W) \cdot P(B^C|W)$$
+
 
 ### Übung `r nextExercise()`: Totale Wahrscheinlichkeit {.exercise type=A-B-C-D answer=C}
 
@@ -222,6 +246,7 @@ D.  Dafür, dass ein Bauteil nicht defekt ist.
 ::: {.notes}
 *Ziel* der Berechnung war es, herauszufinden, ob ein Bauteil defekt ist, also $A=\text{Bauteil defekt}$ (***C***). In dem Fall wäre  $A^C=\text{Bauteil nicht defekt}$. Das Ereignis $B$ kann $B_1=\text{Bauteil von "Schnell und Billig"}$ sein, dann wäre $B_1^C=\text{Bauteil nicht von "Schnell und Billig"}=\text{Bauteil von "Gut und teuer"}$ (wie im Beispiel) *oder* analog könnte $B_2=\text{Bauteil von "Gut und teuer"}$ sein, dann wäre $B_2^C=\text{Bauteil nicht von "Gut und teuer"}=\text{Bauteil von "Schnell und Billig"}$
 :::
+
 
 ### Übung `r nextExercise()`: Gegenwahrscheinlichkeit {.exercise type=A-B-C-D-E answer=E}
 
@@ -250,6 +275,7 @@ Mit Hilfe des **Satzes von Bayes** können Sie die *Bedingungen umkehren*!
 
 *Tipp*: Statt mit Wahrscheinlichkeiten absolute Häufigkeiten verwenden.
 
+
 ### Spambeispiel (I/II)
 
 - $A$: eine Spam-Email, $A^C$: keine Spam-Email.
@@ -262,22 +288,21 @@ Mit Hilfe des **Satzes von Bayes** können Sie die *Bedingungen umkehren*!
 ### Spambeispiel (II/II)
 
 1.  Bestimmung der Wahrscheinlichkeit, dass das Wort "Viagra" in einer Email ist: Satz von der totalen Wahrscheinlichkeit:
-\[
-\begin{aligned} 
+$$\begin{aligned} 
 P(B|W) &= P(B|A,W)\cdot P(A|W) + P(B|A^C,W)\cdot P(A^C|W) \\
 &= 0,5 \cdot 0,2 + 0,001 \cdot (1-0,2) \\
 &= 0,10008
-\end{aligned}
-\]
+\end{aligned}$$
+
 2.  Bestimmung der Wahrscheinlichkeit, dass es sich um eine Spam-Email handelt, wenn das Wort "Viagra" in einer Email ist: Satz von Bayes:
-\[
-\begin{aligned} 
+$$\begin{aligned} 
 P(A|B,W)&=\frac{P(B|A,W)\cdot P(A|W)}{P(B|W)} \\
 &= \frac{0,5 \cdot 0,2}{0,10008} \\
 &= 0,9992006
-\end{aligned}
-\]
+\end{aligned}$$
+
 Die Wahrscheinlichkeit, dass es sich bei der Email mit dem Wort "Viagra" um Spam handelt liegt bei über 99,9\%!
+
 
 ### Übung `r nextExercise()`: Satz von Bayes {.exercise type=A-B-C-D answer=D}
 
@@ -292,6 +317,7 @@ D.  $\approx 2\%$
 Es gibt bei 1000 Personen ca. $\approx 51 \times$ Alarm: den einen, der mit Sicherheit erkannt wird plus die $\approx 50$ Fehlalarme ($999\cdot(1-0,95)$). Von diesen $\approx 51$ ist nur einer *echt*, also $P(\text{Fall}|\text{Alarm},W) \approx \frac{1}{51}\approx 0,02$, damit ***D***.
 :::
 
+
 ### Offene Übung `r nextExercise()`: Risk Literacy {.exercise type=essay}
 
 Bitte nehmen Sie an folgendem Test teil:
@@ -301,6 +327,7 @@ Bitte nehmen Sie an folgendem Test teil:
 ::: {.notes}
 *Individuell*
 :::
+
 
 ### Sensitivität (True positive) und Spezifität (True negative)
 
@@ -322,6 +349,7 @@ Sensitivität gibt an, wie oft, bei vorhandener Krankheit, diese korrekt erkannt
 Ein guter Test hat eine hohe Sensitivität und eine hohe Spezifität, häufig muss man aber einen Kompromiss finden - vgl. Receiver-Operating-Characteristic-Kurve (ROC).
 :::
 
+
 ### Odds und Odds Ratio
 
 Angenommen in einem Kurs sitzen 100 Studierende, 90 arbeiten mit, 10 nicht. Von den 90, die mitarbeiten, bestehen 80 die Klausur, von den 10, die nicht mitarbeiten, 1.^[Rein fiktive Zahlen!]
@@ -330,6 +358,7 @@ Angenommen in einem Kurs sitzen 100 Studierende, 90 arbeiten mit, 10 nicht. Von 
 - Die Chance zu bestehen, wenn nicht mitarbeitet wird, liegt bei $1:9$.
 - Das **Chancenverhältnis** (Quotenverhältnis, engl. *odds ratio*, $OR$), liegt bei $8:\frac{1}{9}=72$ - d. h. die Chance die Klausur zu bestehen ist 72 mal höher, wenn mitgearbeitet wird als wenn nicht mitgearbeitet wird.
 $$OddsRatio=\frac{Odds(A|B,W)}{Odds(A|B^C,W)}=\frac{P(A|B,W)\cdot(1-P(A|B^C,W)}{P(A|B^C,W)\cdot(1-P(A|B,W)}$$
+
 
 ### Odds Ratio aus Vierfeldertafel
 
@@ -347,6 +376,7 @@ $$OddsRatio=\frac{\frac{n_{11}}{n_{21}}}{\frac{n_{12}}{n_{22}}}$$
 
 - Sensitivität^[True positive rate, TPR]: $\frac{n_{11}}{n_{1 \cdot}}$
 - Spezifität^[True negative rate, TNR]: $\frac{n_{22}}{n_{2 \cdot}}$
+
 
 ### Offene Übung `r nextExercise()`: Gesichtserkennung {.exercise type=essay}
 
@@ -385,6 +415,7 @@ Straftäter\*innen wieder, und nur in 1\% der Fälle wird jemand fälschlich ver
 
 :::
 
+
 ### Offene Übung `r nextExercise()`: Präzision Gesichtserkennung {.exercise type=essay}
 
 Wie hoch ist der Anteil der richtig erkannten Straftäter\*innen, d. h. wie viele der Alarme sind berechtigt, d. h. *a posteriori* Wahrscheinlichkeit ein(e) Straftäter\*in zu sein, wenn ein Alarm vorliegt?
@@ -397,6 +428,7 @@ In der Pressemitteilung [https://www.bmi.bund.de/SharedDocs/kurzmeldungen/DE/201
 
 :::
 
+
 ### Offene Übung `r nextExercise()`: Odds Ratio Gesichtserkennung {.exercise type=essay}
 
 Wie ändert sich die Chance ein(e) Straftäter\*in zu sein, wenn ein Alarm vorliegt?
@@ -407,7 +439,7 @@ $$OddsRatio=\frac{\frac{n_{11}}{n_{21}}}{\frac{n_{12}}{n_{22}}}=\frac{\frac{700}
 D. h., die Chance eine(n) Straftäter\*in vor sich zu haben ist 231 mal so hoch, wenn die Gesichterkennung Alarm gegegeben hat, als wenn sie es nicht getan hat.
 :::
 
-```{r finish-Einfuehrung-Wahrscheinlichkeit, include=FALSE}
+```{r finish-Wahrscheinlichkeitsrechnung, include=FALSE}
 rm(pathToImages)
 finalizePart(partname)
 ```

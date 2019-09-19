@@ -1,0 +1,986 @@
+```{r setup-Kausal, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Kausalanalyse",  # Dateiname ohne Suffix
+    "Kausalanalyse"     # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+detach("package:mosaic", unload = TRUE)
+detach("package:ggformula", unload = TRUE)
+library(ggdag)
+```
+
+# Einführung in die kausale Modellierung
+
+
+## Einführung
+
+### Offene Übung `r nextExercise()`: Kausalanalyse {.exercise type=essay}
+
+Wie würden Sie den kausalen Effekt Ihrer ($i$) Teilnahme an dieser Veranstaltung auf Ihr Wissen ($Y$) definieren?
+
+::: {.notes}
+
+**Potential Outcome**: 
+
+Sei $Y^1$ die Zufallsvariable, die das Wissen mit Teilnahme beschreibt und $Y^0$ die ohne. Dies sind potentielle Ergebnisse.
+
+Für die, die hier sind, kann, $y^0_i$ *nicht* beobachtet werden (**Counterfactual**). Für die, die nicht hier sind, kann $y^1_i$ nicht beobachtet werden.
+
+
+Der individuelle kausale Effekt ist z.B.:
+
+$$
+\delta_i=y^1_i-y^0_i
+$$
+
+Das fundamentale Problem ist, dass dieser Effekt nicht bestimmt werden kann, da nur eines der potentiellen Ergebnisse beobachtet werden kann.  
+
+Ein naiver Vergleich z.B. der Mittelwerte mit und ohne Teilnahme ($\overline{y^1}-\overline{y^0}$) ist irreführend: vielleicht sind ja die besonders Schlauen (**Kovariable**) hier, d.h., für diese liegt $y^1$ und damit nicht $y^0$ vor: der geschätzte Effekt ist **verzerrt**.
+
+:::
+
+### Übung `r nextExercise()`: Iris Versicolor {.exercise type=yesno answer=no}
+
+```{r echo=FALSE, out.width = "30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "irisversi.jpg"))
+```
+::: {.footnotesize}
+Foto: Armin Hauke
+:::
+
+Ist das eine Blume?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: Es ist das *Abbild* einer Blume -- nicht die Blume selber. Ebenso wenig wie Korrelation (besser: Assoziation) gleich Kausalität ist, ist das Bild einer Blume die Blume selber. Idee aus: [Daniel T. Kaplan (2012): Statistical Modeling: A Fresh Approach](http://project-mosaic-books.com/?page_id=13), S. 323.
+
+
+Aber wenn wir die Entstehung und das Umfeld des Bildes kennen, optische Täuschungen usw. vermeiden, können wir von dem Abbild auf den Gegenstand schließen. 
+
+Wenn wir gewisse Regeln, Annahmen usw. beachten, können wir von einer bzw. keiner Assoziation auf eine Kausalität -- oder keine Kausalität -- schließen.
+:::
+
+
+### Hinweise
+
+- Es gibt viele Ansätze, Kausalität zu untersuchen (Potential Outcome, Instrumental Variables, ...). In dieser Einführung wird der über **Graphische Modelle** behandelt.
+
+- Literatur:
+    - [Elwert, F. (2013). Graphical causal models. In: Handbook of causal analysis for social research (S. 245-273). Springer, Dordrecht.](https://www.researchgate.net/publication/278717528_Graphical_Causal_Models)
+    - [Pearl, J., Glymour, M., & Jewell, N. P. (2016). Causal inference in statistics: A primer. John Wiley & Sons.](http://bayes.cs.ucla.edu/PRIMER/)
+    - [Peters, J., Janzing, D., & Schölkopf, B. (2017). Elements of causal inference: foundations and learning algorithms. MIT press.](https://mitpress.mit.edu/books/elements-causal-inference)
+    
+Kausale Überlegungen können helfen die interne und externe Validität einer Datenananlyse einzuschätzen!
+
+## Grundlagen Wahrscheinlichkeit
+
+### Zufallsexperiment und Zufallsvariable
+
+Ein **Zufallsexperiment** ist ein Vorgang, bei dem unter (scheinbar) gleichen Voraussetzungen unterschiedliche Ereignisse eintreten können.
+
+Eine **Zufallsvariable** $X$ ist eine Variable, deren Wert $x$ vom **Zufall** abhängt.
+
+
+### Wahrscheinlichkeit
+
+Die **Wahrscheinlichkeit** $P$ eines Ereignisses $A$ ist ein Maß für die Unsicherheit: $P(A|W)\in[0,1]$, die Wahrscheinlichkeit von $A$ vor unserem Wissenshintergrund $W$. Wenn $W$ *klar* ist, wird es ggfs. nicht angegeben, d.h. kurz: $P(A)$.
+
+Für eine Wahrscheinlichkeit gelten folgende Axiome:
+
+- $0 \leq P(A|W) \leq 1$.
+- $P(\Omega|W)=1$.^[$\Omega$ (gr.: *Omega*) ist die Menge aller Ereignisse.]
+- $P(A \cup B|W)=P(A|W)+P(B|W)$^[$A \cup B$ heißt $A$ *oder* $B$ (oder beides).] wenn $A\cap B=\emptyset$^[$A \cap B$ heißt $A$ *und* $B$, $\emptyset$ ist die leere Menge.] gilt.
+
+
+### Übung `r nextExercise()`: Interpretation Wahrscheinlichkeit {.exercise type=A-B-C answer=C}
+
+Welche Alternative beschreibt die Aussage "Die Regenwahrscheinlichkeit für Dortmund liegt morgen bei 10\%" am besten?
+
+A.  Es wird 10\% der Zeit in Dortmund regnen.
+B.  Es wird auf 10\% des Stadtgebietes von Dortmund regnen.
+C.  Bei einer Wetterlage und -prognose wie heute, hat es in 10\% der Fälle am nächsten Tag geregnet.
+
+::: {.notes}
+Wahrscheinlichkeiten beziehen sich auf die Unsicherheit bei Zufallsexperimenten. Hier also wie *oft* es in vergleichbaren Situationen geregnet hat, also ***C***. Am Ende des morgigen Tages hat sich unser Wissen $W^N$ geändert, d.h., wir (können) wissen, ob es geregnet hat oder nicht, d. h. $P(\text{Regen}|W^N)\in\{0,1\}$.
+:::
+
+### Cartoon: Wahrscheinlichkeit
+
+```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_07-2016.jpg", "cartoon0716.jpg", pathToImages)
+```
+
+"Na, das nenne ich mal eine 25\% Chance für gutes Wetter!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2016/results) &copy; J.B. Landers, Überschrift M. Huberty]
+
+
+### Bedingte Wahrscheinlichkeit
+
+- Die **bedingte Wahrscheinlichkeit** von $A$ gegeben $B$, d.h., von $A$ unter der Bedingung $B$, ist die Wahrscheinlichkeit von $A$, wenn wir wissen, dass $B$ eingetreten ist: $$P(A|B)=\frac{P(A\cap B)}{P(B)}$$
+- Umgestellt: $$P(A\cap B)=P(A|B)\cdot {P(B)}$$.
+
+*Beispiel:* Sei $W$ ein fairer, sechsseitiger Würfel mit $\Omega=\{1,2, \ldots,6\}$: Mit $B=\{2,4,6\}$ und $A=\{2\}$ gilt $P(A|B,W)=\frac{\frac{1}{6}}{\frac{1}{2}}=\frac{1}{3}$. Wenn der Würfel eine gerade Zahl ($B$) zeigt, ist dies in einem von drei Fällen eine $2$ ($A$).
+
+
+### Unabhängigkeit
+
+- Zwei Ereignisse sind **unabhängig**, wenn gilt: $$P(A \cap B)=P(A)\cdot P(B)$$
+- Wenn zwei Ereignisse unabhängig sind, gilt: $$P(A|B)=P(A), \quad P(B|A)=P(B)$$ D.h., dadurch, dass ein Ereignis eingetreten ist, ändert sich *nicht* die Wahrscheinlichkeit des anderen.^[Eine harte Forderung: Wenn in China ein Sack Reis umfällt ...]
+
+
+### Übung `r nextExercise()`: Unabhängigkeit {.exercise type=A-B-C-D answer=A}
+
+Welche Ereignisse sind vermutlich unabhängig?
+
+A.  Wiederholtes Werfen einer fairen Münze.
+B.  Größe und Gewicht einer Person.
+C.  Lernen und Klausurerfolg.
+D.  Bildungsabschluss und Gehalt.
+
+::: {.notes}
+Tendenziell sind große Menschen schwerer, daher nicht B. Häufig ohne Lernen kein Klausurerfolg, daher nicht C. Es zeigt sich (*Tipp:* Recherchieren Sie dies nach!), dass Personen mit höheren Bildungsabschlüssen tendenziell höhere Gehälter erzielen können, daher nicht *D*. Wiederholtes Werfen einer fairen Münze sollte aber unabhängig sein, also ***A***.
+:::
+
+
+### Cartoon: Unabhängigkeit
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_08-2018.jpg", "cartoon0818.jpg", pathToImages)
+```
+
+"Nachdem Sie am selben Tag das Lotto 6 aus 49 und den Eurojackpot gewannen, gingen Hans und Peter feiern."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2018/results) &copy; J.B. Landers, Überschrift Michael Albers (Übersetzung/ Anpassung KL)]
+
+## Kausale Modellierung
+
+### Qualitative Annahmen
+
+- Im Rahmen der Kausalen Modellierung werden *qualitative*, kausale Modellannahmen mathematisch/ graphisch dargestellt.
+- Anhand der *angenommenen* Modelle
+  - kann entschieden werden, ob kausale Effekte bestimmbar sind,
+  - können überprüfbare Implikationen entwickelt werden.
+- Schwerpunkt dieser Einheit: Erkennen und Vermeiden von Verzerrungen im *quantitativen* statistischen Modell.
+
+### Kausale Inferenz in der Datenanalyse
+
+[Hernán et al. (2019)](https://doi.org/10.1080/09332480.2019.1579578) unterscheiden 3 Aufgaben innerhalb der Data-Science:
+
+1.  **Beschreibung**
+2.  **Vorhersage**
+3.  **Kausale Inferenz**
+
+[Pearl (2018)](https://ftp.cs.ucla.edu/pub/stat_ser/r481.pdf) unterscheidet 3 Stufen der kausalen Modellierung:
+
+1.  **Assoziation**: $P(y|x)$: Beobachtung: *Was ist*? Wie wahrscheinlich ist $Y=y$, wenn ich $X=x$ beobachte? 
+2.  **Interventionen**: $P(y|do(x))$: Tun: *Was wäre*? Wie wahrscheinlich ist $Y=y$, wenn ich $X=x$ setze, d.h. manipuliere?
+3.  **Counterfactuals**: $P(y_x|x',y')$: Vorstellung: *Was wäre gewesen*? Wie sieht $P(Y=y)$ aus, wenn ich nicht $X=x'$ und damit $Y=y'$ beobachtet hätte, sondern $X=x$ gesetzt hätte?
+
+
+### $X \rightarrow Y$
+
+Kausalität:
+
+$$
+X \rightarrow Y
+$$
+
+Intuitiv:
+
+- Wird $X$ geändert, ändert sich $Y$ -- umgekehrt *nicht*. Z.B. ändert sich mein Gewicht ($Y$), wenn ich größer werde ($X$), leider wachse ich nicht mit meinem Gewicht.^[*Kausal* gibt es keine Umkehrfunktion $x=f^{-1}(y)$.]
+- Ändert sich $P(X)$, so ändert sich $P(Y|X$) nicht.
+
+
+### (Bedingte) Unabhängigkeit
+
+- Zwei Ereignisse sind **unabhängig**, wenn gilt: $P(A|B)=P(A)$ bzw. $P(B|A)=P(B)$: Das Wissen von $B$ ändert nicht unser Wissen über $A$. Für Zufallsvariablen gilt dies entsprechend.^[$f(x,y)=f(x)\cdot f(y)$. Dann gilt auch für den Korrelationskoeffizienten $\rho_{X,Y}=0$. Symbol: $X{\perp\!\!\!\perp}Y$] Andernfalls sind sie nicht unabhängig, d.h. **abhängig**.
+- Ereignisse können auch **bedingt unabhängig** gegeben $C$ sein. Genau dann, wenn gilt: $P(A|B,C)=P(A|C)$ bzw. $P(B|A,C)=P(B|C)$. Für Zufallsvariablen gilt diese wieder entsprechend.^[$f(x,y|z)=f(x|z) \cdot f(y|z)$, $X{\perp\!\!\!\perp}Y|C$]
+
+*Beispiel*: Sei $A$: Studierender A kommt pünktlich zur Vorlesung, $B$: Studierender B kommt pünktlich. Beide kommen getrennt miteinander mit dem Auto. Zunächst sind $A$ und $B$ nicht unabhängig -- aber wenn ich weiß, dass es (k)einen Stau gibt ($C$) können die Ereignisse (bedingt) unabhängig sein.
+
+
+### Structural Causal Model
+
+- Ein **Structural Causal Model** (SCM) besteht aus zwei Variablentypen: Dem endogenen Variablenset $V$ (innerhalb des Modells) und dem exogenen Variablenset $U$ (außerhalb des Modells). Außerdem aus Funktionen $f()$, die den Variablen in $V$ einen Wert auf Basis der anderen Variablen im Modell zuweisen.
+- Beispiel: $X \rightarrow Y$
+  - $X=U_X$: $X$ hängt von keiner Variable im Modell ab, nur von $U_X$.
+  - $Y=f_Y(X, U_Y)$: $Y$ hängt von $X$ ab (und $U_Y$).
+  - Die exogenen Variablen (*Fehler*) von $X$ und $Y$ sind unabhängig.^[$U_X{\perp\!\!\!\perp}U_Y$] 
+- Die Variablen, für die $X$ Funktionsargument ist, werden **Kinder** (childs, $ch(X)$) genannt, die Variablen, für die $Y$ Funktionswert ist, werden **Eltern** (parents, $pa(Y)$) genannt.^[Im weiteren Verlauf sprechen wir auch von Vorfahren (ancestors) und Nachfahren (descendants).]
+
+
+### Beispiel: Rutschige Straße
+
+```{r, echo=FALSE,  out.width = "80%", fig.align="center"}
+set.seed(1896)
+dagify(X3 ~ X1,
+       X2 ~ X1,
+       X4 ~ X2,
+       X4 ~ X3,
+       X5 ~ X4,
+       labels = c("X1"="Jahreszeit",
+                  "X2"="Regen",
+                  "X3"="Wassersprenger",
+                  "X4"="Nass",
+                  "X5"="Rutschig")) %>%
+  ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+Quelle: [ Mohan und Pearl (2012): Graphical Models for Causal Inference](https://ftp.cs.ucla.edu/pub/stat_ser/uai12-mohan-pearl.pdf)
+
+### Übung `r nextExercise()`: Eltern {.exercise type=A-B-C-D answer=C}
+
+```{r echo=FALSE, out.width = "40%", fig.align="right"}
+set.seed(1896)
+dagify(X3 ~ X1,
+       X2 ~ X1,
+       X4 ~ X2,
+       X4 ~ X3,
+       X5 ~ X4,
+       labels = c("X1"="Jahreszeit",
+                  "X2"="Regen",
+                  "X3"="Wassersprenger",
+                  "X4"="Nass",
+                  "X5"="Rutschig")) %>%
+  ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+Welche Variable ist bzw. welche Variablen sind Eltern von `Nass`?
+
+A.  Keine.
+B.  Jahreszeit.
+C.  Wassersprenger und Regen.
+D.  Rutschig.
+
+
+::: {.notes}
+***C***: Nass hängt ab von Wassersprenger und Regen.
+:::
+
+
+### Übung `r nextExercise()`: Kinder {.exercise type=A-B-C-D answer=D}
+
+```{r echo=FALSE, out.width = "40%", fig.align="right"}
+set.seed(1896)
+dagify(X3 ~ X1,
+       X2 ~ X1,
+       X4 ~ X2,
+       X4 ~ X3,
+       X5 ~ X4,
+       labels = c("X1"="Jahreszeit",
+                  "X2"="Regen",
+                  "X3"="Wassersprenger",
+                  "X4"="Nass",
+                  "X5"="Rutschig")) %>%
+  ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+
+Welche Variable ist bzw. welche Variablen sind Kinder von `Nass`?
+
+A.  Keine.
+B.  Jahreszeit.
+C.  Wassersprenger und Regen.
+D.  Rutschig.
+
+
+::: {.notes}
+***D***: Rutschig hängt ab von Nass.
+:::
+
+
+### Directed Acyclic Graphs
+
+**Directed Acyclic Graph** (DAG):
+
+-  Es gibt nur gerichtete Kanten (Pfeile, die den kausalen Zusammenhang darstellen). 
+-  Es gibt keinen gerichteten Kreis, d.h., kein gerichteter Pfad führt von einer Variable zu dieser zurück.
+
+Annahmen DAG:
+
+- Wenn ein Pfeil von $A$ nach $B$ vorliegt ($A \rightarrow B$), dann bedeutet dies, dass $A$ *eventuell* $B$ beeinflusst, aber nicht umgekehrt, d.h., $B$ beeinflusst nicht $A$: es *kann* eine Kausalbeziehung von $A$ nach $B$ vorliegen -- es muss aber keine vorliegen. Es liegt *keine* von $B$ nach $A$ vor.
+- Liegt *kein* Pfeil von $A$ nach $B$ vor, heißt das, dass $A$ keinen Einfluss auf $B$ hat.
+
+### DAG Beispiel
+
+```{r, echo=FALSE,  out.width = "60%", fig.align="center"}
+co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("A", "B", "C")) 
+
+dagify(C ~ A,
+       C ~ B,  coords = co) %>% 
+  ggdag(node_size = 18, text_size = 7) + theme_dag_blank()
+```
+
+$A$ kann evtl. $C$ beeinflussen, $B$ kann evtl. $C$ beeinflussen, aber zwischen $A$ und $B$ gibt es keinen direkten Einfluss, und $C$ wirkt weder auf $A$ noch auf $B$.
+
+
+### Chain
+
+Eine Kette (Chain) liegt bei folgender Graphenstruktur vor: 
+
+$$X \rightarrow C \rightarrow Y$$
+
+### Übung `r nextExercise()`: Chain: Unbedingte Unabhängigkeit {.exercise type=yesno answer=no}
+
+$X \rightarrow C \rightarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: Da $C$ von $X$ abhängt und $Y$ von $C$ abhängt, kann es einen Zusammenhang geben. 
+
+:::
+
+
+### Übung `r nextExercise()`: Chain: Bedingte Unabhängigkeit {.exercise type=yesno answer=yes}
+
+$X \rightarrow C \rightarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (bedingt) $C$, unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Ja***: In SCMs und deren DAGs wird davon ausgegangen (Annahme!), dass die exogenen Variablen ($U$) unabhängig sind. $C$ *blockiert* den *Pfad* zwischen $X$ und $Y$.
+:::
+
+
+### Fork
+
+Eine Gabel (Fork) liegt bei folgender Graphenstruktur vor: 
+
+$$X \leftarrow C \rightarrow Y$$
+
+
+### Übung `r nextExercise()`: Fork: Unbedingte Unabhängigkeit {.exercise type=yesno answer=no}
+
+$X \leftarrow C \rightarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: Wenn sich $C$ ändert, ändert sich sowohl $X$ als auch $Y$: *Scheinkorrelation*, z.B.  [http://tylervigen.com/spurious-correlations](http://tylervigen.com/spurious-correlations) -- dort haben häufig beide Variablen einen zeitlichen Trend.
+:::
+
+
+### Übung `r nextExercise()`: Fork: Bedingte Unabhängigkeit {.exercise type=yesno answer=yes}
+
+$X \leftarrow C \rightarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (bedingt) $C$, unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Ja***: Bei gegebenen $C$ variieren $X$ und $Y$ nur aufgrund der unabhängigen exogenen Variablen $U_X, U_Y$.
+:::
+
+
+### Collider
+
+Eine Kollision (Collider) liegt bei folgender Graphenstruktur vor: 
+
+$$X \rightarrow C \leftarrow Y$$
+
+### Übung `r nextExercise()`: Collider: Unbedingte Unabhängigkeit {.exercise type=yesno answer=yes}
+
+$X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Ja***: Weder $X$ noch $Y$ sind Vor- oder Nachfahre voneinander.
+:::
+
+
+### Übung `r nextExercise()`: Collider: Bedingte Unabhängigkeit {.exercise type=yesno answer=no}
+
+$X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (bedingt) $C$, unabhängig?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: Wenn wir auf $C$ bedingen, erzeugen wir einen scheinbaren Zusammenhang zwischen $X$ und $Y$, da der Wert von $C$ von $X$ und $Y$ abhängt.
+:::
+
+
+### Offene Übung `r nextExercise()`: Verbindungen {.exercise type=essay}
+
+```{r, echo=FALSE,  out.width = "60%", fig.align="center"}
+set.seed(1896)
+dagify(X3 ~ X1,
+       X2 ~ X1,
+       X4 ~ X2,
+       X4 ~ X3,
+       X5 ~ X4,
+       labels = c("X1"="Jahreszeit",
+                  "X2"="Regen",
+                  "X3"="Wassersprenger",
+                  "X4"="Nass",
+                  "X5"="Rutschig")) %>%
+  ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+Welche Chains, Forks und Colliders gibt es im Graph?
+
+::: {.notes}
+
+- Chain: 
+  - Jahreszeit $\rightarrow$ Regen $\rightarrow$ Nass $\rightarrow$ Rutschig
+  - Jahreszeit $\rightarrow$ Wassersprenger $\rightarrow$ Nass $\rightarrow$ Rutschig
+- Fork:
+  - Wassersprenger $\leftarrow$ Jahreszeit $\rightarrow$ Regen
+- Collider: 
+  - Wassersprenger $\rightarrow$ Nass $\leftarrow$ Regen
+
+:::
+
+### Verzerrungen und Adjustierungen
+
+Ziel: kausalen Effekt von $X$ auf $Y$ bestimmen:
+
+- Chain: $X \rightarrow C \rightarrow Y$: Um den (totalen) kausalen Effekt von $X$ auf $Y$ zu untersuchen, sollte über $C$ nicht adjustiert werden.
+- Fork: $X \leftarrow C \rightarrow Y$: $X$ und $Y$ haben eine gemeinsame Ursache: $C$. $C$ sollte adjustiert werden.
+- Collider: $X \rightarrow C \leftarrow Y$: Durch $C$ wird ein Zusammenhang hergestellt. $C$ sollte nicht adjustiert werden.
+
+Adjustierung kann z.B. durch Bedingung, Stratifizierung usw. erfolgen. Z.B. im linearen Modell: `Y ~ X + C`.
+
+*Hinweis*: Auf der Basis eines korrekt spezifizierten kausalen Modell können, sofern gewisse Annahmen erfüllt sind, die Auswirkungen von Interventionen (*was wäre*) und Counterfactuals (*was wäre gewesen*) bestimmt werden (siehe Literatur).
+
+## Beispiele mit linearer Regression
+
+### Hinweis
+
+**Die folgenden, simulierten Beispiele sind nicht real. Sie dienen nur der Illustration!**
+
+### Lernen, Wissen und Verstehen
+
+Fiktives, karikiertes Beispiel: Lernen ($X$) beeinflusst das Wissen ($C$) und Wissen ist die Ursache für Verstehen ($Y$):
+
+\begin{eqnarray*}
+X &=& U_X, \quad U_X \sim \mathcal{N}(0,\,1), \\
+C &=& 5 \cdot X +  U_C, \quad U_C \sim \mathcal{N}(0,\,1), \\
+Y &=& 3 \cdot C + U_Y, \quad U_Y \sim \mathcal{N}(0,\,1).
+\end{eqnarray*}
+
+Dabei steht $\mathcal{N}(\mu,\,\sigma)$ für eine Normalverteilung.
+
+*Hinweis*: Wissen ist hier ein **Mediator** zwischen Lernen und Verstehen: der Zusammenhang zwischen $X$ und $Y$ geht über $C$. Wenn der Zusammenhang zwischen $X$ und $Y$ von $C$ abhängt^[vgl. Wechselwirkung: `Y ~ X + X:C`] spricht man von einem **Moderator**.
+
+### R Code: Lernen, Wissen und Verstehen 
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- 1000 # Stichprobenumfang
+
+learning <- rnorm(n)
+knowing <- 5 * learning + rnorm(n)
+understanding <- 3 * knowing + rnorm(n)
+
+LKU <- data.frame(learning = learning, knowing = knowing,
+                  understanding = understanding) # Datensatz
+```
+
+### DAG: Lernen, Wissen und Verstehen
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+co <- data.frame(x=c(0,1,2), y=c(0,0,0), name=c("X", "C", "Y")) 
+dagify(C ~ X, 
+       Y ~ C, coords = co) %>%
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "X - Lernen\nC - Wissen\nY - Verstehen",
+            hjust = 0, vjust = 1,
+            x = 0, y = -0.025, size = 7, color = "darkgrey")
+```
+
+### Daten: Lernen, Wissen und Verstehen
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+ggformula::gf_point(understanding ~ learning, color = ~knowing, data = LKU)
+```
+
+
+### Ergebnis: Lernen, Wissen und Verstehen
+
+Modellierung ohne Wissen ($C$):
+
+```{r}
+lm1.a <- lm(understanding ~ learning, data = LKU)
+coef(lm1.a)
+```
+
+Modellierung mit  Wissen ($C$):
+```{r}
+lm1.b <- lm(understanding ~ learning + knowing, data = LKU)
+coef(lm1.b)
+```
+
+### Übung `r nextExercise()`: Ergebnis: Lernen, Wissen und Verstehen {.exercise type=A-B answer=A}
+
+Welche Gleichung gibt den totalen kausalen Effekt von Lernen ($x$) auf Verstehen ($y$) unverzerrt wieder?
+
+A.  $\hat{y} = `r coef(lm1.a)[1]` +  `r coef(lm1.a)[2]` \cdot x$
+B.  $\hat{y} = `r coef(lm1.b)[1]` +  `r coef(lm1.b)[2]` \cdot x + `r coef(lm1.b)[3]` \cdot c$
+
+
+::: {.notes}
+In einer Chain sollte nicht über $C$ adjustiert werden (***A***). In B ist der geschätzte Effekt zu niedrig: Evtl. würde man denken, Lernen sei nicht wichtig ... 
+:::
+
+### Intelligenz, Lernzeit und Klausurpunkte
+
+Fiktives, karikiertes Beispiel: Intelligenz ($C$) reduziert die Lernzeit ($X$). Intelligenz und Lernzeit ergeben zusammen die Klausurpunkte ($Y$):
+
+\begin{eqnarray*}
+C &=& U_C, \quad U_C \sim \mathcal{N}(100,\,15), \\
+X &=& 200 - C +  U_X, \quad U_X \sim \mathcal{N}(0,\,1), \\
+Y &=& 0.5 \cdot C + 0.1 \cdot X + U_Y, \quad U_Y \sim \mathcal{N}(0,\,1).
+\end{eqnarray*}
+
+### R Code: Intelligenz, Lernzeit und Klausurpunkte
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- 1000 # Stichprobenumfang
+
+intelligence <- rnorm(n, mean = 100, sd = 15)
+learning.time <- 200 - intelligence + rnorm(n)
+test.score <- 0.5 * intelligence + 0.1 * learning.time + rnorm(n)
+
+ILT <- data.frame(intelligence = intelligence, 
+                  learning.time = learning.time,
+                  test.score = test.score)
+```
+
+### DAG: Intelligenz, Lernzeit und Klausurpunkte
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+
+dagify(X ~ C,
+       Y ~ X,
+       Y ~ C, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "C - Intelligenz\nX - Lernzeit\nY - Klausurpunkte", 
+            hjust = 1, vjust = 1,
+            x = 1, y = 1, size = 7, color = "darkgrey")
+```
+
+### Daten: Intelligenz, Lernzeit und Klausurpunkte
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+ggformula::gf_point(test.score~learning.time, color=~intelligence, data = ILT)
+```
+
+### Ergebnis: Intelligenz, Lernzeit und Klausurpunkte
+
+Modellierung ohne Intelligenz ($C$):
+
+```{r}
+lm2.a <- lm(test.score ~ learning.time, data = ILT)
+coef(lm2.a)
+```
+
+Modellierung mit Intelligenz ($C$):
+
+```{r}
+lm2.b <- lm(test.score ~ learning.time + intelligence, data = ILT)
+coef(lm2.b)
+```
+
+### Übung `r nextExercise()`: Intelligenz, Lernzeit und Klausurpunkte {.exercise type=A-B answer=B}
+
+Welche Gleichung gibt den totalen kausalen Effekt von Lernzeit ($x$) auf Klausurpunkte ($y$) unverzerrt wieder?
+
+A.  $\hat{y} = `r coef(lm2.a)[1]`   `r coef(lm2.a)[2]` \cdot x$
+B.  $\hat{y} = `r coef(lm2.b)[1]` +  `r coef(lm2.b)[2]` \cdot x + `r coef(lm2.b)[3]` \cdot c$
+
+
+::: {.notes}
+In einer Fork sollte über $C$ adjustiert werden (***B***). In A hat der geschätzte Effekt sogar das falsche Vorzeichen: *Simpson Paradox*: Man könnte denken, Lernen schade ... (Geringe *interne* Validität.)
+:::
+
+### Netzwerkfähigkeit, Kompetenz und Beförderung
+
+Fiktives, karikiertes Beispiel: Netzwerkfähigkeit ($X$) und Kompetenz ($Y$) sind unabhängig. Beförderung ($C$) hängt von beiden ab:
+
+\begin{eqnarray*}
+X &=& U_X, \quad U_X \sim \mathcal{N}(0,\,1), \\
+Y &=& U_Y, \quad U_Y \sim \mathcal{N}(0,\,1), \\
+\widetilde{C} &=&\begin{cases} 1 & ,\, \text{wenn } \{ X > 1 \,\vee\, Y > 1\} \\ 0 & ,\, \text{sonst } \end{cases}, \\
+C &=& (1-U_C) \cdot \widetilde{C} + U_C \cdot (1- \widetilde{C}), \quad U_C \sim \mathcal{B}(0.05).
+\end{eqnarray*}
+
+$\mathcal{B}(\pi)$ steht für eine Bernoulliverteilung, $\vee$ für ein logisches Oder.
+
+### R Code: Netzwerkfähigkeit, Kompetenz und Beförderung
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- 1000 # Stichprobenumfang
+
+network <- rnorm(n)
+competence <- rnorm(n)
+promotion <- ((network > 1) | (competence > 1)) 
+luck <- rbinom(n, size = 1, prob = 0.05)
+promotion <- (1 - luck) * promotion + luck * (1 - promotion)
+
+NCP <- data.frame(network = network, competence = competence,
+                  promotion = promotion) # Datensatz
+```
+
+
+### DAG: Netzwerkfähigkeit, Kompetenz und Beförderung
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+co <- data.frame(x=c(0,1,2), y=c(1,0,1), name=c("Y","C","X"))
+
+dagify(C ~ Y,
+       C ~ X, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "Y - Kompetenz\nX - Netzwerkfähigkeit\nC - Beförderung", 
+            hjust = 0.5, vjust = 1,
+            x = 1, y = 1, size = 7, color = "darkgrey")
+```
+
+### Daten: Netzwerkfähigkeit, Kompetenz und Beförderung
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+NCP2 <- NCP %>% dplyr::mutate(promotion = as.factor(promotion))
+ggformula::gf_point(competence~network, color=~promotion, data = NCP2)
+```
+
+
+### Ergebnis: Netzwerkfähigkeit, Kompetenz und Beförderung
+
+Modellierung ohne Beförderung ($C$):
+```{r}
+lm3.a <- lm(competence ~ network, data = NCP)
+coef(lm3.a)
+```
+
+Modellierung mit Beförderung ($C$):
+```{r}
+lm3.b <- lm(competence ~ network + promotion, data = NCP)
+coef(lm3.b)
+```
+
+### Übung `r nextExercise()`: Netzwerkfähigkeit, Kompetenz und Beförderung {.exercise type=A-B answer=A}
+
+Welche Gleichung gibt den totalen kausalen Effekt von Netzwerkfähigkeit ($x$) auf Kompetenz ($y$) unverzerrt wieder?
+
+A.  $\hat{y} = `r coef(lm3.a)[1]` +  `r coef(lm3.a)[2]` \cdot x$
+B.  $\hat{y} = `r coef(lm3.b)[1]`   `r coef(lm3.b)[2]` \cdot x + `r coef(lm3.b)[3]` \cdot c$
+
+
+::: {.notes}
+Bei einem Collider sollte über $C$ nicht adjustiert werden (***A***). Mit Adjustierung (B) scheint es einen Zusammenhang zu geben: *Berkson Paradox*: Man ist geneigt zu denken, dass es einen negativen Zusammenhang zwischen Netzwerkfähigkeit und Kompetenz gebe.
+:::
+
+
+###  Stichprobenvariable
+
+Sollte z.B. die Stichprobe nur aus Beförderten bestehen, ist das Ergebnis ebenfalls verzerrt, d.h., es wird ein negativer Zusammenhang zwischen Netzwerkfähigkeit und  Kompetenz in der Stichprobe beobachtet, obwohl es im kausalen Modell keinen gibt:^[Geringe *externe* Validität.] 
+
+```{r}
+NCP.Sample <- NCP %>%
+  filter(promotion == 1)
+lm3.c <- lm(competence ~ network, data = NCP.Sample)
+coef(lm3.c)
+```
+
+### Randomisierte Experimente
+
+In einem randomisierten Experiment wird der $X$-Wert den Beobachtungen zufällig zugeordnet, d.h., Pfade in $X$ werden durch die Experimentatorin gekappt, $X$ wird unabhängig von $C$ manipuliert:
+
+```{r, echo=FALSE, out.width = "70%", fig.align="center"}
+co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+
+dag41<-dagify(Y ~ X,
+       Y ~ C, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "C - Intelligenz\nX -Lernzeit\nY - Klausurpunkte", 
+            hjust = 1, vjust = 1,
+            x = 1, y = 1, size = 7, color = "darkgrey")
+
+co <- data.frame(x=c(0,0,1,-1), y=c(1,0,0,0), name=c("C", "X", "Y", "E")) 
+
+dag42<-dagify(Y ~ X,
+       X ~ E,
+       Y ~ C, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "C - Intelligenz\nX -Lernzeit\nY - Klausurpunkte\nE - Experimentatorin", 
+            hjust = 0, vjust = 1,
+            x = -1.1, y = 0.75, size = 7, color = "darkgrey")
+gridExtra::grid.arrange(dag41, dag42, nrow=1)
+```
+
+
+### Beispiel Experiment
+
+Die Experimentatorin ordnet den Studierenden zufällig Lernzeiten von $x=80$ oder $x=120$ zu:
+\begin{eqnarray*}
+C &=& U_C, \quad U_C \sim \mathcal{N}(100,\,15), \\
+X &=& U_X\cdot 80 + (1-U_X) \cdot 120, \quad U_X \sim \mathcal{B}(0.5), \\
+Y &=& 0.5 \cdot C + 0.1 \cdot X + U_Y, \quad U_Y \sim \mathcal{N}(0,\,1).
+\end{eqnarray*}
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- 1000 # Stichprobenumfang
+
+learning.time.exp <- sample( c(80, 120), size = n, replace = TRUE)
+test.score.exp <- 0.5*intelligence + 0.1*learning.time.exp + rnorm(n)
+
+ILT.exp <- data.frame(intelligence = intelligence, 
+                      learning.time = learning.time.exp,
+                      test.score = test.score.exp) # Datensatz
+```
+
+### Daten: Experiment Intelligenz, Lernzeit und Klausurpunkte
+
+```{r, echo=FALSE, out.width = "80%", fig.align="center"}
+ggformula::gf_jitter(test.score~learning.time, color=~intelligence, data = ILT.exp, width = 1, height = 0)
+```
+
+
+### Übung `r nextExercise()`: Korrelation im Experiment {.exercise type=A-B answer=B}
+
+Wie groß ist der Korrelationskoeffizient zwischen Intelligenz und Lernzeit im Experiment?
+
+A.  $r=`r mosaic::cor(intelligence~learning.time, data = ILT)`$
+B.  $r=`r mosaic::cor(intelligence~learning.time, data = ILT.exp)`$
+
+::: {.notes}
+***B***: Im Experiment wird der Zusammenhang zwischen Intelligenz und Lernzeit durch die zufällige Zuordnung der Lernzeit gelöst: Vgl. `cor(intelligence~learning.time, data = ILT)` (ohne zufällige Zuordnung) mit `cor(intelligence~learning.time, data = ILT.exp)` (im randomisierten Experiment).
+:::
+
+### Ergebnis randomisiertes Experiment
+
+Randomisierte Experimente gleichen die Verteilung von Kovariablen an:
+
+```{r, eval=FALSE}
+mean(intelligence ~ learning.time, data = ILT.exp)
+```
+
+```{r, echo=FALSE}
+mosaic:::mean_(intelligence ~ learning.time, data = ILT.exp)
+```
+
+Und erlauben daher eine unverzerrte Schätzung des kausalen Effektes:^[Hohe *interne* Validität.]
+
+```{r}
+lm4.a <- lm(test.score ~ learning.time, data = ILT.exp)
+coef(lm4.a)
+lm4.b <- lm(test.score ~ learning.time + intelligence, data = ILT.exp)
+coef(lm4.b)
+```
+
+### Beobachten vs. Manipulieren
+
+**Assoziation**:  Beobachtung: *Was ist*? Mittelwert von denen, bei denen eine Lernzeit von $x\approx 120$ beobachtet wurde:
+
+```{r, eval=FALSE}
+ILT %>%
+  filter(learning.time> 115 & learning.time < 125) %>%
+  summarise(mean.score = mean(test.score))
+```
+
+```{r, echo=FALSE}
+ILT %>%
+  filter(learning.time> 115 & learning.time < 125) %>%
+  dplyr::summarise(mean.score = mean(test.score))
+```
+
+**Interventionen**: Tun: *Was wäre*? Mittelwert von denen, bei denen die Lernzeit gesetzt wurde, $do(x)=120$:
+
+```{r, eval=FALSE}
+ILT.exp  %>%
+  filter(learning.time> 115 & learning.time < 125) %>%
+  summarise(mean.score = mean(test.score))
+```
+
+```{r, echo=FALSE}
+ILT.exp %>%
+  filter(learning.time> 115 & learning.time < 125) %>%
+  dplyr::summarise(mean.score = mean(test.score))
+```
+
+### Übung `r nextExercise()`: Intervention {.exercise type=A-B-C-D answer=C}
+
+Warum ist der Mittelwert der Punkte bei Intervention ($do(x)=120$) höher als bei der Beobachtung ($x \approx 120$)?
+
+A.  Zufall.
+B.  Weil Personen mit einer geringeren Intelligenz mehr Lernzeit hatten.
+C.  Weil Personen mit einer höheren Intelligenz mehr Lernzeit hatten.
+
+::: {.notes}
+Bei Beobachtung gilt für die Lernzeit ($X$) in Abhängigkeit der Intelligenz ($C$):
+$$x=200-c+u_x \Leftrightarrow c=200-x+u_x$$
+So liegt die mittlere Lernzeit bei $c=130$ bei $x=70$. Umgekehrt liegt der Mittelwert des IQs derjenigen, für die $x\approx 120$ gilt bei $\bar{c}=80$. Bei der Intervention haben daher insbesondere Beobachtungen mit einer Intelligenz $c>80$ mehr Lernzeit (***C***). Auf die Punkte ($Y$) wirkt aber sowohl $X$ als auch $C$ positiv.
+:::
+
+
+### Mediator
+
+Fiktives, karikiertes Beispiel: Es gibt einen *direkten* Effekt von Wissen ($X$) auf Klausurpunkte ($Y$) und einen *indirekten* über den *Mediator* Verstehen (*M*):
+
+```{r, echo=FALSE, out.width = "60%", fig.align="center"}
+co <- data.frame(x=c(0.5,0,1), y=c(1,0,0), name=c("M", "X", "Y")) 
+
+dagify(M ~ X,
+       Y ~ X,
+       Y ~ M, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "M - Verstehen\nX - Wissen\nY - Klausurpunkte", 
+            hjust = 1, vjust = 1,
+            x = 1, y = 1, size = 7, color = "darkgrey")
+```
+
+### R Code: Mediator
+
+```{r}
+set.seed(1896) # Reproduzierbarkeit
+n <- 1000 # Stichprobenumfang
+
+knowledge <- rnorm(n)
+understanding <- 2*knowledge + rnorm(n)
+test.score <- 4*knowledge + 6*understanding + rnorm(n)
+
+KUT <- data.frame(knowledge = knowledge, 
+                  understanding = understanding,
+                  test.score = test.score) # Datensatz
+```
+
+### Beispiel Mediatoranalyse
+
+```{r}
+lm5.a <- lm(test.score ~ knowledge, data = KUT)
+coef(lm5.a)
+lm5.b <- lm(understanding ~ knowledge, data = KUT)
+coef(lm5.b)
+lm5.c <- lm(test.score ~ knowledge + understanding, data = KUT)
+coef(lm5.c)
+```
+
+
+### Offene Übung `r nextExercise()`: Effektzerlegung {.exercise type=essay}
+
+Wie kann hier der **totale** Effekt von Wissen ($X$), siehe `lm5.a`, aus dem **direkten** (siehe `lm5.c`) und aus dem **indirekten**, d.h. über den Mediator Verstehen ($M$), siehe `lm5.b`, auf die Klausurpunkte ($Y$) bestimmt werden?
+
+\begin{eqnarray*}
+X &=& U_X, \quad U_X \sim \mathcal{N}(0,\,1), \\
+M &=& 2 \cdot X +  U_M, \quad U_M \sim \mathcal{N}(0,\,1), \\
+Y &=& 4 \cdot X + 6 \cdot M + U_Y, \quad U_Y \sim \mathcal{N}(0,\,1).
+\end{eqnarray*}
+
+*Tipp*: Setzen Sie die Formel für $M$ in die für $Y$ ein. 
+
+::: {.notes}
+Im linearen Fall gilt: Totaler Effekt = Direkter Effekt + Indirekter Effekt
+
+
+-  Totaler Effekt von Wissen auf Klausurpunkte: `coef(lm5.a)[2]`: `r round(coef(lm5.a)[2],4)`
+-  Direkter Effekt von Wissen auf Klausurpunkte: `coef(lm5.c)[2]`: `r round(coef(lm5.c)[2],4)`
+-  Indirekter Effekt von Wissen auf Klausurpunkte - über Verstehen: `coef(lm5.b)[2] * coef(lm5.c)[3]`: `r round(coef(lm5.b)[2] * coef(lm5.c)[3],4)`
+
+$$`r round(coef(lm5.c)[2],4) + round(coef(lm5.b)[2] * coef(lm5.c)[3],4)` = `r round(coef(lm5.c)[2],4)` +`r round(coef(lm5.b)[2] * coef(lm5.c)[3],4)`$$
+:::
+
+
+### Offene Übung `r nextExercise()`: Pfade Kausalanalyse {.exercise type=essay}
+
+Welche Pfade führen von $X$: `Smoking` (Rauchen) zu $Y$: `Cardiac Arrest` (Kreislaufstillstand)?^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+set.seed(1896)
+smoking_ca_dag <- dagify(cardiacarrest ~ cholesterol,
+       cholesterol ~ smoking + weight,
+       smoking ~ unhealthy,
+       weight ~ unhealthy,
+       labels = c("cardiacarrest" = "Cardiac\n Arrest", 
+                  "smoking" = "Smoking",
+                  "cholesterol" = "Cholesterol",
+                  "unhealthy" = "Unhealthy\n Lifestyle",
+                  "weight" = "Weight"),
+       latent = "unhealthy",
+       exposure = "smoking",
+       outcome = "cardiacarrest")
+
+ggdag(smoking_ca_dag, text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+::: {.notes}
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+set.seed(1896)
+ggdag_paths(smoking_ca_dag, text = FALSE, use_labels = "label", text_size = 7) + theme_dag_blank() 
+```
+
+Um den kausalen Effekt von $X$: `Smoking` (Rauchen) auf $Y$: `Cardiac Arrest` zu bestimmen, müssen die kausalen Pfade *offen*, die nicht-kausalen Pfade *geblockt* werden, z.B. durch Adjustierung.
+:::
+
+### Offene Übung `r nextExercise()`: Adjustierung Kausalanalyse {.exercise type=essay}
+
+Welche Variablen $C_i$ sollten im Modell `Y ~ X + C`^[$X$: `Smoking` (Rauchen),  $Y$: `Cardiac Arrest` (Kreislaufstillstand)] adjustiert werden? Die Variable `Unhealthy Lifestyle` ist dabei eine latente, nicht beobachtete Variable.^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
+
+```{r, echo=FALSE, out.width="60%", fig.align="center"}
+set.seed(1896)
+smoking_ca_dag <- dagify(cardiacarrest ~ cholesterol,
+       cholesterol ~ smoking + weight,
+       smoking ~ unhealthy,
+       weight ~ unhealthy,
+       labels = c("cardiacarrest" = "Cardiac\n Arrest", 
+                  "smoking" = "Smoking",
+                  "cholesterol" = "Cholesterol",
+                  "unhealthy" = "Unhealthy\n Lifestyle",
+                  "weight" = "Weight"),
+       latent = "unhealthy",
+       exposure = "smoking",
+       outcome = "cardiacarrest")
+
+ggdag(smoking_ca_dag, text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+```
+
+::: {.notes}
+```{r, echo=FALSE, out.width="40%", fig.align="center"}
+set.seed(1896)
+set.seed(1896)
+ggdag_adjustment_set(smoking_ca_dag, text = FALSE, use_labels = "label", text_size = 7) + theme_dag_blank() 
+```
+
+$C$: `Weight` (Gewicht): 
+
+`Cardiac Arrest ~ Smoking + Weight`
+
+Die nicht beobachtete Variable `Unhealthy Lifestyle` kann nicht ins Modell genommen werden, der nicht-kausale Pfad (*Backdoor*: `Smoking` $\leftarrow$ `Unhealthy Lifestyle` $\rightarrow$ `Weight`  $\rightarrow$ `Cholesterol` $\rightarrow$ `Cardiac Arrest`) kann aber durch `Weight` blockiert werden. 
+
+Die Variable `Cholesterol` darf nicht ins Modell, da so der kausale Pfad `Smoking`  $\rightarrow$ `Cholesterol` $\rightarrow$ `Cardiac Arrest` blockiert werden würde. 
+:::
+
+
+
+```{r finish-Kausalanalyse, include=FALSE}
+detach("package:ggdag", unload = TRUE)
+library(mosaic)
+rm(pathToImages)
+finalizePart(partname)
+```
+
+

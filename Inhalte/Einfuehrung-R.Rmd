@@ -18,13 +18,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
 
 
-# `r nextChapter()` Einführung R
-
-<!-- ::: {.Sinnspruch} -->
-<!-- Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do. -->
-
-<!-- [Donald Knuth]{.Quelle} -->
-<!-- ::: -->
+# Einführung in R
 
 ### Cartoon: Computereinsatz in der Statistik
 
@@ -32,7 +26,8 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
 ```
-"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter - in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+
 
 ### Warum R?
 
@@ -43,51 +38,62 @@ Verbreitung z. B.: [http://r4stats.com/articles/popularity/](http://r4stats.com/
 **R ist eine weit verbreitete Eintrittskarte in das globale Datenzeitalter!**
 
 
-### Vorteile R
+### Vorteile R {include-only=deprecated}
 
-- Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z. B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
-- Neue Methoden der Datenanalyse werden häufig in R entwickelt (auch Big Data, KI, etc.).
+- Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z.B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
+
+- Neue Methoden der Datenanalyse werden häufig in R entwickelt (auch Big Data, KI,  etc. ).
+
 - frei und offen; kostenlos
-- Schnittstellen zu sehr vielen Datenquellen/-banken (auch SocialMedia etc.)
-- Erweiterungen u. a. für Microsoft, Oracle, SAP Produkte, aber auch SPSS, SAS
+
+- Schnittstellen zu sehr vielen Datenquellen/ -banken (auch SocialMedia etc.)
+
+- Erweiterungen u.a. für Microsoft, Oracle, SAP-Produkte, aber auch SPSS, SAS
+
 - unzählige Nutzer*innen weltweit in Unternehmen und Wissenschaft
+
 - Möglichkeiten für Reporting, Apps, etc.
-- numerische Stabilität / Genauigkeit
+
+- numerische Stabilität/ Genauigkeit
+
 - große Entwickler*innen-Gemeinde mit langer Geschichte (seit 1993); R Konsortium, u.a. IBM, Microsoft, TIPCO, Google, ...
+
 
 ### Übung `r nextExercise()`: R in der Wissenschaft {.exercise type=A-B answer=B}
 
+Welchen Vorteil hat R in Bezug auf die Gütekriterien für Forschung?
 
-Welchen Vorteil hat R aufgrund der Gütekriterien für Forschung?
-
-A.  Kostenlos.
-B.  Offen.
+A.  kostenlos
+B.  offen
 
 ::: {.notes}
 Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offenheit ermöglicht, also ***B***.
 :::
 
 
-### R und co.
-
-- **R** [https://www.r-project.org/](https://www.r-project.org/): ist das Basisprogramm
-- **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z. B. Dokumentenerstellung etc.
-- **mosaic** [https://cran.r-project.org/web/packages/mosaic/](https://cran.r-project.org/web/packages/mosaic/): ist ein Zusatzpaket, welches u. a. eine vereinheitlichte R Syntax bietet
 
 
 ### Statistik, R, Rstudio und mosaic
 
-- *Statistik*  ist das *Auto* mit dem der Weg von der Forschungsfrage zur vorläufigen Antwort bestritten werden kann.
+- *Statistik*  ist das *Auto*, mit dem der Weg von der Forschungsfrage zur vorläufigen Antwort bestritten werden kann.
+
 - *R* ist ein *Motor*, der das Auto antreiben kann.
-- *Rstudio Desktop* ist das Cockpit mit dem der Motor gesteuert werden kann.
-- *mosaic* ist eine *Zusatzausstattung* um die Motorsteuerung zu vereinfachen.
+
+- *Rstudio Desktop* ist das Cockpit, mit dem der Motor gesteuert werden kann.
+
+- *mosaic* ist eine *Zusatzausstattung*, um die Motorsteuerung zu vereinfachen.
 
 
-### R Installation
+### R und Co. 
 
-1. R ([https://www.r-project.org/](https://www.r-project.org/))
-2. RStudio Desktop ([https://www.rstudio.com/](https://www.rstudio.com/))
-3. Installation von Zusatzpaketen in RStudio:
+- **R** [https://www.r-project.org/](https://www.r-project.org/): ist das Basisprogramm
+
+- **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z. B. Dokumentenerstellung etc.
+
+- **mosaic** [https://cran.r-project.org/web/packages/mosaic/](https://cran.r-project.org/web/packages/mosaic/): ist ein Zusatzpaket, welches u. a. eine vereinheitlichte R Syntax bietet
+
+
+Installation von Zusatzpaketen in RStudio:
 
 ```{r, eval=FALSE}
 install.packages("mosaic")
@@ -95,29 +101,32 @@ install.packages("mosaic")
 
 Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
 
+Alternative zur Installtion von R: Clouddienst [https://rstudio.cloud/](https://rstudio.cloud/)
 
-### Warum Code? Politik
+
+### Warum Code? Politik {include-only=deprecated}
  
  > Ich glaube, dass die Fähigkeit zum Programmieren eine der Basisfähigkeiten von jungen Menschen wird, neben Lesen, Schreiben, Rechnen. Die werden nicht wegfallen. Aber Programmieren wird nochmal dazu kommen.^[[Rede von Bundeskanzlerin Merkel zur Deutsch-Französischen Digitalkonferenz am 13. Dezember 2016.](https://www.bundeskanzlerin.de/Content/DE/Rede/2016/12/2016-12-13-deutsch-franzoesische-digitalkonferenz.html)]
 
  
-### Warum Code? Wirtschaft
+### Warum Code? Wirtschaft {include-only=deprecated}
  
 > Der Prozess, eine komplexe Aufgabe auf eine Reihe einfacher Anweisungen zu reduzieren - genau darum geht es beim Programmieren -, ist eine Fähigkeit, die in vielen Aspekten des modernen Lebens nützlich ist, nicht nur für professionelle Informatiker und Programmierer.^[[Facebooks Forschungschef Yann LeCun](http://www.faz.net/aktuell/wirtschaft/netzwirtschaft/facebook-ki-experte-yann-lecun-fordert-informatik-als-pflichtfach-15058261.html)]
 >
 > I think everyone should learn how to program a computer, because it teaches you how to think.^[[Steve Jobs](http://www.businessinsider.com/the-best-quotes-from-the-lost-steve-jobs-interview-showing-this-weekend-2011-11?IR=T)]
 
-### Warum Code? Wissenschaft
+
+### Warum Code? Wissenschaft {include-only=deprecated}
 
 > In the past few years, the startling realization that many modern scientific findings cannot be replicated has been highlighted [...].  Many factors have been identified, including publication bias, reporting bias, conflicts of interest, and insufficient statistical power. This last factor can be remedied by encouraging the replication of studies and then conducting subsequent meta-analyses. In order for a scientific study to be replicated, however, the method of statistical analysis must be entirely reproducible. Teaching reproducible analysis in an introductory statistics course not only makes students aware of these issues, but also paves the way toward making them valuable contributors to modern data analysis. These future contributions could be made as part of academic research or for a data-centric enterprise that needs to conduct daily analysis on new data.^[[Baumer B, Cetinkaya-Rundel M, Bray A, Loi L und Horton NJ (2014). R Markdown: Integrating A Reproducible Analysis Tool into Introductory Statistics. Technology Innovations in Statistics Education, 8(1)](https://escholarship.org/uc/item/90b2f5xh)]
 
 
-### Warum Code? Lehre
+### Warum Code? Lehre {include-only=deprecated}
 
 > Don’t fence off students from the computation pool, throw them in! Computing skills are essential to working with data in the 21st century. Given this fact, we feel that to shield students from computing is to ultimately do them a disservice.^[[Ismay, C, Kim, A (2018): ModernDive ](http://moderndive.com/index.html#intro-instructors)]
 
 
-### Vorteile Code
+### Vorteile Code {include-only=deprecated}
 
 - Dokumentation des Vorgehens
 - (Einfache) Nachvollziehbarkeit, Wiederholung
@@ -133,61 +142,136 @@ analysiere( y  # ggfs. abhängige Variable
             ~  x # unabhängige Variable(n)
             | z, # ggfs. bedingende (gruppierende) Variable(n)
             Optionen, # ggfs. weitere Optionen
-            data = daten ) # Datensatz 
+            data = meine_daten ) # Datensatz 
 ```
 
-`analysiere()`: Was soll R tun?^[Befehlsübersicht [hier](https://github.com/luebby/Datenanalyse-mit-R/blob/master/Installation/R-mosaic-Kurzreferenz.pdf)]
+`analysiere()`: Was soll R tun?^[Befehlsübersicht [hier](https://www.fom.de/fileadmin/fom/forschung/ifes/Cheatsheet-DA-R.pdf); Tilde `~` unter macOS: `alt+n`, vertikaler Strich `|`: `alt+7`]
 
 
-*Hinweis*: unter macOS: `~: alt+n`, `|: alt+7`
 
-
-### Zentrale Fragen
+Zentrale Fragen:
 
 1. Was soll der Computer für mich tun?
 2. Was muss der Computer dafür wissen?
 
-```{r, eval = FALSE}
-meineanalyse( meiny ~ meinx, data = meinedaten)
+
+
+
+
+### Kochen mit RStudio^[Idee und in Anlehnung an [Jessica Ward.](https://twitter.com/RLadiesNCL/status/1138812826917724160)]
+```{r echo=FALSE, out.width = "100%", fig.align="center", cache=FALSE}
+knitr::include_graphics("images/Einfuehrung/Kochen_mit_RStudio.png")
 ```
 
-### R Basics
 
-- R unterscheidet zwischen Groß- und Kleinbuchstaben.
-- R verwendet den Punkt `.` als Dezimaltrennzeichen.
-- Fehlende Werte werden in R durch `NA` kodiert.
-- Kommentare werden mit dem Rautezeichen `#` eingeleitet.
-- Eine Ergebniszuweisung erfolgt über `<-.`
-- `%>%` (Paket `dplyr`) übergibt Ergebnisse.
-- Hilfe zur Funktion `foo`: `?foo`
+### Beispiel `Births78`
 
+Ggf. einmalig vorab `mosaic` installieren:
 
-### Beispiel `Alcohol`
-
-Ggfs. einmalig vorab `mosaic` installieren:
 ```{r, eval=FALSE}
 install.packages("mosaic")
 ```
 
 Paket `mosaic` in jeder Sitzung laden:
+
 ```{r, message=FALSE}
 library(mosaic)
 ```
 
-Internen Datensatz `Alcohol` laden:
+Internen Datensatz `Births78` laden:
+
 ```{r}
-data(Alcohol)
+data(Births78)
 ```
 
 Datensatzbeschreibung (Hilfe zu den Daten):
+
 ```{r, eval=FALSE}
-?Alcohol
+?Births78
 ```
 
 Daten betrachten:
+
 ```{r, eval=FALSE}
-View(Alcohol)
+View(Births78)
 ```
+
+
+### Streudiagramm
+
+```{r, eval = FALSE}
+meine.analyse(mein.y ~ mein.x, data = Meine.Daten)
+```
+
+Die Funktion `gf_point()` zeichnet ein *Streudiagramm*:
+
+```{r R_gfpoint, fig.align="center", out.width="60%"}
+gf_point(births ~ date, data = Births78)
+```
+
+
+### Offene Übung `r nextExercise()`: Streudiagramm Tag und Anzahl Geburten {.exercise type=essay}
+
+```{r R_gfpoint-ex, echo=FALSE, fig.align="right", out.width="20%"}
+```
+
+Was können Sie der Abbildung entnehmen?
+
+::: {.notes}
+
+Auf der $x$-Achse ist der Tag im Jahr abgebildet (Datum, `date`), auf der $y$-Achse die Anzahl der Geburten an dem Tag (`births`). 
+
+Es gibt 2 *Wellen* -- eine um die $9500$ Geburten pro Tag, eine um die $8000$. Die Meisten Geburten scheint es im September zu geben.
+
+:::
+
+
+### Daten inspizieren: `inspect()`
+
+:::{.scriptsize}
+
+```{r eval = FALSE}
+inspect(Births78)
+```
+
+
+```{r echo = FALSE}
+mosaic::inspect(Births78)
+```
+
+:::
+
+
+
+
+### Übung `r nextExercise()`: Farbvariable {.exercise type=A-B-C-D answer=D}
+
+Über die Option `color` können die Punkte farbig markiert werden:
+
+```{r eval=FALSE}
+
+gf_point(births ~ date, color = ~ date_year_month_wday, data = Births78) 
+
+```
+
+Welche der Variablen bietet sich dafür an? 
+
+A.  Das Datum `date`.
+B.  Das Jahr `year`.
+C.  Der Monat `month`.
+D.  Der Wochentag `wday`.
+
+::: {.notes}
+Probieren Sie es aus: `color = ~ mein.z`. Vemutung: Die *Wellen* liegen an den Wochentagen, daher hier `color = ~ wday`
+:::
+
+
+### Verlauf der Geburten je Wochentag
+
+```{r , fig.align="center", out.width="70%"}
+gf_point(births ~ date, color = ~ wday, data = Births78)
+```
+
 
 ### Datenvorverarbeitung
 
@@ -199,125 +283,107 @@ Häufig müssen Daten vor der eigentlichen Analyse vorverarbeitet werden, z. B.:
 - ...
 
 
-Das Paket `dplyr`^[wird mit `mosaic` installiert und geladen. [http://dplyr.tidyverse.org/index.html](http://dplyr.tidyverse.org/index.html)] bietet dazu viele Möglichkeiten. Mehr dazu im Abschnitt **Datenhandling**.
-
-
+Das Paket `dplyr`^[wird mit `mosaic` installiert und geladen. [http://dplyr.tidyverse.org/index.html](http://dplyr.tidyverse.org/index.html)] bietet dazu viele Möglichkeiten. Mehr dazu im **Datenhandling**.
 
 
 ### `filter()` wählt Beobachtungen aus
 
-```
-Alcohol.Ger soll sein:
-  Nimm den Datensatz Alcohol und dann...
-  filtere auf die Beobachtungen, in denen das Land Deutschland ist.
+Z.B. für den Unabhängigkeitstag der USA (4. Juli, *internationales* Format beachten):
+
+```{r births78-filter, eval=FALSE}
+Births78 %>%
+  filter(date == "1978-07-04")
 ```
 
-```{r}
-Alcohol.Ger <- Alcohol %>%
-  filter(country == "Germany")
+::: {.small}
+
+```{r ref.label="births78-filter", echo=FALSE}
 ```
 
-```{r, eval=FALSE}
-View(Alcohol.Ger)
-```
+:::
+
 
 ### `select()` wählt Variablen aus
 
+```{r}
+Births78 %>%
+  filter(date == "1978-07-04") %>%
+  select(births)
 ```
-Alcohol.2008 soll sein:
-  Nimm den Datensatz Alcohol und dann...
-  filtere auf die Beobachtungen, in denen das Jahr 2008 ist und dann...
-  selektiere die Variablen Land und Alkohol.
-```
+
+
+### Offene Übung `r nextExercise()`: Anzahl Geburten am Geburtstag {.exercise type=essay}
+
+Finden Sie heraus wie viele Geburten es im Jahre 1978 in den USA an Ihrem Geburtstag gab.
+
+::: {.notes}
+
+Z.B. für den 26. Mai: `Births78 %>% filter(date == "1978-05-26")`:
+
+`r Births78 %>% filter(date == "1978-05-26") %>% select(births)`
+
+Wie können Sie gucken, ob das *viele* oder *wenige* Geburten waren?
+:::
+
+
+### Mittelwert
+
+Die Funktion `mean()` berechnet den arithmetischen Mittelwert, *Durchschnitt*:
 
 ```{r}
-Alcohol.2008 <- Alcohol %>%
-  filter(year == 2008) %>%
-  select(country, alcohol)
+mean(births ~ 1, data = Births78)
 ```
 
-```{r, eval=FALSE}
-View(Alcohol.2008)
-```
-
-### `arrange()` sortiert Beobachtungen
-
-```
-Alcohol.2008.sort soll sein:
-  Nimm den Datensatz Alcohol.2008 und dann...
-  sortiere nach der Variable Alkohol.
-```
+bei univariater Analyse^[d.h. nur eine Variable wird betrachtet] funktioniert auch einfach:
 
 ```{r}
-Alcohol.2008.sort <- Alcohol.2008 %>%
-  arrange(alcohol)
+mean( ~ births, data = Births78)
 ```
 
-```{r, eval=FALSE}
-View(Alcohol.2008.sort)
-```
 
-### `mutate()` verändert bzw. erzeugt Variablen
-
-Die Funktion `rank()` gibt den Rang einer Beobachtung zurück.
-
-```
-Alcohol.2008.rang soll sein:
-  Nimm den Datensatz Alcohol.2008 und dann...
-  erzeuge neue Variable rang als Rang der Beobachtung
-    in der Variable Alkohol.
-```
+### Mittelwert je Wochentag
 
 ```{r}
-Alcohol.2008.rang <- Alcohol.2008 %>%
-  mutate(rang = rank(alcohol))
-```
-
-```{r, eval=FALSE}
-View(Alcohol.2008.rang)
-```
-
-### Übung `r nextExercise()`: Rangliste {.exercise type=A-B answer=A}
-
-```{r}
-Alcohol.2008.rang %>%
-  filter(country == "Germany")
-```
-
-```{r, include=FALSE}
-rg <- Alcohol.2008.rang %>%
-  filter(country == "Germany") %>%
-  select(rang) %>%
-  as.numeric()
+mean(births ~ wday, data = Births78)
 ```
 
 
-Ist Deutschland in der Stichprobe in dem Jahr das Land mit dem `r round(rg)`. geringsten oder höchsten Alkoholkonsum? 
+### Offene Übung `r nextExercise()`: Anzahl Geburten je Monat {.exercise type=essay}
+
+Ändern Sie den Code, so dass Sie die Anzahl der Geburten je Monat (Variable `month`) bestimmen können.
 
 
-A.  Geringsten.
-B.  Höchsten.
-
-```{r, include=FALSE}
-rm(rg)
+```{r eval=FALSE, message=TRUE, warning=FALSE, error=FALSE}
+mean(births ~ 1, data = Births78)
 ```
 
 ::: {.notes}
-Die Ränge werden *aufsteigend* gebildet, d. h. ***A***. Das Land mit Rang 1 hat dem geringsten Alkoholkonsum.
+
+`mean(births ~ month, data = Births78)`:
+
+`r mean(births ~ month, data = Births78)`
+
 :::
 
 
 ### Variablentypen in R
 
-Struktur des Datensatzes `Alcohol`:
-```{r}
-str(Alcohol)
+Struktur des Datensatzes `Births78`:
+
+```{r str-birth78, eval=FALSE}
+str(Births78)
 ```
+::: {.scriptsize}
+
+```{r ref.label="str-birth78", echo=FALSE}
+```
+
+:::
 
 
 Ein Datensatz (`data.frame`) kann aus mehreren Variablen (Spalten) mit gleicher Anzahl Beobachtungen (Zeilen) bestehen. Für Variablen gibt es verschiedene Typen, u.a.:
 
-- Zeichenketten (`character`) und Faktoren (`factor`)^[Faktoren sind Zeichenketten die eine definierte Menge an Werten (Ausprägungen, `levels`) annehmen können.].
+- Zeichenketten (`character`) und Faktoren (`factor`)^[Faktoren sind Zeichenketten, die eine definierte Menge an Werten (Ausprägungen, `levels`) annehmen können.].
 - Gleitkommazahlen (`numeric` bzw. `double`) und Ganze Zahlen (`integer`).
 
 
@@ -330,25 +396,78 @@ B.  `integer`.
 C.  `numeric` bzw. `double`.
 
 ::: {.notes}
-***A***. `integer` wird für ganze Zahlen, d.h. häufig numerisch diskrete und `numeric` für numerisch quasi-stetige Variablen verwendet.
+***A***, `character` bzw. `factor`, mit der Option `ordered` für ordinale Daten. `integer` wird für ganze Zahlen, d.h. häufig numerisch diskrete, und `numeric` für numerisch quasi-stetige Variablen verwendet.
 :::
 
-### R im quantitativen Forschungsprozess
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+R ist eine der Kaffemühlen, die helfen, um von der Frage auf Basis von Daten zur Antwort zu kommen.^[Skizze: Sebastian Sauer]
+
+
+### R im quantitativen Forschungsprozess {include-only=depricated}
 
 1.  Forschungsfrage: Was soll untersucht werden?
-2.  Studiendesign: Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren, z. B. Paket [sampling](https://cran.r-project.org/package=sampling), Stichprobenumfang, z. B. Paket [pwr](https://cran.r-project.org/package=pwr) und/ oder Versuchsplanung, z.B. Paket [AlgDesign](https://cran.r-project.org/package=AlgDesign). Alternativ: Nutzung vorhandener Daten, z.B CRAN Task View [Web Technologies and Services](https://cran.r-project.org/web/views/WebTechnologies.html).
+2.  Studiendesign: Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahrens, z. B. Paket [sampling](https://cran.r-project.org/package=sampling), Stichprobenumfang, z. B. Paket [pwr](https://cran.r-project.org/package=pwr) und/ oder Versuchsplanung, z.B. Paket [AlgDesign](https://cran.r-project.org/package=AlgDesign). Alternativ: Nutzung vorhandener Daten, z. B. CRAN Task View [Web Technologies and Services](https://cran.r-project.org/web/views/WebTechnologies.html).
 3.  Datenerhebung
 4.  Datenanalyse: Datenvorverarbeitung (u.a. Ausreißer, z.B. Paket [outliers](https://cran.r-project.org/package=outliers); fehlende Werte, z. B. Paket [VIM](https://cran.r-project.org/package=VIM)), Explorative Datenanalyse (Grafiken und Kennzahlen), z. B. Paket [mosaic](https://cran.r-project.org/web/packages/mosaic/).
 5.  Inferenz: Schätzen und Testen; Modellierung, z. B. Paket [mosaic](https://cran.r-project.org/web/packages/mosaic/).
 6.  Schlussfolgerungen: (vorläufige) Antwort auf Forschungsfrage.
 
 
+### R im quantitativen Forschungsprozess
+
+```{r forschungsprozess-image-2, echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-2.pdf"))
+```
+
+<!-- Bug? -->
+
+
 ### R im Studium
 
 - Daten und deren Analyse sind zentraler Bestandteil wissenschaftlichen Arbeitens.
-- Jede wissenschaftliche Arbeit sollte mind. eine Methode haben. In den *Sience* Studiengängen sind dies häufig empirische Methoden - je nach Forschungsfrage qualitativ oder quantitativ.
+
+- Jede wissenschaftliche Arbeit sollte mind. eine Methode aufweisen. In den *Science*-Studiengängen sind dies häufig empirische Methoden -- je nach Forschungsfrage qualitativ oder quantitativ.
+
 - Zur Analyse von Daten sollte auf geeignete Software zurückgegriffen werden. Dabei ist die Software das Werkzeug, um die inhaltliche Arbeit (die Analyse) erledigen zu können.
-- Es geht nicht darum, dass Sie R-Programmierung lernen, sondern dass Sie die Daten (mit Hilfe von R) analysieren können.
+
+- Es geht nicht darum, dass Sie R-Programmierung lernen, sondern, dass Sie die Daten (mit Hilfe von R) analysieren können.
+
+
+
+
+### R Basics
+
+- R unterscheidet zwischen Groß- und Kleinbuchstaben.
+- R verwendet den Punkt `.` als Dezimaltrennzeichen.
+- Fehlende Werte werden in R durch `NA` kodiert.
+- Kommentare werden mit dem Rautezeichen `#` eingeleitet.
+- Eine Ergebniszuweisung erfolgt über `<-.`
+- `%>%` (Paket `dplyr`) übergibt Ergebnisse.
+- Hilfe zur Funktion `foo`: `?foo`
+
+
+
+
+
+### Erste Hilfe für R
+
+::: {.small}
+
+- Die [häufigste Ursache von Fehlermeldungen](https://ismayc.github.io/rbasics-book/6-errors.html) sind Tippfehler. Genaues Lesen und Internetsuche der Fehlermeldung helfen.
+- Gerne vergisst man, die benötigten Pakete und Daten zu laden.
+- R schreibt sowohl Hinweise, als auch Warnungen und Fehler (`Error`) in rot. Aber nur Fehler sind i.d.R. ein Problem, Hinweise nicht.
+- Gibt R beim Laden eines Paketes (`library(XXX)`) den Fehler aus, dass ein Paket fehlt (`Fehler in library(XXX): es gibt kein Paket namens 'XXX'`), so muss man das genannte Paket noch installieren (`install.packages("XXX")`)^[Am Besten zu Beginn einer R-Sitzung.].
+- Reagiert R nicht, so kann es daran liegen, dass der aktuelle Befehl in der Konsole noch nicht abgeschlossen ist. Ein einfacher Ausweg ist, in die Konsole zu klicken und dann die Escape-Taste (`Esc`) zu drücken. Damit wird die aktuelle Zeile in der Konsole abgebrochen.
+- In RStudio kann über die Tabulatortaste (`Tab`) vervollständigt werden, über die Pfeiltasten können in der Konsole vorherige Befehle wiederholt werden.
+
+:::
+
 
 ```{r child = './useR/useR-pre.Rmd', eval = showuseR}
 ```

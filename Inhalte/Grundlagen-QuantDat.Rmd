@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 ```{r setup-Grundlagen-QuantDat, include=FALSE}
 # ---------------------------------------------------------------------------
 #% maintainer:
@@ -13,9 +18,10 @@ pathToImages = getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
+library(gridExtra)
 ```
 
-# `r nextChapter()` Grundlagen Quantitativer Datenanalyse
+# Grundlagen Quantitativer Datenanalyse
 
 
 ## Grundbegriffe
@@ -31,7 +37,7 @@ library(mosaic)
 
 ### Operationalisierung
 
-Bsp. Schwierigkeit beim Verständnis von Statistik. **Multi-Item Likert-Skala**:  Auf einer Skala von 1 (trifft überhaupt nicht zu) über 4 (weder zutreffend, noch unzutreffend) bis 7 (trifft voll und ganz zu) werden folgende Aussagen bewertet:^[[Candace Schau: Survey of Attitudes Toward Statistics, SATS-36](http://www.evaluationandstatistics.com/)]
+Bspw. die Leichtigkeit beim Verständnis von Statistik. **Multi-Item Likert-Skala**:  Auf einer Skala von 1 (trifft überhaupt nicht zu) über 4 (weder zutreffend, noch unzutreffend) bis 7 (trifft voll und ganz zu) werden folgende Aussagen bewertet:^[[Candace Schau: Survey of Attitudes Toward Statistics, SATS-36](http://www.evaluationandstatistics.com/)]
 
 - Statistische Formeln sind leicht zu verstehen.
 - Statistik ist ein kompliziertes Fach.*
@@ -55,7 +61,7 @@ Offene Frage: Was folgt daraus?
 
 ::: {.notes}
 
-***Ja***, "Interesse der Studierenden" ist keine offenliegende Eigenschaft. Man muss erst genau definieren -- und Messkriterien festlegen (Operationalisieren!) --, was man darunter versteht.
+***Ja***; "Interesse der Studierenden" ist keine offenliegende Eigenschaft. Man muss erst genau definieren -- und Messkriterien festlegen (Operationalisieren!) -- was man darunter versteht.
 
 :::
 
@@ -69,7 +75,7 @@ Am 15.9. sei es in Dortmund 20°C, am 15.3. 10°C. Stimmt die Aussage: Am 15.9. 
 
 ::: {.notes}
 
-***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50°F und 78°F -- keine Verdoppelung. 0° Celsius ist kein absoluter Nullpunkt. 
+***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50°F und 68°F -- keine Verdoppelung. 0° Celsius ist kein absoluter Nullpunkt. 
 
 Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaft (Wärme).
 
@@ -86,6 +92,16 @@ Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaf
 
 ### Messung: Varianz und Verzerrung
 
+```{r, echo=FALSE, cache=FALSE}
+# default: FOM
+point_col <- "#00998a" # FOM
+```
+```{r, echo=FALSE, cache=FALSE, eval=FOMLayout}
+point_col <- "#00998a" # FOM
+```
+```{r, echo=FALSE, cache=FALSE, eval=EUFOMLayout}
+point_col <- "#8e000f" # EUFOM
+```
 ```{r, echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
 set.seed(1896)
 
@@ -95,18 +111,27 @@ r <- c(0.1,0.25,0.5,0.75,1)
 
 plot(c(-1, 1), c(-1, 1), type = "n", asp=1, axes = FALSE, main="Varianz", xlab = NA, ylab=NA, cex=1.1)
 for (radius in r) lines(x = radius * cos(theta), y = radius * sin(theta), lwd=1.1)
-points(scale(rnorm(10)), scale(rnorm(10)), pch=19, col="#00998a")
+points(scale(rnorm(10)), scale(rnorm(10)), pch=19, col=point_col)
 
 plot(c(-1, 1), c(-1, 1), type = "n", asp=1, axes = FALSE, main="Verzerrung", xlab = NA, ylab=NA, cex=1.1)
 for (radius in r) lines(x = radius * cos(theta), y = radius * sin(theta), lwd=1.1)
-points(rnorm(10, mean=0.5, sd=0.1), rnorm(10, mean=0.5, sd=0.1), pch=19, col="#00998a")
+points(rnorm(10, mean=0.5, sd=0.1), rnorm(10, mean=0.5, sd=0.1), pch=19, col=point_col)
 ```
 
-- hohe Varianz: geringe Reliabilität
-- Verzerrung / Bias: geringe Validität
+- hohe Varianz der Messergebnisse: geringe Reliabilität
+- Verzerrung/ Bias des Messergebnisses: geringe Validität
 
 
-### Übung `r ex <- ex+1; ex`: Gütekriterien Messung {.exercise type=A-B-C-D answer=D}
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+- Wenn wir den Kaffee bekommen, den wir bekommen wollen, haben wir eine hohe Validität.
+- Wenn wir immer denselben Kaffee bekommen, dann haben wir eine hohe Reliabilität.^[Skizze: Sebastian Sauer]
+
+### Übung `r nextExercise()`: Gütekriterien Messung {.exercise type=A-B-C-D answer=D}
 
 Welches Kriterium ist verletzt, wenn die Dozentin statt "Interesse der Studierenden" "Angst vor der Klausur" gemessen hat?
 
@@ -136,13 +161,13 @@ Eine Messung ist valide, wenn die erhobenen Werte geeignete Kennzahlen für die 
 
 Merkmalsausprägungen können unterschieden und in eine Reihenfolge gebracht werden, die Abstände sind vergleichbar.
 
-- **Intervallskala**: Nullpunkt gesetzt, bspw. Zeitrechnung (Jahr 0)
-- **Verhältnisskala**^[Auch Ratioskala]: Nullpunkt gegeben, bspw. Gewicht
+- **Intervallskala**: Nullpunkt gesetzt, bspw. Zeitrechnung (Jahr 0).
+- **Verhältnisskala**^[Auch Ratioskala]: (absoluter) Nullpunkt gegeben, bspw. Gewicht.
 
 Weitere Unterscheidung:
 
-- **stetig**: beliebige Zwischenwerte im Intervall sind möglich, bspw. Größe
-- **diskret**: höchstens abzählbar viele Werte sind möglich, bspw. Anzahl Kinder
+- **stetig**: beliebige Zwischenwerte im Intervall sind möglich, bspw. Größe.
+- **diskret**: höchstens abzählbar viele Werte sind möglich, bspw. Anzahl Kinder.
 
 
 
@@ -157,7 +182,7 @@ D.  Metrisch diskret.
 
 ::: {.notes}
 
-Metrisch stetig (***C***), obwohl die konkrete Auszahlung in der Regel gerundet auf zwei Nachkommastellen erfolgt ("quasi-stetig"). Da ein absoluter Nullpunkt gegeben ist ist die Variable verhältnisskaliert.
+Metrisch stetig (***C***); obwohl die konkrete Auszahlung in der Regel gerundet auf zwei Nachkommastellen erfolgt ("quasi-stetig"). Da ein absoluter Nullpunkt gegeben ist, ist die Variable verhältnisskaliert.
 
 :::
 
@@ -181,12 +206,12 @@ D.  Metrisch diskret.
 
 Je nach Skalennvieau sind unterschiedliche Aussagen und Operationen möglich.
 
-- Kategorial - nominal: $=, \neq$
-- Kategorial - ordinal: $=, \neq, <,>$
-- Numerisch - intervall: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
-- Numerisch - verhältnis: $=, \neq, <,>, +,-, *, :$
+- Kategorial -- nominal: $=, \neq$
+- Kategorial -- ordinal: $=, \neq, <,>$
+- Numerisch -- intervallskaliert: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
+- Numerisch -- verhältnisskaliert: $=, \neq, <,>, +,-, *, :$
 
-Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
 
 ### Datensatz
 
@@ -195,23 +220,26 @@ Aufbau eines Datensatzes:
 
 |Name | Geschlecht | Größe|
 |-----|------------|------|
-Ahmet| m| 180
-Gabi| w| 170
-Max| m| 186
-Susi| w| 172
+Ahmet | m          | 180
+Gabi  | w          | 170
+Max   | m          | 186
+Susi  | w          | 172
 
 
-- Zeilen: Beobachtungen
-- Spalten: Variablen
+- **Zeilen:** Beobachtungen: auf welcher Einheit liegen die Daten vor: z.B. einzelne Menschen, Unternehmen, Länder. Hier Studierende.
+- **Spalten:** Variablen: welche Eigenschaften/ Merkmale liegen je Beobachtung vor: Motivation, Umsatz, Lebenserwartung. Hier Geschlecht (kategorial -- nominal), Größe (Numerisch -- verhältnisskaliert).
+
+[Hinweis:]{.cemph} Jede Zeile sollte genau *eine* Beobachtung beinhalten, jede Spalte genau *eine* Variable.
 
 
-### Big Data
+### Big Data {include-only=deprecated}
 
 > Data are not just numbers, they are numbers with a context.^[[Cobb, G.W. und Moore, D.S. (1997): Mathematics, Statistics, and Teaching, The American Mathematical Monthly, 104(9) 801-823.](http://www.jstor.org/stable/2975286)]
 
+
 **Big Data** wird häufig durch 4 Vs charakterisiert:
 
-- **V**olume: schiere Masse an Daten 
+- **V**olume: schiere Masse an Daten
 
 - **V**elocity: Geschwindigkeit -- immer schneller, immer neuere Daten (Sensoren, Tweeds, ...)
 
@@ -222,40 +250,47 @@ Susi| w| 172
 
 ### Variation
 
-Messwerte einer Variable variieren / streuen, u. a. 
+[Idee:]{.cstrong}
+
+$$\text{ Daten } = \text{ Modell } + \text{ Rest}$$
+
+Messwerte einer Variable variieren/ streuen, u. a. 
 
 - zufällig,
+
 - aufgrund der Messung,
+
 - aufgrund der Stichprobe,
+
 - systematisch -- kann evtl. modelliert werden.
 
-Bsp.: Punkte einer Klausur variieren. *Warum?*
+**Bsp.:** Punkte einer Klausur variieren. *Womit hängt das zusammen?*
 
 
 ### Zusammenhangsanalyse
 
-- **Abhängige Variable** (endogen, erklärt, AV): Wert hängt von der/ den unabhängige(n) Variable ab ("$y$").
+- **Abhängige Variable** (AV - endogen, erklärt): Wert hängt von der/ den unabhängige(n) Variable(n) ab ("$y$").
 
-- **Unabhängige Variable** (exogen, erklärend, UV):  Wert hängt von keiner anderen Variable ab ("$x$").
+- **Unabhängige Variable** (UV - exogen, erklärend):  Wert hängt von keiner anderen Variable ab ("$x$").
 
-- **Kovariablen**/ Störvariablen: Variablen, deren Wert ebenfalls auf die abhängige Variable einwirkt und/ oder den Zusammenhang zwischen unabhängigen und abhängigen Variablen beeinflusst ("$z$").^[Video [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Confounding Variables](https://www.causeweb.org/cause/resources/library/r12607)] 
+- **Kovariablen**/ Störvariablen: Variablen, deren Wert ebenfalls auf die abhängige Variable einwirkt und/ oder den Zusammenhang zwischen unabhängigen und abhängigen Variablen beeinflusst ("$z$").^[Video: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Confounding Variables](https://www.causeweb.org/cause/resources/library/r12607)] 
 
-**Hinweis**: $x$ steht in Zusammenhang mit $y$ heißt nicht zwangsläufig, dass $x$ kausal (ursächlich) für $y$ sein muss!
+**Hinweis**: "$x$ steht in Zusammenhang mit $y$" heißt nicht zwangsläufig, dass $x$ kausal (ursächlich) für $y$ sein muss!
 
 - in der Mathematik: $y=f(x)$. Für ein $x$ genau ein $y$.
-- in der Statistik / in `R`: $y \sim x$. Für ein $x$ sind mehrere $y$ möglich.
+- in der Statistik/ in `R`: $y \sim x$. Für ein $x$ sind mehrere $y$ möglich: $x$ wird zur Modellierung von $y$ verwendet.
 
 
 ### Simpson-Paradoxon (I/ II)
 
 Das Ignorieren von Kovariablen kann zu verzerrten Ergebnissen führen.^[Bickel, P. J., Hammel, E. A., and O'Connell, J. W. (1975). Sex bias in graduate admissions: Data from Berkeley. Science, 187, 398--403. [https://doi.org/10.1126/science.187.4175.398](https://doi.org/10.1126/science.187.4175.398)]
 
-```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+```{r echo=FALSE, out.width = "55%", fig.align="center", cache=FALSE}
 mosaicplot(apply(UCBAdmissions, c(1, 2), sum),
-           main = "Zulassungen an der UC Berkeley", col=trellis.par.get("superpose.polygon")$col)
+           main = "Zulassungen an der UC Berkeley", col=trellis.par.get("superpose.polygon")$col, cex.axis = 1)
 ```
 
-Höherer Frauenanteil bei den Nicht-Zugelassenen als bei den Zugelassenen, vgl. Höhe der Rechtecke: Diskriminierung?
+Höherer Frauenanteil bei den Nicht-Zugelassenen als bei den Zugelassenen; vgl. Höhe der Rechtecke: Diskriminierung?
 
 
 ### Simpson-Paradoxon (II/ II)
@@ -280,12 +315,12 @@ Die Dozentin stellt fest, dass die Motivation der Studierenden mit der Uhrzeit z
 
 A.  Es gibt eine abhängige Variable (Motivation), eine unabhängige Variable (Uhrzeit) und eine Kovariable (Geschlecht).
 B.  Es gibt eine abhängige Variable (Uhrzeit), eine unabhängige Variable (Motivation) und eine Kovariable (Geschlecht).
-C.  Es gibt zwei abhängige Variable (Motivation und Geschlecht) und eine unabhängige Variable (Uhrzeit).
+C.  Es gibt zwei abhängige Variablen (Motivation und Geschlecht) und eine unabhängige Variable (Uhrzeit).
 D.  Es gibt eine abhängige Variable (Geschlecht) und zwei unabhängige Variablen (Motivation und Uhrzeit).
 
 ::: {.notes}
 
-Motivation ist die abhängige Variable $y$, die evt. von der unabhängigen Variable Uhrzeit $x$ abhängt. Das Merkmal Geschlecht beeinflusst die abhängige Variable bzw. den Zusammenhang und ist dadurch hier eine Kovariable $z$, also ***A***. Aber auch eine Modellierung mit Geschlecht und Uhrzeit als unabhängige Variablen und Motivation als abhängige ist möglich.
+Motivation ist die abhängige Variable $y$, die evtl. von der unabhängigen Variable Uhrzeit $x$ abhängt. Das Merkmal Geschlecht beeinflusst die abhängige Variable bzw. den Zusammenhang und ist dadurch hier eine Kovariable $z$, also ***A***. Aber auch eine Modellierung mit Geschlecht und Uhrzeit als unabhängige Variablen und Motivation als abhängige ist möglich.
 
 :::
 
@@ -293,7 +328,7 @@ Motivation ist die abhängige Variable $y$, die evt. von der unabhängigen Varia
 
 ### Stichproben
 
-- **Stichproben** sind eine Teilmenge der **Population** / Grundgesamtheit, die Beobachtungen / Daten.
+- **Stichproben** sind eine Teilmenge der **Population**/ Grundgesamtheit, die Beobachtungen/ Daten.
 
 - In der Regel ist man daran interessiert, das Ergebnis einer Stichprobe zu verallgemeinern, zu generalisieren: vom Geschmack des Suppenlöffels auf die ganze Suppe.^[hier: Kartoffelcremesuppe, Foto: Johann Hauke]
 
@@ -304,13 +339,13 @@ knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"))
 
 ### Begriffe: Stichproben (I/ II)
 
-- **Population**: die Menge, über die eine Aussage getroffen werden soll: die ganze Suppe im Suppentopf.
+- **Population**: Die Menge, über die eine Aussage getroffen werden soll: die ganze Suppe im Suppentopf.
 
 - **Stichprobe**: Teilmenge der Population, die zur Analyse ausgewählt wurde: der Löffel voll Suppe.
 
-- **Stichprobenverfahren**: der Prozess, mit dem die Teilmenge ausgewählt wurde. Z. B. **zufällig**: der Auswahlprozess, wo und wie der Löffel aus dem Suppentopf gefüllt wurde.
+- **Stichprobenverfahren**: Der Prozess, mit dem die Teilmenge ausgewählt wurde. Z. B. **zufällig**: der Auswahlprozess, wo und wie der Löffel aus dem Suppentopf gefüllt wurde.
 
-- **Repräsentative** Stichprobe: Ist die Verteilung der Eigenschaften der Stichprobe ähnlich der in der Population? Wenn der Löffel anders schmeckt als die Suppe, war der Löffel nicht repräsentativ.
+- **Repräsentative** Stichprobe: Ist die Verteilung der Eigenschaften der Stichprobe ähnlich der in der Population? Wenn der Löffel anders schmeckt als die Suppe war der Löffel nicht repräsentativ.
 
 - **Bias** / Verzerrung: Ein Teil der Population wird bevorzugt: nur Fleischbällchen auf dem Löffel.
 
@@ -319,15 +354,30 @@ knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"))
 
 ### Begriffe: Stichproben (II/ II)
 
-- **Parameter**: Wert der Grundgesamtheit, an dem wir interessiert sind: z. B. Temperatur der Suppe insgesamt.^[symbolisiert häufig durch griechische Buchstaben: $\mu, \ldots$]
-- **Statistik**: Wert, der auf Basis der Stichprobe berechnet wird: z. B. Temperatur der Suppe auf dem Löffel.^[symbolisiert häufig durch lateinische Buchstaben: $\bar{x}, \ldots$]
+- **Parameter**^[symbolisiert häufig durch griechische Buchstaben: $\mu, \ldots$]: Wert der Population, an dem wir interessiert sind: z. B. Temperatur der Suppe insgesamt.
 
-Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Estimation Notation](https://www.causeweb.org/cause/resources/fun/songs/estimation-notation-its-greek-and-roman-me)
+- **Statistik**^[symbolisiert häufig durch lateinische Buchstaben: $\bar{x}, \ldots$]: Wert, der auf Basis der Stichprobe berechnet wird: z. B. Temperatur der Suppe auf dem Löffel.
+
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Estimation Notation](https://www.causeweb.org/cause/resources/fun/songs/estimation-notation-its-greek-and-roman-me)
 
 
-### Übung `r nextExercise()`: Stichprobe {.exercise type=yesno answer=no}
+[Hinweis:]{.cemph} Häufig kann die *Datengenerierung* als *Zufallsprozess* aufgefasst werden, z.B. der Aktienkurs. Dann ist der beobachtete Kurs die Stichprobe, der theoretisch mögliche die Population: von den *möglichen* Kursen wurde der beobachtete realisiert.^[Formal: Beobachtung $x$ ist die Realisation einer Zufallsvariable $X$.]
 
-Kann die Dozentin von den Studierenden, die die Vorlesung besuchen^[Stichprobe], unverzerrt auf das Interesse aller Studierenden schließen, die für die Vorlesung angemeldet sind^[Grundgesamtheit]?
+
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+- Population: Der Sack Bohnen, der uns interessiert, oder der Kaffee allgemein.
+
+- Stichprobe: Die Kaffeebohnen, die wir untersuchen.^[Skizze: Sebastian Sauer]
+
+
+### Übung `r nextExercise()`: Stichprobe {.exercise type=yesno answer=no exclude=qmwinf}
+
+Kann die Dozentin von den Studierenden, die die Vorlesung besuchen^[Stichprobe], unverzerrt auf das Interesse aller Studierenden schließen, die für die Vorlesung angemeldet sind^[Population]?
 
 - Ja.
 - Nein.
@@ -341,44 +391,133 @@ Kann die Dozentin von den Studierenden, die die Vorlesung besuchen^[Stichprobe],
 
 ### Stichprobenverfahren
 
-- Bei einer (einfachen) **Zufallsstichprobe** hat jede Beobachtung die gleiche Wahrscheinlichkeit, Teil der Stichprobe  zu sein.
+- Bei einer (einfachen) **Zufallsstichprobe** hat jede Beobachtung die gleiche Wahrscheinlichkeit Teil der Stichprobe  zu sein.
 
-- Bei **geschichtete Stichproben** setzen sich die Schichten aus ähnlichen Beobachtungen zusammen (z. B. Alter, Geschlecht). Es wird eine einfache, zufällige Stichprobe aus jeder Schicht genommen.
+- Bei **geschichteten Stichproben** setzen sich die Schichten aus ähnlichen Beobachtungen zusammen (z. B. Alter, Geschlecht). Es wird eine einfache, zufällige Stichprobe aus jeder Schicht genommen.
 
 - Zufällige Stichproben erlauben einen Schluss auf die Grundgesamtheit (Generalisierbarkeit).
 
 - Gelegenheitsstichproben können verzerrt sein. 
 
-### Einfache Zufallsstichprobe
 
-$30$ zufällig ausgewählte Beobachtungen:
-```{r simple_random, echo=FALSE, out.width = "80%", fig.align="center"}
-set.seed(4)
+### Vergleich verschiedener Stichprobenverfahren
+
+```{r plot-sample-procedures, echo=FALSE, out.width = "80%", fig.align="center"}
+data(iris)
+set.seed(42)
 sam <- rep(1,150)
 sam[sample(1:150, 30)] <- 13
-plot(iris$Petal.Width, iris$Petal.Length, col=iris$Species, xlab="x", ylab="y", pch=sam, cex=1.5)
-```
+
+iris$sam <- factor(sam)
+iris$Species <- ordered(iris$Species)
+
+p1 <- gf_jitter(Petal.Width ~ Petal.Length, 
+         color = ~ Species,
+         data = iris,
+         # alpha = ~ sam,
+         shape = ~Species,
+         size = 4) %>% 
+  gf_theme(legend.position = "none") %>% 
+  gf_labs(title = "Vollerhebung",
+          subtitle = "Alle 150 Objekte der Grundgesamtheit wurden erhoben",
+       x = "X",
+       y = "Y") +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.subtitle = element_text(size = 10))
 
 
-### Geschichtete Zufallsstichprobe
 
-Von jeder Farbe $10$ zufällig ausgewählte Beobachtungen:
-```{r not_so_simple_random, echo=FALSE, out.width = "80%", fig.align="center"}
+
+set.seed(42)
+iris_sample <- sample_n(iris, size = 30)
+
+p2 <- ggplot(iris) +
+  aes(x = Petal.Length , y = Petal.Width) +
+  geom_jitter(color = "grey80",
+             size = 4,
+             aes(shape = Species)) +
+  geom_jitter(data = iris_sample,
+             aes(color =  Species,
+                 shape = Species),
+             size = 4) +
+  theme(legend.position = "none") +
+  labs(title = "Einfache Zufallsstichprobe",
+       subtitle = "30 zufällig ausgewählte Beobachtungen",
+       x = "X",
+       y = "Y") +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.subtitle = element_text(size = 10))
+
+
+
+set.seed(42)
 sam <- rep(1,150)
 sam[sample(1:50, 10)] <- 13
 sam[sample(51:100, 10)] <- 13
 sam[sample(101:150, 10)] <- 13
-plot(iris$Petal.Width, iris$Petal.Length, col=iris$Species, xlab="x", ylab="y", pch=sam, cex=1.5)
-```
+
+iris$sam <- factor(sam)
 
 
-### Gelegenheitsstichprobe
 
-Von den ersten $50$ Beobachtungen $30$ zufällig ausgewählte:
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
+set.seed(42)
+iris_sample <- iris %>% 
+  group_by(Species) %>% 
+  sample_n(10)
+
+
+p3 <- gf_jitter(Petal.Width ~ Petal.Length, 
+         color = "grey80",
+         data = iris,
+         #size = ~ sam,
+         shape = ~Species,
+         size = 4) %>% 
+  gf_jitter(Petal.Width ~ Petal.Length, 
+         color = ~ Species,
+         data = iris_sample,
+         shape = ~Species,
+         size = 4) %>% 
+  gf_theme(legend.position = "none") %>% 
+  gf_labs(title = "Geschichtete Zufallsstichprobe",
+          subtitle = "Von jeder Farbe 10 zufällig ausgewählte Beobachtungen",
+       x = "X",
+       y = "Y")  +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.subtitle = element_text(size = 10))
+
 sam <- rep(1,150)
 sam[sample(1:50, 30)] <- 13
-plot(iris$Petal.Width, iris$Petal.Length, col=iris$Species, xlab="x", ylab="y", pch=sam, cex=1.5)
+iris$sam <- factor(sam)
+
+
+
+set.seed(42)
+iris_sample <- slice(iris, size = 1:50)
+iris_sample2 <- sample_n(iris_sample, size = 30)
+
+p4 <- ggplot(iris) +
+  aes(x = Petal.Length , y = Petal.Width) +
+  geom_jitter(color = "grey80",
+             size = 4,
+             aes(shape = Species)) +
+  geom_jitter(data = iris_sample2,
+             aes(color =  Species,
+                 shape = Species),
+             size = 4) +
+  theme(legend.position = "none") +
+  labs(title = "Gelegenheitsstichprobe",
+          subtitle = "Von den ersten 50 Beobachtungen 30 zufällig ausgewählte",
+       x = "X",
+       y = "Y") +
+  theme(axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        plot.subtitle = element_text(size = 10))
+
+
+grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
 
@@ -396,18 +535,32 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 - Bei **Beobachtungsstudien** werden Daten gesammelt, ohne die Entstehung der Daten zu beeinflussen (keine unmittelbaren Kausalaussagen möglich).
 
 - Bei einem **Experiment** wird der Wert der unabhängigen Variable(n) manipuliert^[z. B. Zielgruppe erhält Werbung, Kontrollgruppe nicht] und die Variation der abhängigen Variable gemessen. 
-    - Um Verzerrungen durch Kovariablen zu vermeiden, erfolgt die Zuordnung zu den Experimentalkonditionen **zufällig (randomisiert)**.^[Video [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Randomize](https://www.causeweb.org/cwis/r2858/video_randomize)] 
+    - Um Verzerrungen durch Kovariablen zu vermeiden, erfolgt die Zuordnung zu den Experimentalkonditionen **zufällig (randomisiert)**.^[Video: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Randomize](https://www.causeweb.org/cwis/r2858/video_randomize)] 
+    
     - Durch wiederholte Messung kann der Effekt der Experimentalkonditionen geschätzt werden: hohe interne Validität. Bei Quasi-Experimenten ist die Zuordnung nicht randomisiert: geringe interne Validität.
 
 
-### Beispiel Experiment
+### Sebastians Kaffeemühle {include-only=sesmill exclude=qmwinf,eufom}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+- Bei einer Beobachtungsstudie werden die Bohnen so verwendet, wie sie sind.
+- Bei einem Experiment werden die Bohnen manipuliert.^[Skizze: Sebastian Sauer]
+
+
+### Beispiel Experiment {exclude=qmwinf,eufom}
 
 Unterscheidet sich die Einschätzung (Rating) eines Unternehmens in Abhängigkeit davon, ob die Person alleiniger Entscheider oder derjenige ist, der die  Entscheidungsvorlage vorbereitet? 
+
+- Fall A: Person entscheidet selbst.
+- Fall B: Person bereitet Entscheidungsvorlage vor, eine andere Person entscheidet.
 
 Um dies zu untersuchen, wurde Studierenden eine Fallstudie mit der Bitte um Einschätzung gegeben, wobei **zufällig** zugeordnet wurde, ob es sich um einen alleinigen Entscheider oder um den Ersteller einer Entscheidungsvorlage handelt.^[Hose, C., Lübke, K., Nolte, T., und Obermeier, T. (2012): *Ratingprozess und Ratingergebnis: Ein Experiment bei qualitativen Ratingkriterien*, Kredit & Rating Praxis (6), 12-14. [Preprint](http://www.fom.de/fileadmin/fom/downloads/forschungsberichte/arbeitspapiere/AP_26.pdf)]
 
 
-### Übung `r nextExercise()`: Beobachtungsstudien und Experimente {.exercise type=A-B answer=A}
+### Übung `r nextExercise()`: Beobachtungsstudien und Experimente {.exercise type=A-B answer=A exclude=qmwinf,eufom}
 
 Die Dozentin stellt fest, dass die Motivation der Studierenden mit der Uhrzeit zusammenhängt, und zwar unterschiedlich für Frauen und Männer. Welche Aussage stimmt?
 
@@ -421,31 +574,41 @@ Es handelt sich um eine Beobachtungsstudie (***A***), da die Dozentin durch rein
 :::
 
 
-### Offene Übung `r nextExercise()`: Experiment {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Experiment {.exercise type=essay exclude=qmwinf,eufom}
 
 Warum ist die interne Validität bei einem randomisierten Experiment höher als z. B. bei Beobachtungsstudien?
 
-1.  Think: Überlegen Sie für sich.
-2.  Pair: Teilen Sie Ihr Ergebnis mit der Nachbar\*in.
-3.  Share: Stellen Sie Ihr Ergebnis im Plenum vor.
+1.  [Think:]{.cemph} Überlegen Sie für sich.
+2.  [Pair:]{.cemph}  Teilen Sie Ihr Ergebnis mit der Nachbar\*in.
+3.  [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
 
 ::: {.notes}
 
-Man hat bei einem randomisierten Experiment die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so besser äußere Einflüsse ausschließen zu können. Man hofft, dass sich die Kovariablen unabhängig gleichmäßig verteilen. Die interne Validität steigt. Z.B. könnte eine Beobachtungsstudie zum Thema "Erfolg durch Studium" verzerrte Ergebnisse liefern, da Menschen mit hoher Motivation und Vorbildung eher studieren als Menschen mit geringer Motivation und Vorbildung. Insbesondere Motivation könnte aber auch zu Erfolg führen -- aber hier ist ein Experiment schwierig.
+Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so äußere Einflüsse besser ausschließen zu können. Man hofft dabei, dass sich die Kovariablen unabhängig gleichmäßig verteilen. Die interne Validität steigt. Z.B. könnte eine Beobachtungsstudie zum Thema "Erfolg durch Studium" verzerrte Ergebnisse liefern, da Menschen mit hoher Motivation und Vorbildung eher studieren als Menschen mit geringer Motivation und Vorbildung. Insbesondere Motivation könnte aber auch zu Erfolg führen -- aber hier ist ein Experiment schwierig.
 
 :::
 
 
-### Labor- und Feldexperiment
+### Labor- und Feldexperiment {include-only=deprecated}
 
 - Bei **Laborexperimenten** erfolgt die Untersuchung innerhalb einer speziellen Versuchsanordnung (geringe externe Validität).
-- Bei einem **Feldexperimenten** erfolgt die Untersuchung im natürlichen Umfeld (hohe externe Validität).
+
+- Bei **Feldexperimenten** erfolgt die Untersuchung im natürlichen Umfeld (hohe externe Validität).
 
 
-### Übung `r nextExercise()`: Labor- und Feldexperiment {.exercise type=A-B answer=A}
+### Sebastians Kaffeemühle {include-only=deprecated}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+```
+
+- Bei einem Laborexperiment werden die Bohnen in einer künstlichen Umgebung manipuliert.
+- Bei einem Feldexperiment werden die Bohnen in ihrer natürlichen Umgebung manipuliert.^[Skizze: Sebastian Sauer]
 
 
-Um was handelt es sich bei der Studie zum Ratingprozess von Hose et al. (2012)^[Hose, C., Lübke, K., Nolte, T., und Obermeier, T. (2012): *Ratingprozess und Ratingergebnis: Ein Experiment bei qualitativen Ratingkriterien*, Kredit & Rating Praxis (6), 12-14. [Preprint](http://www.fom.de/fileadmin/fom/downloads/forschungsberichte/arbeitspapiere/AP_26.pdf)] in dem Studierende gebeten wurden Ihre Einschätzung abzugeben (s.o.)?
+### Übung `r nextExercise()`: Labor- und Feldexperiment {.exercise type=A-B answer=A exclude=qmwinf,eufom include-only=deprecated}
+
+Um was handelt es sich bei der Studie zum Ratingprozess von Hose et al. (2012)^[Hose, C., Lübke, K., Nolte, T., und Obermeier, T. (2012): *Ratingprozess und Ratingergebnis: Ein Experiment bei qualitativen Ratingkriterien*, Kredit & Rating Praxis (6), 12-14. [Preprint](http://www.fom.de/fileadmin/fom/downloads/forschungsberichte/arbeitspapiere/AP_26.pdf)], in dem Studierende gebeten wurden, ihre Einschätzung abzugeben (s.o.)?
 
 A.  Es handelt sich um ein Laborexperiment.
 B.  Es handelt sich um ein Feldexperiment.
@@ -457,15 +620,13 @@ Es handelt sich um ein Laborexperiment (***A***), da Studierende (und nicht die 
 :::
 
 
-### Cartoon: Kausalität
+### Schlussmöglichkeiten {exclude=qmwinf,eufom}
 
-```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
-# Lizenzworkaround: 
-extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_03-2017.jpg", "cartoon0317.jpg", pathToImages)
-```
-"Mal sehen, was das Rad der nicht-ursächlichen Beziehungen diesmal als stärksten Prädiktor für die Krankheit X ausgibt."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2017/results) &copy; J.B. Landers, Überschrift M. Posner]
+Die Datenerhebung und die unmittelbar^[es gibt methodische Erweiterungen] möglichen Schlüsse stehen im Zusammenhang mit den wissenschaftlichen Gütekriterien:
 
-### Schlussmöglichkeiten
+- Randomisierte Stichprobe: Externe Validität
+
+- Randomisierte Zuordnung innerhalb eines Experimentes: Interne Validität 
 
 +-----------------------+------------------------+------------------------------+
 |                       | **zufällige** \        | **keine zufällige** \        |
@@ -475,51 +636,61 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 | **Stichprobe**        | generalisierbar \      | Aussage generalisierbar \    |
 |                       | für die Population     | für die Population           |
 +-----------------------+------------------------+------------------------------+
+|                       |                        |                              |
++-----------------------+------------------------+------------------------------+
 | **keine zufällige** \ | Kausalschluss, \       | kein Kausalschluss, \        |                    
 | **Stichprobe**        | nur für die Stichprobe | Aussage nur für die \        |
 |                       |                        | Stichprobe                   |
 +-----------------------+------------------------+------------------------------+
 
 
-### Datensschutz
+### Cartoon: Kausalität {exclude=qmwinf,eufom}
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_03-2017.jpg", "cartoon0317.jpg", pathToImages)
+```
+"Mal sehen, was das Rad der nicht-ursächlichen Beziehungen diesmal als stärksten Prädiktor für die Krankheit X ausgibt."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2017/results) &copy; J.B. Landers, Überschrift M. Posner]
+
+
+### Datenschutz
 
 Personenbeziehbare Daten und unternehmensinterne Daten sind sensibel!
 
-Rechtliche Rahmen u. a.:
+Rechtliche Rahmen u.a.:
 
 - [Bundesdatenschutzgesetz](https://www.gesetze-im-internet.de/bdsg_2018)
 
 - [Datenschutz-Grundverordnung](http://data.europa.eu/eli/reg/2016/679/oj)
 
-**Nicht alles was möglich ist, ist auch legal!**
+[Nicht alles was möglich ist, ist auch legal!]{.cstrong}
 
 
-### Tipps: Datenerhebung
+### Tipps: Datenerhebung {include-only=deprecated}
 
 - Liste mit Datenquellen: [https://www.fom.de/forschung/institute/ifes/studium-und-lehre/datenquellen.html](https://www.fom.de/forschung/institute/ifes/studium-und-lehre/datenquellen.html)
+
 - Hinweise zu Fragebögen: [https://www.fom.de/fileadmin/fom/forschung/ifes/141112_Leitfaden_operative_Umsetzung_quantitativer_Befragungen.pdf](https://www.fom.de/fileadmin/fom/forschung/ifes/141112_Leitfaden_operative_Umsetzung_quantitativer_Befragungen.pdf)
 
 
 ### Griechische Buchstaben in den Folien
 
-- $\alpha$: *alpha*, i.d.R. Symbol für das Signifikanzniveau eines Tests, auch Zeichen für Fehler 1. Art.
-
-- $\beta$: *beta*, i.d.R. Symbol für Regressionskoeffizienten, auch Zeichen für Fehler 2. Art.
-
-- $\delta$: *delta*, i.d.R. Symbol für allgemeine zusammenfassende Statistik (Kennzahl).
-
-- $\epsilon$: *epsilon*, i.d.R. Symbol für Residuum.
-
-- $\mu$: *my*, i.d.R. Symbol für den Populationsmittelwert.
-
-- $\sigma$: *sigma*, i.d.R. Symbol für die Populationsstandardabweichung.
-
-- $\pi$: *pi*, i.d.R. Symbol für den Populationsanteil.
-
-- $\chi$: *chi*, i.d.R. Symbol für zusammenfassende Statistik im $\chi^2$-Test.
+| Buchstabe | Aussprache | Bedeutung in der Regel
+|-----------|------------|----------------------------------------------------------------------|
+| $\alpha$  | *alpha*    | - Symbol für das Signifikanzniveau eines Tests 
+|           |            | - auch Zeichen für Fehler 1. Art
+| $\beta$   | *beta*     | - Symbol für Regressionskoeffizienten
+|           |            | - Zeichen für Fehler 2. Art 
+| $\delta$  | *delta*    | Symbol für allgemeine zusammenfassende Statistik (Kennzahl)
+| $\epsilon$| *epsilon*  | Symbol für Residuum
+| $\mu$     | *my*       | Symbol für den Populationsmittelwert
+| $\sigma$  | *sigma*    | Symbol für die Populationsstandardabweichung
+| $\pi$     | *pi*       | Symbol für den Populationsanteil
+| $\rho$    | *rho*      | Symbol für den Populationskorrelation
+| $\chi$    | *chi*      | Symbol für zusammenfassende Statistik im $\chi^2$-Test
 
 
-### Übersicht: Quantitativer Forschungsprozess
+### Übersicht: Quantitativer Forschungsprozess {include-only=deprecated}
 
 1.  Forschungsfrage: Was soll untersucht werden?
 2.  Studiendesign: Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung. Alternativ: Nutzung vorhandener Daten.
@@ -528,7 +699,16 @@ Rechtliche Rahmen u. a.:
 5.  Inferenz: Schätzen und Testen; Modellierung.
 6.  Schlussfolgerungen: (vorläufige) Antwort auf Forschungsfrage.
 
-### Offene Übung `r nextExercise()`: Praxistransfer {.exercise type=essay}
+
+### Übersicht: Quantitativer Forschungsprozess {#quantFoprozess}
+
+```{r forschungsprozess-image, echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Forschungsprozess.png"))
+```
+
+<!-- Bug? -->
+
+### Offene Übung `r nextExercise()`: Praxistransfer {.exercise type=essay exclude=qmwinf,eufom}
 
 Überlegen Sie sich für Ihre Berufstätigkeit ein Beispiel für einen quantitativen Forschungsprozess.
 
