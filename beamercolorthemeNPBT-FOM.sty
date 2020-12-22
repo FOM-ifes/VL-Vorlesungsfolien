@@ -1,0 +1,197 @@
+\ProvidesPackage{beamercolorthemeNPBT-FOM}[2019/05/30 v4.3.0 Color Theme FOM]
+% ===========================================================================
+% beamercolorthemeNPBT-FOM.sty
+% ============================-----------------------------------------------
+% 
+% (C) in 2011-2019 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% Starting with rel. 3.1 this is also the Base Color Scheme for 
+% ALL FOM_* colorthemes! 
+%
+% ---------------------------------------------------------------------------
+%
+\mode<presentation>
+% ---------------------------------------------------------------------------
+
+% ---------------------------------------------------------------------------
+% Set Path to images
+% ---------------------------------------------------------------------------
+\def\imagepath{images/NPBT-FOM-}
+\updateNPBTimagespaths{}
+\updateNPBTimages{}
+
+
+% ---------------------------------------------------------------------------
+% Define Colors
+% ---------------------------------------------------------------------------
+%
+% base colors
+%
+\definecolor{fomgreen}{rgb}{0.58,0.77,0.75}
+\definecolor{fomcyan}{rgb}{.00,.60,.54}
+\definecolor{fomgray}{HTML}{717D87}
+%
+% named colors
+%
+\definecolor{FOM}{rgb}{0,0.67,0.6}
+\definecolor{FOMTitelColor}{HTML}{00998A}
+\definecolor{FOMBoldColor}{HTML}{00998A}
+\definecolor{FOMInstituteColor}{HTML}{717D87} 
+\definecolor{FOMSubTitelColor}{HTML}{4CB7AD}
+\definecolor{FOMFirmColor}{HTML}{262626} 
+\definecolor{FOMForgroundColor}{HTML}{717D87}
+\definecolor{FOMWhiteColor}{HTML}{FFFFFF}
+\definecolor{FOMFrametitelColor}{HTML}{128977}
+\definecolor{FOMFrametitelInverseColor}{HTML}{FFFFFF}
+\definecolor{FOMSectionHeadlineColor}{HTML}{5E6974}
+\definecolor{FOMSectionTitelColor}{HTML}{128977}% sollte eigentlich sein: {00998A}
+\definecolor{FOMSectionNumberColor}{HTML}{262927}% oder: {32373D}
+\definecolor{FOMNearBlack}{HTML}{102030}
+
+% ---------------------------------------------------------------------------
+\setbeamercolor*{structure}{fg=fomgreen, bg=softgreen}
+\setbeamercolor{structure}{fg=FOM}
+
+% ---------------------------------------------------------------------------
+% Colors & Fonts setting for: titlepage
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{title in titlepage}{fg=FOMTitelColor}
+\setbeamercolor{subtitle in titlepage}{fg=FOMSubTitelColor}
+\setbeamercolor{institute in titlepage}{fg=FOMInstituteColor}
+\setbeamercolor{firm in titlepage}{fg=FOMFirmColor}
+\setbeamercolor{author in titlepage}{fg=FOMFirmColor}
+%
+% fonts
+%
+\setbeamerfont{institute in titlepage}{size=\large, family=\sffamily, series=\bfseries}
+\setbeamerfont{firm in titlepage}{size=\large, family=\sffamily, series=\bfseries}
+\setbeamerfont{title in titlepage}{size=\LARGE, family=\sffamily, series=\bfseries}
+\setbeamerfont{subtitle in titlepage}{size=\LARGE, family=\sffamily, series=\bfseries}
+\setbeamerfont{author in titlepage}{size=\large, family=\sffamily, series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% Colors & Fonts setting for: part page
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{part title}{fg=FOMTitelColor}
+%
+% fonts
+%
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: section page
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{section name}{fg=FOMTitelColor} % **FIX ME** Needed?
+%\setbeamercolor{section title}{fg=FOMSectionTitelColor}
+\setbeamercolor{section title}{fg=FOMTitelColor}
+\setbeamercolor{sectionnumber title}{fg=FOMSectionNumberColor}
+%
+% fonts
+%
+\setbeamerfont{section name}{size=\Large, family=\sffamily, series=\bfseries}
+\setbeamerfont{section title}{size=\large, family=\sffamily, series=\bfseries}
+\setbeamerfont{sectionnumber title}{size=\huge, family=\sffamily, series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: subsection title page
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{subsection name}{fg=FOMTitelColor}
+\setbeamercolor{subsection title}{fg=FOMTitelColor}
+%
+% fonts
+%
+\setbeamerfont{subsection name}{size=\large, family=\sffamily, series=\bfseries}
+\setbeamerfont{subsection title}{size=\large, family=\sffamily, series=\bfseries}
+\setbeamerfont{subsectionnumber title}{size=\Large, family=\sffamily, series=\bfseries}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: header
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{myheader}{fg=FOMForgroundColor}
+\setbeamercolor{section in head}{parent=myheader}
+\setbeamercolor{subsection in head}{parent=myheader}
+\setbeamercolor{section in head}{parent=myheader, fg=FOMSectionHeadlineColor}
+\setbeamercolor{frametitle in head}{bg=FOMWhiteColor, fg=FOMFrametitelColor}
+\setbeamercolor{frametitle in head exercise}{bg=FOMFrametitelColor, fg=FOMFrametitelInverseColor}
+%
+% fonts
+%
+\setbeamerfont{frametitle in head}{size=\Large, family=\sffamily, series=\bfseries}
+\setbeamerfont{section in head}{size=\large, family=\sffamily, series=\mdseries}
+\setbeamerfont{section in head exercise}{parent=section in head}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: footline
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{footline}{fg=fomgray, bg=white}
+\setbeamercolor{author in footline}{parent=footline}
+\setbeamercolor{date in footline}{parent=footline}
+\setbeamercolor{seperator in footline}{parent=footline}
+\setbeamercolor{title in footline}{parent=footline}
+\setbeamercolor{number in footline}{parent=footline}
+%
+% fonts
+%
+\setbeamerfont{footline}{size=\scriptsize, family=\sffamily, series=\mdseries}
+\setbeamerfont{author in footline}{parent=footline}
+\setbeamerfont{date in footline}{parent=footline}
+\setbeamerfont{separator in footline}{parent=footline}
+\setbeamerfont{title in footline}{parent=footline}
+\setbeamerfont{number in footline}{parent=footline}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: note page
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{note}{fg=FOMNearBlack, bg=FOM!10}
+\setbeamercolor{note page}{fg=FOMNearBlack, bg=FOM!3}
+\setbeamercolor{note date}{fg=FOM!10}
+\setbeamercolor{note title}{fg=FOMNearBlack, bg=FOM!10}
+%
+% fonts
+%
+\setbeamerfont{note}{family=\sffamily, series=\mdseries}
+\setbeamerfont{note date}{family=\ttfamily, series=\mdseries}
+\setbeamerfont{note title}{parent=note}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: cemph and cstrong
+% ---------------------------------------------------------------------------
+%
+% colors
+%
+\setbeamercolor{color emph}{fg=FOMBoldColor!75}
+\setbeamercolor{color strong}{fg=FOMBoldColor}
+%
+% fonts
+%
+\setbeamerfont{color emph}{series=\bfseries}
+\setbeamerfont{color strong}{series=\bfseries}
+
+\renewcommand*{\cemph}{\usebeamerfont{color emph}\usebeamercolor[fg]{color emph}}
+\renewcommand*{\cstrong}{\usebeamerfont{color strong}\usebeamercolor[fg]{color strong}}
+
+% ---------------------------------------------------------------------------
+\mode<all>
+%
+% ===========================================================================
+%

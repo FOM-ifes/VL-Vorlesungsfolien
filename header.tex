@@ -1,39 +1,52 @@
 % ===========================================================================
-% header.tex
+% header.tex (Release 2.3)
 % ==========-----------------------------------------------------------------
 %
-% (C) in 2017 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+% (C) in 2017-19 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% 17. Jan. 2019 (nm) Some tiny changes.
+% 05. Jun. 2020 (nm) Die "columns"-Umgebung hacken, so das onlytextwidth
+%                    zum default wird. Damit ragen die Spalten nicht mehr
+%                    links und rechts aus dem Frame heraus.
+% 31. Aug. 2020 (nm) Inhaltverzeichnis jetzt als Buttons (2.3)
 %
 % ---------------------------------------------------------------------------
-%%\AtBeginSection[]{\relax}
 
-\def\logowidth{1.3cm}
-\def\logoheight{1.3cm}
-\def\logoxshift{-0.85cm}
-\def\logoyshift{-0.85cm}
+\typeout{header.tex wird abgearbeitet!}
 
-\newcommand\Sinnspruch{\relax}
-\newcommand\SinnspruchReset{\renewcommand{\Sinnspruch}{\relax}}
-\AtBeginSection[]{%
+\usepackage{letltxmacro}
+
+%\def\logowidth{1.3cm}
+%\def\logoheight{1.3cm}
+%\def\logoxshift{-0.85cm}
+%\def\logoyshift{-0.85cm}
+
+
+% Disable ligatures, helpful for some converting issues (ligature glyphs can raise problems):
+%\usepackage{microtype}
+%\DisableLigatures{encoding = *, family = *}
+
+
+% Provide Option to change "€" in "EUR", as the "€" glyph can be problematic in some converting formats:
+%\newcommand{\oureuro}{\xspace{}EUR\xspace{}}  %für SMALLPDF-Konvertierung
+\newcommand{\oureuro}{€}   %für normales TeX-PDF
+
+\newcommand{\handleSection}{%
   %
   % New section, not section in headline
   %
   \setbeamertemplate{headline}[nosectioninhead]
   %
   \begin{frame}
-    \frametitle{}
+    \frametitle{\phantom{ÜgyT}}
     \vspace*{1.2em}
-    {\raggedleft\textit{\Sinnspruch}}
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
-      \putLogo%
-      \node[% section title
+        \node[% section title
           xshift=\logoxshift-6.6cm,
-          %anchor=south east,
-          yshift=3.8cm, 
+          yshift=3.8cm,
           inner sep=0pt
-      ] at (current page.south east){%
-%          \fbox{
+        ] at (current page.south east){%
             \makebox[\sectiontitleboxwidth][r]{%
               {%
                 \usebeamercolor{sectionnumber title}%
@@ -44,52 +57,63 @@
                 \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
               }
             }% makebox
-%          }% fbox
-    };% war mal -3pt
-     \node[% 
-        anchor=west, 
-        inner sep=0pt, % 13pt 
-        xshift=13pt,
-        yshift=-\logoheight-12pt
-      ] at (current page.north west){
-            \logoline
-          };
+        };%
     \end{tikzpicture}%
   \end{frame}
   % Reset headline. Put section in head
   \setbeamertemplate{headline}[sectioninhead]
-%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
 }
 
-\AtBeginSubsection[]{%
+\newcommand{\handleSectionStar}{%
+  %
+  % New section, not section in headline
+  %
+  \setbeamertemplate{headline}[nosectioninhead]
+  %
+  \begin{frame}
+    \frametitle{\phantom{ÜgyT}}
+    \vspace*{1.2em}
+    \vspace*{7cm}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[% section title
+          xshift=\logoxshift-6.6cm,
+          yshift=3.8cm,
+          inner sep=0pt
+        ] at (current page.south east){%
+            \makebox[\sectiontitleboxwidth][r]{%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
+              }
+            }% makebox
+        };
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{headline}[sectioninhead]
+
+}
+
+
+\AtBeginSection[\handleSectionStar]{\handleSection}
+
+\newcommand{\handleSubsection}{%
   %
   % New subsection, not section in headline
   %
   \setbeamertemplate{headline}[nosectioninhead]
   %
   \begin{frame}
-    \frametitle{}
+    \frametitle{\phantom{ÜgyT}}
     \vspace*{1.2em}
-    {\raggedleft\textit{\Sinnspruch}}
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
-%    \node[inner sep=0pt] at (current page.center){%
-%              \includegraphics[width=\myPaperWidth,height=\myPaperHeight]{\backgroundimage}%
-%      };%
-      \node[% Logo
-        shift={(\logoxshift,\logoyshift)},
-        inner sep=0pt] at (current page.north east){%
-              \includegraphics[%
-                  width=\logowidth,
-                  height=\logoheight
-              ]{\logoimage}%
-      };% ,xshift=-1cm,yshift=4cm
-      \node[% section title
+        \node[% section title
           xshift=\logoxshift-6.6cm,
           %anchor=south east,
-          yshift=3.8cm, 
+          yshift=3.8cm,
           inner sep=0pt
-      ] at (current page.south east){%
+        ] at (current page.south east){%
 %          \fbox{
             \makebox[\sectiontitleboxwidth][r]{%
               {%
@@ -106,37 +130,109 @@
               }
             }% makebox
 %          }% fbox
-    };% war mal -3pt
-     \node[% 
-        anchor=west, 
-        inner sep=0pt, % 13pt 
-        xshift=13pt,
-        yshift=-\logoheight-12pt
-      ] at (current page.north west){
-            \logoline
-          };
+        };
     \end{tikzpicture}%
   \end{frame}
   % Reset headline. Put section in head
   \setbeamertemplate{headline}[sectioninhead]
 %  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+
+}
+
+\newcommand{\handleSubsectionStar}{%
+  %
+  % New subsection, not section in headline
+  %
+  \setbeamertemplate{headline}[nosectioninhead]
+  %
+  \begin{frame}
+    \frametitle{\phantom{ÜgyT}}
+    \vspace*{1.2em}
+    \vspace*{7cm}
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[% section title
+          xshift=\logoxshift-6.6cm,
+          %anchor=south east,
+          yshift=3.8cm,
+          inner sep=0pt
+      ] at (current page.south east){%
+%          \fbox{
+            \makebox[\sectiontitleboxwidth][r]{%
+              {%
+                \usebeamercolor[fg]{subsection title}%
+                \usebeamerfont{subsection title}\NoHyper\insertsubsectionhead\endNoHyper%
+              }
+            }% makebox
+%          }% fbox
+    };% war mal -3pt
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{headline}[sectioninhead]
 }
 
 
+\AtBeginSubsection[\handleSubsectionStar]{\handleSubsection}
+
+%
+% Remove unwanted toc entries:
+%
+\renewcommand\addcontentsline[3]{%
+\ifthenelse{\equal{#1}{toc}}{\relax}{\addtocontents{#1}{\protect\contentsline{#2}{#3}}}
+}
+
+%
+% Altes Inhaltsverzeichnis
+%
+%\setbeamertemplate{section in toc}{%
+%    \leavevmode\leftskip=2.75ex%
+%  \llap{%
+%    \usebeamerfont*{section number projected}%
+%    \usebeamercolor[bg]{section number projected}%
+%    \vrule width2.50ex height2.05ex depth.4ex%
+%    \hskip-2.50ex%
+%    \hbox to2.50ex{\hfil\color{fg}\inserttocsectionnumber\hfil}}%
+%  \kern1.35ex\inserttocsection\par}
+
+
+%
+% Neues Inhaltsverzeichnis
+%
+\setbeamertemplate{button}{\tikz
+  \node[
+  inner xsep=10pt,
+  outer sep=0pt,
+  draw=structure!80,
+  fill=structure!50,
+  minimum size=5.7em,
+  text width=5.9cm,
+  rounded corners=4pt]  {\large\insertbuttontext};%
+}
 
 \setbeamertemplate{section in toc}{%
-    \leavevmode\leftskip=2.75ex%
-  \llap{%
-    \usebeamerfont*{section number projected}%
-    \usebeamercolor[bg]{section number projected}%
-    \vrule width2.50ex height2.05ex depth.4ex%
-    \hskip-2.50ex%
-    \hbox to2.50ex{\hfil\color{fg}\inserttocsectionnumber\hfil}}%
-  \kern1.35ex\inserttocsection\par}
+    \beamerbutton{\usebeamercolor[fg]{FOMFrametitelInverseColor}\inserttocsectionnumber.~ \hfil\parbox{\dimexpr\linewidth-4\fboxsep-2\fboxrule}{\vspace*{-1px}\usebeamercolor[fg]{FOMFrametitelInverseColor}\inserttocsection}}%
+}
+
+%\makeatletter
+\LetLtxMacro{\oldtableofcontents}{\tableofcontents}
+\renewcommand{\tableofcontents}[1][]{%
+  \typeout{New Table of Content in use!}
+  \setlength{\columnsep}{0.2cm}%
+  %\beamer@noframenumberingtrue%
+  %\setkeys{beamerframe}{noframenumbering=true}
+  \begin{multicols}{2}
+        \vspace*{-0.8em}%
+        \hypersetup{linkbordercolor=white, linkcolor=white, colorlinks=false, hidelinks=true}% hidelinks
+        \oldtableofcontents[#1]
+  \end{multicols}%
+}
+%\makeatother
+
+
 
 %
 % BUGFIX für caption bug in 2018!
-% 
+%
 % see: https://tex.stackexchange.com/questions/426088/texlive-pretest-2018-beamer-and-subfig-collide/426090#426090
 % see: https://www.mrunix.de/forums/showthread.php?77329-Undefined-control-sequence-magyar-captionfix-beim-Laden-von-subfig-in-beamer
 % see: https://gitlab.com/axelsommerfeldt/caption/issues?state=opened
@@ -145,6 +241,50 @@
 \let\@@magyar@captionfix\relax
 \makeatother
 
+
+
+%
+% Default für columns auf "onlytextwidth" setzen, damit die Splaten besser
+% ins Bild passen.
+% Quelle: https://tex.stackexchange.com/questions/204022/make-onlytextwidth-default-width-of-columns
+%
+\makeatletter
+\long\def\beamer@newenvnoopt#1#2#3#4{%
+    \expandafter\renewcommand\expandafter<\expandafter>\csname#1\endcsname[#2]{#3}%<- here
+    \expandafter\long\expandafter\def\csname end#1\endcsname{#4}%
+}
+\long\def\beamer@newenvopt#1#2[#3]#4#5{%
+    \expandafter\renewcommand\expandafter<\expandafter>\csname#1\endcsname[#2][#3]{#4}%<- here
+    \expandafter\long\expandafter\def\csname end#1\endcsname{#5}%
+}
+
+\renewenvironment<>{columns}[1][]{%
+    \begin{actionenv}#2%
+        \def\beamer@colentrycode{%
+            \hbox to\textwidth\bgroup%
+            \leavevmode%
+            \hskip-\beamer@leftmargin%
+            \nobreak%
+            \beamer@tempdim=\textwidth%
+            \advance\beamer@tempdim by\beamer@leftmargin%
+            \advance\beamer@tempdim by\beamer@rightmargin%
+            \hbox to\beamer@tempdim\bgroup%
+            \hbox{}\hfill\ignorespaces}%
+        \def\beamer@colexitcode{\egroup%
+            \nobreak%
+            \hskip-\beamer@rightmargin\egroup}%
+        \ifbeamer@centered\setkeys{beamer@col}{c}\else\setkeys{beamer@col}{t}\fi%
+        \setkeys{beamer@col}{#1, onlytextwidth}% added "onlytextwidth"
+        \par%
+        \beamer@colentrycode%
+        \def\beamer@colclose{}\ignorespaces}%
+    {\beamer@colclose\def\beamer@colclose{}\beamer@colexitcode\end{actionenv}}%
+\makeatother
+
+
+
 \InputIfFileExists{include-notes.tex}{\relax}{\relax}
 \InputIfFileExists{header_costums.tex}{\relax}{\relax}
+
+\typeout{header.tex ist abgearbeitet!}
 % ===========================================================================

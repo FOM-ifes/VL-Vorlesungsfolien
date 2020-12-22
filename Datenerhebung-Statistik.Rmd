@@ -1,5 +1,9 @@
 ---
 title: "Datenerhebung und Statistik"
+tag:
+    - bachelor
+    - shiny
+    - des
 ---
 ```{r setup, include=FALSE}
 # ---------------------------------------------------------------------------
@@ -11,7 +15,61 @@ initPrelude(
     "DES-",      # Prefix für Terminlisten etc.
     TRUE         # Soll geprüft werden ob alle Pakete installiert sind?
 )
+```
+```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
 
+privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
+showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
+showuseR <<- FALSE
+UseCache <<- FALSE
+Vorlesungstermine <<- ""
+
+
+
+createPrivateYaml("FOM-Dozent*in", "WiSe 2020/21", "FOM")
+
+# Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
+makeSkriptOfType("DozentenSkript") 
+```
+
+
+```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggplot2)
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+theme.fom <- theme_classic(22*1.02)
+theme.fom <- theme.fom
+theme_set(
+  theme.fom  
+)
+```
+
+```{r setUpChildren, eval=TRUE, include=FALSE}
+childrenToInclude <- c(
+    "DES-Organisatorisches", "Hinweise", "Grundlagen-Wissenschaft", "Grundlagen-QuantDat", 
+    "Einfuehrung-R", "EDA", "Regression", "Normalverteilung", "Inferenz", "Abschluss"
+)
+if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
+  childrenToInclude <- c(
+    "Grundlagen-Wissenschaft", "Abschluss"
+  )
+}
+includeChild <- function(name, children=childrenToInclude, all=FALSE) {
+    ifelse(all, TRUE, ifelse(name %in% children, TRUE, FALSE))
+}
+```
+
+```{r child = './Inhalte/Wiederholung-R.Rmd', eval=includeChild("Wiederholung-R")}
+```
+
+
+```{r setup_data, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
 # Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
@@ -21,53 +79,41 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # ---------------------------------------------------------------------------
 ```
 
-```{r child = './Inhalte/DES-Organisatorisches.Rmd'}
-```
+
+
+```{r child = './Inhalte/DES-Organisatorisches.Rmd', eval=includeChild("DES-Organisatorisches")}
+``` 
 
 ```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
 ```
 
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'}
+```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd', eval=includeChild("Hinweise")}
 ```
 
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd'}
+```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd', eval=includeChild("Grundlagen-Wissenschaft")}
 ```
 
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd'}
+```{r child = './Inhalte/Grundlagen-QuantDat.Rmd', eval=includeChild("Grundlagen-QuantDat")}
 ```
 
-```{r child = './Inhalte/Einfuehrung-R.Rmd'}
+```{r child = './Inhalte/Einfuehrung-R.Rmd', eval=includeChild("Einfuehrung-R")}
 ```
 
-```{r child = './Inhalte/Einfuehrung-EDA.Rmd'}
+```{r child = './Inhalte/EDA.Rmd', eval=includeChild("EDA")}
 ```
 
-```{r child = './Inhalte/Einfuehrung-EDA-R.Rmd'}
+```{r child = './Inhalte/Regression.Rmd', eval=includeChild("Regression")}
 ```
 
-```{r child = './Inhalte/Einfuehrung-Normalverteilung.Rmd'}
+```{r child = './Inhalte/Normalverteilung.Rmd', eval=includeChild("Normalverteilung")}
 ```
 
-```{r child = './Inhalte/Einfuehrung-Inferenz.Rmd'}
+```{r child = './Inhalte/Inferenz.Rmd', eval=includeChild("Inferenz")}
 ```
 
-```{r child = './Inhalte/Inferenz-Kategorial.Rmd'}
+```{r child = './Inhalte/Abschluss.Rmd', eval=includeChild("Abschluss")}
 ```
 
-```{r child = './Inhalte/Inferenz-Numerisch.Rmd'}
-```
-
-```{r child = './Inhalte/Regression.Rmd'}
-```
-
-```{r child = './Inhalte/Datenhandling.Rmd'}
-```
-
-<!-- ```{r child = './Inhalte/DES-Organisatorisches.Rmd'} -->
-<!-- ``` -->
-
-```{r child = './Inhalte/Abschluss.Rmd'}
-```
 
 ```{r finalize, include=FALSE}
 # ---------------------------------------------------------------------------

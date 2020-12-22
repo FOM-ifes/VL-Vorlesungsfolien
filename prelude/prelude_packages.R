@@ -1,5 +1,5 @@
 # ===========================================================================
-# prelude_packages.R (Release 0.1.2)
+# prelude_packages.R (Release 0.2.0)
 # ==================---------------------------------------------------------
 # (W) by Norman Markgraf, Karsten Lübke in 2017/18
 #
@@ -9,8 +9,10 @@
 #                      (0.1.1)
 # 18. Mär. 2018  (nm)  Dokumentation angepasst.
 #                      (0.1.2)
+# 18. Jan. 2019  (nm)  Version der R Pakete werden nun richtig verglichen.
+#                      (0.2.0)
 #
-#   (C)opyleft Norman Markgraf and Karsten Lübke in 2018
+#   (C)opyleft Norman Markgraf and Karsten Lübke in 2018/19
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -48,6 +50,13 @@ if (!exists("prelude.packages")) {
 # ---------------------------------------------------------------------------
   pathtoneeded_pkgs <<- "."
 
+# ---------------------------------------------------------------------------
+# Release Vergleich
+# ---------------------------------------------------------------------------
+releaseCompare <- function(relA, relB) {
+  return (compareVersion(relA, relB) < 0)
+}
+  
 # ---------------------------------------------------------------------------
 # checkPackages
 # -------------
@@ -122,7 +131,7 @@ if (!exists("prelude.packages")) {
       {
           currel <- c(currel, paste0(packageVersion(pkg), ""))
       }
-      update.pkgs <- needed_pkgs[(currel < as.character(needed_pkgs_df[needed_pkgs_df$minrelease != "-",]$minrelease))]
+      update.pkgs <- needed_pkgs[releaseCompare(currel, as.character(needed_pkgs_df[needed_pkgs_df$minrelease != "-",]$minrelease))]
       
       # Ggf. wird hier ein Update durchgeführt oder eine Mitteilung gesendet!
       for (pkg in update.pkgs)

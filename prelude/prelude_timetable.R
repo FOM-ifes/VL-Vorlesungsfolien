@@ -1,5 +1,5 @@
 # ===========================================================================
-# prelude_timetable.R (Release 0.1.2)
+# prelude_timetable.R (Release 0.1.3)
 # ===================--------------------------------------------------------
 # (W) by Norman Markgraf, Karsten Lübke & Sebastian Sauer in 2017/18
 #
@@ -9,8 +9,11 @@
 #                      (0.1.1)
 # 18. Mär. 2018  (nm)  Dokumentation angepasst.
 #                      (0.1.2)
+# 07. Feb. 2019  (nm)  Ein Studienort, mehrere Gruppen und ".Rmd" als 
+#                      möglicher Ort für ein "timetable"
+#                      (0.1.3)
 #
-#   (C)opyleft Norman Markgraf in 2017/18
+#   (C)opyleft Norman Markgraf in 2017-19
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -25,10 +28,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#  "Als es noch keine Computer gab, 
-#   war das Programmieren noch relativ einfach." 
+#  Einstein’s Dictum: 
 #
-#                                                     -- Edsger W. Dijkstra
+#     “Everything should be as simple as possible, but no simpler.”
+#
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 select <- dplyr::select
@@ -89,7 +92,6 @@ tab2png <- function(df, pngfile = "") {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 probeTimetable <- function(filename, prefix=NULL, path="Vorlesungstermine", suffixes = defaultSuffixe) {
   for (suf in suffixes) {
-    
     tmp <- file.path(basePath, path, paste0(prefix, filename, suf))
     message(paste0("probeTimetable(): probing '", tmp, '"!'))
     if (file.exists(tmp)) {
@@ -153,7 +155,10 @@ loadTimetableFromXlsx <- function(fn) {
 
 
 loadTimetableFromCsv <- function(fn) {
-  read.csv(fn) %>%
+  read.csv(
+      fn,
+      encoding="UTF-8",
+      blank.lines.skip=TRUE) %>%
     mutate(Inhalt = gsub("\\\\n", " ", Inhalt)) -> df
   return(df)
 }
@@ -237,12 +242,35 @@ createTimetableXtable <- function(df) {
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sortTable <- function(df) {
+  df.colname <- names(df)
+  
+  if (!("Tag" %in% df.colname)){
+      df$Tag <- rep("", length(df$Inhalt))
+  }
+  if (!("Datum" %in% df.colname)){
+      df$Datum <- rep("", length(df$Inhalt))
+  }
+  if (!("Uhrzeit" %in% df.colname)){
+      df$Uhrzeit <- rep("", length(df$Inhalt))
+  }
   df %>% select("Tag", "Datum", "Uhrzeit", "Inhalt") -> df
   return(as.data.frame(df))
 }
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+filenameRmdTimetable <- function(ttname = "", path ="Vorlesungstermine") {
+    file.path(basePath, path, paste0(prefixZeit, ttname, ".Rmd"))
+}
+
+existsRmdTimetable <- function(ttname = "") {
+    fn <- filenameRmdTimetable(ttname)
+    file.exists(fn)
+}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 makeTimetable <- function(ttname = "", tttype = "xtable") {
   suffix <- probeTimetable(ttname, prefix = prefixZeit)
   if (is.null(suffix)) {

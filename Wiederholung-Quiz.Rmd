@@ -1,0 +1,57 @@
+---
+title: "Wiederholung"
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "NGI-",        # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+
+# ---------------------------------------------------------------------------
+```
+
+```{r localKnitrButtonSetup, eval=TRUE, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
+showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
+showuseR <<- FALSE
+
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
+
+createPrivateYaml("FOM", "SoSe 2020")
+
+UseCache <<- FALSE
+makeDozi()        # Erzeuge Dozentenskript
+#makeStudi()       # Erzeuge Studentenskript
+#makeLsgSkript()   # Erzeuge Lösungsskript
+```
+
+
+```{r child = './Inhalte/Wiederholung/Wiederholungs-WMQD.Rmd'}
+```
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

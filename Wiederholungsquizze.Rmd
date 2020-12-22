@@ -1,0 +1,80 @@
+---
+title: "Wiederholungsquizze"
+tag:
+    - bachelor
+    - shiny
+    - des
+---
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "DES-",      # Prefix für Terminlisten etc.
+    TRUE         # Soll geprüft werden ob alle Pakete installiert sind?
+)
+```
+```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
+
+privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
+showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
+showuseR <<- TRUE
+UseCache <<- FALSE
+Vorlesungstermine <<- ""
+
+
+createPrivateYaml("FOM", "WiSe 2020", "")
+
+# Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
+makeSkriptOfType("DozentenSkript") 
+```
+
+
+<<<<<<< HEAD:testing.Rmd
+```{r child = './Inhalte/Kausalanalyse.Rmd', eval=FALSE}
+```
+
+```{r child = './Inhalte/testing-child.Rmd', eval=TRUE}
+```
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+=======
+```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggplot2)
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+theme.fom <- theme_classic(22*1.02)
+theme.fom <- theme.fom
+theme_set(
+  theme.fom  
+)
+```
+
+```{r setup_data, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+>>>>>>> a3ec4ac85d47dc53738627c5ee99c8576f6e9d2d:Wiederholungsquizze.Rmd
+```
+
+
+```{r child = './Inhalte/Wiederholung/Wiederholungs-DES.Rmd'}
+```
+
+

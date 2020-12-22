@@ -1,5 +1,9 @@
 ---
 title: "Quantitative Methoden und Evaluationsforschung"
+tag:
+    - bachelor
+    - sesmill
+    - shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +17,37 @@ initPrelude(
     "QMEval-",       # Prefix für Terminlisten etc.
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
+```
+```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
+showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
+showuseR <<- TRUE
+
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
+
+createPrivateYaml("Dozent*in", "SoSe 2020", "Studienort")
+
+UseCache <<- FALSE
+# Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
+makeSkriptOfType("DozentenSkript") 
+```
+```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggplot2)
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+theme.fom <- theme_classic(22*1.02)
+theme.fom <- theme.fom
+theme_set(
+  theme.fom  
+)
+```
+```{r setup_data, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
 # Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
@@ -44,34 +78,25 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```{r child = './Inhalte/Einfuehrung-R.Rmd'}
 ```
 
-```{r child = './Inhalte/Einfuehrung-EDA.Rmd'}
+```{r child = './Inhalte/EDA.Rmd'}
 ```
 
-```{r child = './Inhalte/Einfuehrung-EDA-R.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-Inferenz.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-Normalverteilung.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz-Kategorial.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz-Numerisch.Rmd'}
+```{r child = './Inhalte/Normalverteilung.Rmd'}
 ```
 
 ```{r child = './Inhalte/Regression.Rmd'}
 ```
 
+```{r child = './Inhalte/Inferenz.Rmd'}
+```
+
+```{r child = './Inhalte/Inferenz-Beispiele.Rmd'}
+```
+
 ```{r child = './Inhalte/Evaluation.Rmd'}
 ```
 
-```{r child = './Inhalte/Datenhandling.Rmd'}
-```
-
-```{r child = './Inhalte/QMEval-Organisatorisches.Rmd'}
+```{r child = './Inhalte/Datenhandling.Rmd', eval=FALSE}
 ```
 
 ```{r child = './Inhalte/Abschluss.Rmd'}

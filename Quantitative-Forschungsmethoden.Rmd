@@ -12,7 +12,37 @@ initPrelude(
     "QFM-",        # Prefix für Terminlisten etc.
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
+```
+```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
+showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
+showuseR <<- FALSE
+
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
+
+createPrivateYaml("FOM", "WiSe 2020", "")
+
+UseCache <<- TRUE
+# Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
+makeSkriptOfType("StudierendenSkript") 
+```
+```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggplot2)
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+theme.fom <- theme_classic(22*1.02)
+theme.fom <- theme.fom
+theme_set(
+  theme.fom  
+)
+```
+```{r setup_data, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
 # Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
@@ -22,14 +52,19 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # ---------------------------------------------------------------------------
 ```
 
-```{r child = './Inhalte/QFM-Organisatorisches.Rmd'}
-```
 
-```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
-```
 
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'}
-```
+<!-- ```{r child = './Inhalte/QFM-Organisatorisches.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung} -->
+<!-- ``` -->
+
+<!-- ```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'} -->
+<!-- ``` -->
+
+
+
 
 ```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd'}
 ```
@@ -40,30 +75,24 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```{r child = './Inhalte/Einfuehrung-R.Rmd'}
 ```
 
-```{r child = './Inhalte/Einfuehrung-EDA.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-EDA-R.Rmd'}
-```
-
-
-```{r child = './Inhalte/Einfuehrung-Inferenz.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-Normalverteilung.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz-Kategorial.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz-Numerisch.Rmd'}
+```{r child = './Inhalte/EDA.Rmd'}
 ```
 
 ```{r child = './Inhalte/Regression.Rmd'}
 ```
 
-```{r child = './Inhalte/Datenhandling.Rmd'}
+```{r child = './Inhalte/Normalverteilung.Rmd'}
 ```
+
+```{r child = './Inhalte/Inferenz.Rmd'}
+```
+
+<!-- ```{r child = './Inhalte/Inferenz-Beispiele.Rmd'} -->
+<!-- ``` -->
+
+
+<!-- ```{r child = './Inhalte/Datenhandling.Rmd'} -->
+<!-- ``` -->
 
 <!-- ```{r child = './Inhalte/QFM-Organisatorisches.Rmd'} -->
 <!-- ``` -->

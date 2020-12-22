@@ -1,13 +1,13 @@
 # MakeMySemester.R
 # ================-----------------------------------------------------------
 #
-# (C) in 2018 by Norman Markgraf (nmarkgraf@hotmail.com)
+# (C) in 2018-19 by Norman Markgraf (nmarkgraf@hotmail.com)
 #
 # Dieses Skript erstellt die notwenidigen, personalisierten Skripte für alle
 # Dozenten und verschickt diese automatisch an diese.
 #
 #
-#   (C)opyleft Norman Markgraf in 2018
+#   (C)opyleft Norman Markgraf in 2018-19
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -81,8 +81,10 @@ doRender <- function(rmdfile, target=NULL, outfile=NULL, output_format="beamer_p
 # # renderEnv <- new.env(hash=TRUE, parent = globalenv())
     
     # Neue Umgebung erschaffen und dann soweit löschen wie möglich und nötig.
-    # Somit bekommt jeder neue Rederprozess eine saubere Umgebung!
+    # Somit bekommt jeder neue Renderprozess eine saubere Umgebung!
     renderEnv <- globalenv()
+    RENDEREDBYSCRIPT <<- TRUE
+    assign("RENDEREDBYSCRIPT", TRUE, envir=renderEnv)
 #    rm(list = ls(renderEnv), envir = renderEnv)
     rm(list = ls(), envir = renderEnv)
     rmarkdown::render(
@@ -144,26 +146,41 @@ doMain <- function(
     
     for(i in seq(along=semesterdaten$Vorlesung)) {
 
-        createPrivateYaml(DozInfo, semesterbezeichner, semesterdaten$Ort[i])
+        if (!hasName(semesterdaten, "OrtGruppe")) {
+            flog.info("In 'private-Semesterdaten.R' fehlt die Spalte 'OrtGruppe'! Kopiere die Daten aus 'Ort' in diese Spalte!")
+            semesterdaten %>% mutate(OrtGruppe = Ort) -> semesterdaten
+        }
         
-        Ort <- transUmlaute(semesterdaten$Ort[i])
+        createPrivateYaml(DozInfo, semesterbezeichner, semesterdaten$Ort[i], forced = TRUE)
+        
+        Ort <- transUmlaute(semesterdaten$OrtGruppe[i])
         Vorlesungstermine <<- Ort
         showVorlesungsplan <<- TRUE
         
-        if (is.null(semesterdaten$Zeitplan)) {
-            showVorlesungsplan <<- semesterdaten$Zeitplan
+        if (hasName(semesterdaten, "Zeitplan") && !is.null(semesterdaten$Zeitplan[i])) {
+            showVorlesungsplan <<- semesterdaten$Zeitplan[i]
         }
 
+        if (hasName(semesterdaten, "Vorstellung") && !is.null(semsterdaten$Vorstellung)) {
+            privateVorstellung <<- semesterdaten$Vorstellung
+        } else {
+            if (hasName(DozInfo, "privateVorstellung")) {
+                privateVorstellung <<- DozInfo$privateVorstellung
+            }
+        }
+        
         pdfprefilename <- semesterdaten$Vorlesung[i]
         if (Ort != "") {
             pdfprefilename <- paste0(semesterdaten$Vorlesung[i], "-", Ort)
         }
     
+        
         if ((hasName(semesterdaten, "Dozentenversion")) && (semesterdaten$Dozentenversion[i])) {
             pdfpath <- file.path(buildbasedir, builddir)
             pdffilename <- paste0(pdfprefilename,"-DOZENTENVERSION.pdf")
             pdffn <- file.path(pdfpath, pdffilename)
             rmdfn <- file.path(buildbasedir, paste0(semesterdaten$Vorlesung[i], ".Rmd"))
+            flog.info(paste0("Erzeuge '",pdffilename,"' mit Vorlesungsplan ",showVorlesungsplan))
             if (!file.exists(pdffn) || cleanStart) {
                 makeDozi()
                 flog.debug(paste(rmdfn, pdfpath, pdffilename))
@@ -176,6 +193,7 @@ doMain <- function(
             pdffilename <- paste0(pdfprefilename,"-STUDIERENDENVERSION.pdf")
             pdffn <- file.path(pdfpath, pdffilename)
             rmdfn <- file.path(buildbasedir, paste0(semesterdaten$Vorlesung[i], ".Rmd"))
+            flog.info(paste0("Erzeuge '",pdffilename,"' mit Vorlesungsplan ",showVorlesungsplan))
             if (!file.exists(pdffn) || cleanStart) {
                 makeStudi()
                 flog.debug(paste(rmdfn, pdfpath, pdffilename))
@@ -188,6 +206,7 @@ doMain <- function(
             pdffilename <- paste0(pdfprefilename,"-Loesungen.pdf")
             pdffn <- file.path(pdfpath, pdffilename)
             rmdfn <- file.path(buildbasedir, paste0(semesterdaten$Vorlesung[i], ".Rmd"))
+            flog.info(paste0("Erzeuge '",pdffilename,"' mit Vorlesungsplan ",showVorlesungsplan))
             if (!file.exists(pdffn) || cleanStart) {
                 makeLsgSkript()
                 flog.debug(paste(rmdfn, pdfpath, pdffilename))
