@@ -9,14 +9,14 @@ initPart(
     "Gini",               # Dateiname ohne Suffix
     "Wirtschaftsstatistik"  # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 library(ineq)
 ```
 
-# `r nextChapter()` Disparitäts- und Konzentrationsmessung
+# Disparitäts- und Konzentrationsmessung
 
 ### Transferausgaben (I/II)
 

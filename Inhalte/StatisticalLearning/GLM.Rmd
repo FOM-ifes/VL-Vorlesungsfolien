@@ -1,0 +1,567 @@
+
+```{r setup-GLM, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "GLM",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+options(tinytex.verbose = TRUE)
+
+```
+
+
+
+
+
+```{r libs-GLM, include = FALSE}
+library(mosaic)
+library(gridExtra)
+library(tidyverse)
+library(ISLR)
+library(brms)
+library(broom)
+data(tips, package = "reshape2")
+```
+
+
+
+
+
+
+
+
+# Das Generalisierte Lineare Model (GLM)
+
+
+
+
+
+## Grundlagen
+
+
+
+### Wäre es nicht schön ...
+
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+... wenn wir den Luxus des linearen Modells (Regression) für viele typischen Fragestellungen nutzen könnten?
+
+
+\vspace{2cm}
+
+
+[Das geht!]{.cemph} S. [Post](https://lindeloev.github.io/tests-as-linear/) von Jonas Kristoffer Lindeløv
+
+- Mittelwertsunterschiede bei 2 Gruppen unabhängigen Gruppen
+- Mittelwertsunterschiede bei 2 Gruppen abhängigen Gruppen
+- Mittelwertsunterschiede bei $n$ Gruppen unabhängigen Grupen
+- ...
+
+
+
+:::
+::: {.column width="40%"}
+
+```{r echo = FALSE, out.width="100%"}
+knitr::include_graphics(file.path(pathToImages, "3f20qm.jpg"))
+```
+
+:::{.tiny}
+Quelle: [imgflip](https://imgflip.com/i/3f20qm); [Lizenzhinweise](https://imgflip.com/terms)
+:::
+
+
+
+:::
+::::::
+
+
+### Typische statistische Modelle sind Spezifallfälle des linearen Modells
+
+
+```{r echo = FALSE, out.width="90%"}
+knitr::include_graphics(file.path(pathToImages, "linear_tests_cheat_sheet.pdf"))
+```
+
+
+
+
+### Ein Standardmodell
+
+
+
+
+
+Häufig werden statistische Modelle in dieser Art spezifiziert:
+
+
+$$
+\begin{aligned}
+y_i &\sim \text{N}(\mu_i, \sigma)\\
+\mu_i &= \alpha + \beta x_i
+\end{aligned}
+$$
+
+Dabei steht *N* für eine Normalverteilung mit Erwartungswert $\mu$ und SD $\sigma$.  
+
+Modelle dieser Art bezeichnet man *(einfache) lineare Modelle*. Sie sind geeignet, wenn
+
+- ein linearer Zusammenhang zwischen $X$ und $Y$ angenommen werden kann
+- es keine Begrenzungen im Wertebereich in $Y$ gibt (zumindest nicht im Bereich relevanter Daten)
+- die Fehler ($y|\hat{y}$) normalverteilt sind
+- man an gut interpretierbaren Ergebnissen Interesse hat
+- die richtigen Prädiktoren in das Modell aufgenommen wurden
+
+
+
+
+### Ein Beispiel zur Veranschaulichung mit simulierten Daten
+
+Beispiel: Der Klausurerfolg $Y$ sei linear abhängig von der Lernzeit $X$ mit $\beta = 0.7$; es bleibt einiges Rauschen $\sigma$, da die Korrelation nicht perfekt ist.
+
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r echo = TRUE, out.width="50%", eval = FALSE}
+alpha <- 1; beta <- 0.7; sigma <- 1
+
+x <- seq(-3, 3, by = 0.1) %>% 
+  rep(100)
+mu <- alpha + beta * x
+y <- rnorm(n = length(x), 
+           mean = mu, sd = sigma)
+
+gf_point(y ~ x) %>% gf_lm()
+```
+
+:::
+:::{.column width="40%"}
+
+
+```{r echo = TRUE, out.width="100%", echo = FALSE, fig.asp = 1}
+alpha <- 1; beta <- 0.7; sigma <- 1
+
+x <- seq(-3, 3, by = 0.1) %>% 
+  rep(100)
+mu <- alpha + beta * x
+y <- rnorm(n = length(x), 
+           mean = mu, sd = sigma)
+
+gf_point(y ~ x) %>% gf_lm()
+```
+
+:::
+::::::
+
+
+
+
+### Probleme mit dem Standard-Modell
+
+- Modelliert man  etwa Häufigkeiten, so sind Probleme mit dem Standardmodell vorprogrammiert:
+  - so sind z.B. Werte kleiner Null für Häufigkeiten *unzulässig.* Das Standardmodell erlaubt aber negative Werte.
+  - Häufigkeitsverteilungen haben häufig *Beschränkungen* im Wertebereich (z.B. es sind nur eine gewisse Zahl an Murmeln in der Urne); das Standard-Linear-Modell berücksichtigt diese Eigenschaften von Häufigkeiten nicht.
+  
+
+```{r include = FALSE}
+tips <- tips %>%
+  mutate(sex_binary = case_when(
+         sex == "Female" ~ 0,
+         sex == "Male" ~ 1))
+
+lm1 <- lm(sex_binary ~ total_bill, data = tips)
+tips <- tips %>%
+  mutate(sex_pred = predict(lm1))
+
+tips %>%
+  gf_point(sex_binary ~ total_bill, data = ., alpha = 0.3) %>% 
+  gf_lm(color = "red") %>%
+  gf_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE)
+  #gf_lims(x = c(0, 100))  
+  
+```
+
+  
+  
+  
+```{r echo = FALSE, out.width= "100%", fig.asp=.3}
+default <- as_tibble(ISLR::Default)
+default <- default %>% 
+  mutate(default_binary = ifelse(default == "Yes", 1, 0))
+
+
+set.seed(123)
+sample <- sample(c(TRUE, FALSE), nrow(default), replace = T, prob = c(0.6,0.4))
+train <- default[sample, ]
+test <- default[!sample, ]
+
+model1 <- glm(default_binary ~ balance, family = "binomial", data = train)
+model0 <- lm(default_binary ~ balance, data = train)
+
+
+p1 <- train %>% 
+  gf_point(default_binary ~ balance, data = train, alpha = .1) %>% 
+  gf_lm() %>% 
+  gf_labs(x = "", y = "", title = "Standard Linear-Modell")
+
+p2 <- train %>% 
+  gf_point(default_binary ~ balance, data = train, alpha = .1) %>%
+  gf_smooth(method = "glm", method.args = list(family = "binomial"), se = FALSE) %>% 
+  gf_labs(x = "", y = "", title = "Logistisches Linear-Modell")
+
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+
+
+
+### Verallgemeinerung des Standardmodels
+
+- Man kann das Standard-Lineare-Modell aber verallgemeinern, so dass es für für verschiedene Verteilungen von $y_i$ passt:
+  - Wahl einer geeignenten *Verteilungsform*  $p(y|\hat{y})$
+  - Wahl einer *Linkfunktion*, um die lineare Funktion im Standardmodell "zurechtzubiegen"
+  
+- Ein Modell, das Häufigkeiten einer Variablen $Y$ (z.B. 4 von 5 Klausuren bestanden) anhand eines Prädiktors $X$ für Fall $i$ erklärt, könnte so definiert sein:
+
+$$
+\begin{aligned}
+y_i &\sim \text{Bin}(n_i, p_i)\\
+\text{logit}(p_i)& = \alpha + \beta x_i
+\end{aligned}
+$$
+
+
+Dabei steht *Bin* für die Binomialverteilung einer Zufallsvariablen $Y$, wobei die Trefferwahrscheinlichkeit für $y_i$ bei $p_i$ liegt und $n_i$ Züge getätigt wurden.
+
+
+
+
+
+### Vertiefung: Auflösen nach $p_i$ (Inverse-Logit)
+
+
+$\text{log}(\frac{p}{1-p})$ nennt man *Logit*.
+
+$$
+\begin{aligned}
+\text{log}(\frac{p_i}{1-p_i}) &= \alpha + \beta x_i\\
+\frac{p_i}{1-p_i} &= e^{ \alpha + \beta x_i}\\
+p_i &= (1-p) e^{ \alpha + \beta x_i}\\
+p_i &= e^{ \alpha + \beta x_i} - p_i e^{ \alpha + \beta x_i}\\
+p_i +  p_i e^{ \alpha + \beta x_i} &=  e^{ \alpha + \beta x_i}\\
+p_i(1 + e^{ \alpha + \beta x_i}) &=  e^{ \alpha + \beta x_i}\\
+p_i &= \frac{e^{ \alpha + \beta x_i}}{1+ e^{ \alpha + \beta x_i}}
+\end{aligned}
+$$
+
+$p_i$ gibt die Wahrscheinlichkeit in einem Bernoulli-Experiment (z.B. Lösewahrscheinlichkeit in einer Prüfungsfrage).
+
+
+
+### Veranschaulichung zum Logit Link
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+```{r eval = TRUE, results = "hold"}
+x <- seq(-5, 5, by = .1)
+y <- x
+gf_line(y ~ x) %>% 
+  gf_labs(y = "logits")
+```
+
+:::
+:::{.column width="50%"}
+```{r echo = TRUE, results = "hold"}
+e <- 2.718
+p <- e^x / (1 + e^x)
+gf_line(p ~ x) %>% 
+  gf_labs(y = "probability")
+```
+
+:::
+::::::
+
+## Häufige Varianten des GLM
+
+### Häufige Varianten des GLM: Binomialverteilung
+
+
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+- Die Binomialverteilung modelliert die Wahrscheinlichkeit bei $n$ Versuchen $k$ Treffer zu erzielen oder andersherum: Wie viele Treffer zu erwarten sind, wenn $n$ Versuche durchgeführt werden und die Treffer-Wahrscheinlichkeit bei $p$ liegt. 
+- Die Versuche werden als unabhängig und die Treffer-Wahrscheinlichkeit als konstant angenommen.
+- Bei größeren Werten von $n$ nähert sich die Binomialverteilung der Normalverteilung an.
+
+
+:::
+::: {.column width="50%"}
+
+```{r echo = FALSE}
+x <- seq(0,10)
+y <- dbinom(x = x, size = 10, prob = .5)
+
+gf_point(y ~ x) %>% gf_line() %>% 
+  gf_labs(title = "p = 50%") %>% 
+  gf_refine(scale_x_continuous(breaks = 0:10))
+```
+
+
+:::
+:::::: 
+
+### Häufige Varianten des GLM: Poissonverteilung
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+
+- Die Poisson-Verteilung wird ähnlich wie Binomial-Verteilung zur Modellierung von Häufigkeitsdaten verwendet. Wenn aber ein $y_i$ als die Anzahl der "Treffer" von $n_i$ Versuchen verstanden werden kann, ist die Binomial-Verteilung besser geeignet. Wenn jeder Datenpunkt $y_i$ *kein* natürliches Limit aufweist (also nicht einen Anteil an Versuchen darstellt), dann kann die Poisson-Verteilung verwendet werden.
+- Sie gibt die Wahrescheinlichkeit für eine bestimte Häufigkeit an Ereignissen in einem Zeitintervall an.
+- Sie hat einen Parameter $\lambda$, der als mittlere erwartete Häufigkeit pro Zeitintervall verstanden werden kann.
+
+:::
+::: {.column width="50%"}
+
+
+```{r echo = FALSE}
+x <- seq(0,10)
+y <- dpois(x = x, lambda = 2)
+d <- data.frame(x,y)
+
+gf_point(y ~ x, data = d) %>% gf_line(group=1) %>% 
+  gf_labs(title = "Lambda = 2", y = "p") %>% 
+  gf_refine(scale_x_continuous(breaks = 0:10))
+```
+
+- Die Link-Funktion ist der *Log-Link*: $log(\theta) = \alpha + \beta x_i$.
+- Verteilungsfamilie ist *Poisson*.
+
+
+:::
+::::::
+
+
+### Häufige Varianten des GLM: Exponentialverteilung
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+- Die Exponentialverteilung wird oft zur Modellierung von Wartezeiten verwendet.
+- Diese Verteilung hat einen Parameter $\lambda$, der die mittlere Wartezeit bis zum nächsten Ereignis beschreibt. Ein größerer Wert steht dabei für *kleinere* mittlere Wartezeiten.
+- Da Wartezeiten positiv sind, wird $X\ge0$ angenommen.
+- Die Link-Funktion ist der *Log-Link*: $log(\theta) = \alpha + \beta x_i$.
+- Verteilungsfamilie ist *Exponential*.
+
+
+:::
+::: {.column width="50%"}
+
+```{r echo = FALSE}
+x <- seq(0,10, by = .5)
+y <- dexp(x = x, rate = 1/2)
+
+gf_point(y ~ x) %>% gf_line() %>% 
+  gf_labs(title = "Lambda = 1/2", y = "p")  %>% 
+  gf_refine(scale_x_continuous(breaks = 0:10))
+```
+
+:::
+:::::: 
+
+
+
+### Häufige Varianten des GLM: Normalverteilung
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+- Auch die Gauss'sche Normalverteilung gehört zu dieser Verteilungsfamilie.
+- Die Normalverteilung ist angebracht zur Modellierung von Verteilungen, die sich als Summe vieler unabhängiger Prozesse mit jeweils ähnlichem und schwachen Einfluss ergeben.
+- Die Normalverteilung ist (wie andere Vertreter dieser Familie) entropiemaximierend.
+
+
+:::
+::: {.column width="50%"}
+
+```{r echo = FALSE}
+x <- seq(-3,3, by = .1)
+y <- dnorm(x = x, mean = 0, sd = 1)
+
+gf_point(y ~ x) %>% gf_line() %>% 
+  gf_labs(title = "Standardnormalverteilung", y = "d")  %>% 
+  gf_refine(scale_x_continuous(breaks = -3:3))
+```
+
+:::
+:::::: 
+
+
+
+## GLM in R 
+
+### GLM in R -- frequentistisch
+
+- Für viele Varianten des GLM kann die Funktion `glm()` verwendet werden.
+- Dabei spezifiziert man die Verteilungsform und die Link-Funktion, wobei für jede Verteilungsform ein Standard vorhanden ist.
+- Die Parameter werden nicht über das Least-Square-Verfahren, sondenr über das Maximum-Likelihood-Verfahren bestimmt.
+- Im Übrigen ist die Syntax vergleichbar zu `lm()`.
+
+
+```{r eval = FALSE}
+glm(y ~ x, data = data, 
+    family = poisson(link = "log"))  # Poisson
+lm(log(y) ~ x data = data)  # Exponential
+
+data(tips, package = "reshape2")
+glm1 <- glm(sex ~ total_bill, data = tips, 
+    family = binomial(link = "logit"))  # Binomial Regression
+tidy(glm1)
+```
+
+
+
+### GLM in R -- bayesianisch
+
+
+Das Paket `brms` kann zur bayesianischen Modellierung verwendet werden.^[Installieren und Laden nicht vergessen.] (Priors werden automatisch gesetzt.
+
+```{r results = "hide", cache = TRUE}
+tips$sex_num <- ifelse(tips$sex == "Female", 0, 1)
+model1 <- brm(data = tips,
+              sex_num ~ total_bill,  
+              family = bernoulli(), 
+              file = "model1")  
+```
+
+{.small}
+```{r}
+tidy(model1)  # Modellergebnis
+```
+:::
+
+
+
+
+## Fallbeispiel
+
+
+### Forschungsfrage
+
+Eine Krankheit breitet sich aus; im Zeitverlauf $T$ wird eine Zunahme $Y$ an Fällen gemessen. Wie viele Fälle sind zum Zeitpunkt $t$ zu erwarten?
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+:::{.tiny}
+```{r out.height = "30%", fig.asp = 1/2}
+# Intercept und Steigung:
+alpha <- 1; beta <- 0.7
+
+# Streuung um mue; "Rauschen":
+sigma <- 1  
+
+# 10 Messungen für 51 Zeitpunkte: :
+t <- seq(0, 5, by = 0.1) %>% rep(10)  
+
+# Mittelwert pro Zeitpunkt:
+mu <- exp(alpha + beta * x)  
+
+# Rauschen, r:
+r <- rnorm(n = length(x),
+                mean = 0, sd = sigma)
+
+# beobachteter Wert = wahrer Wert + Rauschen
+y <- mu + r
+
+# nur positive y erlaubt
+y <- ifelse(y < 0, y = -y, y)  
+```
+:::
+
+
+:::
+::: {.column width="40%"}
+
+
+```{r out.width="100%"}
+gf_point(y ~ x) %>% 
+  gf_lm()
+```
+
+
+
+:::
+::::::
+
+
+Eine lineare Funktion beschreibt die Daten unzulänglich.
+
+
+### Modellierung als Exponentialfunktion
+
+
+::::::{.columns}
+:::{.column width="40%"}
+Es gilt:
+
+$$
+\begin{aligned}
+\text{log}(y_i) = \alpha + \beta x_i\\
+y_i = e^{\alpha + \beta x_i}
+\end{aligned}
+$$
+
+```{r out.width="80%"}
+log_y <- log(y)
+gf_point(log_y ~ x) %>% 
+  gf_lm()
+```
+:::
+:::{.column width="60%"}
+
+Daher kann eine lineare Funktion zur Modellierung der logarithmierten $y_i$-Werte verwendet werden, via `lm()` oder `glm()`.
+
+```{r}
+lm1 <- lm(log_y ~ x)
+coef(lm1)
+
+glm1 <- glm(y ~ x, 
+            family = gaussian(link = "log"))
+coef(glm1)
+```
+
+:::
+::::::
+
+
+
+### Regressionsdiagnostik via `plot(lm1)`
+
+Insgesamt zeigt die Regressionsdiagnostik keine gravierenden Modellverletzungen an.
+
+
+```{r out.width="70%", echo = FALSE}
+par(mfrow = c(2, 2))
+plot(lm1)
+par(mfrow = c(1, 1))
+```
+

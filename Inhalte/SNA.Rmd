@@ -9,8 +9,11 @@ initPart(
     "SNA",             # Dateiname ohne Suffix
     "SNA"              # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
+
+# geomnet Stand 5.3.2020 nicht mehr auf CRAN.
+# Installation: devtools::install_github("sctyner/geomnet")
 
 library(geomnet)
 library(igraph)
@@ -18,7 +21,7 @@ library(dplyr)
 library(RColorBrewer)
 ```
 
-# `r nextChapter()` Netzwerkanalyse
+# Netzwerkanalyse
 
 ## Grundlagen Netzwerkanalyse
 

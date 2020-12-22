@@ -9,7 +9,7 @@
   \setbeamertemplate{headline}[nosectioninhead]
 \mode<all>
 \begin{frame}
-  \frametitle{Inhaltsverzeichnis}
+  \frametitle{\contentsname}
   %\vspace*{-1cm}%
   \flushcolumns % \raggedcolumns% 
   \setlength{\columnsep}{0.2cm}%
@@ -20,18 +20,5 @@
 \mode<beamer>
   \setbeamertemplate{headline}[sectioninhead]
 \mode<all>
-% Läuft nicht ... leider ...
-%\makeatletter
-%  \beamer@tocsectionnumber=-1\relax
-%  setcounter{section}{-1}
-%\makeatother
 
-%
-% Eigentlich sollte das Kapitel "0" nicht dargestellt werden. 
-% Also "Organisatorische" sollte nicht wirklich eine Nummer tragen 
-% oder wenn, dann die Nummer 0. --- FIX ME ---
-%
-%\mode<beamer>
-%\addtocounter{section}{-1}
-%\mode<*>
 % ===========================================================================

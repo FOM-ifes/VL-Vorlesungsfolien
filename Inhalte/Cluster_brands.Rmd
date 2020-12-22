@@ -9,25 +9,25 @@ initPart(
     "Cluster_brands",  # Dateiname ohne Suffix
     "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 
 ```
 
-# `r nextChapter()` Clusteranalye zur Marksegmentierung
+# Clusteranalye zur Marksegmentierung
 
 
 ### Lernziele
 
 - Einsatz und Ziel der Clusteranalyse verstehen.
 - Daten für die Clusteranalyse aufbereiten.
-- Anwendung der hirarchischen Clusteranalyse.
-- Interpretation und Schlussfolgerungen der hirarchischen Clusteranalye.
+- Anwendung der hierarchischen Clusteranalyse.
+- Interpretation und Schlussfolgerungen der hierarchischen Clusteranalye.
 - Anwendung der Clusterzentrenanalyse.
 - Interpretation und Anwendung der Clusterzentrenanalyse.
-- Evaluation des Einsates der Clustenalyse in der Marketing Controlling Praxis.
+- Evaluation des Einsatzes der Clustenalyse in der Marketing Controlling Praxis.
 
 
 ### Verwendung der Clusteranalyse
@@ -54,7 +54,7 @@ Das Ziel einer Clusteranalyse ist es, innerhalb der Cluster möglichst homogene 
 
 ### Übung `r nextExercise()`: Clusteranalyse {.exercise type=A-B-C-D-E answer=C-D}
 
-Was wird bei der Clusteranalyse gecluster? (max. zwei Antworten sind richtig)
+Was wird bei der Clusteranalyse geclustert? (max. zwei Antworten sind richtig)
 
 A.  Die Variablen
 B.  Die Items
@@ -71,9 +71,9 @@ E.  Keine der obigen Antworten ist richtig
 
 Grundsätzlich gibt es in R zwei Verfahren der Clusteranalyse:
 
-- **Hierarchische Clusterung:** In hierarchischen Clusterverfahren werden Beobachtungen sukzessive zusammengefasst. Jede Beobachtung ist zunächst ein eigener Cluster, der dann nach dem Ähnlichkeitsmaß gruppiert wird.
+- **Hierarchische Clusterung:** In hierarchischen Clusterverfahren werden Beobachtungen sukzessive zusammengefasst. Jede Beobachtung ist zunächst ein eigenes Cluster, der dann nach dem Ähnlichkeitsmaß gruppiert wird.
 
-- **Clusterzentrenanalyse:** Ist ein partionierendes Verfahren, geht von einer gegebenen Gruppierung der Objekte aus und ordnet die Objekte zwischen den Gruppen um, bis ein optimaler Wert einer Zielfunktion (die Summe der Quadrate der Abweichungen der Beobachtungen soll im Cluster zum Clusterzentrum minimiert werden) erreicht ist.
+- **Clusterzentrenanalyse:** Ist ein partitionierendes Verfahren, geht von einer gegebenen Gruppierung der Objekte aus und ordnet die Objekte zwischen den Gruppen um, bis ein optimaler Wert einer Zielfunktion (die Summe der Quadrate der Abweichungen der Beobachtungen soll im Cluster zum Clusterzentrum minimiert werden) erreicht ist.
 
 
 ### Einlesen der brand.ratings Daten {.shrink}
@@ -91,7 +91,7 @@ d <- dist(brand.ratings[,-10]) # Distanzmatrix ohne die Markenspalte
 as.matrix(d)[1:4,1:4] # Ziege die ersten 5 Zeilen und Spalten
 ```
 
-Wenn keine weiteren Argumente `dist` agegeben werden, wird immer die Euclid-Metrik verwendet. Wenn in den zu clusternden Daten nicht nur numerische, sondern auch nominale Daten vorhanden sind und diese Daten mit in die Clusterung einbezogen werden sollen, empfielt es sich die `daisy` Funktion zu verwenden. Diese scaliert die Daten ud berechnet dann die Distanzen.
+Wenn keine weiteren Argumente `dist` abgegeben werden, wird immer die Euclid-Metrik verwendet. Wenn in den zu clusternden Daten nicht nur numerische, sondern auch nominale Daten vorhanden sind und diese Daten mit in die Clusterung einbezogen werden sollen, empfiehlt es sich die `daisy` Funktion zu verwenden. Diese skaliert die Daten und berechnet dann die Distanzen.
 
 
 ### Übung `r nextExercise()`: Funktion daisy {.exercise type=essay}
@@ -103,7 +103,7 @@ Die Funktion daisy() macht nur Sinn, wenn die Daten tatsächlich auch gemischt s
 </div>
 
 
-### Hirarchische Clusteranalyse mit Ward Methode {.shrink}
+### Hierarchische Clusteranalyse mit Ward Methode {.shrink}
 
 ```{r}
 library(cluster)
@@ -116,7 +116,7 @@ Dendrogramme enthalten den **Abstand der beiden Cluster**, die im jeweiligen Sch
 
 ### Übung `r nextExercise()`: Cluster-Methodee {.exercise type=A-B-C-D-E-F answer=A-B-C-D-E-F}
 
-Welche Methode für die hirarchische Clusterung lässt sich noch ausführen? Probieren Sie es aus. 
+Welche Methode für die hierarchische Clusterung lässt sich noch ausführen? Probieren Sie es aus. 
 
 A.  single
 B.  complete
@@ -149,7 +149,7 @@ Den Zuweisungsvektor für Beobachtungen erhalten wir mit `cutree()`:
 
 ```{r}
 brand.segmente <- cutree(fit, k=3)
-# gibt uns die Anzalh Beobachtungen je Segment aus
+# gibt uns die Anzahl Beobachtungen je Segment aus
 table(brand.segmente) 
 ```
 
@@ -166,7 +166,7 @@ aggregate(. ~ hclust, data=brand.ratings, mean)
 
 ### Übung `r nextExercise()`: Beschreibung Cluster {.exercise type=A-B-C answer=A}
 
-Für welchen Cluster passt die Beschreibung *wertvolle Marke mit hoher Wiederkaufwahrscheinlichkeit* am Besten?
+Für welchen Cluster passt die Beschreibung *wertvolle Marke mit hoher Wiederkaufwahrscheinlichkeit* am besten?
 
 A.  Cluster `1`.
 B.  Cluster `2`.
@@ -186,7 +186,7 @@ k-means Schema:
 3. Zuordnung der Beobachtungen zum nächsten Clusterzentrum
 4. Falls sich die Zuordnung geändert hat, weiter mit Schritt 2, ansonsten Ende
 
-Da explizit eine mittlere Abweichung berechnetwird, ist k-means Clustering auf euklidische Distanz angewiesen. Daher ist sie **nur für numerische Daten** oder Daten, die sinnvollerweise zu numerischen Daten gezwungen werden können, geeignet. 
+Da explizit eine mittlere Abweichung berechnet wird, ist k-means Clustering auf euklidische Distanz angewiesen. Daher ist sie **nur für numerische Daten** oder Daten, die sinnvollerweise zu numerischen Daten gezwungen werden können, geeignet. 
 
 ### k-means {.shrink}
 

@@ -9,7 +9,7 @@ initPart(
     "Inferenz-Beispiele",  # Dateiname ohne Suffix
     "EinfuehrungInferenz"                # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
@@ -18,6 +18,19 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
 
 # Inferenz -- Beispiele
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+- können Anwendungsbeispiele für die Inferenz einer Variable nennen, erläutern und in R berechen -- sowohl für nominale als auch metrische Variablen.
+- können Anwendungsbeispiele für die Inferenz zum Vergleich zweier Gruppen bzw. zum Zusammenhang zweier Variablen nennen, erläutern und in R berechen -- sowohl für nominale als auch metrische Variablen.
+- können Anwendungsbeispiele für die Inferenz zum Vergleich von mehr als zwei Gruppen nennen, erläutern und in R berechen -- sowohl für nominale als auch metrische Variablen.
+
+
+
 
 ### Wiederholung: Inferenz
 
@@ -63,7 +76,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ### Praxistransfer: `Y` numerisch
 
 - Analyse des mittleren Workloads der Studierenden -- ggf. je nach Geschlecht oder Studiengang.
-- Untersuchung des Humors^[Latente Variable, daher Operationalisierung erforderlich] der Mitarbeiter\*innen, ggf. je Geschlecht oder Abteilung.
+- Untersuchung des Humors^[Latente Variable, daher Operationalisierung erforderlich.] der Mitarbeiter\*innen, ggf. je Geschlecht oder Abteilung.
 - Vergleich der Kaufkraft der Kund\*innen mit oder ohne Kundenkarte.
 - Analyse der Rendite von Investitionsalternativen.
 - Vergleich der Mitarbeiterzufriedenheit zwischen Abteilungen.
@@ -97,12 +110,12 @@ Für kategoriale Daten ist der Anteil (***A***) eine geeignete Zusammenfassung.
 
 Durch welche Grafik kann die Verteilung der Variable Essenzeit (Lunch/ Dinner) sinnvoll dargestellt werden?
 
-A.  Balkendiagramm.
+A.  Säulendiagramm.
 B.  Histogramm.
 C.  Boxplot.
 
 ::: {.notes}
-Für kategoriale, nominale Daten ist das Balkendiagramm (***A***) eine geeignete Visualisierung.
+Für kategoriale, nominale Daten ist das Säulendiagramm (***A***) eine geeignete Visualisierung.
 :::
 
 
@@ -156,7 +169,7 @@ tally( ~ sex,
 :::
 :::::::::
 
-Balkendiagramm:
+Säulendiagramm:
 
 ::::::::: {.columns}
 ::: {.column width="49%"}
@@ -189,7 +202,7 @@ Beachte: Es geht hier um den Anteil der insgesamt von Frauen bezahlten Rechnunge
 
 
 ```{r echo=FALSE, out.width = "70%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
+knitr::include_graphics(file.path(pathToImages,"OneTest.png"), error=FALSE)
 ```
 
 [Abbildung: Quelle: Blogbeitrag von Allen Downey]{.small}^[[http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html](http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html)]
@@ -292,6 +305,7 @@ prop( ~ (abw >= abw.stipro), data = Nullvtlg)
 Der p-Wert ist sehr klein ($p<0.0001$): In keiner der $10000$ Simulationen wurde eine so große Abweichung wie in der Stichprobe beobachtet.
 
 
+
 ### Klassischer Test eines Anteilswertes {include-only=deprecated}
 
 Berechnung des p-Wertes und des Konfidenzintervalls unter Verwendung theoretischer Verteilungsannahmen:
@@ -304,6 +318,7 @@ binom.test( ~ sex, # Variable, die gestestet wird
            data = tips) # Datensatz
 ```
 
+<!-- Bug? -->
 
 ### Ergebnis Test des Anteilswertes {include-only=deprecated}
 
@@ -315,6 +330,7 @@ binom.test( ~ sex, # Variable die gestestet wird
            data = tips) # Datensatz
 ```
 
+<!-- Bug? -->
 
 ### Übung `r nextExercise()`: Statistik der Rechnungshöhe {.exercise type=A-B answer=B}
 
@@ -593,7 +609,7 @@ Beispielfragestellungen:
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Wir nehmen an, dass es innerhalb der Maschine für den Kaffee (Zusammenfassung der Daten $Y$) egal ist, welche Bohnen ($X$), z. B. rote oder grüne, eingefüllt werden. 
@@ -670,7 +686,7 @@ $\hat{\mu}_{\text{Smoker Yes}}-\hat{\mu}_{\text{Smoker No}}=`r round(diffmean(to
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
     - Berechne den Unterschied im Mittelwert der Rechnungshöhe 
-      (Raucher vs. Nichtraucher);
+      (Raucher vs. Nichtraucher).
     - Dabei soll das Merkmal *Raucher* jeweils permutiert werden.
 ```
 
@@ -727,7 +743,9 @@ Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage,
 
 
 ::: {.notes}
-Die Forschungsfrage lautete: Unterscheidet sich die mittlere Rechnungshöhe zwischen Tischen, an denen geraucht wird, und denen, an denen nicht geraucht wird? $H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$
+Die Forschungsfrage lautete: Unterscheidet sich die mittlere Rechnungshöhe zwischen Tischen, an denen geraucht wird, und denen, an denen nicht geraucht wird? 
+
+$H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$
 
 
 In der Stichprobe unterscheiden sich die Mittelwerte: $\hat{\mu}_{\text{Smoker Yes}}=`r round(mean(total_bill ~ smoker, data = tips), 2)[2]`$ bzw. $\hat{\mu}_{\text{Smoker No}}=`r round(mean(total_bill ~ smoker, data = tips), 2)[1]`$. 
@@ -758,7 +776,7 @@ $$\hat{\pi}_{\text{Lunch}}-\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, s
 ```
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
-    - Berechne den Unterschied im Frauenanteil (mittags vs. abends);
+    - Berechne den Unterschied im Frauenanteil (mittags vs. abends).
     - Dabei soll das Merkmal *Zeit* jeweils permutiert werden.
 ```
 
@@ -801,7 +819,7 @@ Hypothesentests schließen immer von der Stichprobe auf die Population, also ***
 Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Hypothesen und die Antwort auf die Forschungsfrage.
 
 1. [Think:]{.cemph} Überlegen Sie für sich.
-2. [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit der Nachbar\*in.
+2. [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit dem Nachbarn/ der Nachbarin.
 3. [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
 
 ::: {.notes}

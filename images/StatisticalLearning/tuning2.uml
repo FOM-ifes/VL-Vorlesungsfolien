@@ -1,0 +1,31 @@
+@startuml
+
+
+node "Datensatz" {
+
+
+
+  node "Test-DS" {
+  
+    [Test-DS] --> Modellgüte
+    }
+
+
+
+  package "Für alle Modellkandiaten" {
+    node "Übungs-DS" {
+  
+    [Train-DS] --> Modellanpassung
+    [Validierungs-DS] --> Kandidatengüte
+    }
+  }    
+  
+  
+  
+}
+  
+
+
+ 
+
+@enduml

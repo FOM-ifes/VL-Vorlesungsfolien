@@ -1,7 +1,25 @@
 ### Vorläufiger Zeitplan {.shrink}
 
-```{r, echo=FALSE, out.width = "95%", fig.align="center", cache=FALSE}
+```{r, echo=FALSE, cache=FALSE}
+RmdTimetable <- FALSE
+if (existsRmdTimetable(Vorlesungstermine)) {
+    rmd <- filenameRmdTimetable(Vorlesungstermine)
+    chunks <- paste0("```{r child = '", rmd, "'}\n```\n")
+    cat(chunks, sep = '\n', file="temp.Rmd")
+    RmdTimetable <- TRUE
+}
+```
+
+
+```{r, echo=FALSE, out.width = "95%", fig.align="center", cache=FALSE, eval=!RmdTimetable}
 
 knitr::asis_output(makeTimetable(Vorlesungstermine), cacheable=FALSE)
+
+```
+```{r, child="temp.Rmd", cache=FALSE, eval=RmdTimetable}
+```
+```{r, include=FALSE, echo=FALSE, cache=FALSE, eval=RmdTimetable}
+
+file.remove("temp.Rmd")
 
 ```

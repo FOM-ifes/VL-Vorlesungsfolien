@@ -10,8 +10,8 @@ initPart(
     "Inferenz",  # Dateiname ohne Suffix
     "EinfuehrungInferenz"      # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
-# --------------------------------------------------------------------------
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
 
 library(mosaic)
 
@@ -19,11 +19,132 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 ```
 
+
 # Inferenzstatistik
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+- kennen die Begriffe Punktschätzung und Konfidenzintervall,  können die Unterschiede erläutern und ein Bootstrap-Konfidenzintervall in R berechnen.
+- wissen, was eine $H_0$-Verteilung ist und können ein Beispiel nennen, wie man sie in R simuliert.
+- kennen zentrale Begriffe des Hypothesentestens (wie p-Wert, Signifikanzniveau, signifikant, Standardfehler) und können sie erläutern.
+- wissen um den Zusammenhang und Unterschied von Null- und Alternativhypothese.
+- können Alpha- und Betafehler definieren und anhand von Beispielen illustrieren; sie wissen um den Einfluss der Stichprobengröße auf den p-Wert und die Fehlerarten.
+- kennen die Namen klassischer, verteilungsbasierter Inferenztests und die jeweils getestete Statistik (z.B. t-Test für unabhängige Stichproben -- Mittelwertsdifferenz).
+
 
 ## Einführendes Beispiel
 
-### Einführung: Ist die Münze gezinkt?
+### Offene Übung `r nextExercise()`: Lächeln und Nachsichtigkeit {.exercise type=essay}
+
+Im Artikel LaFrance, M., & Hecht, M. A. (1995). *Why smiles generate leniency*. Personality and Social Psychology Bulletin, 21(3), 207-214, [https://doi.org/10.1177%2F0146167295213002](https://doi.org/10.1177%2F0146167295213002) wird die Frage analysisiert, inwieweit ein Lächeln Personen nachsichtiger stimmt.
+
+- Wie könnten Sie eine solche Fragestellung untersuchen?
+- Welche zwei Hypothesen gibt es? Welche davon ist die *skeptische*?
+- Wie können Sie mit Daten überzeugen?
+
+1.  [Think:]{.cemph} Überlegen Sie für sich.
+2.  [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit dem Nachbarn/der Nachbarin.
+3.  [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
+
+::: {.notes}
+
+- Um den Einfluss von Kovariablen zu vermeiden, sollte ein randomsiertes Experiment durchgeführt werden: Einem zufällig ausgewählten Teil der Teilnehmenden wird ein Foto einer lächelnden Person gezeigt, den anderen ein neutrales Foto. Anschließend kann dann z.B. die durchschnittliche Nachsichtigkeit beider Gruppen verglichen werden.
+- Die skeptische Hypothese lautet: *Lächeln bringt nichts*, d.h., für die Nachsichtigkeit gilt z.B.: $\mu_{\text{neutral}}=\mu_{\text{lächeln}} \Leftrightarrow \mu_{\text{lächeln}}-\mu_{\text{neutral}}=0$. Die andere Vermutung lautet $\mu_{\text{neutral}}<\mu_{\text{lächeln}} \Leftrightarrow \mu_{\text{lächeln}}-\mu_{\text{neutral}}>0$.
+- Falls in der Stichprobe gilt: $\bar{x}_{\text{lächeln}}-\bar{x}_{\text{neutral}}>0$ ist der/die Skeptiker\*in vielleicht nicht überzeugt ("Zufall"). Wenn Sie aber zusätzlich zeigen, dass die Daten nicht gut zum skeptischen Modell passen, haben Sie weitere Belege für die Vermutung $\mu_{\text{lächeln}}-\mu_{\text{neutral}}>0$. 
+
+Zusatzfrage: Wie können Sie *Nachsichtigkeit* messen?
+
+:::
+
+
+### Lächeln und Nachsichtigkeit
+
+```{r smile, echo=FALSE, fig.align="center", fig.width = 12, out.width="12cm"}
+set.seed(1896)
+# LaFrance, M., & Hecht, M. A., "Why smiles generate leniency", Personality and Social Psychology Bulletin, 21, 1995, 207-214.
+
+nachsichtigkeit <- c(7, 3, 6, 4.5, 3.5, 4, 3, 3, 3.5, 4.5, 7, 5, 5, 7.5, 2.5, 5, 5.5, 5.5, 
+                     5, 4, 5, 6.5, 6.5, 7, 3.5, 5, 3.5, 9, 2.5, 8.5, 3.5, 4.5, 3.5, 4.5, 
+                     2, 4, 4, 3, 6, 4.5, 2, 6, 3, 3, 4.5, 8, 4, 5, 3.5, 4.5, 6.5, 3.5, 
+                     4.5, 4.5, 2.5, 2.5, 4.5, 2.5, 6, 6, 2, 4, 5.5, 4, 2.5, 2.5, 3, 6.5)
+gesicht <- factor(rep(c("lächeln", "neutral"), each =34), levels = c("neutral", "lächeln"))
+Laecheln <- data.frame(gesicht, nachsichtigkeit)
+
+
+Laecheln.shuffle <- do(12) * Laecheln
+Laecheln.shuffle <- Laecheln.shuffle %>%
+  group_by(.index) %>%
+  mutate(gesicht = shuffle(gesicht)) %>%
+  ungroup() %>%
+  select(-.row)
+
+Laecheln.org  <- Laecheln  %>%
+  mutate(.index = 3)
+
+Laecheln.shuffle[Laecheln.shuffle$.index==3, ] <- Laecheln.org
+
+
+gf_jitter(nachsichtigkeit ~ gesicht, 
+          color = ~ gesicht, data = Laecheln.shuffle, width=0.1, height = 0.05, alpha = 0.5) %>%
+  gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
+           group = ~ gesicht, stat="summary", size = 4) +
+  facet_wrap(~ .index, ncol = 4) +
+  scale_color_viridis_d()
+  #ggthemes::scale_color_colorblind()
+```
+
+
+
+
+
+### Offene Übung `r nextExercise()`: Modell und Daten {.exercise type=essay}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+gf_jitter(nachsichtigkeit ~ gesicht, 
+          color = ~ gesicht, data = Laecheln.shuffle, width=0.1, height = 0.05, alpha = 0.5) %>%
+  gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
+           group = ~ gesicht, stat="summary", size = 4) +
+  facet_wrap(~ .index, ncol = 4) +
+  ggthemes::scale_color_colorblind()
+```
+
+$11$ Abbildungen zeigen Daten, in denen es nach Konstruktion (Simulation) keinen Unterschied in der Nachsichtigkeit zwischen Lächeln und neutralem Gesicht gibt, eine Abbildung zeigt die beobachteten Daten.
+
+Finden Sie diese?
+
+::: {.notes}
+Die echten Daten finden Sie in Abbildung $3$. 
+
+Für die echten Daten gilt: $\bar{x}_{\text{lächeln}}=`r round(mean(nachsichtigkeit ~ gesicht , data = Laecheln)[2],1)`$ und $\bar{x}_{\text{neutral}}=`r round(mean(nachsichtigkeit ~ gesicht , data = Laecheln)[1],1)`$ und damit $\bar{x}_{\text{lächeln}}-\bar{x}_{\text{neutral}}=`r round(diffmean(nachsichtigkeit ~ gesicht , data = Laecheln),1)`>0$. Aber auch wenn $\mu_{\text{lächeln}}-\mu_{\text{neutral}}=0$ gelten würde (alle anderen Abbildungen), gibt es zufällige Unterschiede. 
+:::
+
+
+
+### Offene Übung `r nextExercise()`: Ergebnisinterpretation {.exercise type=essay}
+
+
+```{r smiledot, echo=FALSE, fig.align="right", out.width="40%"}
+set.seed(1896)
+Nullvtlg <- do(100)*diffmean(nachsichtigkeit ~ shuffle(gesicht), data = Laecheln)
+gf_dotplot( ~ diffmean, data = Nullvtlg, binwidth = 0.05) %>%
+  gf_vline(xintercept = ~diffmean(nachsichtigkeit ~ gesicht , data = Laecheln)) %>%
+  gf_lims(x=c(-1.2,1.2)) %>%
+  gf_labs(y="Simulationen", x="Differenz Mittelwerte")
+```
+
+$100$ Simulationen des Modells *kein Unterschied* ergeben, dass `r tally( ~ diffmean>=diffmean(nachsichtigkeit ~ gesicht , data = Laecheln), data = Nullvtlg)[1]` Mal zufällig der Unterschied in der mittleren Nachsichtigkeit zwischen Lächeln und neutralem Gesicht mindestens so groß war wie der beobachtete.
+
+Wie würden Sie dieses Ergebnis einordnen?
+
+::: {.notes}
+Vielleicht: Wenn wir *theoretisch* annehmen, es gibt keinen Unterschied (und uns gemäß diesem Modell, d.h. gemäß dieser Annahme, Daten simulieren), dann ist das *praktisch* beobachtete Ergebnis möglich, aber eher unwahrscheinlich. Daher gibt es berechtigte Zweifel an der Gültikeit der Annahme und somit liegen hier Indizien für einen positiven Effekt des Lächelns vor.
+:::
+
+
+### Einführung: Ist die Münze gezinkt? {include-only=deprecated}
 
 Jemand lädt Sie zu einem Glücksspiel ein: Die Person wirft 10-mal eine Münze.
 Bei *Kopf* gewinnt die Person, bei *Zahl* gewinnen Sie.
@@ -38,7 +159,7 @@ Zählen Sie dann aus, ob das Ereignis *(mind.) 8 von 10 Kopf* selten ist oder h�
 Falls das Ereignis selten ist, so sprechen die Daten *gegen* die *Unschuldsvermutung*, dass die Münze im Glücksspiel fair war.
 
 
-### Die Verteilung der Stichproben aus dem Münzversuch
+### Die Verteilung der Stichproben aus dem Münzversuch {include-only=deprecated}
 
 So könnte die Verteilung Ihrer Ergebnisse aussehen, falls sie das Spiel (10 Würfe) wie hier $n=100$-mal wiederholt haben:
 
@@ -57,7 +178,7 @@ gf_props(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8
 Das ist die *Verteilung* der Statistik (hier: Anteil $p$), wie sie sich gemäß eines hypothetischen Modells (hier: "Die Münze ist fair" $\Longleftrightarrow$ $\pi=0.5$) ergibt.
 
 
-### Übung `r nextExercise()`: Was ist ein häufiges Ereignis im Münzversuch? {.exercise type=A-B-C-D answer=B}
+### Übung `r nextExercise()`: Was ist ein häufiges Ereignis im Münzversuch? {.exercise type=A-B-C-D answer=B include-only=deprecated}
 
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
 gf_bar(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8-mal oder mehr Kopf") %>%
@@ -77,7 +198,7 @@ Antwort ***B*** ist korrekt. Wenn die Wahrscheinlichkeit *Kopf* bei einer Münze
 :::
 
 
-### Was ist eine Computersimulation?
+### Was ist eine Computersimulation? {include-only=deprecated}
 
 Man kann das Münzwerfen (allgemein: das Durchführen von Zufallsexperimenten) an den Computer delegieren; man spricht dann von einer *Simulation*:
 
@@ -112,7 +233,7 @@ muenzverteilung <- do(100) *
 :::::::
 
 
-### Cartoon: Simulation
+### Cartoon: Simulation {include-only=deprecated}
 
 ```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
 # Lizenzworkaround: 
@@ -145,7 +266,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 \vspace{1cm}
 
 ```{r fig-desk-vs.inf, out.width="70%", echo = FALSE}
-knitr::include_graphics(file.path(pathToImages,"desk_vs_inf-crop.png"))
+knitr::include_graphics(file.path(pathToImages,"desk-vs-inf-v2.pdf"), error=FALSE)
 ```
 
 
@@ -168,7 +289,7 @@ knitr::include_graphics(file.path(pathToImages,"desk_vs_inf-crop.png"))
 ```{r, echo=FALSE, fig.align="center", out.width="30%"}
 plot(c(1,2,3), y=c(1,sqrt(5),1), 
      col=c("darkgreen", "red", "red"), 
-     pch=19, cex=8, ann=FALSE, axes=FALSE, xlim = c(0,4), ylim = c(0,3), asp = 1)
+     pch=c(3,4,4), cex=8, lwd=8, ann=FALSE, axes=FALSE, xlim = c(0,4), ylim = c(0,3), asp = 1)
 ```
 
 
@@ -190,7 +311,7 @@ Es handelt sich um ein kategoriales Merkmal (***A***). Insbesondere gibt es nur 
 Im Rahmen einer Sonderveranstaltung der FOM Dortmund (6.10.2016)^[[https://www.fom.de/2016/oktober/kneipe-statt-hoersaal-chef-mit-humor-lohnt-sich.html](https://www.fom.de/2016/oktober/kneipe-statt-hoersaal-chef-mit-humor-lohnt-sich.html)] und Münster (9.11.2017) tippten von $n=34$ Teilnehmer\*innen $x=12$ im Rahmen eines Dreieckstest auf die richtige Probe, d. h. das *andere* Bier: Krombacher bzw. Perlenbacher.
 
 ```{r echo=FALSE, out.width = "35%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"Lidl-WR20160919.png"))
+knitr::include_graphics(file.path(pathToImages,"Lidl-WR20160919.png"), error=FALSE)
 ```
 [Abbildung: Quelle: Anzeige Westfälische Rundschau, 19.9.2016]{.small}
 
@@ -210,6 +331,7 @@ Anhand dieses Beispiels werden die Themen Punktschätzung, Bereichsschätzung un
 - Da $\pi$ (in der Population) in der Regel unbekannt ist, muss es auf Basis der Stichprobe **geschätzt** werden: $\hat{\pi}$.
 
 
+
 ### Übung `r nextExercise()`: Punktschätzung {.exercise type=A-B-C-D answer=C}
 
 Was wäre Ihrer Meinung nach ein vernünftiger Schätzer für $\pi$?
@@ -227,7 +349,7 @@ Antwort ***C*** ist korrekt: In der vorliegenden Stichprobe haben $12$ von $34$ 
 
 ### Punktschätzung
 
-Der Wert der Stichprobe wird häufig als **Punktschätzer** (engl.: (point) estimate) für den interessierenden Wert der Population verwendet, z. B.:
+Der Wert der Stichprobe wird mit $\delta^*$ bezeichnet. Häufig^[Es gibt weitere Schätzmethoden, mit teilweise unterschiedlichen Eigenschaften, siehe Literatur.] wird er als **Punktschätzer** (engl.: (point) estimate) für den interessierenden Wert der Population verwendet, z. B.:
 
 - Anteil (kategoriale Daten): Population $\pi$, Stichprobe $p$, Punktschätzer $\hat{\pi}=p$.
 
@@ -262,7 +384,7 @@ Eine andere Stichprobe würde evtl. ein anderes Ergebnis liefern, was in der Pop
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 :::
@@ -290,14 +412,15 @@ population <- rep(factor(c("f","r")), c(220000, 120000))
 prop( ~ population, success = "r")
 ```
 
-Dann variiert auch der Anteil in der Stichprobe: `sample` ($n=34$):
+Dann kann auch der Anteil in der Stichprobe: `sample` ($n=34$) variieren:
 
 ```{r, eval=FALSE}
 prop( ~ sample(population, size = 34), success = "r")
 prop( ~ sample(population, size = 34), success = "r")
 ```
-```{r, echo=FALSE}
-set.seed(1896)
+
+```{r, echo=FALSE, cache=0}
+set.seed(1904)
 prop( ~ sample(population, size = 34), success = "r")
 prop( ~ sample(population, size = 34), success = "r")
 ```
@@ -312,7 +435,7 @@ Setze Zufallszahlengenerator
 Stiprovtlg soll sein:
   Wiederhole 10000 Mal:
     - Berechne den Anteil "r",
-    - Ziehe dafür eine Stichprobe vom Umfang 34 aus der Population
+    - ziehe dafür eine Stichprobe vom Umfang 34 aus der Population
 ```
 
 ```{r}
@@ -358,7 +481,7 @@ Bei (quasi-)stetigen Verteilungen gilt z. B. $\hat{\mu}\neq \mu$.
 
 ### Resampling 
 
-In der Regel kennen wir die Population nicht^[Genau genommen haben wir sie hier ja auch nur *simuliert*.]. Wir können aber unsere Stichprobe **resampeln** -- durch *Ziehen mit Zurücklegen*:
+In der Regel kennen wir die Population nicht^[Genau genommen haben wir sie hier ja auch nur [simuliert]{.cemph}.]. Wir können aber unsere Stichprobe **resampeln** -- durch *Ziehen mit Zurücklegen*:
 
 ::: {.small}
 
@@ -398,7 +521,7 @@ do(3)* prop( ~ resample(stipro), success = "r")
 ### Schema: Bootstrap
 
 ```{r echo=FALSE, out.width = "70%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "bootstrap.png"))
+knitr::include_graphics(file.path(pathToImages, "bootstrap.png"), error=FALSE)
 ```
 
 [Abbildung: Quelle: Lock, Robin, Patti Frazer Lock, Kari Lock Morgan, Eric F. Lock, and Dennis F. Lock (2012): Statistics: UnLOCKing the Power of Data. Wiley.]{.small}
@@ -411,7 +534,7 @@ knitr::include_graphics(file.path(pathToImages, "bootstrap.png"))
 - Zufällige Stichprobe oder zufällige Zuordnung. 
 - Nicht zu kleine Stichprobe.^[$n\geq 35$]
 
-[Beispiel:]{.cemph} Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise exaktere Bootstrap-Methoden.] für eine Stichprobe:
+[Beispiel:]{.cemph} Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise [exaktere]{.cemph} Bootstrap-Methoden.] für eine Stichprobe:
 
 - Wiederhole z.B.  $10000 \times$
     - Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
@@ -429,7 +552,7 @@ Ausgehend von einer Stichprobe: Wie entsteht die Bootstrap-Verteilung?
 
 ### Übung `r nextExercise()`: Bootstrap {.exercise type=yesno answer=yes}
 
-Stimmt die Aussage: beim Resampeln kann eine Beobachtung mehrfach in einer Bootstrap-Stichprobe vorkommen?
+Stimmt die Aussage: Beim Resampeln kann eine Beobachtung mehrfach in einer Bootstrap-Stichprobe vorkommen?
 
 - Ja.
 - Nein.
@@ -446,7 +569,7 @@ Setze Zufallszahlengenerator
 Bootvtlg soll sein:
   Wiederhole 10000 Mal:
     - Berechne den Anteil "r",
-    - Der Datensatz "stipro" soll dabei jedes Mal resampelt werden.
+    - der Datensatz "stipro" soll dabei jedes Mal resampelt werden.
 ```
 
 ```{r}
@@ -490,7 +613,7 @@ gridExtra::grid.arrange(gridExtra::grid.arrange(p1,p2, ncol=2))
 
 - Wir simulieren die zufällige Stichprobe (Sampling) durch zufälliges Resampling.
 
-- Das $95\,\%$-Konfidenzintervall ist der Bereich in dem $95\,\%$ unserer wiederholten Stichprobenkennzahlen liegen:
+- Das geschätzte $95\,\%$-Konfidenzintervall ist der Bereich in dem $95\,\%$ unserer wiederholten Stichprobenkennzahlen liegen:
 
 ```{r}
 quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
@@ -522,16 +645,21 @@ B.  Auf Werte von Populationen, z. B. $\pi, \mu$.
 
 ::: {.notes}
 ***B***: Konfidenzintervalle beschreiben die Schätzunsicherheit.
+
+Während wir bei der Punktschätzung aus den möglichen Populationswerten einen wie mit einer *Angel* herausfischen, werfen wir beim Konfidenzintervall ein *Netz* für *kompatible* Werte aus.
 :::
 
 
 ### Konfidenzintervall
 
-- Ein **Konfidenzintervall** gibt einen Bereich an, der den wahren, unbekannten Wert der Population mit einer gegebenen Sicherheit (z. B. $95\,\%=1-\alpha=100\,\%-5\,\%$) überdeckt, d. h., den Anteil der so konstruierten Konfidenzintervalle, die den Wert enthalten.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Call It Maybe](https://www.causeweb.org/cause/resources/fun/songs/call-it-maybe)]
+- Ein **Konfidenzintervall** gibt einen Bereich an, der den wahren, unbekannten Wert der Population mit einer gegebenen Sicherheit (z. B. $95\,\%=1-\alpha=100\,\%-5\,\%$) überdeckt^[Oft gilt die \%-Aussage nur approximativ.], d. h., den Anteil der so konstruierten Konfidenzintervalle, die den Wert enthalten.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Call It Maybe](https://www.causeweb.org/cause/resources/fun/songs/call-it-maybe)]
 
-- Je größer die Sicherheit (z. B. $99\,\%$ statt $95\,\%$), desto breiter ist das Intervall.^[Häufig bei $n>30$: $95\,\%$-KI $\approx \delta^* \pm (2 \cdot se)$]
+- Häufig bei $n>30$: $95\,\%$-KI $\approx \delta^* \pm (2 \cdot se)$, d.h., z.B. für den Mittelwert: $95\,\%$-KI für $\mu$: $\approx \bar{x} \pm 2 \cdot se = \bar{x} \pm 2 \cdot \frac{sd}{\sqrt{n}}.$
 
 - Je größer der Stichprobenumfang, desto kleiner das Konfidenzintervall (unter sonst gleichen Umständen): der Standardfehler $se$ fällt mit $n$.
+
+- Je größer die Sicherheit (z. B. $99\,\%$ statt $95\,\%$), desto breiter ist das Intervall. 
+
 
 
 ### Übung `r nextExercise()`: Breite des Konfidenzintervalls {.exercise type=yesno answer=no}
@@ -543,7 +671,9 @@ Stimmt die Aussage: Die Breite eines Konfidenzintervalls hängt *nicht* von der 
 
 ::: {.notes}
 
-***Nein***: Neben der Unsicherheit in statistischen Ergebnissen durch die Zufälligkeit der Stichprobe gibt es natürlich auch die zufällige Variation der Beobachtungen.
+***Nein***: Neben der Unsicherheit in statistischen Ergebnissen durch die Zufälligkeit der Stichprobe gibt es natürlich auch die zufällige Variation der Beobachtungen:
+
+Siehe z.B. $sd$ in Formel:  $\bar{x} \pm 2 \cdot \frac{sd}{\sqrt{n}}$
 :::
 
 
@@ -560,7 +690,7 @@ CIsim(n=10, samples=100)
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 :::
@@ -710,7 +840,7 @@ Wenn $x=20$ das Ergebnis Ihrer Stichprobe wäre, würde dieses nicht gut zum Mod
 ### Schema der simulationsbasierten Inferenz
 
 ```{r echo=FALSE, out.width = "70%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
+knitr::include_graphics(file.path(pathToImages,"OneTest.png"), error=FALSE)
 ```
 
 [Abbildung: Quelle: Blogbeitrag Allen Downey]{.small}^[[http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html](http://allendowney.blogspot.de/2016/06/there-is-still-only-one-test.html)]
@@ -721,7 +851,7 @@ knitr::include_graphics(file.path(pathToImages,"OneTest.png"))
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 :::
@@ -746,22 +876,9 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 "Dr. Frankenstein akzeptierte die Nullhypothese zum letzten Mal."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2016/results) &copy; J.B. Landers, Überschrift A. Boito]
 
 
-### Nutzen und Grenzen des p-Werts
-
-- Der p-Wert bietet eine datenbasierte Möglichkeit zu überprüfen, ob die vorliegenden Daten durch ein zu überprüfendes Modell ($H_0$) plausibel erklärt werden können, d. h., bei wiederholten Stichproben relativ häufig vorkommen.
-
-- Der p-Wert ist definiert als Wahrscheinlichkeit des beobachteten Wertes der Teststatistik (oder noch extremerer Werte) unter der Annahme, dass die $H_0$ gilt ($p(\delta^*\,|\,H_0)$).
-
-- **Achtung**: Der p-Wert sagt nicht aus, wie wahrscheinlich die $H_0$ bei den vorliegenden Daten (Teststatistik) ist ($p(H_0\,|\,\delta^*)$). 
-
-- Der p-Wert sagt nicht, wie relevant ein Ergebnis ist (wie groß ein Effekt ist).
-
-- **Keine** Entscheidung sollte rein auf Basis des p-Wertes getroffen werden.
-
-- *Vor* der Testentscheidung **immer** eine explorative Datenanalyse durchführen.
-
-
 ### p-Wert
+
+Wie oft kommt in den gemäß der Nullhypothese ($H_0: \pi=\frac{1}{3}$) simulierten Daten eine mindestens so große Anzahl richtige (`heads`) vor, wie in der Stichprobe (12)?
 
 ::::::::: {.columns}
 ::: {.column width="40%" .small}
@@ -803,7 +920,7 @@ prop( ~ heads >= 12,
 
 ### Übung `r nextExercise()`: p-Wert {.exercise type=yesno answer=no}
 
-Liefern die Daten (starke) Indizien dafür, dass die Nullhypothese nicht gilt?
+Liefern die Daten (starke) Indizien dafür, dass die Nullhypothese *nicht* gilt?
 
 - Ja.
 - Nein.
@@ -837,6 +954,21 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
 ```
 
 
+### Nutzen und Grenzen des p-Werts
+
+- Der p-Wert bietet eine datenbasierte Möglichkeit zu überprüfen, ob die vorliegenden Daten durch ein zu überprüfendes Modell ($H_0$) plausibel erklärt werden können, d. h., bei wiederholten Stichproben relativ häufig vorkommen.
+
+- Der p-Wert ist definiert als Wahrscheinlichkeit des beobachteten Wertes der Teststatistik (oder noch extremerer Werte) unter der Annahme, dass die $H_0$ gilt ($p(\delta^*\,|\,H_0)$).
+
+- **Achtung**: Der p-Wert sagt nicht aus, wie wahrscheinlich die $H_0$ bei den vorliegenden Daten (Teststatistik) ist ($p(H_0\,|\,\delta^*)$). 
+
+- Der p-Wert sagt nicht, wie relevant ein Ergebnis ist (wie groß ein Effekt ist).
+
+- **Keine** Entscheidung sollte rein auf Basis des p-Wertes getroffen werden.
+
+- *Vor* der Testentscheidung **immer** eine explorative Datenanalyse durchführen.
+
+
 ### Alternativhypothese und Signifikanz
 
 - Die **Alternativhypothese** $H_A, H_1$ ist das Gegenteil der Nullhypothese. Die Rollen von $H_0$ und $H_A$ können *nicht* vertauscht werden.
@@ -866,7 +998,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 ### Übung `r nextExercise()`: Alternativhypothese {.exercise type=A-B-C answer=B}
 
-[Im Dreieckstest:]{.cemph} Was ist eine sinnvolle Alternativhypothese für die Fragestellung ob ein Unterschied vorliegt?
+[Im Dreieckstest:]{.cemph} Was ist eine sinnvolle Alternativhypothese für die Fragestellung, ob ein Unterschied vorliegt?
 
 A.  $H_A: \pi<\frac{1}{3}$
 B.  $H_A: \pi>\frac{1}{3}$
@@ -891,7 +1023,7 @@ Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Do
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
 p1 <- gf_dist("norm", mean=0, geom = "area", fill= ~(x>qnorm(0.95)), alpha = 0.5, 
-        title=expression(paste("Fehler 1. Art: Verteilung bei ", mu==0)),
+        title=expression(paste("Fehler 1. Art: Verteilung falls ", mu==0)),
         subtitle=expression(H[0]:mu<=0 )) %>%
   gf_refine(guides(fill=guide_legend(title=expression(paste(alpha,"-Fehler"))))) %>%
   gf_vline(xintercept = ~qnorm(0.95)) %>%
@@ -903,7 +1035,7 @@ p1 <- gf_dist("norm", mean=0, geom = "area", fill= ~(x>qnorm(0.95)), alpha = 0.5
 
 
 p2 <- gf_dist("norm", mean=2, geom = "area", fill= ~(x<qnorm(0.95)), alpha = 0.5, 
-        title=expression(paste("Fehler 2. Art: Verteilung bei ", mu==2)),
+        title=expression(paste("Fehler 2. Art: Verteilung falls ", mu==2)),
         subtitle=expression(H[0]:mu<=0 )) %>%
   gf_refine(guides(fill=guide_legend(title=expression(paste(beta,"-Fehler"))))) %>%
   gf_vline(xintercept = ~qnorm(0.95)) %>%
@@ -929,7 +1061,7 @@ Zusammenhang des Stichprobenumfangs mit den Fehlerarten.
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 :::
@@ -951,14 +1083,45 @@ B.  Es liegt ein Fehler 2. Art vor.
 C.  Es liegt kein Fehler vor.
 
 ::: {.notes}
-***B***: Ein Fehler 2. Art liegt vor, wenn in Wirklichkeit $H_A$ gilt, die Testentscheidung aber lautet, dass $H_0$ nicht verworfen wird. I. d. R. kennen wir die Realität nicht, daher wissen wir nicht, ob ein solcher Fehler vorliegt. *Vorab* können wir aber durch eine Poweranalyse (siehe Literatur) die Wahrscheinlichkeit eines solchen Fehlers unter der Annahme eines gewissen Effekts (z. B. $\pi=\frac{2}{3}$) bestimmen und den nötigen Stichprobenumfang $n$ berechnen.
+***B***: Ein Fehler 2. Art liegt vor, wenn in Wirklichkeit $H_A$ gilt, die Testentscheidung aber lautet, dass $H_0$ nicht verworfen wird. I. d. R. kennen wir die Realität nicht, daher wissen wir nicht, ob ein solcher Fehler vorliegt. *Vorab* können wir aber durch eine Power-Analyse (siehe Literatur) die Wahrscheinlichkeit eines solchen Fehlers unter der Annahme eines gewissen Effekts (z. B. $\pi=\frac{2}{3}$) bestimmen und den nötigen Stichprobenumfang $n$ berechnen.
 :::
 
 
-### Wiederholung: Quantitativer Forschungsprozess
+### Wiederholung: PPDAC
 
-```{r ref.label="forschungsprozess-image", echo=FALSE, out.width = "90%", fig.align="center"}
+:::::: {.columns}
+::: {.column width="80%"}
+
+[P]{.cemph} 
+: (Problem)
+: Problemdefinition, Forschungsfrage: Was soll untersucht werden?
+
+[P]{.cemph} 
+: (Plan)
+: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
+
+[D]{.cemph} 
+: (Data)
+: Datenerhebung, Datenmanagement, Datenbereinigung.
+
+[A]{.cemph} 
+: (Analysis)
+: Explorative Datenanalyse, Modellierung, Hypothesenprüfung. 
+
+[C]{.cemph} 
+: (Conclusion)
+: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+
+:::
+::: {.column width="20%"}
+
+```{r forschungsprozess-image2, echo=FALSE, out.width = "95%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error=FALSE)
 ```
+
+:::
+::::::
+
 
 
 ### Ablauf: Hypothesenprüfung
@@ -1027,7 +1190,7 @@ $P(H\,|\,\delta^*)$ ist dabei die *a posteriori*-Verteilung *gegeben die Daten* 
 <!-- ::: {.flush align=top-right} -->
 
 <!-- ```{r echo=FALSE, out.width = "20%", fig.align="right"} -->
-<!-- knitr::include_graphics(file.path(pathToImages, "maschine.jpg")) -->
+<!-- knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE) -->
 <!-- ``` -->
 
 <!-- ::: -->
@@ -1070,8 +1233,9 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 ```
 "Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Überschrift D. Nandy]
 
+<!-- Bug? -->
 
-### Hypothesenprüfung und Konfidenzintervall
+### Hypothesenprüfung und Konfidenzintervall {include-only=master}
 
 - Das Konfidenzintervall gibt auf Basis der Stichprobe einen Wertebereich für den Wert ($\delta$) an: $1-\alpha$ der Werte aus den Resampling-Stichproben liegen darin.
 
@@ -1079,8 +1243,10 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 - Häufig^[Hängt u.a. vom Verfahren ab. Es ist aber *theoretisch* möglich äquivalente Bereiche zu konstruieren.] entspricht der Bereich des Konfidenzintervalls dem Bereich für $\delta$, für den $H_0: \delta=\delta_0$ *nicht* verworfen wird.
 
+<!-- -->
 
-### Übung `r nextExercise()`: Konfidenzintervall und Hypothesentest{.exercise type=yesno answer=yes}
+
+### Übung `r nextExercise()`: Konfidenzintervall und Hypothesentest{.exercise type=yesno answer=yes include-only=master}
 
 Das simulierte Konfidenzintervall überdeckt folgenden Bereich:
 ```{r}
@@ -1098,11 +1264,14 @@ Würde $H_0: \pi=\frac{2}{3}$ (vermutlich)^[Da wir nicht *exakt* gerechnet, sond
 [Achtung:]{.cstrong} hier nur kleines $n$ und damit diskrete Schätzwerte.
 :::
 
+<!-- -->
 
 
-## Effektgröße
+## Effektgröße {include-only=des,qfm}
 
-### Effektgröße: Vorbereitung
+<!-- Bug? -->
+
+### Effektgröße: Vorbereitung {include-only=des,qfm}
 
 Der p-Wert gibt (nur) die Wahrscheinlichkeit der Teststatistik unter der Nullhypothese an. Er sagt nicht, wie groß/relevant ein Unterschied ist. Mit größerem Stichprobenumfang $n$ sinkt (c. p.) der p-Wert.
 
@@ -1121,8 +1290,9 @@ library(lsr)
 library(lsr)
 ```
 
+<!-- Bug? -->
 
-### Effektgröße: Rauchen
+### Effektgröße: Rauchen {include-only=des,qfm}
 
 Daumenregel:
 
@@ -1135,8 +1305,9 @@ Beispiel Trinkgelddaten `tips`:
 cohensD(total_bill ~ smoker, data=tips)
 ```
 
+<!-- Bug? -->
 
-### Beispiel: Effektgrößen
+### Beispiel: Effektgrößen {include-only=des,qfm}
 
 ```{r plot-cohens-d, echo=FALSE, out.width="80%", fig.align="center"}
 set.seed(1896)
@@ -1157,15 +1328,16 @@ gf_fitdistr(gformula=~x|d, color=~ordered(Gruppe), data=cohendata, size = 2) %>%
 rm(n,x,x02,x05,x08,x11,cohendata)
 ```
 
+<!-- Bug? -->
 
-### FOMshiny: Mittelwertsvergleich {includeonly=shiny}
+### FOMshiny: Mittelwertsvergleich {include-only=des,qfm,shiny}
 
 Einflussgrößen beim Vergleich von Mittelwerten:
 
 [https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/](https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/)
 
 
-### Power-Analyse: Simulation $d, n$ und p-Wert
+### Power-Analyse: Simulation $d, n$ und p-Wert {include-only=des,qfm}
 
 ```{r plot-p-value-n-d, echo=FALSE, out.width="80%", fig.align="center"}
 set.seed(1896)
@@ -1199,6 +1371,7 @@ gf_histogram(~pvalue, data = pvalsim, bins=20,
 
 ```
 
+<!-- Bug? -->
 
 ```{r rm-simu-values, echo=FALSE}
 rm(n)
@@ -1211,7 +1384,7 @@ rm(k)
 rm(pvalsim)
 ```
 
-### Übung  `r nextExercise()`: Effektgröße und Power {.exercise type=A-B-C answer=A}
+### Übung  `r nextExercise()`: Effektgröße und Power {.exercise type=A-B-C answer=A include-only=des,qfm}
 
 Welche Aussage stimmt? 
 
@@ -1224,13 +1397,15 @@ Je größer in der Population der Effekt ist ($H_A$), desto eher wird $H_0$ verw
 :::
 
 
-### Cartoon: Stichprobenumfang
+### Cartoon: Stichprobenumfang {include-only=des,qfm}
 
 ```{r echo=FALSE, out.width = "30%", fig.align="center", cache=FALSE}
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_10-2017.jpg", "cartoon1017.jpg", pathToImages)
 ```
 "Da Joe der einzige war, der vorab eine Power-Analyse durchgeführt hatte, hatte er als einziger die nötige Größe, um den gewünschten Effekt zu erzielen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2017/results) &copy; J.B. Landers, Überschrift G. Snow]
+
+<!-- Bug? -->
 
 
 ## Zusammenfassung

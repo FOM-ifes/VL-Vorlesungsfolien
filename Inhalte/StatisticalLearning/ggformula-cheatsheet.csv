@@ -1,0 +1,10 @@
+Diagrammtyp,ggformula-Syntax
+Punkte,gf_point()
+Linie,gf_line()
+Boxplot,gf_boxplot()
+Violine,gf_violin()
+Histogramm,gf_histogram()
+Balkendiagramm,"gf_bar(), gf_col()"
+Wackelpunkte,gf_jitter()
+Regressionslinie,gf_lm()
+Glättungslinie,gf_smooth()

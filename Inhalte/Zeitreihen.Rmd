@@ -9,14 +9,14 @@ initPart(
     "Zeitreihen",          # Dateiname ohne Suffix
     "Wirtschaftsstatistik"  # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 library(forecast)
 ```
 
-# `r nextChapter()` Grundlagen Zeitreihenanalyse
+# Grundlagen Zeitreihenanalyse
 
 ### Zerlegung einer Zeitreihe
 
@@ -129,7 +129,7 @@ ma(co2, order=11) %>% # p=11
 
 ### Übung `r nextExercise()`: Gleitende Durchschnitte {.exercise type=yesno answer=yes}
 
-Stimmt die Aussage: Je größer $p$ (`order`), desto glatter wird die geglättete Zeitreihe?
+Stimmt die Aussage: Je größer $p$ (`order`), desto glatter wird die Zeitreihe der gleitenden Durchschnitte?
 
 - Ja.
 - Nein.

@@ -1,0 +1,507 @@
+
+```{r setup-programmieren-mit-r, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Sebastian sauer 
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "Programmieren-mit-R",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+options(tinytex.verbose = TRUE)
+
+```
+
+
+
+
+
+```{r libs-programmieren-mit-r, include = FALSE}
+library(mosaic)
+library(tidyverse)
+```
+
+
+# Programmieren mit R
+
+
+## Einführung
+
+
+### Interaktiver Gebrauch von R vs. Programmieren
+
+
+R ist für *interaktive* Verwendung gut geeignet: Man kann einzelne Befehle (Code) oder kürzere Befehlsgruppen "abschicken", also von R auswerten lassen. Auf der Basis einer Ausgabe schreibt man dann weitere Befehle.
+
+R kann man aber auch zur *Programmierung*. Diese Art des Schreibens ist z.B. dann sinnvoll, wenn man *automatisierte* oder *längere* Befehlssequenzen erstellen möchte. 
+
+
+Programmieren (mit R) unterscheidet sich vom interaktiven Gebrauch, z. B.:
+
+- Der Code sollte (weitgehend) fehlerfrei sein.
+- Der Code sollte mit unvorhergesehen Eingaben/Ereignissen zurecht kommen bzw. diese abfangen.
+- Der Code sollte wohl gegliedert sein.
+
+
+
+
+
+## Funktionen programmieren
+
+
+### Was ist eine Funktion?
+
+
+- Eine Funktion ist eine *Sammlung von R-Befehlen* (R-Syntax), die zusammen eine Aufgabe ausführen.
+
+- *Beispiele*: `mean()`, `round()`, `max()`, `summary()`, aber auch `+`, `:` 
+
+- Funktionen bestehen aus
+  - ihren *Namen*, z.B. `round`
+  - ihren *Argumenten* (Parameter), z.B. `digits = ...`
+  - ihrem *Körper* (body), dort werden die Befehle der Funktion aufgeführt
+  - ihrem *Rückgabewert*, eine Funktion liefert immer (zumindest implizit) einen Wert zurück
+  
+- Nutzer können eigene Funktionen schreiben
+
+- Eine Funktion ruft man anhand ihres Namens auf; ggf. gibt man Parameter an: `round(2,71)`.
+
+- Funktionen haben manchmal Standardwerte für Parameter definiert. Führt man so einen Parameter nicht an beim Aufruf der Funktion, so wird der Standardwert verwendet.
+
+- Man kann die Namen der Funktionsparameter nur dann weglassen, wenn man die in der Funktionsdefinition vorgegebene Reihenfolge der Parameter beim Aufruf der Funktion beibehält.
+
+
+### Wie man eine Funktion schreibt
+
+
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+Eine einfache Funktion mit Namen `addiere_10`, einem Argument (`zahl`) und zwei Zeilen Code im Körper. Der Rückgabewert heißt `ergebnis`.
+
+```{r}
+addiere_10 <- function(zahl){
+  
+  ergebnis <- zahl + 10
+  
+  return(ergebnis)
+  
+} 
+
+addiere_10(zahl = 99)
+```
+
+
+:::
+::: {.column width="50%"}
+
+
+Funktionen sollten hinreichend flexibel sein:
+
+```{r}
+addiere_x <- function(zahl, x = 10) {
+  
+  ergebnis <- zahl + x
+  
+  return(ergebnis)
+  
+}
+
+addiere_x(99, 9)
+```
+
+:::
+::::::
+
+
+
+### Übung `r nextExercise()`: Schreiben Sie eine einfache Funktion!  {.exercise type=essay}
+
+
+Schreiben Sie eine einfache Funktion mit folgenden Eigenschaften
+
+- Mind. zwei Argumemten
+- Mind. einem Standardwert für ein Argument
+- Lassen Sie die Zeile mit `return()` weg und beboachten Sie, was passiert.
+
+
+
+:::{.notes}
+
+`summe <- function(x, y = 10){ergebnis <- x + y}`
+
+`summe(1)`
+`summe(1, 11)`
+
+:::
+
+
+### Übung `r nextExercise()`: Schreiben Sie die Funktion `sd()` nach!  {.exercise type=essay}
+
+Die SD ist so definiert:
+
+$$
+\text{sd} = \sqrt{\frac{\sum (x_i - \bar{x})^2} {n-1}}
+$$
+
+
+
+
+:::{.notes}
+
+my_sd <- function(x) {
+
+  temp1 <- mean(x)
+  
+  temp2 <- x - mean(x)
+  
+  temp3 <- temp2^2
+  
+  temp4 <- sum(temp3)
+  
+  temp5 <- temp4 / (length(x)-1)
+  
+  temp6 <- sqrt(temp5)
+  
+  return(temp6)
+  
+}
+
+
+
+:::
+
+
+
+## Schleifen
+
+
+### Viele R-Funktionen sind vektorisiert
+
+*Schleifen* (Wiederholungen) werden benötigt, um Code nicht unnötig zu wiederholen: "Don't repeat yourself" (DRY). 
+
+Viele R-Funktionen haben "Schleifen eingebaut":
+
+```{r}
+x <- 1:10
+y <- 1:5  # Vektor wird "recycelt"
+
+mean(x)
+rnorm(x)
+x+y
+```
+
+
+
+
+### Schleifen mit `purrr::map()`
+
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+
+- `map(.x, .f)` wendet auf jedes Element von `.x` die Funktion `.f` an.
+
+- `.x` kann ein Vektor, eine Liste oder ein Dataframe sein.
+
+- `map()` gibt eine Liste zurück.
+
+
+\vspace{2cm}
+
+
+```{r echo = FALSE, out.width="70%",}
+knitr::include_graphics(file.path(pathToImages,"map.png"))
+```
+
+:::{.tiny}
+Quelle [RStudio](https://github.com/rstudio/cheatsheets/raw/master/purrr.pdf), Lizenz: CC-BY
+:::
+
+
+
+:::
+::: {.column width="50%"}
+
+```{r}
+library(purrr)
+purrr::map(.x = c(1, 2, 3),
+           .f = sqrt)
+```
+
+:::
+::::::
+
+
+### Varianten von `map()`
+
+
+
+
+
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+
+Mit einer Tabelle für `.x`:
+
+
+```{r}
+purrr::map(.x = data.frame(a = 1, 
+                           b = 2),
+    .f = sqrt)
+```
+
+
+Man kann auch die Namen der Parameter weglassen, wenn man die Reihenfolge einhält:
+```{r eval = FALSE}
+purrr::map(c(1, 2, 3),
+    sqrt)
+```
+
+
+:::
+::: {.column width="50%"}
+
+Mit `map_dbl()` wird ein Objekt vom Typ `double` (reelle Zahl) zurückgegeben.
+
+```{r}
+my_vec <- c(1, 2, 3)
+map_dbl(.x = my_vec,
+        .f = sqrt)
+```
+
+
+
+
+
+:::
+::::::
+
+
+
+### Befehle verketten mit der Pfeife
+
+
+Man kann natürlich auch die Pfeife verwenden:
+
+
+```{r}
+my_vec %>% 
+  map_dbl(sqrt)
+```
+
+Zur Erinnerung: Die "Pfeife" `%>%` übergibt das Ergebnis einer Zeile als ersten Parameter an die folgende Funktion.
+
+
+Das ist analog zu
+
+```{r}
+map_dbl(my_vec,
+        sqrt)
+```
+
+
+
+
+### Funktionsargumente bei `map()` 
+
+
+Möchte man die Parameter `a` und `b` einer Funktion `fun` angeben, so kann man die Form `map(.x, ~ fun(., a, b))` verwenden, wobei `.` das jeweilige Element von `.x` meint.
+
+```{r}
+my_vec <- c(1.11, 2.22, 3.33)
+purrr::map(my_vec,
+    ~ round(., 1))
+```
+
+
+
+
+### Parameterwerte anhand ihres Namens auslesen
+
+Haben Parameterwerte einen Namen, so kann man sie anhand des Namens auslesen:
+
+```{r}
+my_list <- list(element1 = c(a = 1, b = 2, c = 3),
+                element2 = c(a = 4, b = 5, c = 6),
+                element3 = c(a = 7, b = 8, c = 9))
+
+my_list %>% 
+  map(~ sqrt(.)) %>%   # ziehe von jeder Zahl die Wurzel
+  map("a")  # Lies Parameterwert mit Namen "a" jeweils aus
+```
+
+
+
+
+
+
+
+
+### Schleife für ein lineares Modell
+
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+```{r}
+data(mtcars)
+
+mtcars %>%
+  group_split(cyl) %>%
+  purrr::map(~ lm(mpg ~ wt, 
+                  data = .)) %>% 
+  purrr::map("coefficients")
+```
+
+:::
+::: {.column width="40%"}
+
+Übersetzt auf Deutsch:
+
+\vspace{1cm}
+
+- Nimm die Tabelle `mtcars` und dann ...
+- Gruppiere sie/teile sie anhand der Werte von `cyl` und dann ...
+- Wende auf jedes Element (von `mtcars`) die Funktion `lm()` und dann ...
+- Lies den Parameter mit Namen `coefficients` jeweils aus. 
+
+
+:::
+::::::
+
+
+### Bedingte Schleifen
+
+
+Für jede *numerische* Schleife soll ein Test auf Normalverteilung durchgeführt werden:
+
+
+```{r}
+data(iris)
+
+map_if(iris, is.numeric, shapiro.test) %>% 
+  purrr::map("p.value")
+```
+
+
+
+
+### Übung `r nextExercise()`: Berechnen Sie die SD! {.exercise type=essay}
+
+Wie groß ist die SD jeder numerischen Spalte von `iris`?
+
+
+:::{.notes}
+
+
+`map_if(iris, is.numeric, sd)`
+
+:::
+
+
+
+
+### For-Schleifen in R
+
+`For-Loops` sind Schleifen, die eine Operation $n$ Mal wiederholen, wobei $n$ vorab bekannt sein sollte.
+
+
+```{r}
+ergebnis <- 0  # inititialisiere Ergebnisobjekt
+for (i in 1:5) {
+  ergebnis[i] <- (rnorm(n = 1) * 10) %>% abs() %>% sqrt()
+}
+ergebnis
+```
+
+Allgemein lautet die Syntax für eine For-Schleife in R:
+
+```{r eval = FALSE}
+for (Variable in Sequenz) {
+
+  Operation
+  
+}
+```
+
+
+
+
+
+
+
+
+## Kontrollstrukturen
+
+
+
+### Beispiel für `if-else`-Statements (Wenn-Dann-Abläufe)
+
+
+
+
+- *Kontrollstrukturen* erlauben den weiteren Fluss von R-Befehlen zu steuern.
+
+- If-Else-Abläufe prüfen eine Bedingung und führen weitere Befehle in Abhängigkeit davon aus, ob die Prüfung zutraf oder nicht. Beispiel:
+
+```{r}
+x <- rnorm(1)
+x
+
+if (x > 0) {
+  print("Größer Null!")
+} else {
+  print("Nicht größer Null!")
+}
+```
+
+
+
+
+### if-else-Statements (Wenn-Dann-Abläufe)
+
+
+Allgemein sind `if-else-`Abläufe so aufgebaut:
+  
+```{r eval = FALSE}
+wenn (Bedingung==TRUE) {
+  ## tue etwas
+} ansonsten {
+  ## tue etwas anderes
+}
+```
+
+- Der `else`-Teil kann auch weggelassen werden.
+- Im interaktiven Gebrauch von R werden Wenn-Dann-Strukturen wenig benötigt; beim Programmieren mit R hingegen häufiger.
+ 
+  
+### Die Funktion `ifelse()`
+  
+- Im Gegensatz zu if-else-Statements wird die Funktion `ifelse()` verwendet, um für jedes Element eines Vektors eine Prüfung durchzuführen:
+  
+  
+```{r}
+x <- c(-1, 0, 1, 42, -3.14)
+
+ifelse(x > 0, "größer!", "nicht größer!")
+```
+
+
+Alternativ kann z.B. die Funktion `case_when()` aus `dplyr` verwendet werden; diese erlaubt mehr als zwei Ausgänge einer Prüfung.
+
+
+

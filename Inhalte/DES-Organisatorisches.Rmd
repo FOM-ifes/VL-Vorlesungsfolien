@@ -9,18 +9,18 @@ initPart(
     "DES-Organisatorisches",  # Dateiname ohne Suffix
     "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 ```
 
-# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
-
-```{r child = './Organisatorisches/Literatur.Rmd'}
-```
+# `r if(abschluss) WDH` Organisatorisches
 
 ```{r child = './Organisatorisches/LizenzVersion.Rmd'}
 ```
+
+<!-- ```{r child = './Organisatorisches/Literatur.Rmd'} -->
+<!-- ``` -->
 
 
 ### Lernergebnisse
@@ -28,7 +28,7 @@ pathToImages = getPathToImages()
 Die Studierenden können nach erfolgreichem Abschluss des Moduls: 
 
 - den Prozess der Erkenntnisgewinnung in der Psychologie nutzen,
--  Daten gewinnen, zusammenfassen, analysieren und graphisch darstellen,
+- Daten gewinnen, zusammenfassen, analysieren und graphisch darstellen,
 - statistische Aussagen über Zusammenhänge und Prognosen machen,
 - die Gültigkeit der gefundenen Schlussfolgerungen abschätzen,
 - wichtige Methoden der deskriptiven und Inferenzstatistik passgenau auswählen und anwenden,
@@ -38,13 +38,9 @@ Die Studierenden können nach erfolgreichem Abschluss des Moduls:
 - vorbereitend für die Projektarbeiten und ihre Abschlussarbeit angemessene empirische Methoden einsetzen.
 
 
-```{r child = './Organisatorisches/Wordcloud.Rmd'}
-```
-
-
 ### Prüfungsleistung
 
-- Datenanalyse (ca. 1500 Wörter)
+- Datenanalyse als Prognose-Wettbewerb (ca. 1500 Wörter) -> Näheres folgt! 
 - Klausur 90 Minuten
 
 Seminararbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 

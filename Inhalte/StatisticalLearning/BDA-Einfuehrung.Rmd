@@ -1,0 +1,740 @@
+```{r setup-BDAGrundlagen, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "LernenVonDaten",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+```
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  size = "tiny"
+)
+
+```
+
+
+
+
+```{r libs-trends-bda-intro, include = FALSE}
+library(mosaic)
+library(gridExtra)
+library(tidyverse)
+```
+
+
+
+# Einführung in Big Data Analytics
+
+
+
+## Big Data Analytics - Beispiele
+
+
+### Emotionsdetektion^[Zhang, Y.-D., Yang, Z.-J., Lu, H.-M., Zhou, X.-X., Phillips, P., Liu, Q.-M., & Wang, S.-H. (2016). Facial Emotion Recognition Based on Biorthogonal Wavelet Entropy, Fuzzy Support Vector Machine, and Stratified Cross Validation. IEEE Access, 4, 8375–8385. https://doi.org/10.1109/ACCESS.2016.2628407]
+
+
+::::::{.columns}
+:::{.column width="50%"}
+
+:::{.footnotesize}
+
+Abstract
+
+
+Emotion recognition represents the position and motion of facial muscles. It contributes significantly in many fields. Current approaches have not obtained good results. This paper aimed to propose a new emotion recognition system based on facial expression images. We enrolled 20 subjects and let each subject pose seven different emotions: happy, sadness, surprise, anger, disgust, fear, and neutral. Afterward, we employed biorthogonal wavelet entropy to extract multiscale features, and used fuzzy multiclass support vector machine to be the classifier. The stratified cross validation was employed as a strict validation model. The statistical analysis showed our method achieved an overall accuracy of 96.77±0.10%. Besides, our method is superior to three state-of-the-art methods. In all, this proposed method is efficient.
+:::
+:::
+
+:::{.column width="50%"}
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "emo2.jpg"))
+```
+
+
+:::
+::::::
+
+
+
+### Gesichtserkennung^[Amos, B., Ludwiczuk, B., Satyanarayanan, M., & others. (2016). Openface: A general-purpose face recognition library with mobile applications. CMU School of Computer Science, 6. http://elijah.cs.cmu.edu/DOCS/CMU-CS-16-118.pdf]
+
+
+::::::{.columns}
+:::{.column width="50%"}
+
+:::{.footnotesize}
+
+Abstract
+
+Cameras are becoming ubiquitous in the Internet of Things (IoT) and can use face recognition technology to improve context. There is a large accuracy gap between today’s publicly available face
+recognition systems and the state-of-the-art private face recognition systems. This paper presents
+our OpenFace face recognition library that bridges this accuracy gap. We show that OpenFace provides near-human accuracy on the LFW benchmark and present a new classification benchmark
+for mobile scenarios. This paper is intended for non-experts interested in using OpenFace and
+provides a light introduction to the deep neural network techniques we use.
+We released OpenFace in October 2015 as an open source library under the Apache 2.0 license.
+It is available at: http://cmusatyalab.github.io/openface/
+:::
+
+
+
+:::
+:::{.column width="50%"}
+
+
+
+
+```{r echo = FALSE, out.height="30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "face1.png"))
+```
+  
+```{r echo = FALSE, out.height="30%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "face2.png"))
+```
+:::
+::::::
+
+
+### Autonomes Fahren^[Chen, C., Seff, A., Kornhauser, A., & Xiao, J. (2015). Deepdriving: Learning affordance for direct perception in autonomous driving. Proceedings of the IEEE International Conference on Computer Vision, 2722–2730. http://openaccess.thecvf.com/content_iccv_2015/papers/Chen_DeepDriving_Learning_Affordance_ICCV_2015_paper.pdf]
+
+::::::{.columns}
+:::{.column width="50%"}
+:::{.scriptsize}
+
+Abstract
+
+Today, there are two major paradigms for vision-based
+autonomous driving systems: mediated perception approaches that parse an entire scene to make a driving decision, and behavior reflex approaches that directly map an
+input image to a driving action by a regressor. In this paper,
+we propose a third paradigm: a direct perception approach
+to estimate the affordance for driving. We propose to map
+an input image to a small number of key perception indicators that directly relate to the affordance of a road/traffic
+state for driving. Our representation provides a set of compact yet complete descriptions of the scene to enable a simple controller to drive autonomously. Falling in between the
+two extremes of mediated perception and behavior reflex,
+we argue that our direct perception representation provides
+the right level of abstraction. To demonstrate this, we train
+a deep Convolutional Neural Network using recording from
+12 hours of human driving in a video game and show that
+our model can work well to drive a car in a very diverse
+set of virtual environments. We also train a model for car
+distance estimation on the KITTI dataset. Results show that
+our direct perception approach can generalize well to real
+driving images. Source code and data are available on our
+project website.
+:::
+
+:::
+:::{.column width="50%"}
+
+
+
+
+```{r echo = FALSE, out.width="60%"}
+knitr::include_graphics(file.path(pathToImages, "drive1.png"))
+```
+
+
+```{r echo = FALSE, out.width="60%"}
+knitr::include_graphics(file.path(pathToImages, "drive3.png"))
+```
+
+:::
+::::::
+
+
+
+
+
+### Industriebeispiel: Mitarbeiterbindung bei IBM
+
+KI bei IBM sagt mit 95% Sicherheit voraus, welche Mitarbeiter (m/w/d) ihren Job kündigen werden, laut einer Fallstudie^[https://www.cnbc.com/2019/04/03/ibm-ai-can-predict-with-95-percent-accuracy-which-employees-will-quit.html; https://towardsdatascience.com/building-an-employee-churn-model-in-python-to-develop-a-strategic-retention-plan-57d5bd882c2d]
+
+
+
+```{r out.width='30%', fig.show='hold', echo = FALSE}
+knitr::include_graphics(c(file.path(pathToImages, "1_tm31oVS7Mc2mP78yIa_lqA.png"), file.path(pathToImages, "1_gi7rrpqphWz9cfpAkK1LZQ.png")))
+```
+
+
+
+### Industriebeispiel: Sentimentanalyse^[vgl. Kap. Textmining]
+
+
+Emotionen in Tweets, die das Wort *Siemens* beinhalteten^[Quelle: Eigene Analyse, 2019]
+
+```{r out.width="70%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages, "tweets-emotions-2019-05-29.png"))
+```
+
+
+Was machen wir jetzt damit?
+
+
+
+
+
+
+
+### Industriebeispiel: *Brand Watching*
+
+Häufigkeiten von Wörtern, die das Wort *Siemens* beinhalteten
+
+
+```{r out.width = "80%", out.width="70%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages, "tweets-Siemens_tf_idf-2019-05-29.png"))
+```
+
+
+
+
+
+### Schöne neue Welt?
+
+
+- Wem gehören die (persönlichen) Daten?
+- Zunahme von (finanzieller) Ungleichheit aufgrund von Monopolisierung (Winner-takes-it-all-Effekt)?
+- Technische Unwägbarkeiten (Börsen)?
+- Überwachung (Big-Brother-Szenario)?
+- Manipulation/Diebstahl von Daten durch Hacker (Datenschutz)?
+- Einflussnahme in politische Meinungsbildung^[https://www.youtube.com/watch?v=n8Dd5aVXLCc&t=209s]?
+- Überzogene Erwartungen?
+  
+  
+  
+
+
+## Grundbegriffe
+
+
+### Was ist Big Data?
+
+- Big Data sind Daten, die in ihrer Größe klassische Datenhaltung, Verarbeitung und Analyse auf konventioneller Hardware-Infrastruktur übersteigen.
+- Die Ergebnisse einer guten Big-Data-Analyse bezeichnen manche als *Smart Data*.
+- Pragmatisch: "Big Data" ist, wenn die Daten nicht mehr in den Arbeitsspeicher passen: `data > RAM`.
+- Simplistisch, aber eingängig: die "3V" von Big Data:
+  - **V**elocity (Geschwindigkeit): Neue Daten entstehen in hoher Geschwindigkeit z.B. in Echtzeit. Beispiele: Social-Media-Daten, Sensordaten, Verkaufstransaktionen, Wetterdaten
+  - **V**ariety (Vielfalt): Es gibt eine Vielzahl an Formaten (und Quellen), in denen Daten vorliegen können. Der Strukturierungsgrad und die Art der Strukturierung schwankt erheblich. Beispiele: Emails, Tweets, Bilder, Videos, GPS-Daten.
+  - **V**olumen (Masse): Die Größe der Daten und die Zunahme der Größe. Die Zunahme der Größe von Daten nimmt zu.
+  
+
+>   I think data-scientist is a sexed up term for a statistician (Nate Silver)^[https://www.statisticsviews.com/details/feature/5133141/Nate-Silver-What-I-need-from-statisticians.html]
+
+
+### Treiber des Datenwachstums
+
+
+Treiber des Datenwachstums sind u.a.
+
+- "smarte" Geräte, die Daten produzieren (embedded devices, internet of things)
+- Bilder und Videos
+- Austausch von Informationen zwischen Maschinen
+
+
+
+- Mengengerüste von Daten im Internet: https://www.internetlivestats.com/
+
+  
+### Medienarten
+- Soziale Medien: Twitter, Facebook, Instagram, ...
+- Sensordaten: Medizingeräte, Satellit, Kühlschränke^[Hilfe! Mein Kühlschrank hat sich nicht mit meinen Google-Kalender verbunden (First-World-Problems)], Überwachungskameras, RFID, ...
+- Maschinen-Logs: Serverdaten, Applikationslogs, Geschäftsprozesslogs, ...
+- Apps: Google Docs, CRM, ERP, ...
+- Archive
+- Öffentliche Daten: Wetter, Aktien, Wikipedia, [IMdb](https://www.imdb.com/), ...
+- Dokumente: DPC, PDF, email, PPT, HTML, TXT, XML, JSON, ...
+- Medien: Videos, Fotos, Podcasts, Live Stream, ...
+
+
+Daten unterscheiden sich in ihrem Strukturierungsgrad.
+
+### Strukturierungsgrad von Daten
+
+
+- Hohe Strukturierung: vorab festgelegtes Format
+  - meist in Tabellenform
+  - Abfrage häufig via SQL
+
+- Mittlere Strukturierung: gewisse Strukturierung, aber nicht (oder teilweise) vorab bekannt
+  - häufig in Schlüssel-Wert-Format
+  - Abfrage häufig via XML o.Ä.
+  - Beispiele: `<name>=Suess, <profession>=Professor` und `<major>=dataScience, <semester>=1`.
+    
+
+- Geringe (keine) Strukturierung: unstrukturierte Daten
+  - Emails
+  - Posts
+  - Logs
+  - Bilder
+
+
+
+### Big Data Analytics und Business Intelligence (BI)
+
+
+>   Business intelligence (BI) is an umbrella term that includes the applications, infrastructure and tools, and best practices that enable access to and analysis of information to improve and optimize decisions and performance.^[https://www.gartner.com/it-glossary/business-intelligence-bi]
+
+
+- In der Praxis wird [BI]{.cemph} auf primär assoziiert mit
+  - "kleinen" Datenmengen
+  - hoch strukturierte Daten
+  - statische Daten
+  - Data-Warehouse-Architekturen
+
+- Klassische BI-Systeme stoßen bei großen Datenmengen an Problemen
+  - *Volume*: klassische relationale Datenbanken bieten kaum horizontale Skalierungsmöglichkeiten
+  - *Velocity*: klassische BI-Systeme sind i.d.R. auf statische Daten (Data-at-Rest) ausgelegt, Echtzeit-Datenströme sind kaum zu verarbeiten
+  - *Variety*:  klassische BI-Systeme sind nicht optimiert für unstrukturierte Daten
+- Big Data Analytics kann man als "BI 2.0" auffassen
+
+
+
+
+  
+
+### Big-Data-Euphorie in den Medien
+
+- starke Medienpräsenz^[z.B. https://www.youtube.com/watch?v=m9D-v6r3NJQ&list=PLRR4REmBgpIHCQ1iZqjXia_BtEvy_0orl&index=5&t=858s]
+
+- "Mit Künstlicher Intelligenz zur Aktienauswahl" [FAZ](https://www.faz.net/aktuell/finanzen/wie-kuenstliche-intelligenz-im-fondsmanagement-arbeitet-16223269.html) 
+
+- "Die Hoffnung der Neurowissenschaften ruht auf Big Data. Aber kann so das Gehirn verstanden werden?" [FAZ](https://www.faz.net/aktuell/wissen/was-kann-big-data-14672419.html)
+  
+- "BIG DATA: Die Vermessung der Wissenschaften" [FAZ](https://www.faz.net/aktuell/wissen/forschung-politik/big-data-die-vermessung-der-wissenschaften-15514234.html)
+
+- "Dataismus und Optimismus" [Die Zeit](https://www.zeit.de/digital/internet/2013-09/bigdata-dataismus-optimismus)
+
+- "Wie Maschinen denken lernen" [Die Zeit](https://www.zeit.de/2018/12/viktor-mayer-schoenberger-digitalisierung-big-data)
+  
+### Was ist "big"? - Potenzen von 2
+
+
+::::::{.columns}
+:::{.column width="50%"}
+$$2^0 = 1, \qquad 2^6 = 64$$
+$$2^1 = 2, \qquad 2^7 = 128$$
+$$2^2 = 4, \qquad 2^8 = 256$$
+$$2^3 = 8, \qquad 2^9 = 512$$
+$$2^4 = 16, \qquad 2^{10} = 1024$$
+$$2^5 = 32, \qquad 2^{11} = 2064$$
+
+
+
+:::
+
+
+:::{.column width="50%"}
+#### Rechenregeln für Potenzen
+$$a^x \cdot a^y = a^{x+y}$$
+$$a^{-^1} = \frac{1}{a^x}$$
+$$a^x \cdot a^x = (ab)^x$$
+$$(a^x)^y = x^{xy}$$
+$$\sqrt[n]{a} = a^{\frac{1}{n}}$$
+$$a^0 = 1$$
+$$\log_{b} a = x \leftrightarrow  b^x = a$$
+$$\log_b (xy) = \log_{b}x + \log_{b}y$$
+:::
+::::::
+
+
+
+### Potenzen von 2 mit R
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r}
+2^10
+```
+
+```{r}
+log2(1024)
+```
+
+```{r}
+```
+
+
+```{r eval = FALSE}
+library(mosaic)
+
+power <- 1:10
+out <- 2^power
+
+gf_point(out ~ power)
+```
+:::
+  
+  
+:::{.column width="50%"}
+
+```{r message = FALSE, echo = FALSE, out.width="80%"}
+library(mosaic)
+power <- 1:10
+out <- 2^power
+
+gf_point(out ~ power)
+```
+
+
+```{r message = FALSE, echo = FALSE, out.width="80%"}
+library(mosaic)
+power <- 1:10
+out <- 2^power
+
+gf_point(out ~ power) %>% 
+  gf_refine(scale_y_log10()) +
+  labs(y = "Wert in log10-Skala", x = "Potenzen von 2") +
+  gf_refine(scale_x_continuous(breaks = c(2,4,6,8,10)))
+```
+
+:::
+::::::
+  
+  
+### Giga-, Tera-, ...Byte
+  
+
+
+- $\text{Hecto} \qquad 10^2  \qquad \text{Hundert}$
+
+- $\text{Kilo} \qquad 10^3  \qquad \text{Tausend}$
+  
+- $\text{Mega} \qquad 10^6  \qquad \text{Million}$
+  
+- $\text{Giga} \qquad 10^9  \qquad \text{Milliarde}$
+
+- $\text{Tera} \qquad 10^{12}  \qquad \text{Billion}$ 
+
+- $\text{Peta} \qquad 10^{15}  \qquad \text{Billiarde}$
+  
+- $\text{Exa} \qquad 10^{18}  \qquad \text{Trillion}$
+  
+- $\text{Zetta} \qquad 10^{21}  \qquad \text{Trilliarde}$
+  
+- $\text{Yotta} \qquad 10^{24}  \qquad \text{Quadrillion}$
+  
+
+
+Grobe Umrechnung von Zweierpotenzen nach Zehnerpotenzen:
+
+$10^3  \approx 2^{10}$, d.h. z.B. $2^{30} = 2^{10} \cdot 2^{10} \cdot 2^{10} \approx 10^3 \cdot 10^3 \cdot 10^3 = 10^9$
+
+
+
+
+
+
+
+
+### Übung `r nextExercise()`: Wie viel ist viel?  {.exercise type=essay}
+
+Eine weise alte Frau brachte einem Maharaja das Schachspiel nahe. Zur Belohnung gewährte er ihr einen Wunsch. 
+
+Sie sprach: "Ich verlange nicht mehr als etwas Reis. Und zwar entsprechend einem Schachbrett,  ein Reiskorn auf das erste Feld, zwei Reiskörner für das zweite, drei für das dritte Feld und so weiter".
+
+
+Der Maharaja freute sich über die offenbar kleine Gunst, und sagte zu.
+
+Wie viele Reiskörner kommen zusammen?
+  
+  
+  
+  
+:::{.notes}
+Es finden sich $x=2^{63}$ Reiskörner für das $n=64$. Feld. In Summe $2^{64}-1$.
+
+
+Das Wachstum entspricht einer *geometrischen Folge*. Eine Zahlenfolge $x(n)=x(n_{-1})\cdot k$ nennt man *geometrisch*, wenn zwei aufeinander folgende Glieder sich stets um den gleichen Faktor $k$ unterscheiden.
+
+
+Das ist *sehr* viel Reis. Es entspricht etwa der 1200-fachen weltweiten Weizenernte des Jahres 2004. 
+
+
+
+https://de.wikipedia.org/wiki/Sissa_ibn_Dahir
+
+https://www.youtube.com/watch?v=jWXLNPrVhfw
+
+https://www.youtube.com/watch?v=2TCDiK7GpNM
+
+:::
+  
+
+
+
+
+### Veranschaulichung von "big"
+
+- Menschen können sich große Zahlen nur schwer verdeutlichen^[http://imgs.xkcd.com/comics/1000_times.png]
+- Verteilte man eine *Milliarde* Euro auf alle Einwohner Deutschlands, so bekäme jeder - vom Säugling zum Greis - 12.15\oureuro.
+- Eine *Million* in 100-Euro-Scheinen, übereinander gestapelt, sind ca. 30 Zentimeter hoch. Eine *Milliarde* aufeinandergestapelt bringt es auf ein Turm der Höhe 300 Meter. Der Kölner Dom bringt es auf 157 Meter.
+- Video [Powers of Ten](https://www.youtube.com/watch?v=0fKBhvDjuy0)
+- Tipps zum Verdeutlichen (großer) Zahlen
+  - In Beziehung setzen: "das ist X mal so groß wie der Kölner Dom"
+  - Runterbrechen: "das entspricht der Summe von Y für jede/n Bewohner/in Deutschlands"
+  - Visualisieren
+
+
+
+
+
+### Geläufige Begriffe^[Es gibt keinen Konsens zur Definition dieser Begriffe.]
+
+
+
+
+
+- [Statistik]{.cemph}: Wissenschaft von Sammlung, Analyse, Interpretation und Kommunikation von Daten mithilfe mathematischer Verfahren, die Wahrscheinlichkeitstheorie spielt eine zentrale Rolle
+- [Data Science]{.cemph}: (angewandte) Statistik mit Schwerpunkt auf Computern aufgrund von rechenintensiven Verfahren
+- [Data Mining]{.cemph}: Wissen aus großen Datenmengen  extrahieren
+- [Maschinelles Lernen]{.cemph} (Machine Learning): Wissenschaft (und Anwendung) der Programmierung von Computern, so dass sie von Daten lernen, primär anhand von statistischer Analyse; ein Teilgebiet der künstlichen Intelligenz
+- [künstliche Intelligenz]{.cemph} (KI): Automatisierung von Aufgaben bei Maschinen (Computern), die, wenn sie von einem Menschen gelöst werden, Intelligenz erfordern; ein Teilgebiet der Informatik
+- [Neuronale Netze]{.cemph} (Deep Learning): Eine Klasse von Optimierungsmethoden, die ein Netzwerk mit vielen Verarbeitungsschichten sowie Ein- und Ausgabeschicht bereithält; ein Teilgebiet der künstlichen Intelligenz
+- [Prädiktive Analyse]{.cemph}: Statistische Methoden mit dem Ziel, eine Prognose zu erstellen
+
+
+
+### Eine Frage des Trends?
+
+
+```{r echo = FALSE, out.width="90%"}
+knitr::include_graphics(file.path(pathToImages, "trends-data-science.pdf"))
+```
+
+
+
+### *Eine* Definition von Data Science
+
+```{r out.width="50%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages, "ds-venn-crop.png"))
+```
+
+
+
+
+
+
+
+
+### Gemeinsamer Kern: Lernen von Daten
+
+
+
+
+$$Y=f(X)+\epsilon$$
+
+$$\hat{Y}=\hat f(X)$$
+
+
+
+
+```{r p-learn-data, fig.asp = 0.4, echo = FALSE}
+data(mtcars)
+
+
+mtcars %>% 
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "X",
+       y = "Y") +
+  theme(axis.line = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())
+```
+
+
+
+
+### Muster Lernen von *Daten*, nicht von Regeln
+
+*Machine Learning*: Muster werden anhand von Daten gelernt, nicht andhand von vorab einprogrammierter, fester Regeln
+
+
+
+```{r echo = FALSE, out.width="90%"}
+knitr::include_graphics(file.path(pathToImages, "programming-ml.png"))
+```
+
+
+Quelle: Molnar, C. (2019). Interpretable Machine Learning [ePub Book]. Morrisville, NC: Christoph Molnar.
+
+
+### Was ist die beste Methode, das beste Modell, der beste ....
+
+
+```{r out.width  = "50%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages, "269nqn.png"))
+```
+
+
+### Taxonomie von Big Data Analytics
+
+- *Deskriptive Analyse* (descriptive analytics): Beschreibung eines aktuellen (oder früheren) Zustands
+- *Prädiktive Analyse* (predictive analytics): Prognose zukünftiger Zustände
+- *Präskriptive Analyse* (prescriptive analytics): Entscheidungsorientierte Analyse, z.B. Verrechnung von Wahrscheinlichkeit und Kosten/Nutzen eines künftigen Zustands mit dem Ziel, eine rationale Entscheidung zu treffen
+
+Das meiste Interesse liegt auf *prädiktiver* Analyse.
+
+
+
+## Berufsfeld Big Data
+
+
+
+### Big-Data-Experten sind gesucht^[https://www.bain.com/de/insights/solving-the-new-equation-for-advanced-analytics-talent/; https://www.bain.com/contentassets/ef0b54461cd84242a44ae1f8a953c219/bain_brief_solving_the_new_equation_for_advanced_analytics_talent.pdf]
+
+>    Die Talentjagd nach Advanced-Analytics-Fachkräfte hat begonnen
+
+>    Unternehmen müssen intern aus- und weiterbilden sowie externes Wissen flexibel nutzen, um das gravierende Knappheitsproblem zu lösen.
+
+>    Die Auswertung großer Datenmengen hat heute für fast jedes Unternehmen Priorität. Dafür benötigen sie Spezialisten – und das mehr, als zur Verfügung stehen. Auch wenn sich die weltweite Zahl der Advanced-Analytics-Experten von 2018 bis 2020 auf eine Million verdoppeln wird, reicht das Angebot nicht aus, um den rasant steigenden Bedarf zu decken. Nur wer zugleich intern aus- und weiterbildet sowie externes Wissen flexibel nutzt, kann das gravierende Knappheitsproblem lösen. 
+
+
+
+
+###  Übung `r nextExercise()`: Data Scientist: The Sexiest Job of the 21st Century(?)
+
+
+Der *Harvard Business Review* titelte in einem bekannten Artikel, dass Data Scientist ein Berufszweig mit großen Karrierechancen sei (sinngemäß).^[https://hbr.org/2012/10/data-scientist-the-sexiest-job-of-the-21st-century]
+
+Nehmen Sie dazu Stellung!
+
+
+
+
+
+### Data Science als schnell wachsender Berufszweig^[https://blog.linkedin.com/2017/december/7/the-fastest-growing-jobs-in-the-u-s-based-on-linkedin-data]
+
+**Methodologie**
+
+- LinkedIn zählte bei allen Mitglieder deren Berufsbezeichnung in 2017 und in 2012
+- Auf dieser Basis wurden Wachstumsfelder identifiziert
+- Kritik: die Stichprobe ist verzerrt
+  - Die Population der LinkedIn-Mitglieder ist ungleich zu der der Arbeitnehmer
+  - LinkedIn ist im deutschen Markt schwächer vertreten als andere Dienste
+  
+**Ergebnisse**
+
+1. Machine Learning Engineer
+
+2. Data Scientist
+
+3. Sales Development Representative
+
+4. Customer Success Manager
+
+5. Big Data Developer
+
+...
+
+8. Director of Data Science
+
+
+
+### Übung `r nextExercise()`: Rollenprofile 
+
+
+Beschreiben Sie die verschiedenen Rollenprofile aus dem Big-Data-Analytics-Umfeld!
+
+- Orientieren Sie sich an [dieser Quelle](https://www.datacamp.com/community/tutorials/data-science-industry-infographic)
+
+- Arbeiten Sie in Kleingruppen!
+
+- Bereiten Sie eine kurze Präsentation vor!
+
+- Beschreiben Sie die Rollen, aber fügen Sie auch eine (kritische) Einschätzung zu der Darstellung dieser Rollen hinzu!
+
+
+
+
+
+### Drei Geschäftsstrategien für Big Data^[http://image-src.bcg.com/Images/Seven_Ways_Big_Data_Apr_2014_tcm9-143370.pdf] {.exercise type=essay}
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "bcg1.png"))
+```
+
+
+
+
+### Übung `r nextExercise()`: Sieben Gewinnmodelle für Big Data^[http://image-src.bcg.com/Images/Seven_Ways_Big_Data_Apr_2014_tcm9-143370.pdf]
+
+Erklären Sie das Modell!
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "bcg2.png"))
+```
+
+
+### Grober Referenzprozess zur Einführung von Big Data
+
+
+::::::{.columns}
+:::{.column width="50%"}
+1. [Vision und Roadmap]{.cemph}
+  - Entwicklung einer Vision für ein datengetriebenes Unternehmen
+  - Identifikation datengetriebener Produktsoptionen
+  - Bewertung von Produktoptionen nach Nutzen und Umsetzbarkeit
+  - Ableitung einer Roadmap zur Umsetzung
+  
+2. [Modellierung und Datensammlung]{.cemph}
+  - Auswahl eins vielversprechenden datengetriebenen Produkts
+  - Erstellung eines Geschäftsmodell und Berechnung Business Case
+  - Aufbau einer Infrastruktur (Hard-, Software, Kompetenzen)
+  - Sammlung relevanter Daten
+::: 
+:::{.column width="50%"}
+3. [Daten- und Nutzenanalyse]{.cemph}
+  - Analyse der Daten anhand verschiedener Modelle
+  - Schätzung des Nutzens für die Zielgruppe
+  - Aufbereitung der Ergebnisse
+  
+4. [Entscheidung und ggf. Umsetzung]{.cemph}
+  - Entscheidung zur Umsetzung eines datengetriebenen Produkte
+  - Planung und Ausführung eines Pilotprojekts
+  - Planung und Ausführung des Produkts
+  - Ableitung von Lessons Learnt
+ 
+:::  
+::::::
+
+
+### Kompetenzen eines *Data Scientists*^[https://www.kdnuggets.com/2018/05/simplilearn-9-must-have-skills-data-scientist.html]
+  
+
+1. *Bildung*: Relevantes Studienfach, idealerweise mit MSc. oder sogar PhD.
+2. *R*: " You can use R to solve any problem you encounter in data science"
+3. *Python*: Eine vielseitige und verbreitete Allround-Programmiersprache, gute Anschlussfähigkeit zu anderen IT-Spezialisten
+4. *Hadoop*: Apache Hadoop ist eine der führenden Technologien im Big-Data-Umfeld
+5. *SQL*: Robustes Verständnis von Datenbanken(abfragen) bleibt eine unabdingbare Kompetenz
+6. *[Apache Spark](https://spark.apache.org/)*: Eine der am stärksten wachsenden Big-Data-Technologien.
+7. *Maschinelles Lernen und künstliche Intelligenz*: Fortgeschrittene Analysekompetenz von Daten
+8. *Datenvisualisierung*: Ein zentraler Weg, um Einblicke in eine Analyse zu vermitteln (oder zu bekommen)
+9. Kompetenz mit *unstrukturierten Daten*: Solche Daten (Bilder, Videos, Text, ...) gewinnen an Bedeutung.
+  
+  
+  

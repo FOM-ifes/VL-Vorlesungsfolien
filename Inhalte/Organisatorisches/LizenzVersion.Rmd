@@ -1,8 +1,8 @@
 ### Lizenz/ Version
 
-Diese Folien wurden von Karsten Lübke zusammen mit Kolleg\*innen von der FOM [https://www.fom.de/](https://www.fom.de/) entwickelt und stehen unter der Lizenz CC-BY-SA-NC 3.0 de: [https://creativecommons.org/licenses/by-nc-sa/3.0/de/](https://creativecommons.org/licenses/by-nc-sa/3.0/de/) 
+Diese Folien wurden von Autor\*innen der FOM [https://www.fom.de/](https://www.fom.de/) entwickelt und stehen unter der Lizenz CC-BY-SA-NC 3.0 de: [https://creativecommons.org/licenses/by-nc-sa/3.0/de/](https://creativecommons.org/licenses/by-nc-sa/3.0/de/) 
 
-Der verwendete Code sowie das Beamer Template aus dem [NPBT-Projekt](http://github.com/NMarkgraf/NPBT) von Norman Markgraf stehen unter der Lizenz [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.de.html).
+Der verwendete Code sowie das Beamer-Template aus dem [NPBT-Projekt](http://github.com/NMarkgraf/NPBT) von Norman Markgraf stehen unter der Lizenz [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.de.html).
 
 - Datum erstellt: `r Sys.Date()`
 - R Version: `r getRversion()`
@@ -10,4 +10,5 @@ Der verwendete Code sowie das Beamer Template aus dem [NPBT-Projekt](http://gith
 
 Bitte melden Sie Fehler und Verbesserungsvorschläge: [karsten.luebke@fom.de](<mailto:karsten.luebke@fom.de>)
 
-Mitarbeit und Hinweise von Thomas Christiaans, Oliver Gansser, Matthias Gehrke, Jörg Horst, Bianca Krol, Norman Markgraf, Sebastian Sauer, Daniel Ziggel. **Vielen Dank!**
+- Autor\*innen: Karsten Lübke, Oliver Gansser, Matthias Gehrke, Bianca Krol, Norman Markgraf, Sebastian Sauer, Tanja Kistler, Tabea Griesenbeck
+- Hinweise u.a. von Thomas Christiaans, Jörg Horst, Ute Twisselmann, Martin Vogt, Daniel Ziggel. Vielen Dank!

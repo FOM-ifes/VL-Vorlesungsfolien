@@ -10,16 +10,25 @@ initPart(
     "0-Grundlagen-Wissenschaft",  # Dateiname ohne Suffix
     "Grundlagen"                  # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 library(mosaic)
 ```
 
 # Wissenschaftliche Grundlagen
 
+### Lernziele {exclude-only=NOlernziele}
+
+Nach diesem Kapitel sollen die Studierenden folgende Lernziele erreicht haben:
+
+- Die Studierenden können die vorgestellten Grundkonzepte wissenschaftlichen Denkens erläutern.
+- Die Studierenden können zentrale Begriffe der Wissenschaftstheorie darlegen.
+- Die Studierenden sind fähig, eigenständig Beispiele für zentrale Begriffe (wie Hypothesen und zu den Schlusstechniken) zu generieren.
+
+
 ### Übung `r nextExercise()`: Ihr Erinnerungsvermögen {.exercise type=A-B-C}
 
-Was glauben Sie: wann können **Sie** sich besser an Wörter erinnern, die Sie sich vorher einprägen mussten?
+Was glauben Sie: Wann können **Sie** sich besser an Wörter erinnern, die Sie sich vorher einprägen mussten?
 
 A.  Nachdem ich ein Nickerchen gemacht habe.
 B.  Nachdem ich eine Koffeintablette genommen habe.
@@ -31,9 +40,10 @@ Was für **Sie** gilt, kann Ihre Dozent\*in nicht wissen.
 Die Wissenschaft kann aber versuchen herauszufinden, welche Zusammenhänge **allgemein** (z.B. im *Durchschnitt*) gelten. Systematische Daten sind dafür besser als einzelne Anekdoten.
 :::
 
-### Übung `r nextExercise()`: Erinnerungsvermögen allgemein {.exercise type=A-B-C, answer=A}
 
-Was glauben Sie: wann kann **mensch** sich besser an Wörter erinnern, die mensch sich vorher einprägen musste?
+### Übung `r nextExercise()`: Erinnerungsvermögen allgemein {.exercise type=A-B-C answer=A}
+
+Was glauben Sie: Wann kann **mensch** sich besser an Wörter erinnern, die mensch sich vorher einprägen musste?
 
 
 A.  Nach einem Nickerchen.
@@ -49,16 +59,7 @@ In dieser Vorlesung lernen Sie den **Prozess** kennen, der von der Forschungsfra
 :::
 
 
-### Cartoon: Wahrsager\*innen
-
-```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
-# Lizenzworkaround: 
-extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_05-2019.jpg", "cartoon0519.jpg", pathToImages)
-```
-"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Überschrift M. Dunlap]
-
-
-### Übung `r nextExercise()`: Worterinnerung nach Behandlung {.exercise type=A-B-C, answer=C}
+### Übung `r nextExercise()`: Worterinnerung nach Behandlung {.exercise type=A-B-C answer=C}
 
 Die Daten der Studie von Mednick et al. (2008)^[Datenquelle: [https://github.com/rpruim/Lock5withR](https://github.com/rpruim/Lock5withR)] sind wie folgt:
 
@@ -70,12 +71,12 @@ gf_jitter(woerter~behandlung, data = SchlafKoffein, width=0.1, hight=0.1, size=5
   gf_labs(x="Behandlung", y="Erinnerte Wörter")
 ```
 
-Im Mittelwert konnten diejenigen mit der Koffeintablette `r mean(woerter~behandlung, data = SchlafKoffein)[1]` Wörter erinnern, die mit dem Schlaf `r mean(woerter~behandlung, data = SchlafKoffein)[2]`, d.h. im Mittelwert konnte die Schlafgruppe `r diffmean(woerter~behandlung, data = SchlafKoffein)` Wörter mehr erinnern.
+Im Mittelwert konnten diejenigen mit der Koffeintablette `r mean(woerter~behandlung, data = SchlafKoffein)[1]` Wörter erinnern, die mit dem Schlaf `r mean(woerter~behandlung, data = SchlafKoffein)[2]`, d.h., im Mittelwert konnte die Schlafgruppe `r diffmean(woerter~behandlung, data = SchlafKoffein)` Wörter mehr erinnern.
 
 Welche Aussage stimmt?
 
 A.  Die Analyse beweist, dass Schlaf vorteilhaft gegenüber Koffeintabletten ist.
-B.  Das hier Schlaf besser ist als Koffein ist reiner Zufall, in Wirklichkeit ist Koffein besser.
+B.  Dass hier Schlaf besser ist als Koffein, ist reiner Zufall, in Wirklichkeit ist Koffein besser.
 C.  Kann nicht endgültig entschieden werden.
 
 
@@ -101,13 +102,13 @@ gf_histogram( ~ diffmean, data = Nullvtlg, center=0, binwidth = 0.8571428, fill=
   gf_vline(xintercept = ~emp_effect) %>%
     gf_labs(x="Differenz Mittelwert erinnerte Wörter", y="Anzahl Simulationen",
             title = "Im Modell vorhergesagte Differenzen - ", subtitle = "wenn es keinen Unterschied gibt") +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(alpha = 0.6) +
   annotate(geom = "label", x =  emp_effect,
            y = 2000, label = "empirischer\nWert")
 ```
 
 
-### Übung `r nextExercise()`: Daten und Modell {.exercise type=A-B, answer=A}
+### Übung `r nextExercise()`: Daten und Modell {.exercise type=A-B answer=A}
 
 Der Anteil der Simulationen, in denen es zufällig einen Unterschied von mindestes drei erinnerten Wörtern im Mittelwert gibt, liegt bei `r prop( ~ abs(diffmean)>=3, data = Nullvtlg)`. 
 
@@ -118,10 +119,13 @@ B.  Es liegt ein Fehler vor: wenn es keinen Unterschied gibt, dürften wir auch 
 
 
 ::: {.notes}
-Auch wenn es keinen Unterschied gibt, kann es zufällig vorkommen, dass wir einen Unterschied sehen. Aber *wenn* es keinen Unterschied geben sollte, dann ist das Ergebnis dieser Stichprobe eher ungewöhnlich (***A***) - aber natürlich kein Beweis dafür, dass es einen gibt!
+Auch wenn es keinen Unterschied gibt, kann es zufällig vorkommen, dass wir einen Unterschied sehen. Aber *wenn* es keinen Unterschied geben sollte, dann ist das Ergebnis dieser Stichprobe eher ungewöhnlich (***A***) -- aber natürlich kein Beweis dafür, dass es einen gibt!
 
 In dieser Vorlesung lernen Sie, wie Sie Daten erheben können, welche Aussagen damit möglich sind, wie Sie Daten auswerten können und wie Sie Modelle mit und über Daten erstellen können.
 :::
+
+
+<!-- Bug? -->
 
 
 ### Wissenschaft (I / II) {include-only=deprecated}
@@ -135,6 +139,9 @@ In dieser Vorlesung lernen Sie, wie Sie Daten erheben können, welche Aussagen d
 > Hypothesis: A tentative statement about the natural world leading to deductions that can be tested. If the deductions are verified, it becomes more probable that the hypothesis is correct. If the deductions are incorrect, the original hypothesis can be abandoned or modified. Hypotheses can be used to build more complex inferences and explanations.
 
 
+<!-- Bug? -->
+
+
 ### Wissenschaft (II / II) {include-only=deprecated}
 
 > Law^[Hier: Modell.]: A descriptive generalization about how some aspect of the natural world behaves under stated circumstances.
@@ -145,28 +152,29 @@ In dieser Vorlesung lernen Sie, wie Sie Daten erheben können, welche Aussagen d
 Quelle: Science and Creationism: A View from the National Academy of Sciences, Second Edition (1999)^[[https://doi.org/10.17226/6024](https://doi.org/10.17226/6024)]
 
 
-### Kognitives Modell Datenanalyse
+<!-- Bug? -->
+
+
+### Einordnung des Beispiels
+
+- Wie sind Sie zu Ihrer ursprünglichen Einschätzung gekommen? Vielleicht u.a. auf Basis von Erfahrungen und (Vor-)Wissen.
+- Wie ordnen Sie die Erkenntnisse der Studie ein? Vielleicht verwerfen Sie diese^[*Fake News*], vielleicht bestätigt die Studie Ihre Einschätzung, vielleicht revidieren Sie Ihre Einschätzung.
+
+Auch wenn der Fokus dieser Vorlesung die Methoden sind: **Literaturrecherche ist zwingend erforderlich**, damit Sie ein Bild über den aktuellen Stand der Forschung aber auch über das methodische Vorgehen anderer erhalten.
+
+<!-- Bug? -->
+
+### Kognitives Modell Datenanalyse {include-only=master}
 
 ```{r echo=FALSE, out.width = "60%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Sinn3.png"))
+knitr::include_graphics(file.path(pathToImages, "Sinn3.png"), error = FALSE)
 ```
 
 - Schema: Ein mentales Modell, dass die ganze Bandbreite der Information über ein Thema beinhaltet
 - Modell: Repräsentation eines Ausschnitts innerhalb des Themas
 - Daten: Messungen der Realität^[[http://vita.had.co.nz/papers/sensemaking.html](http://vita.had.co.nz/papers/sensemaking.html)]
 
-
-### Übung `r nextExercise()`: Daten {.exercise type=yesno answer=yes}
-
-Stimmt die Aussage: Daten und deren Analyse sind ein zentraler Bestandteil natur- und sozialwissenschaftlicher Argumentation?
-
-- Ja.
-- Nein.
-
-::: {.notes}
-
-*Empirische Evidenz* liefern Daten und deren Analyse, also ***Ja***.
-:::
+<!-- Bug? -->
 
 
 ### Cartoon: Data Science
@@ -201,10 +209,11 @@ Weitere Erkenntnistheorien sind u.a. Empirismus^[Quelle des Wissens ist (vorrang
 
 - Sie lässt sich kaum in ihrem vollen Umfang (auf einmal) prüfen.
 
-- Häufig sind Theorien zumeist an kausalen Beziehungen interessiert.
+- Häufig sind Theorien primär an kausalen Beziehungen interessiert.
 
 - Gute Theorien ermöglichen Erklärungen, Vorhersagen, Nutzen.
 
+<!-- Bug? -->
 
 ### Offene Übung `r nextExercise()`: Theorie {.exercise type=essay include-only=deprecated}
 
@@ -217,6 +226,7 @@ Alle wollen Realität beschreiben und erklären und sind daher auch für die Pra
 
 :::
 
+<!-- Bug? -->
 
 ### Hypothese
 
@@ -284,9 +294,17 @@ Ableitung von Aussagen aus anderen (allgemeineren) Aussagen mit Hilfe logischer 
 ::::::: {.column width="32%"}
 #### Abduktion
 
-::::: {.spaceing bottom="7.6em"}
-Verknüpfung von Einzelbeobachtungen und Erkennen von Regeln. 
-:::::
+Verknüpfung von Einzelbeobachtungen und Erkennen (Vermuten) von Regeln. 
+
+
+
+
+::::: {.spaceing top=2em  bottom="3em"}
+**Häufig:** *Hypothesenbildung*.
+:::
+
+
+
 
 :::::::
 ::::::::::::::
@@ -300,9 +318,13 @@ Verknüpfung von Einzelbeobachtungen und Erkennen von Regeln.
 
 - *Abduktion*: Vor mir steht ein Sack; ich sehe, dass Bohnen darin sind. Ich finde eine weiße Bohne irgendwo im Raum auf dem Boden. Daraus schließe ich: Die Bohne muss aus dem Sack sein!
 
+
+:::{.tiny}
 Quelle: Walach, H. (2013): *Psychologie: Wissenschaftstheorie, philosophische Grundlagen und Geschichte; ein Lehrbuch*.
 Stuttgart: Kohlhammer.
+:::
 
+  
 
 ### Übung `r nextExercise()`: Schlusstechniken {.exercise type=A-B answer=A}
 
@@ -336,8 +358,9 @@ C.  Vielleicht.
 ***B***, nein, sie hat die Aussage "Alle Studierenden sind interessiert an Statistik" nicht endgültig bewiesen, da es immer noch möglich ist, dass es Studierende gibt, die nicht an Statistik interessiert sind. Vielleicht woanders, zu einem anderen Zeitpunkt ...
 :::
 
+<!-- Bug? -->
 
-### Forschungsprozess generell
+### Forschungsprozess generell {include-only=deprecated}
 
 - **Planung**: Formulierung der Forschungsfrage: Forschungsidee, Informationssammlung, Forschungsfrage und -hypothesen.
 
@@ -347,8 +370,9 @@ C.  Vielleicht.
 
 - **Interpretation**: Was sagt das Ergebnis aus? Schlussfolgerung, Mitteilung der Ergebnisse.
 
+<!-- Bug? -->
 
-### Übung `r nextExercise()`: Literatur {.exercise type=A-B-C-D answer=A}
+### Übung `r nextExercise()`: Literatur {.exercise type=A-B-C-D answer=A include-only=deprecated}
 
 An welcher Stelle des Forschungsprozesses ist Literaturrecherche besonders zentral?
 
@@ -361,6 +385,7 @@ D.  Zum Ende.
 Insbesondere zu Beginn ist Literaturrecherche wichtig, damit Sie ein Bild über den Stand der Forschung, das Vorgehen anderer etc. erhalten. Natürlich auch später, aber gerade zu Beginn, daher ***A***.
 :::
 
+<!-- Bug? -->
 
 ### Forschen
 
@@ -376,19 +401,21 @@ Gütekriterien für Forschung:
 
 - **Externe Validität**: Übertragbarkeit der Ergebnisse? Zeigt sich der behauptete Zusammenhang auch in anderen Situationen?
 
+<!-- Bug? -->
 
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Wie die Kaffemaschine *wirklich* funktioniert, wissen wir nicht, dafür verwenden wir Hypothesen und Modelle.^[Literatur!]
 - Wenn wir uns sicher sind, den Mechanismus in der Maschine gefunden zu haben, haben wir eine hohe interne Validität.
 - Wenn die Maschine auch woanders genauso funktioniert, haben wir eine hohe externe Validität.^[Skizze: Sebastian Sauer]
 
+<!-- Bug? -->
 
-### Übung `r nextExercise()`: Wissenschaftliches Arbeiten {.exercise type=A-B-C-D answer=D}
+### Übung `r nextExercise()`: Wissenschaftliches Arbeiten {.exercise type=A-B-C-D answer=D include-only=deprecated}
 
 Was ist ein unabdingbares Merkmal wissenschaftlichen Arbeitens?
 
@@ -401,6 +428,7 @@ D.  Keines der in A -- C genannten.
 Alles der in *A*, *B* und *C* genannten Merkmale kann ein Merkmal einer wissenschaftlichen Arbeit sein, aber keines muss, daher ***D***.
 :::
 
+<!-- Bug? -->
 
 ### Übung `r nextExercise()`: Reproduzierbarkeit {.exercise type=A-B-C-D answer=D}
 
@@ -427,14 +455,6 @@ Alle der in *A*, *B*, *C* genannten Probleme können aufgetreten sein, daher ***
     - Wirklichkeitsinterpretationen sind durch spezifische soziale Handlungsweisen geprägt und strukturieren gleichzeitig das soziale Handeln der Einzelperson vor. 
     - Untersuchungsgegenstand soll möglichst in seinem natürlichen Umfeld detailliert, ganzheitlich und umfassend erfasst werden.
 
-
-### Cartoon: Statistik
-
-```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
-# Lizenzworkaround: 
-extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_07-2017.jpg", "cartoon0717.jpg", pathToImages)
-```
-"Traue Dich, in die Daten einzutauchen, navigiere mit Statistik und tauche erfrischt mit sinnvollen Erkenntnissen wieder auf."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2017/results) &copy; J.B. Landers, Überschrift D. Nandy]
 
 ```{r finish-Grundlagen-Wissenschaft, include=FALSE}
 rm(pathToImages)

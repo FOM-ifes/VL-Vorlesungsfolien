@@ -14,11 +14,10 @@ pathToImages = getPathToImages()
 
 library(mosaic)
 library(plspm)
-
-
 ```
-# `r nextChapter()` PLS Path Modeling
+# PLS Path Modeling
 
+## Übersicht
 
 ### Was sind Strukturgleichungsmodelle (SEM)
 
@@ -32,7 +31,7 @@ SEM kombinieren die Methoden der Faktoranalyse und Regressionsanalyse mit der M�
 Strukturgleichungsmodell zur Nutzungsabsicht von LBS (Location based services)
 
 ```{r echo=FALSE, out.width = "50%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"BSP_SEM"))
+knitr::include_graphics(file.path(pathToImages,"BSP_SEM"), error=FALSE)
 ```
 Quelle: Gansser, O.; Krol, B. (2017): Potenziale von Location-based Services für die Marktforschung, in: Gansser, A. O.; Krol, B. (Hrsg.): Moderne Methoden der Marktforschung, Wiesbaden: Springer.
 
@@ -57,7 +56,7 @@ Für die Operationalisierung der latenten Konstrukte muss entschieden werden, ob
 ### Messmodelle für die latenten Variablen
 
 ```{r echo=FALSE, out.width = "70%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"ref_form"))
+knitr::include_graphics(file.path(pathToImages,"ref_form"), error=FALSE)
 ```
 
 
@@ -86,14 +85,15 @@ Während **globale Qualitätskriterien** eine Bewertung der Konsistenz des Gesam
 
 ### Warum PLS-PM (Partial Least Squares Path Modeling)
 
-PLS-PM bietet folgende Vorteile^[Sanchez, G. (2013) PLS Path Modeling with R,
-Trowchez Editions, Berkeley, 2013.
+PLS-PM bietet folgende Vorteile^[Sanchez, G. (2013) PLS Path Modeling with R, Trowchez Editions, Berkeley, 2013.]
 
 - Es gibt keine Verteilungsannahmen.
 - Nicht auf einen Datengenerierungsprozess und kausale Modellierungsinterpretationen angewiesen.
 - Behandelt die Daten "nur" als Datensatz.
 - Technik zur Analyse eines Systems von Beziehungen zwischen mehreren Blöcken von Variablen.
 - Technik ist als Vorhersagemethode geeignet (kann für erklärende und bestätigende Zwecke eingesetzt werden).
+
+## Fallstudie
 
 
 ### Das Paket `plspm`
@@ -109,9 +109,10 @@ Literatur:
 Installation
 
 ```{r eval=FALSE}
-# Installation des Pakets plspm
-install.packages("plspm")
-
+install.packages("devtools")
+library(devtools)
+install_github("sctyner/geomnet")
+install_github("gastonstat/plspm")
 ```
 
 
@@ -153,7 +154,7 @@ Somit haben wir ein relativ einfaches Modell mit vier Konstrukten und vier Wirku
 # Einlesen der Daten
 load(url("http://gansser.de/data/SMI.Rdata"))
 
-# Paket Mosaic laden
+# Paket mosaic laden
 library(mosaic)
 ```
 
@@ -195,43 +196,43 @@ Skala von 1 = stimme überhaupt nicht zu bis 7 = stimme voll und ganz zu.
   - Ich beabsichtige, ein von Influencern empfohlenes Produkt/Marke in Zukunft zu kaufen.
   
 
-### Korrelationen von SM
+### Korrelationsplot
 
-
-```{r}
-# Korrelation des Indikators "Social Meldia Influencer"
-# Auswahl der Variablen 5 bis 7 im Datensatz
-cor(data[, 5:7])
+```{r  fig.align="center", out.width="40%"}
+# Laden corrplot (zuerst install.packages("corrplot")
+library(corrplot)
+cor(data) %>%
+  corrplot()
 ```
 
 
-### PCA Plot des Indikators SM
+### Angenommenes Pfadmodell
 
-```{r echo=TRUE, out.width = "50%", fig.align="center"}
-
-# Laden plsdepot (zuerst install.packages("plsdepot"))
-library(plsdepot)
-# PCA mit der Funktion nipals
-SM_pca = nipals(data[,5:7])
-# Plot
-plot(SM_pca, main = "SM Indicator (Korrelationskreis)",
-cex.main = 1)
-
-```
-
-
-### Definition des Pfadmodells
-
-```{r echo=TRUE, out.width = "50%", fig.align="center"}
-# Pfadmodell (Inneres Modell=> untere Triangel einer Matrix)
+```{r echo=FALSE, fig.align="center", out.width="80%"}
 TM <- c(0, 0, 0, 0)
 SM <- c(0, 0, 0, 0)
 ME <- c(1, 1, 0, 0)
 KA <- c(1, 1, 1, 0)
 
-path = rbind(TM, SM, ME, KA)
+path <- rbind(TM, SM, ME, KA)
 # Optionale Spaltennamen hinzufügen
-colnames(path) = rownames(path)
+colnames(path) <- rownames(path)
+innerplot(path)
+```
+
+### Definition des Pfadmodells
+
+```{r echo=TRUE, out.width = "50%", fig.align="center"}
+# Pfadmodell (Inneres Modell=> untere Dreicksmatrix)
+# 1: Zeile i hängt ab von Spalte j, 0 sonst
+TM <- c(0, 0, 0, 0)
+SM <- c(0, 0, 0, 0)
+ME <- c(1, 1, 0, 0)
+KA <- c(1, 1, 1, 0)
+
+path <- rbind(TM, SM, ME, KA)
+# Optionale Spaltennamen hinzufügen
+colnames(path) <- rownames(path)
 # wie sieht es aus?
 path
 ```
@@ -239,7 +240,7 @@ path
 
 ### Graphisches Modell
 
-```{r echo=TRUE, fig.align="center", out.width="100%"}
+```{r echo=TRUE, fig.align="center", out.width="80%"}
 # Plotten der inneren Matrix
 innerplot(path)
 ```
@@ -250,18 +251,18 @@ innerplot(path)
 ```{r}
 # Liste, die angibt, welche Variablen mit welchen 
 # latenten Variablen verknüpft sind.
-blocks = list(2:4, 5:7, 8:10, 11:13)
+blocks <- list(2:4, 5:7, 8:10, 11:13)
 
 # Alle latenten Größen werden reflektierend gemessen 
 # (formativen Modelle werden als "B" definiert)
-modes = rep("A", 4)
+modes <- rep("A", 4)
 ```
 
 
 ### Durchführung des PLS Analyse {.shrink}
 
 ```{r}
-pls = plspm(data, path, blocks, modes = modes)
+pls <- plspm(Data = data, path_matrix = path, blocks = blocks, modes = modes)
 pls
 ```
 
@@ -273,18 +274,17 @@ pls
 pls$unidim
 ```
 
-- Alle Kriterien der Unidimensiononalität sind erfüllt
-- C.alpha > 0,7; DG.roho > 0,7 und die Eigenwerte der ersten Komponente sind wesentlich größer als 1.
+- Alle Kriterien der Unidimensiononalität sind erfüllt: `C.alpha` $> 0.7$; `DG.roho` $> 0.7$ und die Eigenwerte der ersten Komponente sind wesentlich größer als 1.
 
 
 ### Plot der äußeren Ladungen
 
-```{r echo=TRUE, out.width = "80%", fig.align="center"}
+```{r echo=TRUE, out.width = "50%", fig.align="center"}
 plot(pls, what = "loadings", arr.width = 0.1) 
 ```
 
-- Sind alle Ladungen größer als 0,7 oder gibt es sogar negative Ladungen?
-- Sollen negative Ladungen vorliegen, sind diese Items eventuell zu recodieren.  
+- Sind alle Ladungen größer als $0.7$ oder gibt es sogar negative Ladungen?
+- Sollten negative Ladungen vorliegen, sind diese Items eventuell zu recodieren.  
 
 ### Prüfung des äußeres Modells
 
@@ -296,109 +296,20 @@ pls$outer_model
 ### Bewertungskriterien für das äußere Modell
 
 
-- Zulässige Werte für die **Ladungen** sind Werte größer als 0,7. 
-- Äquivalent werden **Kommunalitäten** größer als 0,7^2 = 0,49 als akzeptabel angesehen. Da Kommunalitäten die Höhe der Variabilität repräsentieren, die durch eine latente Variable erklärt wird, bedeutet Kommunalität größer als 0,5, dass mehr als 50% der Variabilität in einem Indikator durch sein latentes Konstrukt erfasst wird. 
-- Die **Redundanz** misst den Prozentsatz der Varianz von Indikatoren in einem endogenen Block, der aus den unabhängigen latenten Variablen, die mit dem endogenen Konstrukt assoziiert sind, vorhergesagt wird. Hohe Redundanz bedeutet hohe Prognosefähigkeit
+- Zulässige Werte für die **Ladungen** sind Werte größer als $0.7$. 
+- Äquivalent werden **Kommunalitäten** größer als $0.7^2 = 0.49$ als akzeptabel angesehen. Da Kommunalitäten die Höhe der Variabilität repräsentieren, die durch eine latente Variable erklärt wird, bedeutet Kommunalität größer als $0.5$, dass mehr als $50\%$ der Variabilität in einem Indikator durch sein latentes Konstrukt erfasst wird. 
+- Die **Redundanz** misst den Prozentsatz der Varianz von Indikatoren in einem endogenen Block, der aus den unabhängigen latenten Variablen, die mit dem endogenen Konstrukt assoziiert sind, vorhergesagt wird. Hohe Redundanz bedeutet hohe Prognosefähigkeit.
 
-
-### Plot der Ladungen - code
-
-```{r eval=FALSE}
-# Laden ggplot2 (vorher install.packages())
-library(ggplot2)
-# Barchart der Ladungen
-ggplot(data = pls$outer_model,
-aes(x = name, y = loading, fill = block)) +
-geom_bar(stat = 'identity', position = 'dodge') +
-# Grenzwertlinie (um akzeptable Belastungen über 0,7 zu erreichen)
-geom_hline(yintercept = 0.7, color = 'gray50') +
-# Titel
-ggtitle("Ladungen der Items") +
-# Name der x-Achse
-theme(axis.text.x = element_text(angle = 90))
-```
-
-
-### Plot der Ladungen
-
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
-# Laden ggplot2 (vorher install.packages())
-library(ggplot2)
-# Barchart der Ladungen
-ggplot(data = pls$outer_model,
-aes(x = name, y = loading, fill = block)) +
-geom_bar(stat = 'identity', position = 'dodge') +
-# Grenzwertlinie (um akzeptable Belastungen über 0,7 zu erreichen)
-geom_hline(yintercept = 0.7, color = 'gray50') +
-# Titel
-ggtitle("Ladungen der Items") +
-# Name der x-Achse
-theme(axis.text.x = element_text(angle = 90))
-```
-
-
-### Kreuzladungen - code {.shrink}
-
-```{r eval=FALSE}
-
-# Laden von reshape (vorher install.packages())
-library(reshape)
-
-# Datenmatrix für Kreuladungen generieren
-xloads = melt(pls$crossloadings, id.vars = c("name", "block"), 
-              variable_name = "LV")
-
-# Barcharts der Kreuzladungen je Block
-ggplot(data = xloads,
-       aes(x = name, y = value, fill = block)) +
-  geom_hline(yintercept = 0, color = "gray75") +
-  geom_hline(yintercept = c(-0.5, 0.5), color = "gray70", 
-             linetype = 2) +
-  geom_bar(stat = 'identity', position = 'dodge') +
-  facet_wrap(block ~ LV) +
-  theme(axis.text.x = element_text(angle = 90),
-        line = element_blank()) +
-  ggtitle("Crossloadings")
-```
 
 
 ### Kreuzladungen
 
-```{r echo=FALSE, out.width = "90%", fig.align="center"}
-
-# Laden von reshape (vorher install.packages())
-library(reshape)
-
-# Datenmatrix für Kreuladungen generieren
-xloads = melt(pls$crossloadings, id.vars = c("name", "block"), variable_name = "LV")
-
-# Barcharts der Kreuzladungen je Block
-ggplot(data = xloads,
-       aes(x = name, y = value, fill = block)) +
-  geom_hline(yintercept = 0, color = "gray75") +
-  geom_hline(yintercept = c(-0.5, 0.5), color = "gray70", linetype = 2) +
-  geom_bar(stat = 'identity', position = 'dodge') +
-  facet_wrap(block ~ LV) +
-  theme(axis.text.x = element_text(angle = 90),
-        line = element_blank()) +
-  ggtitle("Crossloadings")
-```
-
-
-### Pfadkoeffizienten
-
 ```{r}
-# Pfadkoeffizioen
-pls$path_coefs
+pls$crossloadings
 ```
 
+- Kein Indikator sollte eine höhere Ladung zu einem anderem Konstrukt als dem zugeordneten aufweisen.
 
-### Inneres Modell
-
-```{r}
-# Inneres Modell
-pls$inner_model
-```
 
 ### Plot der Pfadkoeffizienten im Modell
 
@@ -406,58 +317,26 @@ pls$inner_model
 plot(pls)
 ```
 
+### Pfadkoeffizienten
+
+```{r}
+pls$path_coefs
+```
+
+
+### Inneres Modell (Regression)
+
+```{r}
+pls$inner_model
+```
 
 ### Effekte
 
 ```{r}
-# effects
 pls$effects
-
 ```
 
-
-### Effekte - graphisch
-
-```{r}
-# "aktive" Effects in Matrix Format
-path_effs = as.matrix(pls$effects[2:6, 2:3])
-
-# rownames zu path_effs hinzufügen
-rownames(path_effs) = pls$effects[2:6, 1]
-
-# Wie sieht path_effs aus?
-path_effs
-```
-
-
-
-### Totale und indirekte Effekte - graphisch - code
-
-```{r eval=FALSE}
-
-# Barplots der Total Effekte (direkt + indirekt)
-barplot(t(path_effs), border = NA, col = c("#9E9AC8", "#DADAEB"),
-        las = 2, cex.names = 0.8, cex.axis = 0.8,
-        legend = c("Direct", "Indirect"),
-        args.legend = list(x = "top", ncol = 2, border = NA,
-                           bty = "n", title = "Effects"))
-
-```
-
-
-### Totale und indirekte Effekte - graphisch 
-
-```{r echo=FALSE, out.width = "90%", fig.align="center"}
-
-# Barplots der Total Effekte (direkt + indirekt)
-barplot(t(path_effs), border = NA, col = c("#9E9AC8", "#DADAEB"),
-        las = 2, cex.names = 0.8, cex.axis = 0.8,
-        legend = c("Direct", "Indirect"),
-        args.legend = list(x = "top", ncol = 2, border = NA,
-                           bty = "n", title = "Effects"))
-
-```
-
+- Bspl.: KA wird von SM *direkt* und zusätzlich *indirekt* über ME im Modell beeinflusst.
 
 ### Inneres Modell Zusammenfassung
 
@@ -465,24 +344,10 @@ barplot(t(path_effs), border = NA, col = c("#9E9AC8", "#DADAEB"),
 pls$inner_summary
 ```
 
-
-### GoF
-
-- Das letzte Maß für die Qualität ist der sogenannte **GoF-Index**, der in $gof enthalten ist. Dies ist eine Pseudo-Goodness-of-Fit-Messung, die versucht, die Gesamtqualität sowohl bei der Messung als auch bei dem Strukturmodell zu berücksichtigen.
-- Grundsätzlich bewertet GoF die gesamte Vorhersageleistung des Modells unter Berücksichtigung der Kommunalität und der R^2-Koeffizienten.
-
-```{r}
-# gof Index
-pls$gof
-```
-
-
+- Das $R^2$ (`R2`) gibt an wie viel Variation der abhängigen latenten Variablen durch die unabhängigen modelliert werden.
 
 ```{r finish-PLS-PM, include=FALSE}
 rm(pathToImages)
-
-detach("package:reshape", unload = TRUE)
-detach("package:plsdepot", unload = TRUE)
 detach("package:plspm", unload = TRUE)
 finalizePart(partname)
 ```

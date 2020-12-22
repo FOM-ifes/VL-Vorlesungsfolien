@@ -9,7 +9,7 @@ initPart(
     "Einfuehrung-EDA-R",  # Dateiname ohne Suffix
     "Einfuehrung"       # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
@@ -19,6 +19,18 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 
 # Einführung in R
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+- Die Studierenden können Gründe für den Einsatz von R nennen.
+- Die Studierenden können die Unterschiede zwischen R, RStudio und mosaic erläutern.
+- Die Studierenden können R in Grundzügen anwenden (wie Datensätze laden und einfache Befehle eingeben).
+
+
+
+
 
 ### Cartoon: Computereinsatz in der Statistik
 
@@ -38,7 +50,7 @@ Verbreitung z. B.: [http://r4stats.com/articles/popularity/](http://r4stats.com/
 **R ist eine weit verbreitete Eintrittskarte in das globale Datenzeitalter!**
 
 
-### Vorteile R {include-only=deprecated}
+### Vorteile R 
 
 - Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z.B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
 
@@ -79,7 +91,7 @@ Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offe
 
 - *R* ist ein *Motor*, der das Auto antreiben kann.
 
-- *Rstudio Desktop* ist das Cockpit, mit dem der Motor gesteuert werden kann.
+- *RStudio Desktop* ist das Cockpit, mit dem der Motor gesteuert werden kann.
 
 - *mosaic* ist eine *Zusatzausstattung*, um die Motorsteuerung zu vereinfachen.
 
@@ -90,18 +102,30 @@ Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offe
 
 - **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z. B. Dokumentenerstellung etc.
 
+Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+
+Alternative zur Installation von R: Clouddienst [https://rstudio.cloud/](https://rstudio.cloud/)
+
+
+### Installation Zusatzpakete
+
 - **mosaic** [https://cran.r-project.org/web/packages/mosaic/](https://cran.r-project.org/web/packages/mosaic/): ist ein Zusatzpaket, welches u. a. eine vereinheitlichte R Syntax bietet
 
 
-Installation von Zusatzpaketen in RStudio:
+**Installation:**
 
+Pakete werden **einmalig** über `install.packages()` **installiert**, im Falle von mosaic: 
 ```{r, eval=FALSE}
 install.packages("mosaic")
 ```
 
-Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+Bei **jeder** neuen Sitzung müssen sie erneut geladen werden.^[[https://twitter.com/visnut/status/1248087845589274624](https://twitter.com/visnut/status/1248087845589274624)]
 
-Alternative zur Installtion von R: Clouddienst [https://rstudio.cloud/](https://rstudio.cloud/)
+
+<!-- ```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE, fig.cap="Quelle: Dianne Cook - https://twitter.com/visnut/status/1248087845589274624"} -->
+<!-- knitr::include_graphics("images/Einfuehrung/install-use-R-packages.jpg", error=FALSE) -->
+<!-- ``` -->
+
 
 
 ### Warum Code? Politik {include-only=deprecated}
@@ -126,7 +150,7 @@ Alternative zur Installtion von R: Clouddienst [https://rstudio.cloud/](https://
 > Don’t fence off students from the computation pool, throw them in! Computing skills are essential to working with data in the 21st century. Given this fact, we feel that to shield students from computing is to ultimately do them a disservice.^[[Ismay, C, Kim, A (2018): ModernDive ](http://moderndive.com/index.html#intro-instructors)]
 
 
-### Vorteile Code {include-only=deprecated}
+### Vorteile Code 
 
 - Dokumentation des Vorgehens
 - (Einfache) Nachvollziehbarkeit, Wiederholung
@@ -157,28 +181,51 @@ Zentrale Fragen:
 
 
 
-
 ### Kochen mit RStudio^[Idee und in Anlehnung an [Jessica Ward.](https://twitter.com/RLadiesNCL/status/1138812826917724160)]
 ```{r echo=FALSE, out.width = "100%", fig.align="center", cache=FALSE}
-knitr::include_graphics("images/Einfuehrung/Kochen_mit_RStudio.png")
+knitr::include_graphics("images/Einfuehrung/Kochen_mit_RStudio.png", error=FALSE)
 ```
 
 
-### Beispiel `Births78`
-
-Ggf. einmalig vorab `mosaic` installieren:
-
-```{r, eval=FALSE}
-install.packages("mosaic")
-```
+### `mosaic` nutzen
 
 Paket `mosaic` in jeder Sitzung laden:
 
-```{r, message=FALSE}
+```{r, message=TRUE}
 library(mosaic)
 ```
 
-Internen Datensatz `Births78` laden:
+<!-- **************************************************** -->
+<!-- TODO: Gelegentlich überprüfen und ggf. aktualisieren -->
+<!-- **************************************************** -->
+
+Die dabei angezeigten folgenden Meldungen^[`mosaic` Version 1.8] sind nur Hinweise, [keine]{.cemph} Fehler:
+
+
+:::{.tiny}
+
+```
+The 'mosaic' package masks several functions from core packages in order to add 
+additional features.  The original behavior of these functions should not be affected by this.
+
+Attache Paket: ‘mosaic’
+
+The following objects are masked from ‘package:dplyr’:
+
+[...]
+
+
+The following objects are masked from ‘package:base’:
+
+    max, mean, min, prod, range, sample, sum
+
+```
+
+:::
+
+### Beispiel `Births78`
+
+Internen Datensatz `Births78` laden:^[Falls Sie aktuell noch kein lauffähiges R haben: Für die heutige Vorlesung geht auch [https://fomshinyapps.shinyapps.io/micRo-Births78/](https://fomshinyapps.shinyapps.io/micRo-Births78/)]
 
 ```{r}
 data(Births78)
@@ -212,7 +259,7 @@ gf_point(births ~ date, data = Births78)
 
 ### Offene Übung `r nextExercise()`: Streudiagramm Tag und Anzahl Geburten {.exercise type=essay}
 
-```{r R_gfpoint-ex, echo=FALSE, fig.align="right", out.width="20%"}
+```{r ref.label="R_gfpoint", eval=TRUE, echo=FALSE, fig.align="right", out.width="20%"}
 ```
 
 Was können Sie der Abbildung entnehmen?
@@ -221,7 +268,7 @@ Was können Sie der Abbildung entnehmen?
 
 Auf der $x$-Achse ist der Tag im Jahr abgebildet (Datum, `date`), auf der $y$-Achse die Anzahl der Geburten an dem Tag (`births`). 
 
-Es gibt 2 *Wellen* -- eine um die $9500$ Geburten pro Tag, eine um die $8000$. Die Meisten Geburten scheint es im September zu geben.
+Es gibt 2 *Wellen* -- eine um die $9500$ Geburten pro Tag, eine um die $8000$. Die meisten Geburten scheint es im September zu geben.
 
 :::
 
@@ -250,11 +297,11 @@ mosaic::inspect(Births78)
 
 ```{r eval=FALSE}
 
-gf_point(births ~ date, color = ~ date_year_month_wday, data = Births78) 
+gf_point(births ~ date, color = ~ mein.z, data = Births78) 
 
 ```
 
-Welche der Variablen bietet sich dafür an? 
+Welche der Variablen bietet sich für `mein.z` an? 
 
 A.  Das Datum `date`.
 B.  Das Jahr `year`.
@@ -314,7 +361,7 @@ Births78 %>%
 
 ### Offene Übung `r nextExercise()`: Anzahl Geburten am Geburtstag {.exercise type=essay}
 
-Finden Sie heraus wie viele Geburten es im Jahre 1978 in den USA an Ihrem Geburtstag gab.
+Finden Sie heraus, wie viele Geburten es im Jahre 1978 in den USA an Ihrem Geburtstag gab.
 
 ::: {.notes}
 
@@ -334,7 +381,7 @@ Die Funktion `mean()` berechnet den arithmetischen Mittelwert, *Durchschnitt*:
 mean(births ~ 1, data = Births78)
 ```
 
-bei univariater Analyse^[d.h. nur eine Variable wird betrachtet] funktioniert auch einfach:
+bei univariater Analyse^[d.h., nur eine Variable wird betrachtet] funktioniert auch einfach:
 
 ```{r}
 mean( ~ births, data = Births78)
@@ -403,7 +450,7 @@ C.  `numeric` bzw. `double`.
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 R ist eine der Kaffemühlen, die helfen, um von der Frage auf Basis von Daten zur Antwort zu kommen.^[Skizze: Sebastian Sauer]
@@ -418,11 +465,12 @@ R ist eine der Kaffemühlen, die helfen, um von der Frage auf Basis von Daten zu
 5.  Inferenz: Schätzen und Testen; Modellierung, z. B. Paket [mosaic](https://cran.r-project.org/web/packages/mosaic/).
 6.  Schlussfolgerungen: (vorläufige) Antwort auf Forschungsfrage.
 
+<!-- Bug? -->
 
-### R im quantitativen Forschungsprozess
+### R im quantitativen Forschungsprozess {include-only=depricated}
 
 ```{r forschungsprozess-image-2, echo=FALSE, out.width = "90%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-2.pdf"))
+knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-3.png"), error=FALSE)
 ```
 
 <!-- Bug? -->
@@ -432,7 +480,7 @@ knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-2.pdf"))
 
 - Daten und deren Analyse sind zentraler Bestandteil wissenschaftlichen Arbeitens.
 
-- Jede wissenschaftliche Arbeit sollte mind. eine Methode aufweisen. In den *Science*-Studiengängen sind dies häufig empirische Methoden -- je nach Forschungsfrage qualitativ oder quantitativ.
+- Jede wissenschaftliche Arbeit sollte mindestens eine Methode aufweisen. In den *Science*-Studiengängen sind dies häufig empirische Methoden -- je nach Forschungsfrage qualitativ oder quantitativ.
 
 - Zur Analyse von Daten sollte auf geeignete Software zurückgegriffen werden. Dabei ist die Software das Werkzeug, um die inhaltliche Arbeit (die Analyse) erledigen zu können.
 
@@ -448,7 +496,7 @@ knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-2.pdf"))
 - Fehlende Werte werden in R durch `NA` kodiert.
 - Kommentare werden mit dem Rautezeichen `#` eingeleitet.
 - Eine Ergebniszuweisung erfolgt über `<-.`
-- `%>%` (Paket `dplyr`) übergibt Ergebnisse.
+- `%>%` (Paket `dplyr`^[wird von `mosaic` automatisch geladen]) übergibt Ergebnisse.
 - Hilfe zur Funktion `foo`: `?foo`
 
 
@@ -462,7 +510,7 @@ knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-2.pdf"))
 - Die [häufigste Ursache von Fehlermeldungen](https://ismayc.github.io/rbasics-book/6-errors.html) sind Tippfehler. Genaues Lesen und Internetsuche der Fehlermeldung helfen.
 - Gerne vergisst man, die benötigten Pakete und Daten zu laden.
 - R schreibt sowohl Hinweise, als auch Warnungen und Fehler (`Error`) in rot. Aber nur Fehler sind i.d.R. ein Problem, Hinweise nicht.
-- Gibt R beim Laden eines Paketes (`library(XXX)`) den Fehler aus, dass ein Paket fehlt (`Fehler in library(XXX): es gibt kein Paket namens 'XXX'`), so muss man das genannte Paket noch installieren (`install.packages("XXX")`)^[Am Besten zu Beginn einer R-Sitzung.].
+- Gibt R beim Laden eines Paketes (`library(XXX)`) den Fehler aus, dass ein Paket fehlt (`Fehler in library(XXX): es gibt kein Paket namens 'XXX'`), so muss man das genannte Paket noch installieren (`install.packages("XXX")`)^[Am besten zu Beginn einer R-Sitzung.].
 - Reagiert R nicht, so kann es daran liegen, dass der aktuelle Befehl in der Konsole noch nicht abgeschlossen ist. Ein einfacher Ausweg ist, in die Konsole zu klicken und dann die Escape-Taste (`Esc`) zu drücken. Damit wird die aktuelle Zeile in der Konsole abgebrochen.
 - In RStudio kann über die Tabulatortaste (`Tab`) vervollständigt werden, über die Pfeiltasten können in der Konsole vorherige Befehle wiederholt werden.
 

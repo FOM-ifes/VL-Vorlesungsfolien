@@ -6,10 +6,10 @@
 # ---------------------------------------------------------------------------
 source("../prelude.R")
 initPart(
-    "Normalverteilung",  # Dateiname ohne Suffix
-    "EinfuehrungInferenz"              # Verzeichnisname im Bilderverzeichnis 
+    "Normalverteilung",   # Dateiname ohne Suffix
+    "EinfuehrungInferenz" # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
@@ -19,20 +19,86 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 # Normalverteilung
 
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+- können zentrale Begriffe definieren (wie Zufallsvariable, Verteilungs- und 
+  Quantilsfunktion, Normalverteilung).
+- wissen, was man unter einer z-Transformation versteht.
+- kennen die $68$-$95$-$99{,}7\,\%$-Regel.
+- können Quantile und Perzentile mit R berechnen.
+
+
+
 ### Zufallsvariable
 
-- Eine **Zufallsvariable** $X$ ist eine Variable, deren Wert $x$ vom **Zufall** abhängt.
+- Eine **Zufallsvariable** $X$ ist eine Variable, deren Wert $x$ vom 
+  **Zufall** abhängt.
 
-- Beobachtungen $x_i$ können aufgefasst werden als Realisationen von Zufallsvariablen $X$.
+- Beobachtungen $x_i$ können aufgefasst werden als Realisationen von 
+  Zufallsvariablen $X$.
 
-- Die **Verteilungsfunktion** $F(x)$ sagt, wie wahrscheinlich es ist, einen Wert $\leq x$ zu beobachten: $F(x)=P(X\leq x)$, und damit $0\leq F(x) \leq 1$.
+- Die **Verteilungsfunktion** $F(x)$ sagt, wie wahrscheinlich es ist, einen 
+  Wert $\leq x$ zu beobachten: 
+  $F(x)=P(X\leq x)$, und damit $0\leq F(x) \leq 1$.
 
-- Durch eine *zufällige* Stichprobe oder eine *zufällige* Zuordnung im Rahmen eines Experimentes soll sichergestellt werden, dass die Beobachtungen $x_i, i=1, \ldots ,n$ unabhängig und identisch verteilt sind.
+- Durch eine *zufällige* Stichprobe oder eine *zufällige* Zuordnung im Rahmen 
+  eines Experimentes soll sichergestellt werden, dass die Beobachtungen 
+  $x_i$ (mit $i=1, \ldots ,n$) unabhängig und identisch verteilt sind.
+
+
+### Verteilungs- und Dichtefunktion der Normalverteilung
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+*Dichtefunktion:* 
+$$f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
+*Verteilungsfunktion:* 
+$$F(x) = \int_{-\infty}^x f(u)\, du= \int_{-\infty}^x \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(u-\mu)^2}{2\sigma^2}} \,du$$
+:::
+::: {.column width="40%"}
+
+*Standardnormalverteilung:* 
+
+[$\mu=0$, $\sigma=1$, $X \sim N(\mu, \sigma^2)$, $\Phi(x)=F(x)$]{.scriptsize}
+
+```{r NormDiagramm, echo=FALSE, fig.align="center", warning=FALSE}
+p1 <- gf_dist("norm", mean = 0, sd=1) %>% 
+  gf_labs(title = "Dichtefunktion", x="x", y="f(x)=F'(x)")
+p2 <- gf_dist("norm", mean = 0, sd=1, kind = "cdf") %>% 
+  gf_labs(title = "Verteilungsfunktion", x="x", y=expression(paste("F(x)=P(",X<=x,")")))
+gridExtra::grid.arrange(p1,p2, nrow=2 )
+rm(p1)
+rm(p2)
+```
+:::
+::::::
+
+::: {.footnotesize}
+*Lage und Streuung:*
+
+- $\mu=E(X)=\int_{-\infty}^{\infty} x \cdot f(x) \, dx$: 
+  Mittelwert der Verteilung (Erwartungswert).
+- $\sigma^2=Var(X)=\int_{-\infty}^{\infty} (x-\mu)^2 \cdot f(x) \, dx$: 
+  Varianz der Verteilung.
+
+Unter der Annahme einer Normalverteilung können abhängig von den Parametern $\mu$ und $\sigma>0$ Wahrscheinlichkeiten berechnet werden.
+
+[Hinweis:]{.cemph} Es gibt viele weitere Wahrscheinlichkeitsverteilungen für Zufallsvariablen (diskret/stetig).
+:::
 
 
 ### Normalverteilung
 
-Die Punkte einer Klausur seien **normalverteilt** mit $\mu=55$ (Mittelwert der Population/ Erwartungswert) und $\sigma=15$ (Standardabweichung Population).
+::: {.small}
+Angenommen die Punkte einer Klausur ($X$) seien **normalverteilt** mit $\mu=E(X)=55$ 
+(Mittelwert der Population/ Erwartungswert) und 
+$\sigma=\sqrt{Var(X)}=15$ (Standardabweichung Population)^[In der Praxis sind Klausurpunkte i.d.R. diskret bei begrenztem Wertebereich. Aber eine Abschätzung ist trotzdem oft möglich.], kurz: $X \sim N(55, 15^2)$.
+:::
 
 ```{r, echo=FALSE, fig.align="center", fig.width = 10.5, fig.asp = 0.67, out.width="10.5cm"}
 p1 <- gf_dist("norm", mean = 55, sd=15) %>% gf_labs(title = "Dichtefunktion", x="Punkte", y="f(x)=F'(x)")
@@ -43,39 +109,18 @@ rm(p2)
 ```
 
 
-### FOMshiny: Zentraler Grenzwertsatz {include-only=shiny}
-
-Wie *entsteht* eigentlich eine Normalverteilung? 
-
-[https://fomshinyapps.shinyapps.io/ZGS-Normalverteilung/](https://fomshinyapps.shinyapps.io/ZGS-Normalverteilung/)
-
-
-### Dichte- und Verteilungsfunktion der Normalverteilung
-
-- Dichtefunktion: $$f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$$
-- Verteilungsfunktion: $$F(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(u-\mu)^2}{2\sigma^2}} du$$
-
-
-Lage und Streuung:
-
-- $\mu=E(X)=\int_{-\infty}^{\infty} x \cdot f(x) dx$: Mittelwert der Verteilung (Erwartungswert).
-- $\sigma^2=Var(X)=\int_{-\infty}^{\infty} (x-\mu)^2 \cdot f(x) dx$: Varianz der Verteilung.
-
-Unter der Annahme einer Normalverteilung können abhängig von den Parametern $\mu$ und $\sigma>0$ Wahrscheinlichkeiten berechnet werden.
-
-
 ### Parameter Normalverteilung
 
 ```{r, echo=FALSE, fig.align="center", fig.width = 12, fig.asp = 0.67, out.width="12cm", warning=FALSE}
-p1 <- gf_dist("norm", mean = 10, sd=5) %>% 
+p1 <- gf_dist("norm", mean = 10, sd=5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=10"," und ",sigma,"=5")),
           x="x", y="f(x)=F'(x)") %>%
   gf_lims(x=c(-10,30), y=c(0,0.175))
-p2 <- gf_dist("norm", mean = 15, sd=5) %>% 
+p2 <- gf_dist("norm", mean = 15, sd=5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=15"," und ",sigma,"=5")),
           x="x", y="f(x)=F'(x)") %>%
   gf_lims(x=c(-10,30), y=c(0,0.175))
-p3 <- gf_dist("norm", mean = 15, sd=2.5) %>% 
+p3 <- gf_dist("norm", mean = 15, sd=2.5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=15"," und ",sigma,"=2.5")),
           x="x", y="f(x)=F'(x)") %>%
   gf_lims(x=c(-10,30), y=c(0,0.175))
@@ -87,49 +132,67 @@ rm(p3)
 ```
 
 
+### FOMshiny: Zentraler Grenzwertsatz {include-only=shiny}
+
+Wie *entsteht* eigentlich eine Normalverteilung? 
+
+[https://fomshinyapps.shinyapps.io/ZGS-Normalverteilung/](https://fomshinyapps.shinyapps.io/ZGS-Normalverteilung/)
+
+
 ### Verteilungsfunktion
 
-Angenommen, unter $45$ Punkten, d. h., mit $44.5$ Punkten oder weniger, fällt mensch leider durch, dann liegt die Durchfallwahrscheinlichkeit bei `r round(pnorm(44.5, mean = 55, sd = 15),2)`:
+Angenommen, unter $45$ Punkten, d.h. mit $44{,}5$ Punkten oder weniger, fällt 
+mensch leider durch, dann liegt die Durchfallwahrscheinlichkeit bei 
+`r round(pnorm(44.5, mean=55, sd=15),2)`:
 
 $$p=F(x)=P(X\leq x)$$
 
 ```{r, fig.align="center", out.width="35%"}
 library(mosaic)
-xpnorm(44.5, mean = 55, sd = 15)
+xpnorm(44.5, mean=55, sd=15)
 ```
 
 
-### Übung  `r nextExercise()`: Eigenschaften Verteilungsfunktion I {.exercise type=yesno answer=yes}
+### Übung `r nextExercise()`: Eigenschaften Verteilungsfunktion I {.exercise type=yesno answer=yes}
 
-Stimmt die Aussage: Die Verteilungsfunktion ist monoton steigend, d. h., mit größerem $x$ wird $F(x)$ zumindest nicht kleiner?
+*Stimmt die Aussage:* 
+Die Verteilungsfunktion ist monoton steigend^[alt.: monoton wachsend], d. h., mit größerem $x$ wird 
+$F(x)$ zumindest nicht kleiner?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
-***Ja***: $F(x)=P(X\leq x)$, d. h., wenn $x$ größer wird, kann $P$ und damit $F$ nicht fallen.
+***Ja***: $F(x)=P(X\leq x)$, d.h., wenn $x$ größer wird, kann $P$ und damit 
+$F$ nicht fallen.
 :::
 
 
-### Übung  `r nextExercise()`: Eigenschaften Verteilungsfunktion II {.exercise type=A-B-C-D answer=B}
+### Übung `r nextExercise()`: Eigenschaften Verteilungsfunktion II {.exercise type=A-B-C-D answer=B}
 
 Was gilt bei der Verteilungsfunktion für $x \rightarrow \infty$?
 
-A.  $F(x)$ geht gegen 0.
-B.  $F(x)$ geht gegen 1.
-C.  $F(x)$ geht gegen unendlich.
+A.  $F(x)$ geht gegen 0. $\quad\left(\text{formal: }\lim\limits_{x \to \infty} F(x) = 0\right)$
+B.  $F(x)$ geht gegen 1. $\quad\left(\text{formal: }\lim\limits_{x \to \infty} F(x) = 1\right)$
+C.  $F(x)$ geht gegen unendlich. $\quad\left(\text{formal: }\lim\limits_{x \to \infty} F(x) = \infty\right)$
 D.  Kann nicht beantwortet werden.
 
 ::: {.notes}
-Richtig ist ***B***, für $x \rightarrow \infty$ gilt $F(x) \rightarrow 1$. Wenn $x$ immer größer wird, geht die Wahrscheinlichkeit für eine Beobachtung $\leq x$ gegen Eins. Für $x \rightarrow -\infty$ gilt $F(x) \rightarrow 0$. 
+Richtig ist ***B***, für $x \rightarrow \infty$ gilt $F(x) \rightarrow 1$. 
+Wenn $x$ immer größer wird, geht die Wahrscheinlichkeit für eine Beobachtung 
+$\leq x$ gegen Eins. 
+Für $x \rightarrow -\infty$ gilt $F(x) \rightarrow 0$. 
 :::
 
 
 ### Standardisierung, z-Transformation
 
-**z-Transformation, Standardisierung**: Überführung einer beliebigen Verteilung in eine mit $\mu=0$ und $\sigma=1$: $$z=\frac{x-\mu}{\sigma}$$^[Symbol für die Verteilungsfunktion einer Standardnormalverteilung: $\Phi(\cdot)$.]
+**z-Transformation, Standardisierung**: 
+Überführung einer beliebigen Verteilung in eine mit $\mu=0$ und $\sigma=1$: 
+$$z=\frac{x-\mu}{\sigma}$$
 
-*Hinweis:* Die Funktion `zscore()` verwendet statt der theoretischen Werte $\mu$ und $\sigma$ die beobachteten Werte $\bar{x}$ bzw. $sd$.^[Studentisierung]
+*Hinweis:* Die Funktion `zscore()` verwendet statt der theoretischen Werte 
+$\mu$ und $\sigma$ die beobachteten Werte $\bar{x}$ bzw. $sd$.^[Studentisierung]
 
 ```{r}
 zscore(c(0,1,2))
@@ -148,25 +211,28 @@ C.  $x$ ist kleiner als $0$.
 
 $$z=\frac{x-\mu}{\sigma} \Leftrightarrow x=z \cdot \sigma + \mu$$
 
-***C***.: z. B. $\mu=100, \sigma=1: \quad x=-2 \cdot 1 + 100=98>0$
+***C***.: z.B. $\mu=100, \sigma=1: \quad x=-2 \cdot 1 + 100=98>0$
 :::
 
 
-### Übung  `r nextExercise()`: Verteilungsfunktion (I/II) {.exercise}
+### Übung `r nextExercise()`: Verteilungsfunktion {.exercise type=A-B-C-D answer=C}
 
-Ein Studierender hat $60$ Punkte erreicht:
+:::::: {.columns}
+::: {.column width="44%"}
+Ein Studierender hat in der Klausur $60$ Punkte erreicht:
+:::
+::: {.column width="54%"}
 
-```{r, fig.align="center", out.width="45%"}
+```{r, fig.align="center", out.width="60%"}
 xpnorm(60, mean = 55, sd = 15)
 ```
-
-
-### Übung  `r nextExercise()`: Verteilungsfunktion (II/II) {.exercise type=A-B-C-D answer=C}
+:::
+:::::
 
 Welche Aussage stimmt?
 
-A.  ca. $37\%$ der Population schneiden schlechter ab als er.
-B.  ca. $63\%$ der Population schneiden besser ab als er.
+A.  ca. $37\,\%$ der Population schneiden schlechter ab als er.
+B.  ca. $63\,\%$ der Population schneiden besser ab als er.
 C.  Er ist $\frac{1}{3}$ Standardabweichungen über dem Durchschnitt.
 D.  Keine der Antworten A--C stimmt.
 
@@ -175,52 +241,77 @@ Da $z=\frac{60-55}{15}=\frac{1}{3}>0$ gilt, stimmt ***C***.
 :::
 
 
-### 68-95-99,7%-Regel
+### $68$-$95$-$99{,}7\,\%$-Regel
 
 Bei einer Normalverteilung liegen ca. 
 
-- $68\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$
-- $95\%$ der Werte im Bereich  $\mu\pm 2 \cdot \sigma$ 
-- $99,7\%$ der Werte im Bereich  $\mu\pm 3 \cdot \sigma$.
+::: {.small}
+- $68\,\%$ der Werte im Bereich $\mu\pm 1 \cdot \sigma$ $\quad\phantom{{,}7}\left(\text{formal: }P\left(\mu-1 \cdot \sigma \leq x \leq \mu+1 \cdot \sigma\right) \approx 68\,\%\right)$
+- $95\,\%$ der Werte im Bereich $\mu\pm 2 \cdot \sigma$ $\quad\phantom{{,}7}\left(\text{formal: }P\left(\mu-2 \cdot \sigma \leq x \leq \mu+2 \cdot \sigma\right) \approx 95\,\%\right)$
+- $99{,}7\,\%$ der Werte im Bereich $\mu\pm 3 \cdot \sigma$ $\quad\left(\text{formal: }P\left(\mu-3 \cdot \sigma \leq x \leq \mu+3 \cdot \sigma\right) \approx 99{,}7\,\%\right).$
+:::
 
 ```{r, fig.align="center", out.width="40%"}
 xpnorm(c(-2,2)) # Standardnormalverteilung
 ```
 
 
-### Übung  `r nextExercise()`: 68-95-99,7% Regel {.exercise type=yesno answer=no}
+### Übung `r nextExercise()`: $68$-$95$-$99{,}7\,\%$-Regel {.exercise type=yesno answer=no}
 
-Die Daten seien normalverteilt mit $\mu=100$ und $\sigma=15$. Ist dann $x=150$ ein üblicher Wert?
+Die Daten seien normalverteilt mit $\mu=100$ und $\sigma=15$. 
+Ist dann $x=150$ ein üblicher Wert?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
-***Nein***: $z=\frac{150-100}{15}>3$. Ein solcher Wert kommt also in weniger als $0,3\%$ der Fälle vor.
+***Nein***: $z=\frac{150-100}{15}>3$. Ein solcher Wert kommt also in weniger 
+als $0{,}3\,\%$ der Fälle vor.
 :::
 
 
 ### Offene Übung `r nextExercise()`: Standardisierung {.exercise type=essay}
 
-Welchen $z$-Wert^[standardisiert, z-transformiert] hat ein Kandidat mit $x=130$, wenn $\mu=100$ und $\sigma=15$ ist?
+Welchen $z$-Wert^[standardisiert, z-transformiert] hat ein Kandidat mit $x=130$, 
+wenn $\mu=100$ und $\sigma=15$ ist?
 
 ::: {.notes}
-$z=\frac{130-100}{15}=2$. Der Kandidat ist also 2 Standardabweichungen besser als der Durchschnitt.
+$z=\frac{130-100}{15}=2$. Der Kandidat ist also 2 Standardabweichungen besser 
+als der Durchschnitt.
 :::
 
 
 ### Quantilsfunktion
 
-Man gehört zu den $10\%$ besten, d.h. $90\%$ sind *nicht* besser, ab `r round(qnorm(0.9, mean = 55, sd = 15))` Punkten:
-$$q=F^{-1}(p)$$
+::::::::: {.small}
 
-```{r, fig.align="center", out.width="20%"}
+Die *Umkehrfunktion* der *Verteilungsfunktion* ist die **Quantilsfunktion**:
+$$q=F^{-1}(p)$$
+Mit diesem $q$ ist dann $F(q)=P(X \leq q)=p$
+
+:::::: {.columns}
+::: {.column width="49%"}
+
+Man gehört zu den $10\,\%$ besten, wenn $90\,\%$ *nicht* besser sind.
+
+Dies ist ab `r round(qnorm(0.9, mean = 55, sd = 15))` Punkten der Fall:
+:::
+::: {.column width="49%"}
+```{r, fig.align="center", out.width="60%"}
 xqnorm(0.9, mean = 55, sd = 15)
 ```
+:::
+::::::
 
-- Die Verteilungsfunktion $F(q)=p$, z.B. `xpnorm()`, gibt für einen gegebenen Wert `q` aus, mit welcher Wahrscheinlichkeit `p` dieser Wert nicht überschritten wird.
+- Die Verteilungsfunktion $F(q)=p$, z.B. `xpnorm()`, gibt für einen gegebenen 
+  Wert `q` aus, mit welcher Wahrscheinlichkeit `p` dieser Wert nicht 
+  überschritten wird.
 
-- Die Quantilsfunktion $F^{-1}(p)=q$, z.B. `xqnorm()`, gibt für eine gegebene Wahrscheinlichkeit `p` aus, welcher Wert `q` mit dieser Wahrscheinlichkeit nicht überschritten wird. 
+- Die Quantilsfunktion $F^{-1}(p)=q$, z.B. `xqnorm()`, gibt für eine gegebene 
+  Wahrscheinlichkeit `p` aus, welcher Wert `q` mit dieser Wahrscheinlichkeit 
+  nicht überschritten wird.
+:::::::::
+
 
 ### FOMshiny: Verteilungen {include-only=shiny}
 
@@ -238,7 +329,9 @@ B.  Je kleiner $p$, desto größer $q$.
 C.  $p$ und $q$ stehen in keinem Zusammenhang.
 
 ::: {.notes}
-Mit einer kleineren Wahrscheinlichkeit werden kleinere Werte nicht überschritten, daher ***A***.
+Mit einer kleineren Wahrscheinlichkeit werden kleinere Werte nicht 
+überschritten, daher ***A***.
+
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 pp<-seq(0,1, length=5000)
 qq<-qnorm(pp, mean=55, sd=15)
@@ -269,14 +362,17 @@ Man zählt zum oberen Drittel, wenn zwei Drittel nicht besser sind, also ***B***
 
 ### FOMshiny: $6\sigma$ {include-only=shiny}
 
-Wie stark ändert sich der Ausschuss, wenn durch Qualitätssicherungsmaßnahmen sich die Streuung in der Produktion ändert? 
+Wie stark ändert sich der Ausschuss, wenn durch Qualitätssicherungsmaßnahmen 
+sich die Streuung in der Produktion ändert? 
 
 [https://fomshinyapps.shinyapps.io/SixSigma/](https://fomshinyapps.shinyapps.io/SixSigma/)
 
 
 ### Überprüfung Normalverteilungsannahme
 
-Ein QQ-Plot (`gf_qq()`) vergleicht die Quantile einer Verteilung z. B. mit den theoretischen einer Normalverteilung. Bei einer guten Übereinstimmung liegen die Punkte auf der Diagonalen.^[Formale Überprüfung z.B. über Shapiro-Wilk Test (`shapiro.test()`).]
+Ein QQ-Plot (`gf_qq()`) vergleicht die Quantile einer Verteilung z.B. mit den 
+theoretischen einer Normalverteilung. Bei einer guten Übereinstimmung liegen 
+die Punkte auf der Diagonalen.^[Formale Überprüfung z.B. über Shapiro-Wilk-Test (`shapiro.test()`).]
 
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 set.seed(1896)
@@ -300,18 +396,48 @@ rm(hxc)
 rm(qxc)
 ```
 
+### Beispiel: Rechnungshöhe
+
+Erinnern wir uns an die Rechnungshöhe `total_bill` bei den `tips`-Daten.
+
+Wir können auch mit einem QQ-Plot prüfen, in wie weit diese normalverteilt sind:
+
+:::::: {.columns}
+::: {.column width="45%"}
+
+```{r qq-plot-total_bill, eval=FALSE, echo=TRUE, tidy=FALSE}
+gf_qq( ~ total_bill, 
+       data = tips) %>% 
+  gf_qqline()
+```
+:::
+::: {.column width="55%"}
+
+```{r ref.label='qq-plot-total_bill', echo=FALSE, eval=TRUE, fig.align="center", out.width="85%"}
+```
+
+:::
+::::::
+
 
 ### Übung `r nextExercise()`: Score {.exercise type=A-B-C answer=A}
 
-Gabi und Klaus haben zwei verschiedene Tests geschrieben. Dabei hat Gabi bei Test A ($\mu=60, \sigma=10$) $75$ Punkte erreicht, Klaus bei Test B ($\mu=250, \sigma=25$) $275$ Punkte. Beide Tests sollen das Gleiche testen und die Testergebnisse seien normalverteilt. Wer von beiden hat besser abgeschnitten?
+Gabi und Klaus haben zwei verschiedene Tests geschrieben. 
+Dabei hat Gabi bei Test A ($\mu=60, \sigma=10$) $75$ Punkte erreicht, 
+Klaus bei Test B ($\mu=250, \sigma=25$) $275$ Punkte. 
+Beide Tests sollen das Gleiche testen und die Testergebnisse seien 
+normalverteilt. 
+Wer von beiden hat besser abgeschnitten?
 
 A.  Gabi
 B.  Klaus
 C.  Beide gleich gut.
 
 ::: {.notes}
-Gabi hat einen z-Wert von 1.5, Klaus einen von 1, also hat Gabi (***A***) besser abgeschnitten.  
-Siehe auch für Gabi: `xpnorm(75, mean=60, sd=10)`, für Klaus: `xpnorm(275, mean=250, sd=25)`
+Gabi hat einen z-Wert von 1.5, Klaus einen von 1, also hat Gabi (***A***) 
+besser abgeschnitten.  
+Siehe auch für Gabi: `xpnorm(75, mean=60, sd=10)`, 
+für Klaus: `xpnorm(275, mean=250, sd=25)`
 :::
 
 ```{r finish-Normalverteilung, include=FALSE}

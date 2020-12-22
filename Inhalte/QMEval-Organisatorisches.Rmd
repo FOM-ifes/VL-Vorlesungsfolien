@@ -9,12 +9,12 @@ initPart(
     "QuantEval-Organisatorisches",  # Dateiname ohne Suffix
     "Organisatorisches"             # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 ```
 
-# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+# `r if(abschluss) WDH` Organisatorisches
 
 
 ```{r child = './Organisatorisches/LiteraturEval.Rmd'}

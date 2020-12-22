@@ -1,0 +1,34 @@
+### Datenerhebung: useR!
+
+Bitte nehmen Sie an der freiwilligen und anonymen Umfrage zu R und Statistik teil: [http://user.fom.de](http://user.fom.de)
+
+
+### Rückblick: Quantitativer Forschungsprozess am Beispiel von useR! {.shrink}
+
+1.  *Forschungsfrage:*
+    a) Wie ist die Akzeptanz und Nutzung(sabsicht) von R und wie verändert sich diese im Laufe des Semesters?
+    b) Wie gut ist das Verständnis von zentralen Konzepten der Statistik und wie verändert sich dieses im Laufe des Semesters?
+2. *Studiendesign:*
+
+    *Operationalisierung:*
+      a) Unified theory of acceptance and use of technology (UTAUT2), vgl. Venkatesh, V., Thong, J. Y., & Xu, X. (2012). Consumer acceptance and use of information technology: extending the unified theory of acceptance and use of technology. MIS quarterly, 157-178.
+      b) Comprehensive Assessment of Outcomes in a First Statistics course (CAOS), vgl. Chance, B., Wong, J., & Tintle, N. (2016). Student performance in curricula centered on simulation-based inference: A preliminary report. Journal of Statistics Education, 24(3), 114-126.
+    
+    *Stichprobenverfahren:* Online-Erhebung in den Vorlesungen zu Beginn und zum Ende des Semesters.
+
+
+
+### Quantitativer Forschungsprozess am Beispiel von useR! (Fortsetzung) {.shrink}
+
+3.  *Datenerhebung:* 1. Teil (Vorher-Erhebung) und 2. Teil (Nachher-Erhebung) erfolgen in der Vorlesung.
+4.  *Datenanalyse:* z. B. `favstats()`, `gf_boxplot()`.
+5.  *Modellierung*: Lineare Regression:
+    - Ergebnis *Post* als abhängige Variable.
+    - Ergebnis *Pre* als unabhägige Variable + weitere Kovariablen, z. B. Studiengang, Geschlecht etc.
+6.  *Schlussfolgerungen:* Limitierungen z. B. Kovariablen nicht berücksichtigt; Beobachtungen können auf Kursebene korreliert sein. Beobachtungsstudie, daher keine Kausalaussagen.
+
+Methodische Limitierung: Beobachtungen können auf Kursebene korreliert sein, daher wäre eine Modellierung als hierarchisches lineares Modell, z.B. über R-Paket [lme4](https://cran.r-project.org/package=lme4) angemessen.
+
+Außerdem sollte die *Regression zur Mitte* beachtet werden. Dieses Phänomen besagt, dass zufällig extreme Werte bei wiederholter Messung wahrscheinlich näher am Mittelwert liegen.
+
+

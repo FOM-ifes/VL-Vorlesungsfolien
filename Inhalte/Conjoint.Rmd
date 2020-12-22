@@ -9,14 +9,14 @@ initPart(
     "Conjoint",  # Dateiname ohne Suffix
     "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 
 ```
 
-# `r nextChapter()` Conjointanalyse
+# Conjointanalyse
 
 ### Lernziele
 
@@ -24,7 +24,7 @@ library(mosaic)
 - Daten für die Conjoint-Analyse aufbereiten.
 - Anwendung der Conjoint Analyse.
 - Interpretation und Schlussfolgerungen der Conjontanalyse.
-- Evaluation des Einsates der Conjoint Analyse in der Marketing Controlling Praxis.
+- Evaluation des Einsatzes der Conjoint Analyse in der Marketing Controlling Praxis.
 
 
 ### Einführung Conjointanalyse 
@@ -42,9 +42,9 @@ Typische Fragen, die sich in diesem Zusammenhang stellen, sind
  
 ### Probleme der Informationsbeschaffung durch direkte Befragung
 
-- Wert einzelener Merkmale schwer zu quantifizieren
+- Wert einzelner Merkmale schwer zu quantifizieren
 - Gefahr unehrlicher Antworten (bei Preisbereitschaft)
-- Keine Abwägung zwischen Nutzen und Kostenm, wenn Preis im Fokus. 
+- Keine Abwägung zwischen Nutzen und Kosten, wenn Preis im Fokus. 
 
 
 ### Einsatz von Conjointanalysen
@@ -98,7 +98,7 @@ Dabei werden aus Präferenzen (Gesamtnutzen) die **Präferenzbeiträge (Teilnutz
 
 1.	Charakterisierung des Entscheidungsprozesses
 2.	Identifizieren und Beschreiben der Merkmale
-3.	Entwicklung eines experimentellen Design
+3.	Entwicklung eines experimentellen Designs
 4.	Entwicklung des Fragebogen
 5.	Sammeln der Daten
 6.	Schätzmodell
@@ -123,7 +123,7 @@ H.	Aus den definierten Merkmalen und Ausprägungen sollten realistischen Alterna
 **D-E sind richtig**
 </div>
 
-### Übung `r nextExercise()`: Anforderungen an die Merkamalsausprägungen {.exercise type=A-B-C-D-E answer=A-C-D}
+### Übung `r nextExercise()`: Anforderungen an die Merkmalsausprägungen {.exercise type=A-B-C-D-E answer=A-C-D}
 
 Welchen Aussagen stimmen Sie zu?
 
@@ -150,14 +150,14 @@ Gansser, O.; Füller, S. R. (2015): Präferenzprognosen mittels Conjoint-Analyse
 ### Merkmale und Beschreibung der Merkmalsausprägungen
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Merkmale.png"))
+knitr::include_graphics(file.path(pathToImages, "Merkmale.png"), error=FALSE)
 ```
 
 
 ### Merkmale und Beschreibung der Merkmalsausprägungen
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Kurznotation.png"))
+knitr::include_graphics(file.path(pathToImages, "Kurznotation.png"), error=FALSE)
 ```
 
 
@@ -188,7 +188,7 @@ vd <- gen.factorial(c(4,3,3,3),
 ```
 
 
-### Ausgabe des vollständigen Designs (esten 16 Zeilen)
+### Ausgabe des vollständigen Designs (erste 16 Zeilen)
 
 
 ```{r echo=FALSE}
@@ -211,7 +211,7 @@ vd[92:108,]
 ### 2 Erstellung eines fraktionierten Designs mit orthogonaler Anordnung
 
 ```{r}
-set.seed(1986) # Initialisierung eines Zufallsgeneraturs
+set.seed(1986) # Initialisierung eines Zufallsgenerators
 fd <- optFederov(~.,vd,16) # Erstellung eines fraktionierten Designs 
                            # mit 16 Alternativzeilen
 alt1 <- fd$design  # Zuweisung des Designs zu einer Matrix alt1 
@@ -291,14 +291,14 @@ alt2_o
 ### Präsentation der Stimuli bei den Befragungsteilnehmern
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Stimuli.png"))
+knitr::include_graphics(file.path(pathToImages, "Stimuli.png"), error=FALSE)
 ```
 
 
 ### Vorlage Choice-Set 1
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Choice-Set1.png"))
+knitr::include_graphics(file.path(pathToImages, "Choice-Set1.png"), error=FALSE)
 ```
 
 
@@ -321,7 +321,7 @@ conjoint_data[1:12,] # Output der Daten für die ersten vier Personen
 
 Die Spalte APN setzt sich zusammen aus der Nummer der Auskunftsperson und der Nummer des Choice-Sets. 
 
-Am Beispiel der ersten Auskunftsperson bedeuten die ersten drei Ziffern die Auskunftsperson Nr. 1 und die letzten zwei Ziffern, dass es sich um das erste, zweite, drieet und vierte Choice-Set im Fragebogen handelt. 
+Am Beispiel der ersten Auskunftsperson bedeuten die ersten drei Ziffern die Auskunftsperson Nr. 1 und die letzten zwei Ziffern, dass es sich um das erste, zweite, dritte und vierte Choice-Set im Fragebogen handelt. 
 
 In der Spalte E wird die **Entscheidung der Probanden** gespeichert. 
 
@@ -385,7 +385,7 @@ D.  Ort:ONline, SL: Wiki, ML: Podcast, Unt: Papier & Digital
 </div>
 
 
-### Interprataion der Schätzparameter
+### Interpretation der Schätzparameter
 
 -	In der Spalte **coef** werden die sogenannten Logit-Koeffizienten ausgegeben, die die logarithmierten Odds darstellen.
 -	In der Spalte **exp(coef)** werden die Effekt-Koeffizienten (auch **Odds Ratios** genannt) ausgegeben, berechnet als Exponentialfunktion aus ecoef. Diese dienen als Effektgrößen für die Koeffizienten. Bei nominalen Merkmalen gibt die Odds Ratio einer Variable beziehungsweise Merkmalsausprägung die Chancen des Odds einer Merkmalsausprägung im Vergleich zur Basiskategorie an, also das Chancenverhältnis.
@@ -398,7 +398,7 @@ D.  Ort:ONline, SL: Wiki, ML: Podcast, Unt: Papier & Digital
 
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Rangfolge.png"))
+knitr::include_graphics(file.path(pathToImages, "Rangfolge.png"), error=FALSE)
 ```
 
 
@@ -413,10 +413,10 @@ knitr::include_graphics(file.path(pathToImages, "Rangfolge.png"))
 - Änderungen bei dem Merkmal mit dem größten Effekt wirken sich auch am stärksten auf das Verhalten der Kunden aus, da eine **Variation der Ausprägung** dieses Merkmals einen bedeutsamen Einfluss auf die Höhe des Gesamtnutzenwertes hat 
 
 
-###  Relative Wichtigkeit der Merkmale
+### Relative Wichtigkeit der Merkmale
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Wichtigkeit.png"))
+knitr::include_graphics(file.path(pathToImages, "Wichtigkeit.png"), error=FALSE)
 ```
 
 ### Übung `r nextExercise()`: Reihenfolge der Präferenzen {.exercise type=A-B-C-D answer=B}

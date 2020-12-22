@@ -9,14 +9,14 @@ initPart(
     "Kind-Vorlage",  # Dateiname ohne Suffix
     "Vorlage"        # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 
 ```
 
-# `r nextChapter()` Vorlage
+# Vorlage
  
  
 ### Dies ist eine Vorlage für eine Folie

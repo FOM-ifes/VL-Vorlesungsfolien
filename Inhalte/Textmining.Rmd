@@ -9,19 +9,33 @@ initPart(
     "Textmining",  # Dateiname ohne Suffix
     "Textmining"   # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 
 
 ```
-# `r nextChapter()` Text-Mining
+# Text-Mining
 
 <!-- ::: {.Sinnspruch} -->
 <!-- Where is the wisdom we have lost in knowledge? Where is the knowledge we have lost in information? -->
 
 <!-- [T.S. Eliot]{.Quelle} -->
 <!-- ::: -->
+
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+
+- wissen, wozu Text Mining verwendet wird bzw. verwendet werden kann und was die Grenzen dieser Methode sind.
+- kennen zentrale Begriffe (z.B. Corpus, tf-idf).
+- können eine grundlagende Textmining-Analyse in R durchführen.
+- wissen, was man unter einer *Sentimentanalyse* versteht.
+
 
 ## Einführung
 
@@ -36,10 +50,10 @@ Robinson (2016):^[Blogbeitrag [http://varianceexplained.org/r/trump-tweets/](htt
 
 - Wir werden Selbstdarstellung-Essays einer Online Partnerbörse analysieren. Daher *bitte* ich Sie, überlegen Sie, was Sie über sich dort schreiben würden. Die ersten zwei/ drei Sätze genügen 
 - Vielleicht schreiben Sie es auf, bestenfalls auf Englisch
-- Eventuell finden Sie sich in den Texten, die wir analysieren werden wieder
+- Eventuell finden Sie sich in den Texten, die wir analysieren werden, wieder
 
 ```{r echo=FALSE, out.width = "20%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"IBD.jpg"))
+knitr::include_graphics(file.path(pathToImages,"IBD.jpg"), error=FALSE)
 ```
 
 
@@ -116,7 +130,7 @@ text
 Speichern als Datensatz:
 
 ```{r FALSE}
-text_df <- data_frame(Zeile=1:length(text), text)
+text_df <- tibble(Zeile=1:length(text), text)
 
 text_df
 ```
@@ -217,7 +231,7 @@ word_freq
 
 ### Zipfsches Gesetz
 
-Die Häufigkeit ($h_i$ bzw. $f_i$) und der Rang ($r_i$) eines Wortes $i$ stehen ungefähr in einem umgekehrt proportionalen Zusammenhang, d. h. \[f_i \cdot r_i \approx c\]:
+Die Häufigkeit ($h_i$ bzw. $f_i$) und der Rang ($r_i$) eines Wortes $i$ stehen ungefähr in einem umgekehrt proportionalen Zusammenhang, d. h. $$f_i \cdot r_i \approx c$$:
 
 ```{r}
 # Wörter insgesamt je Geschlecht
@@ -313,7 +327,7 @@ top_word <- tidy_essay %>%
   mutate(word = reorder(word, n)) %>%
   top_n(25) 
 
-# Balkendiagramm
+# Säulendiagramm
 gf_bar(n ~ word, stat = "identity", data = top_word) %>%
   gf_refine(coord_flip())
 ```
@@ -328,7 +342,7 @@ top_word <- tidy_essay %>%
   mutate(word = reorder(word, n)) %>%
   top_n(25) 
 
-# Balkendiagramm
+# Säulendiagramm
 gf_bar(n ~ word, stat = "identity", data = top_word) %>%
   gf_refine(coord_flip())
 ```
@@ -483,7 +497,7 @@ gf_point(f ~ m, data = frequency) %>%
           check_overlap = TRUE, vjust = 1.5) %>%
   gf_refine(scale_x_log10()) %>%
   gf_refine(scale_y_log10()) %>%
-  gf_abline(intercept = 0, slope = 1, color = "red")
+  gf_abline(intercept = ~0, slope = ~1, color = "red")
 ```
 
 ### Abbildung Vergleich Worthäuigkeiten (Fortsetzung)
@@ -494,7 +508,7 @@ gf_point(f ~ m, data = frequency) %>%
           check_overlap = TRUE, vjust = 1.5) %>%
   gf_refine(scale_x_log10()) %>%
   gf_refine(scale_y_log10()) %>%
-  gf_abline(intercept = 0, slope = 1, color = "red")
+  gf_abline(intercept = ~0, slope = ~1, color = "red")
 ```
 
 
@@ -576,16 +590,32 @@ Mit einem p-Wert von $`r pchi`$ wird $H_0$ verworfen, aber der Unterschied ist i
 
 ### Sentiment und Emotionen
 
-Das NRC Word-Emotion Association Lexicon^[[Mohammad, A und Turney, P (2013)](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)] enthält eine Liste von englischen Wörtern und ihren Zusammenhang mit acht grundlegenden Emotionen, sowie ihr Sentiment, d. h. Polarität.^[Für ein deutsches Lexikon siehe z.B. SentiWS [http://wortschatz.uni-leipzig.de/de/download](http://wortschatz.uni-leipzig.de/de/download).]
+Das NRC Word-Emotion Association Lexicon^[[Mohammad, A und Turney, P (2013)](http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm)] enthält eine Liste von englischen Wörtern und ihren Zusammenhang mit acht grundlegenden Emotionen, sowie ihr Sentiment, d. h. Polarität. Für Forschungszwecke ist es frei (kostenlos) verwendbar.^[Für ein deutsches Lexikon siehe z.B. SentiWS [http://wortschatz.uni-leipzig.de/de/download](http://wortschatz.uni-leipzig.de/de/download).]
+
+Laden Sie das NRC-Wörterbuch herunter (in Ihr Arbeitsverzeichnis) und importieren Sie es in R:
 
 ::: {.scriptsize}
 
-```{r}
-get_sentiments(lexicon = "nrc")
+```{r read-nrc-no-eval, eval = FALSE, echo = TRUE}
+# Daten aus Textdatei importieren:
+nrc <- read_delim(file = "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+                  delim = "\t", col_names = FALSE)
+# Spalten umbenennen:
+nrc <- nrc %>% rename(word = X1, sentiment = X2, flag = X3)
+# Nur Zeilen belassen, für die eine Emotion vorliegt:
+nrc <- nrc %>% filter(flag == 1)
 ```
 
 :::
 
+```{r read-nrc, eval = TRUE, echo = FALSE}
+nrc <- read_delim(file = "../datasets/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+                  delim = "\t", col_names = FALSE)
+# Spalten umbenennen:
+nrc <- nrc %>% rename(word = X1, sentiment = X2, flag = X3)
+# Nur Zeilen belassen, für die eine Emotion vorliegt:
+nrc <- nrc %>% filter(flag == 1)
+```
 
 
 ### Sentiment je Geschlecht
@@ -594,7 +624,7 @@ Sentiment Lexikon verbinden, Geschlecht und Sentiment zählen, ergänzen um die 
 
 ```{r, results='hide'}
 sentiment_by_sex <- tidy_essay %>%
-  inner_join(get_sentiments("nrc")) %>%
+  inner_join(nrc) %>%
   count(sex, sentiment) %>%
   left_join(tidy_essay %>%
               group_by(sex) %>%
@@ -624,7 +654,7 @@ gf_point(f ~ m, data = sentiment_by_sex) %>%
           vjust = 1.5) %>%
   gf_refine(scale_x_log10()) %>%
   gf_refine(scale_y_log10()) %>%
-  gf_abline(intercept = 0, slope = 1, color = "red")
+  gf_abline(intercept = ~0, slope = ~1, color = "red")
 ```
 
 ### Abbildung Sentiment je Geschlecht (Fortsetzung)
@@ -635,7 +665,7 @@ gf_point(f ~ m, data = sentiment_by_sex) %>%
           vjust = 1.5) %>%
   gf_refine(scale_x_log10()) %>%
   gf_refine(scale_y_log10()) %>%
-  gf_abline(intercept = 0, slope = 1, color = "red")
+  gf_abline(intercept = ~0, slope = ~1, color = "red")
 ```
 
 
@@ -643,7 +673,7 @@ gf_point(f ~ m, data = sentiment_by_sex) %>%
 
 Unterschiedliche Anteile können über die Log Odds Ratios untersucht werden:
 
-\[ \text{log odds ratio}=\ln \left(\frac{(\frac{n}{total})_{female}}{(\frac{n}{total})_{male}} \right)\]
+$$\text{log odds ratio}=\ln \left(\frac{(\frac{n}{total})_{female}}{(\frac{n}{total})_{male}} \right)$$
 
 
 Wann ist das Log Odds Ratios für Frauen und Männer gleich?

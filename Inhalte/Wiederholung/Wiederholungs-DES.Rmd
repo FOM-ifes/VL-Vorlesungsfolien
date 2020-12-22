@@ -1,0 +1,506 @@
+
+```{r setup-Wiederholung, echo=FALSE}
+detach("package:mosaic", unload = TRUE)
+detach("package:ggformula", unload = TRUE)
+
+library(ggdag)
+# DAGs definieren
+set.seed(1896)
+
+# Immo
+DAG_Immo <- dagify(C ~ X,
+                   Y ~ X,
+                   Y ~ C,
+                  labels = c("C"="Kamin",
+                             "X"="Fläche",
+                             "Y"="Preis")) %>%
+  ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank()
+
+
+
+library(mosaic)
+
+Houses <- assertData("houses.csv", "http://statistix.org/Data/SaratogaHouses.csv")
+```
+
+# Wiederholungsfragen
+
+### Übung `r nextExercise()`: Forschungsprozess {.exercise type=essay}
+
+Überlegen Sie sich für Ihre Berufstätigkeit ein Beispiel für einen quantitativen Forschungsprozess.
+
+::: {.notes}
+
+*Individuell*.
+
+Phasen:
+
+[P]{.cemph} 
+: (Problem)
+: Problemdefinition, Forschungsfrage: Was soll untersucht werden?
+
+[P]{.cemph} 
+: (Plan)
+: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
+
+[D]{.cemph} 
+: (Data)
+: Datenerhebung, Datenmanagement, Datenbereinigung.
+
+[A]{.cemph} 
+: (Analysis)
+: Explorative Datenanalyse, Modellierung, Hypothesenprüfung. 
+
+[C]{.cemph} 
+: (Conclusion)
+: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+
+:::
+
+### Übung  `r nextExercise()`: Schlusstechnik {.exercise type=A-B-C answer=A}
+
+Eine Immobilienmaklerin beobachtet wiederholt, dass Immobilien mit einem Kamin einen höheren Preis erzielen. Sie schließt daraus, dass der Immobilienpreis vom Kamin abhängt. Welche wissenschaftliche Schlussart liegt vor?
+
+A.  Induktion.
+B.  Deduktion.
+C.  Abduktion.
+
+::: {.notes}
+Sie generalisiert Einzelbeobachtungen, also Induktion (***A***).
+:::
+
+
+### Übung  `r nextExercise()`: Wissenschaftliche Hypothese {.exercise type=yesno answer=yes}
+
+Ist die Aussage "ein Kamin erhöht den Preis einer Immobilie" eine wissenschaftliche Hypothese?
+
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***: Es ist eine über den Einzelfall hinausgehende Implikation, die falsifiziert werden kann.
+:::
+
+
+### Übung  `r nextExercise()`: Messung {.exercise type=A-B-C answer=C}
+
+Verschiedene Gutachter\*innen kommen bezüglich des Zustandes einer Immobilie zu verschiedenen Ergebnissen. Welches Gütekriterium der Messung der Variable "Zustand der Immobilie" ist dann verletzt?
+
+A.  Validität.
+B.  Reliabilität.
+C.  Objektivität
+
+::: {.notes}
+Wenn Messungen verschiedener Messenden zu unterschiedlichen Ergebnissen führen, ist die Objektivität (***C***) eingeschränkt.
+:::
+
+
+### Übung  `r nextExercise()`: Datenerhebung {.exercise type=A-B answer=A}
+
+Im Rahmen einer Marktanalyse wurden von einer Internetseite Immobiliendaten und -preise extrahiert. Welche Form der Datenerhebung liegt vor?
+
+A.  Beobachtungsstudie.
+B.  Randomisiertes Experiment.
+
+::: {.notes}
+Es ist eine Sekundäranalyse von Beobachtungsdaten (***A***), d.h., in die Datenentstehung wurde nicht eingegriffen, unmittelbare Kausalaussagen sind somit nicht möglich.
+:::
+
+
+### Übung  `r nextExercise()`: Versuchsplanung {.exercise type=essay}
+
+Überlegen Sie sich eine Möglichkeit, wie die Immobilienmaklerin Ihre **Kausalaussage** *ein Kamin erhöht den Preis einer Immobilie* überprüfen kann.
+
+::: {.notes}
+Sie könnte z.B. innerhalb eines Experimentes Internetauktionen verwenden, in denen identische Immobilien mal mit und mal ohne Kamin versteigert werden, und die erzielten Preise vergleichen. Oder es wird randomisiert Immobilien ein Kamin oder kein Kamin zugeordnet.
+:::
+
+
+### Datengrundlage
+
+[Dick De Veaux: How much is a Fireplace Worth?](http://community.amstat.org/HigherLogic/System/DownloadDocumentFile.ashx?DocumentFileKey=288c3e05-1ba5-450d-8ec8-62629b876557&forceDialog=0)^[Siehe auch: `?mosaicData::SaratogaHouses`]
+
+- `Preis`: Preis in $\$$.
+- `Wohnflaeche`: Wohnfläche in $m^2$.
+- `Alter`: Alter der Immobilie in Jahren.
+- `Klimaanlage`: Inwieweit eine (zentrale) Klimaanlage vorhanden ist.
+- `Kamin`: Inwieweit ein Kamin vorhanden ist.
+- `Heizung`: Heizsystem: Gas, Strom oder Öl.
+
+
+```{r, eval=FALSE, message=FALSE}
+# Paket laden
+library(mosaic)
+
+# URL
+daten_url <- "http://statistix.org/Data/SaratogaHouses.csv"
+
+# Daten einlesen
+Houses <- read.csv2(daten_url)
+```
+
+
+### Inspizieren {.shrink}
+
+```{r, eval=FALSE}
+inspect(Houses)
+```
+```{r, echo=FALSE}
+mosaicCore:::inspect.data.frame(Houses)
+```
+
+
+### Übung  `r nextExercise()`: Skalenniveau {.exercise type=A-B-C-D answer=A}
+
+Welches Skalenniveau hat die Variable `Heizung`?
+
+A.  Kategorial - nominal.
+B.  Kategorial - ordinal.
+C.  Numerisch - intervallskaliert.
+D.  Numerisch - verhältnisskaliert.
+
+
+::: {.notes}
+Nominal mit drei Ausprägungen, also ***A***.
+:::
+
+
+### Übung  `r nextExercise()`: Verteilung Immobilienpreis {.exercise type=essay}
+
+Was können Sie über die Verteilung des Immobilienpreises aussagen?
+```{r, fig.align="center", out.width="40%"}
+gf_histogram( ~ Preis, data = Houses)
+```
+
+::: {.notes}
+Der Preis ist unimodal rechtsschief verteilt. Der Schwerpunkt der Verteilung liegt ca. zwischen $150000\$$ und $200000\$$. Die Spannweite ca. zwischen $0\$$ und $800000\$$.
+:::
+
+
+### Übung  `r nextExercise()`: Kennzahlen Immobilienpreis {.exercise type=essay}
+
+```{r}
+favstats(~ Preis, data = Houses)
+```
+
+In welchem Bereich liegen 50\% der Beobachtungen?
+
+::: {.notes}
+Wahlweise im Bereich `min` bis `median` oder `median` bis `max`. Üblicherweise wird aber der Bereich der zentralen $50\%$ angegeben: `Q1=145000` bis `Q3=259000`.
+:::
+
+
+### Übung  `r nextExercise()`: Verfahrenswahl {.exercise type=A-B answer=B}
+
+Der Mittelwert der Stichprobe des Preises liegt bei $\bar{x}=`r mean(~ Preis, data = Houses)`$. Mit welchem Simulationsverfahren können Sie einen *plausiblen* Wertebereich für den unbekannten Wert der Population $\mu$ konstruieren?
+
+A.  Simulation unter $H_0$, z.B. einfache Simulation.
+B.  Resampling-Simulation (Bootstrap).
+
+::: {.notes}
+***B***: Ein Teil der Unsicherheit empirischer Ergebnisse liegt an der zufälligen Stichprobe. Diese kann über Resampling simuliert werden, so dass wir weitere *plausible* Werte für die Statistik $\bar{x}^*$ generieren können.
+:::
+
+
+### Bootstrap Preis 
+
+```{r, fig.align="center", out.height="20%"}
+set.seed(1896)
+Bootvtlg <- do(10000)* mean(~ Preis, data = resample(Houses))
+gf_histogram(~ mean, data = Bootvtlg)
+ # Standardfehler
+sd(~ mean, data = Bootvtlg)
+# Konfidenzintervall
+quantile(~mean, data = Bootvtlg, probs = c(0.025, 0.975)) 
+```
+
+
+### Übung  `r nextExercise()`: Interpretation Konfidenzintervall {.exercise type=yesno answer=no}
+
+Stimmt die Aussage: $95\%$ der Immobilien erzielen einen Preis zwischen $`r quantile(~mean, data = Bootvtlg, probs = c(0.025))`$ und $`r quantile(~mean, data = Bootvtlg, probs = c(0.975))`$ Dollar?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Konfidenzintervalle beziehen sich auf Statistiken (hier: Mittelwert) bzw. Parameter (hier: $\mu$). Wir sind uns bei unserer Stichprobe zu $95\%$ sicher, dass ein erneutes Resample einen Mittelwert in dem genannten Bereich ergibt.
+:::
+
+
+### Übung  `r nextExercise()`: Forschungshypothese {.exercise type=A-B-C answer=C}
+
+Die Immobilienmaklerin hat Zweifel an der Aussage, dass der mittlere Immobilienpreis in der Region größer oder gleich $215000\,\$$ ist, d.h., ihre Forschungsthese ist, dass der Preis kleiner ist. Wie würde ihre Nullhypothese lauten?
+
+A.  $\mu=215000$
+A.  $\mu \leq 215000$
+A.  $\mu \geq 215000$
+
+::: {.notes}
+***C***: Nullhypothesen werden verworfen -- oder nicht verworfen. Sie prüfen, ob die Daten (Teststatistik) mit einem hypothetischen Modell ($H_0$) plausibel erklärt werden können. Sind die beobachteten Daten *unwahrscheinlich*, wenn das Modell stimmt, hat mensch (berechtigen) Zweifel am Modell.
+:::
+
+
+### Simulation $H_0$
+
+Simulation unter der (hier aber nur für den Mittelwert erfüllten!) Annahme einer Normalverteilung mit $\mu_0, n, \hat{\sigma}$:
+
+```{r}
+set.seed(1896)
+Nullvtlg <- do(10000) * mean( ~ rnorm(n = 1728, 
+                                      mean = 215000, 
+                                      sd = 98441.39))
+# p-Wert
+prop( ~ (mean <= 211966.7), data = Nullvtlg) 
+```
+
+
+### Übung  `r nextExercise()`: Interpretation p-Wert {.exercise type=yesno answer=no}
+
+Stimmt die Aussage: Die Wahrscheinlichkeit das $H_0$ stimmt, liegt bei `r prop( ~ (mean <= 211966.7), data = Nullvtlg)`?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Wenn das Modell der Nullhypothese $\mu_0=215000$ stimmt, liegt die Wahrscheinlichkeit einen Mittelwert von $\bar{x}=211966.7$ (oder noch kleiner) zu beobachten, bei `r prop( ~ (mean <= 211966.7), data = Nullvtlg)`.
+
+Die im Hypothesentest (und Konfidenzintervall) angegebenen *Fehlerwahrscheinlichkeiten* beziehen sich auf die Verfahren.
+:::
+
+
+### Übung  `r nextExercise()`: Testergebnis {.exercise type=yesno answer=no}
+
+Wird im vorliegenden Fall die Nullhypothese zum Niveau $\alpha=5\%$ verworfen?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Der p-Wert (`r prop( ~ (mean <= 211966.7), data = Nullvtlg)`) liegt über $0.05$, daher wird $H_0$ nicht verworfen -- aber auch nicht bestätigt.
+:::
+
+
+### Übung  `r nextExercise()`: Zusammenhang Kamin und Heizung {.exercise type=A-B-C-D answer=c}
+
+Welche Aussage stimmt gemäß der Abbildung?
+
+```{r, fig.align="center", out.height="40%"}
+mosaicplot(Kamin ~ Heizung, data = Houses)
+```
+
+
+A.  Die Mehrheit der Häuser ohne Kamin hat eine Stromheizung.
+B.  Die meisten Häuser haben eine Ölheizung.
+C.  Die meisten Häuser haben einen Kamin.
+D.  Die Verteilung der Heizungsart ist bei Häusern mit Kamin genau so wie bei Häusern ohne Kamin.
+
+::: {.notes}
+***C***: Der Balken der Häuser mit Kamin (`Ja`) ist breiter als der ohne Kamin.
+:::
+
+
+### Übung  `r nextExercise()`: Nullhypothese {.exercise type=A-B answer=A}
+
+Wie lautet beim Vergleich von zwei oder mehr Anteilswerten die Nullhypothese?
+
+A.  Die beiden Variablen sind abhängig. Die Verteilung der einen Variable hängt vom Wert der anderen Variable ab.
+B.  Die beiden Variablen sind unabhängig. Die Verteilung der einen Variable hängt nicht vom Wert der anderen Variable ab.
+
+::: {.notes}
+
+***B***: Die Nullhypothese $H_0$ lautet, es gibt keinen Zusammenhang, die Alternativhypothese $H_A$ ist das Gegenteil, es gibt einen Zusammenhang.
+
+Ein Verfahren diese Nullhypothese zu prüfen geht über den Chi-Quadrat Unabhängigkeitstest ($\chi^2$-Test), in R mosaic über `xchisq.test()` und diese Funktion gibt wie viele andere auch den p-Wert aus (`p-value`).
+:::
+
+
+### Analyse Klimaanlage und Kamin {.shrink}
+
+```{r}
+xchisq.test(Kamin ~ Klimaanlage, data = Houses)
+```
+
+
+### Übung  `r nextExercise()`: Fehlerart {.exercise type=A-B-C answer=A}
+
+Angenommen es gäbe keinen Zusammenhang zwischen dem Vorhandensein einer Klimaanlage und dem eines Kamins. Was gilt dann für die obige Analyse? 
+
+A.  Es liegt ein Fehler 1. Art vor.
+B.  Es liegt ein Fehler 2. Art vor.
+C.  Es liegt kein Fehler vor.
+
+::: {.notes}
+***A***: Wenn $H_0$ gilt, aber die Testentscheidung lautet, dass $H_0$ verworfen wird, so liegt ein Fehler 1. Art vor.
+:::
+
+
+### Übung  `r nextExercise()`: Vorhandensein Fehler {.exercise type=yesno answer=no}
+
+Können Sie wissen ob hier ein solcher Fehler vorliegt? 
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: I.d.R. (so auch hier) ist die Population unbekannt. 
+
+Die Wahrscheinlichkeit, einen Fehler 2. Art zu begehen, sinkt mit $n$.
+:::
+
+
+### Übung  `r nextExercise()`: p-Wert unter $H_0$ {.exercise type=A-B-C-D-E answer=B}
+
+Wie oft liegt bei einem Signifikanzniveau von $\alpha=0.05$ der p-Wert unter $5\%$, wenn die Nullhypothese stimmt?
+
+A.  $\approx 0 \%$
+B.  $\approx 5 \%$
+C.  $\approx 95 \%$
+D.  $\approx 100 \%$
+E.  Kann nicht gesagt werden.
+
+
+::: {.notes}
+***B***: Der p-Wert gibt die Randwahrscheinlichkeit der Daten unter der Nullhypothese an. Das Signifikanzniveau gibt die maximale Wahrscheinlichkeit an $H_0$ zu verwerfen, obwohl $H_0$ gilt.
+:::
+
+
+### Übung  `r nextExercise()`: Methodenwahl {.exercise type=A-B answer=B}
+
+Wie können die Immobilienpreise mit und ohne Kamin verglichen werden?
+
+A.  Vergleich zweier Anteilswerte.
+B.  Vergleich zweier Mittelwerte.
+
+
+
+::: {.notes}
+Immobilienpreis ist ein numerisches Merkmal, es liegen zwei Gruppen vor, also ***B***.
+:::
+
+
+### Zwei Gruppenvergleich (I/II) 
+
+Vergleich Immobilien mit und ohne Kamin.
+
+
+```{r, fig.align="center", out.width="40%"}
+# Mittelwerte
+mean(Preis ~ Kamin, data = Houses)
+# Differenz
+diffmean(Preis ~ Kamin, data = Houses)
+```
+
+
+### Zwei Gruppenvergleich (II/II) {.shrink}
+
+```{r, fig.align="center", out.width="40%"}
+set.seed(1896)
+meandiff_est <- diffmean(Preis ~ Kamin, data = Houses)
+Nullvtlg <- do(10000) * 
+  diffmean(Preis ~ shuffle(Kamin), data = Houses)
+gf_histogram( ~ diffmean, data = Nullvtlg) %>%
+  gf_vline(xintercept =~ meandiff_est)
+# p-Wert
+prop( ~(abs(diffmean)>=abs(meandiff_est)), data = Nullvtlg)
+```
+
+
+### Übung  `r nextExercise()`: Immobilienpreis mit und ohne Kamin {.exercise type=essay}
+
+Fassen Sie die vorherige Analyse zusammen. Wie lautet die Forschungsfrage, die Hypothesen und das vorläufige Ergebnis?
+
+::: {.notes}
+Gibt es einen Unterschied im mittleren Immobilienpreis für Immobilien mit oder ohne Kamin? Die Nullhypothese lautet $H_0: \mu_{\text{Kamin Ja}}=\mu_{\text{Kamin Nein}}$ gegen $H_A:  \mu_{\text{Kamin Ja}} \neq \mu_{\text{Kamin Nein}}$. Die Punktschätzer lauten $\hat{\mu}_{\text{Kamin Ja}}=`r mean(Preis ~ Kamin, data = Houses)[1]`$ bzw. $\hat{\mu}_{\text{Kamin Nein}}=`r mean(Preis ~ Kamin, data = Houses)[2]`$. In der Stichprobe gibt es also eine Differenz von $\bar{x}_{\text{Kamin Nein}}-\bar{x}_{\text{Kamin Ja}}$ von $`r meandiff_est`$.
+
+In keiner der $10000$ Simulationen unter $H_0$ kam eine mindestens so große Abweichung vor. Mit einem p-Wert $<1/10000$ wird $H_0$ damit verworfen.
+:::
+
+
+### Übung  `r nextExercise()`: Schlussfolgerung {.exercise type=yesno answer=no}
+
+Zeigt die Aussage, dass ein Kamin im Mittelwert zu einem um $`r abs(meandiff_est)`$ höheren Preis führt?
+
+- Ja
+- Nein
+
+::: {.notes}
+***Nein***: eine *Kausalaussage* ist hier nicht möglich. Hier wurden z.B. wichtige Kovariablen *nicht* berücksichtigt.
+:::
+
+
+### Lineares Modell (I/II)
+
+```{r, fig.align="center", out.width="60%"}
+erglm <- lm(Preis ~ Wohnflaeche + Kamin, data = Houses)
+plotModel(erglm)
+```
+
+
+### Lineares Modell (II/II) {.shrink}
+```{r}
+summary(erglm)
+```
+
+
+### Übung  `r nextExercise()`: Lineare Regression {.exercise type=essay}
+
+Was können Sie über den Zusammenhang zwischen Wohnfläche und Immobilienpreis aussagen?
+
+
+::: {.notes}
+In einem linearen Modell, d.h. hier $Preis=\beta_0 + \beta_1\cdot Wohnflaeche + \beta_2 \cdot Kamin + \epsilon$ ergibt sich hier ein Schätzwert von $\hat{\beta}_1=`r round(coef(erglm)[2],2)`$. D.h., im linearen Modell der Stichprobe ändert sich der Mittelwert des Preises, ceteris paribus, mit jedem $m^2$ Wohnfläche um `r round(coef(erglm)[2],2)`. Mit einem p-Wert `< 2e-16` wird $H_0: \beta_1=0$ verworfen.
+
+Ergänzung: Hier wird $`r round(rsquared(erglm)*100)`\%$ ($R^2$) der Variation des Preises in der Stichprobe durch die Wohnfläche zusammen mit dem Kamin modelliert.
+:::
+
+
+### Übung  `r nextExercise()`: Kovariablen {.exercise type=yes-no answer=no}
+
+Gegeben die Wohnfläche: Ist dann der (marginale) Effekt des Kamins in einem linearen Modell auf den Preis *signifikant* ($\alpha=5\%$)? 
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Der p-Wert (`Pr(>|t|)`) für $H_0: \beta_{\text{Kamin}}=0$ ist mit $`r round(coef(summary(erglm))[3,4],4)`$ größer als $\alpha=5\%$, $H_0$ wird nicht verworfen. Der Unterschied, gegeben die Wohnfläche, liegt auch nur noch bei `r round(coef(erglm)[3],2)` (statt $`r sprintf("%.2f", meandiff_est)`$ ohne Berücksichtigung der Wohnfläche).
+:::
+
+<!-- ### Übung  `r nextExercise()`: Kausalanalyse {.exercise type=A-B answer=B} -->
+
+<!-- Angenommen es gelte folgendes Kausalmodell: -->
+
+<!-- ```{r echo=FALSE, out.width = "40%", fig.align="center"} -->
+<!-- DAG_Immo -->
+<!-- ``` -->
+
+<!-- Welches Modell sollte zur Bestimmung des erwarteten Preisänderung durch Einbau eines Kamins verwendet werden? -->
+
+<!-- A.  `lm(Preis ~ Kamin, data = Houses)` -->
+<!-- B.  `lm(Preis ~ Wohnflaeche + Kamin, data = Houses)` -->
+
+
+
+<!-- ::: {.notes} -->
+<!-- ***B***: Der nicht-kausale Pfad Kamin $\leftarrow$ Fläche $\rightarrow$ Preis sollte durch Adjustierung geschlossen werden. -->
+<!-- ::: -->
+
+### Übung  `r nextExercise()`: Selbstkontrolle {.exercise type=A-B-C-D-E answer=A}
+
+Wie viele der Übungen haben Sie richtig beantwortet?
+
+A.  $p\geq 90\%$
+B.  $90\%>p\geq 80\%$
+C.  $80\%>p\geq 70\%$
+D.  $70\%>p\geq 60\%$
+E.  $60\%>p\geq 50\%$
+F.  $p < 50$
+
+
+::: {.notes}
+***A***: Prima!!
+:::
+
+```{r finish--Wiederholung, include=FALSE}
+finalizePart(partname)
+```

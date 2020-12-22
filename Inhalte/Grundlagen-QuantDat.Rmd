@@ -14,14 +14,29 @@ initPart(
     "Grundlagen-QuantDat",  # Dateiname ohne Suffix
     "Grundlagen"              # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 library(gridExtra)
+library(emojifont)
+library(viridis)
+library(tidyr)
 ```
 
 # Grundlagen Quantitativer Datenanalyse
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+- Die Studierenden können Messen definieren und können verschiedene Typen von Skalenniveaus sicher unterscheiden.
+- Die Studierenden kennen Grundbegriffe der quantitativen Datenanalyse (wie unabhängige und abhängige Variable) und können Probleme erklären, die aufgrund der Nichtberücksichtigung von Drittvariablen auftreten können (vgl. Simpson-Paradox).
+- Die Studierenden können zentrale Begriffe um Stichproben(arten) und Populationen erläutern.
+- Die Studierenden wissen um die Unterschiede hinsichtlich Zufall und Kausalität bei Beobachtungs- vs. Experimentalstudien.
+- Die Studierenden können die Phasen des PPDAC-Zyklus nennen und anhand von Beispielen illustrieren.
+
+
+
 
 
 ## Grundbegriffe
@@ -68,14 +83,14 @@ Offene Frage: Was folgt daraus?
 
 ### Übung `r nextExercise()`: Messung Relation {.exercise type=yesno answer=no}
 
-Am 15.9. sei es in Dortmund 20°C, am 15.3. 10°C. Stimmt die Aussage: Am 15.9. war es in Dortmund doppelt so warm wie am 15.3.?
+Ist es bei 20 Grad Celsius doppelt so warm wie bei 10 Grad Celsius?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
 
-***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50°F und 68°F -- keine Verdoppelung. 0° Celsius ist kein absoluter Nullpunkt. 
+***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50 Grad Fahrenheit und 68 Grad Fahrenheit -- keine Verdoppelung. 0 Grad Celsius ist kein absoluter Nullpunkt. 
 
 Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaft (Wärme).
 
@@ -125,7 +140,7 @@ points(rnorm(10, mean=0.5, sd=0.1), rnorm(10, mean=0.5, sd=0.1), pch=19, col=poi
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Wenn wir den Kaffee bekommen, den wir bekommen wollen, haben wir eine hohe Validität.
@@ -177,12 +192,12 @@ Welches Skalenniveau hat die Variable Stundenlohn?
 
 A.  Kategorial nominal.
 B.  Kategorial ordinal.
-C.  Metrisch stetig.
-D.  Metrisch diskret.
+C.  Metrisch intervallskaliert.
+D.  Metrisch verhältnisskaliert.
 
 ::: {.notes}
 
-Metrisch stetig (***C***); obwohl die konkrete Auszahlung in der Regel gerundet auf zwei Nachkommastellen erfolgt ("quasi-stetig"). Da ein absoluter Nullpunkt gegeben ist, ist die Variable verhältnisskaliert.
+Metrisch vehältnisskaliert (***D***). Sie ist auch stetig, obwohl die konkrete Auszahlung in der Regel gerundet auf zwei Nachkommastellen erfolgt (*quasi-stetig*).
 
 :::
 
@@ -193,8 +208,9 @@ Welches Skalenniveau hat die Variable Telefonvorwahl?
 
 A.  Kategorial nominal.
 B.  Kategorial ordinal.
-C.  Metrisch stetig.
-D.  Metrisch diskret.
+C.  Metrisch intervallskaliert.
+D.  Metrisch verhältnisskaliert.
+
 
 ::: {.notes}
 
@@ -285,26 +301,28 @@ Messwerte einer Variable variieren/ streuen, u. a.
 
 Das Ignorieren von Kovariablen kann zu verzerrten Ergebnissen führen.^[Bickel, P. J., Hammel, E. A., and O'Connell, J. W. (1975). Sex bias in graduate admissions: Data from Berkeley. Science, 187, 398--403. [https://doi.org/10.1126/science.187.4175.398](https://doi.org/10.1126/science.187.4175.398)]
 
-```{r echo=FALSE, out.width = "55%", fig.align="center", cache=FALSE}
-mosaicplot(apply(UCBAdmissions, c(1, 2), sum),
-           main = "Zulassungen an der UC Berkeley", col=trellis.par.get("superpose.polygon")$col, cex.axis = 1)
+```{r echo=FALSE, fig.width = 5, out.width = "8cm", fig.asp = 0.75, fig.align="center", cache=FALSE}
+mosaicplot(apply(UCBAdmissions, c(1, 2), sum) %>% t(),
+           main = "Zulassungen an der UC Berkeley", col=viridis(2, alpha = 0.6), cex.axis = 1)
 ```
+
 
 Höherer Frauenanteil bei den Nicht-Zugelassenen als bei den Zugelassenen; vgl. Höhe der Rechtecke: Diskriminierung?
 
 
 ### Simpson-Paradoxon (II/ II)
 
-```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+```{r echo=FALSE, fig.width = 7, out.width = "10cm", fig.asp = 0.75, fig.align="center", cache=FALSE}
 opar <- par(mfrow = c(2, 3), oma = c(0, 0, 2, 0))
 for(i in 1:6)
-  mosaicplot(UCBAdmissions[,,i],
+  mosaicplot(UCBAdmissions[,,i] %>% t(),
     xlab = "Admit", ylab = "Sex",
-    main = paste("Department", LETTERS[i]), col=trellis.par.get("superpose.polygon")$col)
+    main = paste("Department", LETTERS[i]), col=viridis(2, alpha = 0.6))
 mtext(expression(bold("Zulassungen an der UC Berkeley")),
       outer = TRUE, cex = 1.5)
 par(opar)
 ```
+\vspace{-8mm}
 
 Je nach Department^[Kovariable!] mal mehr mal weniger Frauen bei den Nicht-Zugelassenen als bei den Zugelassenen. Aber Frauen haben sich mehr für Fächer beworben, in denen der Anteil der Zugelassenen geringer war, vgl. Breite der Rechtecke.
 
@@ -333,7 +351,7 @@ Motivation ist die abhängige Variable $y$, die evtl. von der unabhängigen Vari
 - In der Regel ist man daran interessiert, das Ergebnis einer Stichprobe zu verallgemeinern, zu generalisieren: vom Geschmack des Suppenlöffels auf die ganze Suppe.^[hier: Kartoffelcremesuppe, Foto: Johann Hauke]
 
 ```{r echo=FALSE, out.width = "40%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"))
+knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error=FALSE)
 ```
 
 
@@ -367,7 +385,7 @@ Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Do
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Population: Der Sack Bohnen, der uns interessiert, oder der Kaffee allgemein.
@@ -397,128 +415,91 @@ Kann die Dozentin von den Studierenden, die die Vorlesung besuchen^[Stichprobe],
 
 - Zufällige Stichproben erlauben einen Schluss auf die Grundgesamtheit (Generalisierbarkeit).
 
-- Gelegenheitsstichproben können verzerrt sein. 
+- Gelegenheitsstichproben, d.h. willkürliche, nicht zufällige Stichproben^[Z.B. die Fleischbällchen in der Suppe.] können verzerrt sein. 
 
 
 ### Vergleich verschiedener Stichprobenverfahren
 
-```{r plot-sample-procedures, echo=FALSE, out.width = "80%", fig.align="center"}
-data(iris)
-set.seed(42)
-sam <- rep(1,150)
-sam[sample(1:150, 30)] <- 13
 
-iris$sam <- factor(sam)
-iris$Species <- ordered(iris$Species)
-
-p1 <- gf_jitter(Petal.Width ~ Petal.Length, 
-         color = ~ Species,
-         data = iris,
-         # alpha = ~ sam,
-         shape = ~Species,
-         size = 4) %>% 
-  gf_theme(legend.position = "none") %>% 
-  gf_labs(title = "Vollerhebung",
-          subtitle = "Alle 150 Objekte der Grundgesamtheit wurden erhoben",
-       x = "X",
-       y = "Y") +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        plot.subtitle = element_text(size = 10))
-
-
-
+```{r fig.showtext=TRUE, out.width="70%", echo = FALSE, fig.asp = .7}
+fa1 <- fontawesome(c("fa-user"))
+fa2 <- fontawesome(c("fa-female", "fa-male"))
 
 set.seed(42)
-iris_sample <- sample_n(iris, size = 30)
-
-p2 <- ggplot(iris) +
-  aes(x = Petal.Length , y = Petal.Width) +
-  geom_jitter(color = "grey80",
-             size = 4,
-             aes(shape = Species)) +
-  geom_jitter(data = iris_sample,
-             aes(color =  Species,
-                 shape = Species),
-             size = 4) +
-  theme(legend.position = "none") +
-  labs(title = "Einfache Zufallsstichprobe",
-       subtitle = "30 zufällig ausgewählte Beobachtungen",
-       x = "X",
-       y = "Y") +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        plot.subtitle = element_text(size = 10))
+d <- crossing(x = 1:10,
+              y = 1:10) %>%
+  mutate(label = sample(x = c(rep(1, 20), rep(0, 80))) %>% as.factor()) %>%
+  mutate(label2 = c(rep(1, 20), rep(0, 80)) %>% as.factor(),
+         label3 = c(sample(x = c(rep(1, 10), rep(0, 40))),
+                    sample(x = c(rep(1, 10), rep(0, 40)))),
+         group = c(rep(fa2[1], 50), rep(fa2[2], 50))) %>%
+  mutate(label3 = as.factor(label3),
+         label4 = rep(1, 100) %>%
+         as.factor())
 
 
-
-set.seed(42)
-sam <- rep(1,150)
-sam[sample(1:50, 10)] <- 13
-sam[sample(51:100, 10)] <- 13
-sam[sample(101:150, 10)] <- 13
-
-iris$sam <- factor(sam)
-
-
-
-set.seed(42)
-iris_sample <- iris %>% 
-  group_by(Species) %>% 
-  sample_n(10)
+p1 <- ggplot(d, aes(x = x, y = y, color = label)) +
+  geom_tile(color = "white", size = .5, aes(fill = label), alpha = .2) +
+  theme_void() +
+  geom_text(family='fontawesome-webfont', size=8, label = fa1) +
+  scale_color_manual(label = c("nicht-gewählt", "gewählt"),
+                     values = c("grey80", "#00998A"),
+                     name = "") +
+  scale_fill_manual( values = c("grey80", "#00998A"))+
+  labs(title = "Zufallstichprobe") +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE)
 
 
-p3 <- gf_jitter(Petal.Width ~ Petal.Length, 
-         color = "grey80",
-         data = iris,
-         #size = ~ sam,
-         shape = ~Species,
-         size = 4) %>% 
-  gf_jitter(Petal.Width ~ Petal.Length, 
-         color = ~ Species,
-         data = iris_sample,
-         shape = ~Species,
-         size = 4) %>% 
-  gf_theme(legend.position = "none") %>% 
-  gf_labs(title = "Geschichtete Zufallsstichprobe",
-          subtitle = "Von jeder Farbe 10 zufällig ausgewählte Beobachtungen",
-       x = "X",
-       y = "Y")  +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        plot.subtitle = element_text(size = 10))
-
-sam <- rep(1,150)
-sam[sample(1:50, 30)] <- 13
-iris$sam <- factor(sam)
+p2 <- ggplot(d, aes(x = x, y = y, color = label2)) +
+  geom_tile(color = "white", size = .5, aes(fill = label2), alpha = .2) +
+  theme_void() +
+  geom_text(family='fontawesome-webfont', size = 8, label = fa1) +
+  scale_color_manual(label = c("nicht-gewählt", "gewählt"),
+                     values = c("grey80", "#00998A"),
+                     name = "") +
+  scale_fill_manual( values = c("grey80", "#00998A")) +
+  labs(title = "Gelegenheitsstichprobe") +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE)
 
 
-
-set.seed(42)
-iris_sample <- slice(iris, size = 1:50)
-iris_sample2 <- sample_n(iris_sample, size = 30)
-
-p4 <- ggplot(iris) +
-  aes(x = Petal.Length , y = Petal.Width) +
-  geom_jitter(color = "grey80",
-             size = 4,
-             aes(shape = Species)) +
-  geom_jitter(data = iris_sample2,
-             aes(color =  Species,
-                 shape = Species),
-             size = 4) +
-  theme(legend.position = "none") +
-  labs(title = "Gelegenheitsstichprobe",
-          subtitle = "Von den ersten 50 Beobachtungen 30 zufällig ausgewählte",
-       x = "X",
-       y = "Y") +
-  theme(axis.ticks = element_blank(),
-        axis.text = element_blank(),
-        plot.subtitle = element_text(size = 10))
+p3 <- ggplot(d, aes(x = x, y = y, color = label3)) +
+  geom_tile(color = "white", size = .5, aes(fill = label3), alpha = .2) +
+  theme_void() +
+  geom_text(family='fontawesome-webfont', size = 8, aes(label = group)) +
+  scale_color_manual(label = c("nicht-gewählt", "gewählt"),
+                     values = c("grey80", "#00998A"),
+                     name = "") +
+  scale_fill_manual( values = c("grey80", "#00998A")) +
+  labs(title = "Geschichtete Zufallsstichprobe") +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE) +
+  geom_vline(xintercept = 5.5, linetype = "dashed")
 
 
-grid.arrange(p1, p2, p3, p4, ncol = 2)
+p4 <- ggplot(d, aes(x = x, y = y, color = label4)) +
+  geom_tile(color = "white", size = .5, fill = "#00998A", alpha = .2) +
+  theme_void() +
+  geom_text(family='fontawesome-webfont', size = 8, label = fontawesome("fa-user")) +
+  scale_color_manual(label = "gewählt",
+                     values = "#00998A",
+                     name = "") +
+  scale_fill_manual(values = "#00998A") +
+  labs(title = "Vollerhebung") +
+  theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE)
+
+
+grid.arrange(p1, p2, p3, p4, nrow = 1)
+
 ```
+
+:::{.scriptsize}
+Quelle: Eigene Darstellung
+:::
+
+
 
 
 ### Cartoon: Gelegenheitsstichproben
@@ -534,8 +515,8 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 - Bei **Beobachtungsstudien** werden Daten gesammelt, ohne die Entstehung der Daten zu beeinflussen (keine unmittelbaren Kausalaussagen möglich).
 
-- Bei einem **Experiment** wird der Wert der unabhängigen Variable(n) manipuliert^[z. B. Zielgruppe erhält Werbung, Kontrollgruppe nicht] und die Variation der abhängigen Variable gemessen. 
-    - Um Verzerrungen durch Kovariablen zu vermeiden, erfolgt die Zuordnung zu den Experimentalkonditionen **zufällig (randomisiert)**.^[Video: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Randomize](https://www.causeweb.org/cwis/r2858/video_randomize)] 
+- Bei einem **Experiment** wird der Wert der unabhängigen Variable(n) ("$x$") manipuliert^[z. B. Zielgruppe erhält Werbung, Kontrollgruppe nicht] und die Variation der abhängigen Variable ("$y$") gemessen.  
+    - Um Verzerrungen durch Kovariablen zu vermeiden, erfolgt die Zuordnung zu den Experimentalkonditionen **zufällig (randomisiert)**, d.h., der Zufall entscheidet welche Beobachtung welchen Wert $x$ zugewiesen bekommt.^[Video: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; Randomize](https://www.causeweb.org/cwis/r2858/video_randomize)] 
     
     - Durch wiederholte Messung kann der Effekt der Experimentalkonditionen geschätzt werden: hohe interne Validität. Bei Quasi-Experimenten ist die Zuordnung nicht randomisiert: geringe interne Validität.
 
@@ -543,7 +524,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 ### Sebastians Kaffeemühle {include-only=sesmill exclude=qmwinf,eufom}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Bei einer Beobachtungsstudie werden die Bohnen so verwendet, wie sie sind.
@@ -579,12 +560,12 @@ Es handelt sich um eine Beobachtungsstudie (***A***), da die Dozentin durch rein
 Warum ist die interne Validität bei einem randomisierten Experiment höher als z. B. bei Beobachtungsstudien?
 
 1.  [Think:]{.cemph} Überlegen Sie für sich.
-2.  [Pair:]{.cemph}  Teilen Sie Ihr Ergebnis mit der Nachbar\*in.
+2.  [Pair:]{.cemph}  Teilen Sie Ihr Ergebnis mit dem Nachbarn/der Nachbarin.
 3.  [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
 
 ::: {.notes}
 
-Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so äußere Einflüsse besser ausschließen zu können. Man hofft dabei, dass sich die Kovariablen unabhängig gleichmäßig verteilen. Die interne Validität steigt. Z.B. könnte eine Beobachtungsstudie zum Thema "Erfolg durch Studium" verzerrte Ergebnisse liefern, da Menschen mit hoher Motivation und Vorbildung eher studieren als Menschen mit geringer Motivation und Vorbildung. Insbesondere Motivation könnte aber auch zu Erfolg führen -- aber hier ist ein Experiment schwierig.
+Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so äußere Einflüsse besser ausschließen zu können. Man hofft dabei, dass sich die die *Experimentalgruppe* ($x=1$, z.B. erhält Werbung) sich nicht systematisch von den  *Kontrollgruppe* ($x=0$, z.B. erhält keine werbung) unterscheiden. Die interne Validität steigt. 
 
 :::
 
@@ -599,7 +580,7 @@ Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen 
 ### Sebastians Kaffeemühle {include-only=deprecated}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Bei einem Laborexperiment werden die Bohnen in einer künstlichen Umgebung manipuliert.
@@ -653,6 +634,26 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 "Mal sehen, was das Rad der nicht-ursächlichen Beziehungen diesmal als stärksten Prädiktor für die Krankheit X ausgibt."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2017/results) &copy; J.B. Landers, Überschrift M. Posner]
 
 
+### Daten-Ethik
+
+Daten **immer** hinterfragen:
+
+- wo kommen sie her?
+
+- wie wurden sie erhoben?
+
+- was fehlt?
+
+- wer profitiert davon?
+
+- zeigen sie wirklich das, was behauptet wird?
+
+- Werden Rechte (z.B. Persönlichkeitsrechte) verletzt?
+
+- Bei Prozentangaben? Prozent von was?
+
+
+
 ### Datenschutz
 
 Personenbeziehbare Daten und unternehmensinterne Daten sind sensibel!
@@ -682,7 +683,7 @@ Rechtliche Rahmen u.a.:
 | $\beta$   | *beta*     | - Symbol für Regressionskoeffizienten
 |           |            | - Zeichen für Fehler 2. Art 
 | $\delta$  | *delta*    | Symbol für allgemeine zusammenfassende Statistik (Kennzahl)
-| $\epsilon$| *epsilon*  | Symbol für Residuum
+| $\epsilon$| *epsilon*  | Symbol für Fehler
 | $\mu$     | *my*       | Symbol für den Populationsmittelwert
 | $\sigma$  | *sigma*    | Symbol für die Populationsstandardabweichung
 | $\pi$     | *pi*       | Symbol für den Populationsanteil
@@ -700,11 +701,42 @@ Rechtliche Rahmen u.a.:
 6.  Schlussfolgerungen: (vorläufige) Antwort auf Forschungsfrage.
 
 
-### Übersicht: Quantitativer Forschungsprozess {#quantFoprozess}
+### Übersicht: Quantitativer Forschungsprozess/ PPDAC {#quantFoprozess}
 
-```{r forschungsprozess-image, echo=FALSE, out.width = "90%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Forschungsprozess.png"))
+
+
+:::::: {.columns}
+::: {.column width="80%"}
+
+[P]{.cemph} 
+: (Problem)
+: Problemdefinition, Forschungsfrage: Was soll untersucht werden?
+
+[P]{.cemph} 
+: (Plan)
+: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
+
+[D]{.cemph} 
+: (Data)
+: Datenerhebung, Datenmanagement, Datenbereinigung.
+
+[A]{.cemph} 
+: (Analysis)
+: Explorative Datenanalyse, Modellierung, Hypothesenprüfung. 
+
+[C]{.cemph} 
+: (Conclusion)
+: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+
+:::
+::: {.column width="20%"}
+
+```{r forschungsprozess-image, echo=FALSE, out.width = "95%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error=FALSE)
 ```
+
+:::
+::::::
 
 <!-- Bug? -->
 

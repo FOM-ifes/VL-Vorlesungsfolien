@@ -4,14 +4,11 @@
 """
   Quick-Typographie-Filter-Decorator-Class: decorator.py
 
-  (C)opyleft in 2018 by Norman Markgraf (nmarkgraf@hotmail.com)
+  (C)opyleft in 2018-2020 by Norman Markgraf (nmarkgraf@hotmail.com)
 
   Release:
   ========
-  0.1   - 05.04.2018 (nm) - Erste Version
-  0.2   - 27.03.2018 (nm) - Code (angeblich) "wartbarer" gemacht.
-  0.2.1 - 14.06.2018 (nm) - Code noch "wartbarer" gemacht. ;-)
-
+  please see style.py!
 
   WICHTIG:
   ========
@@ -64,34 +61,46 @@ class Decorator:
         self.pre = ""
         self.post = ""
 
-    def addPrePost(self, prepost=("", "")):
-        self.addPre(prepost[0])
-        self.addPost(prepost[1])
+    def add_pre_post(self, prepost=("", "")):
+        self.add_pre(prepost[0])
+        self.add_post(prepost[1])
 
-    def addPost(self, post):
+    def add_post(self, post):
         self.post = post + self.post
 
-    def addPre(self, pre):
+    def add_pre(self, pre):
         self.pre = self.pre + pre
 
-    def getPre(self):
+    def get_pre(self):
         return self.pre
 
-    def getPost(self):
+    def get_post(self):
         return self.post
 
-    def hasPrePost(self):
-        return (self.pre != "") and (self.post != "")
+    def has_pre_post(self):
+        return (self.pre != "") or (self.post != "")
 
-    def handleClassCenter(self):
+    def handle_class_center(self):
         pass
 
-    def handleClassFontsize(self, fontsize):
+    def handle_class_fontsize(self, fontsize):
         pass
 
-    def handleDivAndSpan(self, elem):
+    def handle_div(self, elem):
+        """Handle DIV and SPAN Blocks in LaTeX Context.
+        """
         pass
 
+    def handle_span(self, elem):
+        """Handle DIV and SPAN Blocks in LaTeX Context.
+        """
+        pass
+
+    def handle_div_and_span(self, elem):
+        pass
+
+    def handle_comments(self, elem):
+        pass
 
 class LaTeXDecorator(Decorator):
     """
@@ -99,6 +108,8 @@ class LaTeXDecorator(Decorator):
     """
     TEX_CENTER_BEFORE = """\n\\begin{center}\n"""
     TEX_CENTER_AFTER = """\n\\end{center}\n"""
+    TEX_COLOR_EMPH = """\\cemph{}"""
+    TEX_COLOR_STRONG = """\\cstrong{}"""
     FORMAT = "latex"
 
     TEX_FONTFAMILY_TAG = {
@@ -110,97 +121,138 @@ class LaTeXDecorator(Decorator):
         "italic": "itshape",
         "smallcaps": "scshape",
         "upright": "upshape"}
-        
-    def handleClassCenter(self):
+
+    def __init__(self, frmt="latex"):
+        super().__init__()
+        self.FORMAT = frmt
+
+    def handle_class_center(self):
         """ Add center environment
         """
-        self.addPre(self.TEX_CENTER_BEFORE)
-        self.addPost(self.TEX_CENTER_AFTER)
+        self.add_pre(self.TEX_CENTER_BEFORE)
+        self.add_post(self.TEX_CENTER_AFTER)
 
-    def handleClassFontsize(self, fontsize):
+    def handle_class_fontsize(self, fontsize):
         """Add new fontsize.
         """
-        self.addPre("{\\" + fontsize + "{}")
-        self.addPost("}")
+        self.add_pre("{\\" + fontsize + "{}")
+        self.add_post("}")
 
-    def handleClassFontfamily(self, fontfamily):
+    def handle_class_fontfamily(self, fontfamily):
         """Add new fontfamily.
         """
-        self.addPre("{\\" + self.TEX_FONTFAMILY_TAG[fontfamily] + "{}")
-        self.addPost("}")
+        self.add_pre("{\\" + self.TEX_FONTFAMILY_TAG[fontfamily] + "{}")
+        self.add_post("}")
 
-    def getRawBlock(self, txt):
+    def handle_class_color_emph(self):
+        """Add new fontfamily.
+        """
+        self.add_pre("{" + self.TEX_COLOR_EMPH)
+        self.add_post("}")
+
+    def handle_class_color_strong(self):
+        """Add new fontfamily.
+        """
+        self.add_pre("{" + self.TEX_COLOR_STRONG)
+        self.add_post("}")
+
+    def get_raw_block(self, txt):
         return pf.RawBlock(txt, format=self.FORMAT)
 
-    def getRawInline(self, txt):
+    def get_raw_inline(self, txt):
         return pf.RawInline(txt, format=self.FORMAT)
 
-    def getBeforeBlock(self):
-        if self.hasPrePost():
-            return self.getRawBlock(self.getPre())
+    def get_before_block(self):
+        if self.has_pre_post():
+            return self.get_raw_block(self.get_pre())
 
-    def getBeforeInline(self):
-        if self.hasPrePost():
-            return self.getRawInline(self.getPre())
+    def get_before_inline(self):
+        if self.has_pre_post():
+            return self.get_raw_inline(self.get_pre())
 
-    def getAfterBlock(self):
-        if self.hasPrePost():
-            return self.getRawBlock(self.getPost())
+    def get_after_block(self):
+        if self.has_pre_post():
+            return self.get_raw_block(self.get_post())
 
-    def getAfterInline(self):
-        if self.hasPrePost():
-            return self.getRawInline(self.getPost())
+    def get_after_inline(self):
+        if self.has_pre_post():
+            return self.get_raw_inline(self.get_post())
 
-    def handleClassJustifiedInDiv(self, alignment):
+    def handle_class_justified_in_div(self, alignment):
         if alignment == "left":
-            self.addPre("\n\\begin{flushright}\n")
-            self.addPost("\n\end{flushright}\n")
+            self.add_pre("\n\\begin{flushright}\n")
+            self.add_post("\n\\end{flushright}\n")
 
         if alignment == "right":
-            self.addPre("\n\\begin{flushleft}\n")
-            self.addPost("\n\end{flushleft}\n")
+            self.add_pre("\n\\begin{flushleft}\n")
+            self.add_post("\n\\end{flushleft}\n")
 
         if alignment == "center":
-            self.handleClassCenter()
+            self.handle_class_center()
 
-    def handleDiv(self, elem):
-        """Handle DIV and SPAN Blocks in LaTeX Context.
+    def handle_class_spacing_in_div(self, attrib=[]):
+        if 'top' in attrib:
+            width = attrib["top"]
+            if width == "fill":
+                self.add_pre("\n\\vfill\n")
+            else:
+                self.add_pre("\n\\vspace*{"+width+"}\n")
+
+        if 'bottom' in attrib:
+            width = attrib["bottom"]
+            if width == "fill":
+                self.add_pre("\n\\vfill\n")
+            else:
+                self.add_post("\n\\vspace*{"+width+"}\n")
+
+    def handle_div(self, elem):
+        """Handle DIV Blocks in LaTeX Context.
         """
         if 'center' in elem.classes:
-            self.handleClassCenter()
+            self.handle_class_center()
 
         if 'justifiedleft' in elem.classes:
-            self.handleClassJustifiedInDiv("left")
+            self.handle_class_justified_in_div("left")
 
         if 'justifiedright' in elem.classes:
-            self.handleClassJustifiedInDiv("right")
+            self.handle_class_justified_in_div("right")
+            
+        if 'spaceing' in elem.classes:
+            self.handle_class_spacing_in_div(elem.attributes)
 
-    def handleSpan(self, elem):
-        """Handle DIV and SPAN Blocks in LaTeX Context.
+    def handle_span(self, elem):
+        """Handle SPAN Blocks in LaTeX Context.
         """
 
-    def handleDivAndSpan(self, elem):
+    def handle_div_and_span(self, elem):
         """Handle DIV and SPAN Blocks in LaTeX Context.
         """
+        if 'cemph' in elem.classes:
+            self.handle_class_color_emph()
+
+        if 'cstrong' in elem.classes:
+            self.handle_class_color_strong()
+
         for fontsize in self.FONTSIZECLASSES:
             if fontsize in elem.classes:
-                self.handleClassFontsize(fontsize)
+                self.handle_class_fontsize(fontsize)
 
         for fontfamily in self.FONTFAMILYCLASSES:
             if fontfamily in elem.classes:
-                self.handleClassFontfamily(fontfamily)
+                self.handle_class_fontfamily(fontfamily)
 
         if 'Quelle' in elem.classes:
-            self.addPre("\n{\\scriptsize{} --\\xspace{} ")
-            self.addPost("}\n")
+            self.add_pre("\n{\\scriptsize{} --\\xspace{} ")
+            self.add_post("}\n")
 
         if 'Sinnspruch' in elem.classes:
-            self.addPre("\n\\begin{quote}\\small{}")
-            self.addPost("\\end{quote}\n")
-            
+            self.add_pre("\n\\begin{quote}\\small{}")
+            self.add_post("\\end{quote}\n")
+
         if 'personRight' in elem.classes:
-            self.addPre("\n\\begin{columns}[T]\n\t\\begin{column}[t]{0.74\\textwidth}")
-            self.addPost("\n\t\\end{column}\n\t\\begin{column}[t]{0.24\\textwidth}\n\\personDB{"+elem.attributes["person"]+"}\n\t\\end{column}\n\\end{columns}")
+            self.add_pre("\n\\begin{columns}[T]\n\t\\begin{column}[t]{0.74\\textwidth}")
+            self.add_post("\n\t\\end{column}\n\t\\begin{column}[t]{0.24\\textwidth}\n\\personDB{" + elem.attributes[
+                "person"] + "}\n\t\\end{column}\n\\end{columns}")
 
 
 class HTMLDecorator(Decorator):

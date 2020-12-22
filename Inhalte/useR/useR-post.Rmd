@@ -1,10 +1,7 @@
 ### Datenerhebung useR!
 
-Bitte nehmen Sie an der freiwilligen und anonymen Umfrage zu R und Statistik teil: [https://goo.gl/bkgM13](https://goo.gl/bkgM13)
+Bitte nehmen Sie an der freiwilligen und anonymen Umfrage zu R und Statistik teil: [http://user.fom.de](http://user.fom.de)
 
-```{r echo=FALSE, out.width = "50%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "useR-QR.png"))
-```
 
 ### Rückblick: Quantitativer Forschungsprozess am Beispiel useR! {.shrink}
 
@@ -19,7 +16,7 @@ knitr::include_graphics(file.path(pathToImages, "useR-QR.png"))
     
     *Stichprobenverfahren:* Online Erhebung in den Vorlesungen zu Beginn und zum Ende des Semesters.
 
-3. *Datenerhebung:* 1. Teil (Pretest) und 2. Teil (Posttest) erfolgen in der Vorlesung.
+3. *Datenerhebung:* 1. Teil (Vorher-Erhebung) und 2. Teil (Nachher-Erhebung) erfolgen in der Vorlesung.
 
 ### Quantitativer Forschungsprozess am Beispiel useR! (Fortsetzung) {.shrink}
 

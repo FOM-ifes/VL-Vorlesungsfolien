@@ -9,23 +9,23 @@ initPart(
     "PCA_brands",  # Dateiname ohne Suffix
     "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 
 ```
 
-# `r nextChapter()` Dimensionsreduktion bei Marketingdaten
+# Dimensionsreduktion bei Marketingdaten
 
 
-### Lerziele
+### Lernziele
 
 - Einsatz und Ziel der Dimensionsreduktion verstehen.
 - Daten für die Dimensionsreduktion aufbereiten.
 - Anwendung der Dimensionsreduktion.
 - Interpretation und Schlussfolgerungen der Dimensionsreduktion.
-- Evaluation des Einsates der Dimensionsreduktion in der Marketing Controlling Praxis.
+- Evaluation des Einsatzes der Dimensionsreduktion in der Marketing Controlling Praxis.
 
 
 ### Dimensionsreduktion
@@ -55,7 +55,7 @@ Es gibt also keine einzigartige Lösung bei der EFA.
 Eine einfache Faustregel für die Entscheidung zwischen diesen beiden Methoden:
 
 - Führe die PCA durch, wenn die korrelierten beobachteten Variablen einfach auf einen kleineren Satz von wichtigen unabhängigen zusammengesetzten Variablen reduziert werden soll. 
-- Führe die EFA durch, wenn ein theoretisches Modell von latenten Faktoren zugrunde liegt, dass die beobachtete Variablen verursacht. 
+- Führe die EFA durch, wenn ein theoretisches Modell von latenten Faktoren zugrunde liegt, dass die beobachteten Variablen verursacht. 
 
 
 ### Übung `r nextExercise()`: Methodenauswahl {.exercise type=A-B-C answer=A}
@@ -158,7 +158,7 @@ corrplot(cor(brand.sc[, 1:9]), order="hclust")
 
 ### Übung `r nextExercise()`: Korrelationen {.exercise type=A-B-C-D answer=B}
 
-Wie viele Cluster sind sichbar?
+Wie viele Cluster sind sichtbar?
 
 A.  2
 B.  3
@@ -172,7 +172,7 @@ D.  5
 
 ### Übung `r nextExercise()`: Cluster {.exercise type=essay}
 
-Welche Adjektive lassen sich aufgrund der Korrelationen zu CLustern zusammenfassen?
+Welche Adjektive lassen sich aufgrund der Korrelationen zu Clustern zusammenfassen?
 
 <div class="notes">
 - fun/latest/trendy
@@ -239,14 +239,14 @@ Der Standard-Plot `plot()` für die PCA ist ein **Scree-Plot**, dieser zeigt uns
 
 Nach diesem Kriterium werden alle Hauptkomponenten berücksichtigt, die links von der Knickstelle im Scree-Plot liegen. 
 
-Gibt es mehrere Knicks, dann werden jene Hauptkomponenten ausgewählt, die links vom rechtesten Knick liegen. 
+Gibt es mehr Knicks, dann werden jene Hauptkomponenten ausgewählt, die links vom rechtesten Knick liegen. 
 
 Gibt es keinen Knick, dann hilft der Scree-Plot nicht weiter. 
 
 
 ### Eigenwert-Kriterium {.shrink}
 
-Der Eigenwert ist eine Metrik für den Anteil der erklärten Varianz. Die Anzahl Eigenwerte können wir über den Befehl `eigen()` ausgeben. An dieser Stelle können wir die original Daten nehmen, da wir keine unterschiedlichen Skalenstufen haben. Der Eigenwert einer Komponente/ eines Faktors sagt aus, wie viel Varianz dieser Faktor an der Gesamtvarianz aufklärt. Laut dem Eigenwert-Kriterium sollen nur Faktoren mit einem Eigenwert größer 1 extrahiert werden
+Der Eigenwert ist eine Metrik für den Anteil der erklärten Varianz. Die Anzahl Eigenwerte können wir über den Befehl `eigen()` ausgeben. An dieser Stelle können wir die originalen Daten nehmen, da wir keine unterschiedlichen Skalenstufen haben. Der Eigenwert einer Komponente/ eines Faktors sagt aus, wie viel Varianz dieser Faktor an der Gesamtvarianz aufklärt. Laut dem Eigenwert-Kriterium sollen nur Faktoren mit einem Eigenwert größer 1 extrahiert werden
 
 ```{r}
 eigen(cor(brand.sc[, 1:9]))
@@ -295,7 +295,7 @@ Wie interpretieren Sie das Ergebnis? Diskutieren Sie mögliche Lösungen.
 
 <div class="notes">
 - Das Ergebnis sieht sehr gut aus. Es laden immer mehrere Items (mindestens 2) hoch (> 0,5) auf einer Komponente (die mit RC1 bis RC3 bezeichnet werden, RC steht für Rotated Component). Innerhalb einer PCA kann die Interpretierbarkeit über eine **Rotation** erhöht werden. Wenn die Rotation nicht ausgeschlossen wird (mit dem Argument `rotate="none"`), dann ist die Voreinstellung eine `Varimax-Rotation`.   
-- Es gibt keine Items die auf mehr als einer Komponente hoch laden. Die Ladungen sind Korrelationskoeffizienten zwischen den Items und den Hauptkomponenten. 
+- Es gibt keine Items die auf mehr als einer Komponente hochladen. Die Ladungen sind Korrelationskoeffizienten zwischen den Items und den Hauptkomponenten. 
 - In der Zeile SS loadings finden wir die Eigenwerte der fünf Hauptkomponenten. Den Anteil an der Gesamtvarianz, den sie erklären, findet man in der Zeile Proportion Var. Aufsummiert sind die Anteile in der Zeile Cumlative Var. Insgesamt werden durch die fünf Hauptkomponenten 64% der Gesamtvarianz erklärt. 
 - Einzig das Item `fun` lädt negativ auf RC2. 
 </div>
@@ -354,7 +354,7 @@ print(brands.fa, digits=2, cutoff=.4, sort=TRUE)
 
 ### Heatmap mit Ladungen {.shrink}
 
-In der obigen Ausgabe werden die Item-to-Faktor-Ladungen angezeigt. Im zurückgegebenen Objekt `Werte.fa` sind diese als  `$loadings` vorhanden. Wir können die Item-Faktor-Beziehungen mit einer Heatmap von `$loadings` visualisieren:
+In der obigen Ausgabe werden die Item-to-Faktor-Ladungen angezeigt. Im zurückgegebenen Objekt `Werte.fa` sind diese als `$loadings` vorhanden. Wir können die Item-Faktor-Beziehungen mit einer Heatmap von `$loadings` visualisieren:
 
 ```{r}
 heatmap.2(brands.fa$loadings,
@@ -451,5 +451,6 @@ heatmap.2(as.matrix(brand.fa.mean),
 rm(pathToImages)
 finalizePart()
 ```
+
 
 

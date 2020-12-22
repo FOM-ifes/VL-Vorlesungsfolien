@@ -1,10 +1,7 @@
 ### Datenerhebung useR!
 
-Bitte nehmen Sie an der freiwilligen und anonymen Umfrage zu R und Statistik teil: [https://goo.gl/bkgM13](https://goo.gl/bkgM13)
+Bitte nehmen Sie an der freiwilligen und anonymen Umfrage zu R und Statistik teil: [http://user.fom.de](http://user.fom.de)
 
-```{r echo=FALSE, out.width = "50%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "useR-QR.png"))
-```
 
 ### Quantitativer Forschungsprozess am Beispiel useR! {.shrink}
 
@@ -17,6 +14,6 @@ knitr::include_graphics(file.path(pathToImages, "useR-QR.png"))
       a) Unified theory of acceptance and use of technology (UTAUT2), vgl. Venkatesh, V., Thong, J. Y., & Xu, X. (2012). Consumer acceptance and use of information technology: extending the unified theory of acceptance and use of technology. MIS quarterly, 157-178.
       b) Comprehensive Assessment of Outcomes in a First Statistics course (CAOS), vgl. Chance, B., Wong, J., & Tintle, N. (2016). Student performance in curricula centered on simulation-based inference: A preliminary report. Journal of Statistics Education, 24(3), 114-126.
     
-    *Stichprobenverfahren:* Online Erhebung in den Vorlesungen zu Beginn und zum Ende des Semesters.
+    *Stichprobenverfahren:* Online-Erhebung in den Vorlesungen zu Beginn und zum Ende des Semesters.
 
-3. *Datenerhebung:* 1. Teil (Pretest) erfolgt in der Vorlesung.
+3. *Datenerhebung:* 1. Teil (Vorher-Erhebung) erfolgt in der Vorlesung.

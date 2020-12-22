@@ -1,0 +1,88 @@
+\ProvidesPackage{beamerouterthemeNPBT-FOM}[2019/05/30 v4.3.0 Beamer Outer Theme FOM]
+% ===========================================================================
+% beamerouterthemeNPBT-FOM.sty
+% ============================-----------------------------------------------
+% 
+% (C) in 2011-2018 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+%
+% ---------------------------------------------------------------------------
+%
+\mode<presentation>
+% ---------------------------------------------------------------------------
+
+% ---------------------------------------------------------------------------
+%
+% Frame title template:
+%
+\defbeamertemplate{frametitle}{old}
+{
+  \leavevmode
+  \hbox{%
+  \begin{beamercolorbox}[ht=6ex,leftskip=.4cm,wd=\paperwidth]{frametitle}%
+%        \strut%
+        {\small%
+          \ifthenelse{\equal{\thesection}{0}}{% then:
+             {%
+                \usebeamercolor[fg]{section in head}%
+                \usebeamerfont{section in head}%
+                \phantom{\thesection.}~\NoHyper%
+                \insertsection%
+                \endNoHyper%
+              }\\\vspace*{-1.03ex}%
+              {%
+                \usebeamercolor[fg]{frametitle in head}%
+                \usebeamerfont{section in head}%
+                ~\phantom{\thesection.}%
+                \usebeamerfont{frametitle in head}%
+                \Large\insertframetitle%
+             }%
+          }{%else:
+            \ifthenelse{\equal{\thesubsection}{0}}{% then:
+              {%
+                \usebeamercolor[fg]{section in head}%
+                \usebeamerfont{section in head}%
+                \thesection.~\NoHyper\insertsection\endNoHyper%
+              }\\\vspace*{-1.03ex}%
+              {%
+                \usebeamercolor[fg]{frametitle in head}%
+                \usebeamerfont{section in head}%
+                ~\phantom{\thesection.}%
+                \usebeamerfont{frametitle in head}%
+                \Large\insertframetitle%
+              }%
+            }{% else:
+             {%
+                \usebeamercolor[fg]{subsection in head}%
+                \usebeamerfont{subsection in head}%
+                \thesection.\thesubsection.~\insertsubsection%
+             }\\\vspace*{-1.03ex}%
+             {%
+                \usebeamercolor[fg]{frametitle in head}%
+                \usebeamerfont{subsection in head}%
+                ~\phantom{\thesection.\thesubsection.}
+                \usebeamerfont{frametitle in head}%
+                \Large\insertframetitle}%
+             }
+          }%
+        }%
+        \strut
+        \vspace*{-0.875em}
+        \includegraphics[%
+            width=0.9\paperwidth%
+          ]{%
+             \lineimage%
+            }%
+        \begin{tikzpicture}[remember picture, overlay]
+          \node[shift={(\logoxshift,\logoyshift)},inner sep=0pt] at (current page.north east){%
+              \includegraphics[width=\logowidth,height=\logoheight]{\logoimage}%
+          };%
+        \end{tikzpicture}%
+  \end{beamercolorbox}%
+  }%
+}
+
+% ---------------------------------------------------------------------------
+\mode<all>
+%
+% ===========================================================================
+%

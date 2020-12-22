@@ -9,20 +9,34 @@ initPart(
     "Datenhandling",  # Dateiname ohne Suffix
     "Datenhandling"     # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 library(knitr)
+library(viridis)
+library(gridExtra)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
-# `r nextChapter()` Datenhandling
-
 ```{r echo = FALSE}
 library(mosaic)
 inspect <- mosaic::inspect # Sonst wir arules::inspect() vielleicht genommen
 ```
+
+# Datenhandling
+
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+- Die Studierenden kennen zentrale Operationen der Datenvorverarbeitung und können sie anwenden (wie Zeilen filtern).
+- Die Studierenden können einen Datensatz von Lang- zur Breitform pivotieren und können Anwendungsbeispiele beschreiben.
+- Die Studierenden können Unterschiede in den Ursachen von fehlenden Werten erläutern und kennen Strategien zum Umgang mit fehlenden Werten.
+- Die Studierenden wissen um potenzielle Probeleme, die Ausreißerwerte verursachen und können sie im Datensatz identifizieren.
+
+
+## Grundlagen
 
 ### Cartoon: Datenbereinigung
 
@@ -43,7 +57,7 @@ Häufig müssen Daten vor der eigentlichen Analyse vorverarbeitet werden, z. B.:
 - Beobachtungen zusammenfassen: `summarise()`
 - ...
 
-Das Paket `dplyr`^[wird mit `mosaic` installiert und geladen.] bietet dazu viele Möglichkeiten.
+Das Paket `dplyr`^[Wird mit `mosaic` installiert und geladen] bietet dazu viele Möglichkeiten.
 
 Umfangreiche Dokumentation: [http://dplyr.tidyverse.org/index.html](http://dplyr.tidyverse.org/index.html)
 
@@ -51,7 +65,7 @@ Umfangreiche Dokumentation: [http://dplyr.tidyverse.org/index.html](http://dplyr
 
 ### Vorbereitung
 
-Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie laden des Pakets `mosaic`.
+Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing]-Daten sowie laden des Pakets `mosaic`.
 
 ```{r, eval=FALSE, message=FALSE}
 download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
@@ -80,12 +94,12 @@ tips %>%
 
 ### Logik 
 
-- Logisches Und ($\land$): `&`: Eine *und* Verknüpfung von zwei Aussagen ist genau dann wahr, wenn beide Aussagen wahr sind.
-- Logisches Oder ($\lor$): `|`: Eine *oder* Verknüpfung von zwei Aussagen ist genau dann wahr, wenn mindestens eine Aussage wahr ist.
+- Logisches Und ($\land$): `&`: Eine ***Und***-Verknüpfung von zwei Aussagen ist genau dann wahr, wenn beide Aussagen wahr sind.
+- Logisches Oder ($\lor$): `|`: Eine ***Oder***-Verknüpfung von zwei Aussagen ist genau dann wahr, wenn mindestens eine Aussage wahr ist.
 - Logische Verneinung ($\neg$): `!`
 - Wahr: `TRUE`, Falsch: `FALSE`
 
-Dabei wird vektorelementweise verglichen. Zusammenfassung durch Klammern.^[Über `all()` ($\forall$) und `any()` ($\exists$) lassen sich Wahrheitsvektoren zusammenfassen.]
+Dabei wird vektorelementweise verglichen. Zusammenfassung durch Klammern:^[Über `all()` ($\forall$) und `any()` ($\exists$) lassen sich Wahrheitsvektoren zusammenfassen.]
 
 ::: {.scriptsize} 
 
@@ -115,18 +129,18 @@ B.  `r !((TRUE|FALSE)&(FALSE))`
 ```{r, echo=FALSE, fig.align="center", out.width="60%", results=FALSE}
 # https://rstudio-pubs-static.s3.amazonaws.com/13301_6641d73cfac741a59c0a851feb99e98b.html
 VennDiagram::draw.pairwise.venn(30, 25, 10, category = c("Hundeliebhaber*in", "Katzenliebhaber*in"),
-                                lty = rep("blank", 2), fill = c("light blue", "pink"), cat.cex=rep(1.5,2), cex=rep(2,3),
+                                lty = rep("blank", 2), fill = viridis(2, alpha = 0.6), cat.cex=rep(1.5,2), cex=rep(2,3),
                                 alpha = rep(0.5, 2), cat.pos = c(0, 0), cat.dist = rep(0.025, 2))
 ```
 
-Stimmt die Aussage: Wenn Beobachtungen anhand einer *Und* ($\land$) Verknüpfung ausgewählt werden, so werden mindestens so viele Beobachtungen wie bei einer *Oder* ($\lor$) Verknüpfung ausgewählt?
+Stimmt die Aussage: Wenn Beobachtungen anhand einer ***Und***- ($\land$) Verknüpfung ausgewählt werden, so werden mindestens so viele Beobachtungen wie bei einer ***Oder***- ($\lor$) Verknüpfung ausgewählt?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
 
-***Nein***: Während 10 Beobachtungen beide Bedingungen erfüllen ($\land$, in Mengenschreibweise $\cap$), erfüllen 45 mindestens eine ($\lor$, in Mengenschreibweise $\cup$).
+***Nein***: Während 10 Beobachtungen beide Bedingungen erfüllen ($\land$, in Mengenschreibweise: $\cap$), erfüllen 45 mindestens eine ($\lor$, in Mengenschreibweise: $\cup$).
 
 :::
 
@@ -173,13 +187,13 @@ smokingdinner <- tips %>%
 
 ```{r eval=FALSE}
 tips %>%
-  mutate(paid=total_bill+tip) %>%
+  mutate(paid = total_bill + tip) %>%
   select(paid) %>%
   inspect()
 ```
 ```{r, echo=FALSE}
 tips %>%
-  mutate(paid=total_bill+tip) %>%
+  mutate(paid = total_bill + tip) %>%
   dplyr::select(paid) %>%
   inspect()
 ```
@@ -196,7 +210,7 @@ C.  `r tips %>% mutate(rel=tip/total_bill) %>% filter(rel<=0.1) %>% nrow()`
 
 ::: {.notes}
 
-***B***: `tips %>% mutate(rel=tip/total_bill) %>% filter(rel>0.1) %>% nrow()`
+***B***: `tips %>% mutate(rel = tip/total_bill) %>% filter(rel > 0.1) %>% nrow()`
 
 :::
 
@@ -279,6 +293,7 @@ D.  `summarise()`
 :::
 
 
+
 ### Die obersten *n* Beobachtungen: `top_n()`
 
 ```{r top_n}
@@ -291,7 +306,7 @@ tips %>%
 *Hinweis:* Auf diese Art und Weise können auch Datensätze balanciert werden.^[Vgl. geschichtete Stichprobe: `group_by() %>% sample_n()`]
 
 
-### Beobachtungen sortieren: `arrange()`
+### Spalten sortieren: `arrange()`
 
 ```{r arrange}
 tips %>%
@@ -301,30 +316,27 @@ tips %>%
 ```
 
 
-### Verknüpfen von Daten {.shrink}
+### Verknüpfen von Daten^[Schöne Visualisierung: https://github.com/gadenbuie/tidyexplain]
 
+::: {.small}
 
 ```{r, eval=FALSE}
 # ID (Zeilennummer, Schlüssel) erzeugen
-tipsID <- tips %>%
-  mutate(ID=row_number())
+tipsID <- tips %>% mutate(ID=row_number())
 
 # Zwei (Teil-)Datensätze erzeugen
-tips1 <- tipsID %>%
-  select(ID, total_bill)
-tips2 <- tipsID %>%
-  select(ID, tip)
+tips1 <- tipsID %>% select(ID, total_bill)
+tips2 <- tipsID %>% select(ID, tip)
 
-# Matche beide Tabellen, so dass nur Zeile von tip1 übrigbleiben,
+# Matche beide Tabellen, so dass nur Zeilen von tip1 übrigbleiben,
 # die eine korrespondiere Zeile in tips2 haben
 tips1 %>%
   inner_join(tips2, by = "ID") %>%
-  inspect()
+  head()  # ersten paar Zeilen zeigen
 ```
 ```{r, echo=FALSE}
 # ID (Zeilennummer, Schlüssel) erzeugen
-tipsID <- tips %>%
-  mutate(ID=row_number())
+tipsID <- tips %>% mutate(ID=row_number())
 
 # Zwei (Teil-)Datensätze erzeugen
 tips1 <- tipsID %>%
@@ -333,10 +345,11 @@ tips2 <- tipsID %>%
   dplyr::select(ID, tip)
 
 # Innere Verknüpfung
-tips1 %>%
-  inner_join(tips2, by = "ID") %>%
-  inspect()
+tips1 %>% inner_join(tips2, by = "ID") %>%
+  head(3)
 ```
+
+:::
 
 
 ### Offene Übung `r nextExercise()`: Daten zusammenfassen {.exercise type=essay}
@@ -353,10 +366,35 @@ tips %>%
 ```
 
 ::: {.notes}
-tips %>% mutate(party = case_when((smoker=="Yes" & time=="Dinner") ~ "Party", TRUE ~ "No Party"), rel_tip=tip/total_bill) %>% group_by(party) %>% summarise(mean=mean(rel_tip), sd=sd(rel_tip))
+:::: {.teletype}
+tips %>%   
+\ \ \ mutate(party =   
+\ \ \ case_when((smoker=="Yes" & time=="Dinner") ~ "Party",   
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TRUE ~ "No Party"),   
+\ \ \ \ \ \ \ \ \ \ \ \ \ rel_tip=tip/total_bill) %>% group_by(party) %>%   
+\ \ \ summarise(mean=mean(rel_tip), sd=sd(rel_tip))
+::::
+
 :::
 
-### Ausblick: Tidy Data
+
+### Ergebnisse von `mosaic`-Befehlen als Tabelle ausgeben lassen
+
+Häufig ist es sinnvoll, sich die Ergebnisse einer statistischen Analyse in Tabellenform^[Genauer: Als Dataframe] ausgeben zu lassen. So erwarten z. B. die Diagrammbefehle `gf_XXX`^[Paket `ggformula`] eine Tabelle als Eingabe. Die Funktion `df_stats`^[Über `mosaic` geladen] leistet das:
+
+```{r}
+df_stats( tip ~ sex + smoker, data = tips, mean, sd)
+```
+
+
+
+
+
+
+
+## Datensatz pivotieren
+
+### Tidy Data
 
 Tidy data:^[[Wickham, H. (2014). Tidy data. Journal of Statistical Software, 59(10), 1-23.](http://dx.doi.org/10.18637/jss.v059.i10)]
 
@@ -380,37 +418,157 @@ library(tidyr)
 ```
 
 
+### Von *breit* nach *lang* und zurück
 
-### Langer Datensatz über `gather()`
+Häufig liegt ein Datensatz in *langer* Form vor, aber man benötigt ihn in *breiter* Form (oder umgekehrt):
+
+```{r echo = FALSE}
+breit <- tibble::tribble(
+  ~Umsatz_2018, ~Umsatz_2017, ~Umsatz_2016,  ~...,
+         "100",        "101",        "102", "...",
+          "90",         "91",         "92", "...",
+          "80",         "81",         "82", "...",
+           "...",          "...",          "...", "..."
+  )
+
+
+lang <- tibble::tribble(
+  ~Umsatz, ~Jahr,
+   "2018", "100",
+   "2018",  "90",
+   "2018",  "80",
+   "2017", "101",
+   "2017",  "91",
+   "2017",  "81",
+   "2016", "102",
+      "…",   "…"
+  )
+
+
+```
+
+
+
+:::::: {.columns}
+::: {.column width="20%"}
+
+Tabelle in *langer* Form:
+
+
+```{r echo = FALSE}
+kable(lang)
+```
+
+
+:::
+::: {.column width="70%"}
+
+
+Tabelle in *breiter* Form:
+```{r echo = FALSE}
+kable(breit)
+```
+
+:::
+::::::
+
+
+Das Umformatieren von *breit* zu *lang* (und zurück) bezeichnet man als *pivotieren*; dafür kann man die Funktionen `pivot_longer()` (in die Langform) und `pivot_wider()` (in die Breitform) nutzen.
+
+
+
+
+
+
+
+
+### Datensatz in *Lang*form überführen mit `pivot_longer()`
+
+[Achtung]{.cemph}: Sie benötigen das R-Paket `tidyr` für diese Funktion!^[Installieren und starten nicht vergessen.]
 
 Überführt einen *breiten* Datensatz in einen *langen*:
 
-```{r, eval=FALSE}
-tips_long <- tips %>%
-  mutate(id = row_number()) %>%
-  select(id, tip, total_bill) %>%
-  gather(key = "Variable", value = "Wert", -id)
 
-str(tips_long)
-```
-```{r, echo=FALSE}
-tips_long <- tips %>%
-  mutate(id = row_number()) %>%
-  dplyr::select(id, tip, total_bill) %>%
-  gather(key = "Variable", value = "Wert", -id)
+:::::: {.columns}
+::: {.column width="60%"}
 
-str(tips_long)
+```{r eval = FALSE}
+tips_long <- tips %>% 
+  mutate(ID = row_number()) %>% 
+  select(ID, sex, smoker, day) %>% 
+  pivot_longer(cols = sex:day, 
+               names_to = "Variable")
 ```
 
-### Breiter Datensatz über `spread()`
+:::
+::: {.column width="35%"}
+
+
+```{r echo = FALSE}
+tips_long <- tips %>% 
+  mutate(ID = row_number()) %>% 
+  dplyr::select(ID, sex, smoker, day) %>% 
+  pivot_longer(cols = sex:day, 
+               names_to = "Variable",
+               values_to = "Wert")
+
+
+tips_long %>% 
+  head(10) %>% 
+knitr::kable()
+```
+
+
+:::
+::::::
+
+
+
+
+
+### Datensatz in *Breit*form überführen mit `pivot_wider()`
+
+
+[Achtung]{.cemph}: Sie benötigen das R-Paket `tidyr` für diese Funktion!
+
+
+:::::: {.columns}
+::: {.column width="60%"}
+
 
 Überführt einen *langen* Datensatz in einen *breiten*:
-```{r}
-tips_wide <- tips_long %>%
-  spread(key = "Variable", value="Wert")
 
-str(tips_wide)
+```{r eval = FALSE}
+tips_wide <- tips_long %>%
+  pivot_wider(names_from = "Variable",
+              values_from = "Wert")
+
 ```
+
+
+:::
+::: {.column width="35%"}
+
+
+:::{.tiny}
+
+```{r echo = FALSE}
+tips_wide <- tips_long %>%
+  pivot_wider(names_from = "Variable",
+              values_from = "Wert")
+
+tips_wide %>% 
+  head(10) %>% 
+  kable()
+```
+:::
+:::
+::::::
+
+
+
+Ein ausführlicheres Tutorial findet sich [hier](https://tidyr.tidyverse.org/articles/pivot.html) oder [hier](https://www.youtube.com/watch?v=D48JHU4llkk).
+
 
 ### Übung `r nextExercise()`: Datenvorverarbeitung {.exercise type=A-B-C answer=A}
 
@@ -425,6 +583,286 @@ C.  Beide gleich.
 In einem *langen* Datensatz stehen die Werte der Variablen untereinander, also ***A***.
 
 :::
+
+
+
+
+
+
+## Fehlende Werte
+
+
+### Auf fehlende Werte prüfen
+
+
+Fehlende Werte (`NA`s)  willkürlich erzeugen im Datensatz `tips`:
+
+```{r}
+tips_na <- tips
+tips_na$tip[c(1,2,3, 42, 244)] <- NA
+tips_na$total_bill[c(10, 11, 12)] <- NA
+```
+
+```{r}
+favstats(~ tip, data = tips_na)
+```
+
+Mit `inspect()` bekommt man die Ausgabe  von `favstats()` für jede nummerische Spalte des Datensatzes, und damit auch die Angabe der Anzahl fehlender Werte.
+
+
+```{r eval = FALSE}
+inspect(tips)
+```
+
+
+
+### Arten von Ursachen fehlender Werte
+
+Wie man mit fehlenden Werten umgeht, hängt auch von (der Art) der Ursache des Fehlens ab:
+
+
+1. [Rein zufälliges Fehlen]{.cemph}: z.B. *Ihr Hund hat den Zettel aufgefressen für Versuchsperson `JB007`; es hätte genauso `JB008` erwischen könnnen.* Das Fehlen von Werten steht nicht in Zusammenhang mit den Ausprägungen der Variablen dieser Beobachtung: [Missing completely at random (MCAR)]{.cemph}.
+2. [(Bedingt) zufälliges Fehlen]{.cemph}: z.B. *Männer haben in Ihrer Umfrage häufiger das Gewicht nicht angegeben im Vergleich zu Frauen*. Das Fehlen von Werten in einer Variablen (Gewicht) hängt mit der Ausprägung in anderen Variablen dieser Person zusammen (Geschlecht): [Missing at random (MAR)]{.cemph}
+3. [Nicht zufälliges Fehlen]{.cemph}: z.B. Je leichter eine Person in der Umfrage war, desto häufiger hat sie ihr Gewicht nicht angegeben. Das Fehlen von Werten in einer Variablen hängt mit der Ausprägung in der (gleichen) Variablen zusammen: [Missing not at random (MNAR)]{.cemph}
+
+
+Insbesondere bei MNAR sind wohl überlegte Maßnahmen nötig. Einfache Maßnahmen funktionieran am besten bei MCAR.
+
+
+### Fallweises Löschen
+
+Ganze Zeilen (ganze Fälle) zu löschen ist eine einfache Methode, um fehlende Werte zu "bereinigen". Beim fallweisen Löschen können aber sehr viele Zeilen verloren gehen.
+
+```{r}
+# löscht alle Zeilen, in denen mindestens ein Wert fehlt.
+tips_no_na <- na.omit(tips_na)  
+```
+
+
+*Hinweis:* Manchmal werden fehlende Werte z.B. mit `-99` gekennzeichent. Dann muss dieser Wert zuerst noch in `NA` umkodiert werden:
+
+
+
+<!-- ```{r} -->
+<!-- tips_na$tip[c(1,2,3, 42)] <- 99  # willkürlich gesetzte fehlende Werte mit -99 bezeichnet -->
+
+<!-- tips_na2 <- tips_na %>%  -->
+<!--   mutate(tip = case_when( -->
+<!--     tip == -99 ~ NA_real_,  # Fehlender Wert vom Typ "relle Zahl" -->
+<!--     tip > 0 ~ tip  # wenn tip>0, dann bleibt tip=tip -->
+<!--   )) -->
+<!-- ``` -->
+
+
+<!-- mit `case_when()` kann man mehrstufige Wenn-Dann-Abfragen gestalten: `case_when(Prüfung ~ Konsequenz_wenn_wahr)`. -->
+
+
+
+
+## Ausreißerwerte 
+
+
+
+### Was sind Ausreißerwerte?
+
+*Ausreißer* bzw. *Ausreißerwerte* sind Werte, die so sehr von den anderen Werten einer Verteilung/Datenreihe abweichen, dass man vermutet, sie könnten von einem anderen Mechanismus erzeugt worden sein als die übrigen Werte.
+
+:::::: {.columns}
+::: {.column width="45%"}
+
+```{r echo = FALSE, results = "hide"}
+
+x <- rnorm(1e05)
+y <- rnorm(1e04, 0, 1.5)
+z <- x + y 
+
+p1 <- gf_dens(~z, color = viridis(2)[1]) %>% 
+  gf_dist("norm", color = "grey60") %>% 
+  gf_lims(x = c(-5, +5)) %>% 
+  gf_vline(xintercept = c(-3,3), linetype = "dashed")
+
+p2 <- gf_boxplot(~z)
+
+
+xpnorm(q = c(-3, 3), mean = 0, sd = 1.5, verbose = FALSE) %>% 
+  gf_theme(legend.position = "none")
+
+
+ 
+```
+
+Bei einer normalverteilten Variablen $X$ kann z.B. ein $|x_i-\bar{x}| > 3 \cdot s_x$ als Ausreißer gelten.
+
+
+:::
+::: {.column width="45%"}
+
+
+```{r echo = FALSE}
+d <- data.frame(x = 1:10,
+                y = 0.7 * 1:10,
+                y2 = 0.7 * 1:10)
+
+d$y2[length(d$y)-1] <- d$y[length(d$y)-1] * 0.5
+
+
+gf_point(y2 ~ x, data = d) %>% 
+  gf_refine(scale_x_continuous(breaks = NULL),
+            scale_y_continuous(breaks = NULL)) +
+  annotate("point", x = length(d$y)-1, y = d$y2[length(d$y2)-1], color = "red", alpha = .7, size = 10)
+```
+
+
+Ein (bivariater) Ausreißer in einer Regressionsanalyse.
+
+:::
+::::::
+
+
+
+
+
+### Probleme mit Ausreißerwerten
+
+
+Das [Identifikationsproblem]{.cemph} mit Ausreißern besteht darin, dass man oft nicht weiß, ob die Ursache ein "Fehler" (z.B. ein Messfehler) oder ein valides Phänomen ist (z.B. eine 16 Jahre alte Studentin). Daher ist es oft schwer zu entscheiden, ob man z.B. den Ausreißer aus dem Datensatz entfernen soll oder nicht.
+
+
+Das [Einflussproblem]{.cemph} mit Ausreißern besteht darin, dass einzelne Ausreißerwerte einen im Verhältnis sehr starken Einfluss auf eine Statistik bzw. ein Modell haben können.
+
+```{r echo = FALSE, fig.asp= 0.3}
+p1 <- gf_point(y2 ~ x, data = d) %>% 
+  gf_lm() %>% 
+  gf_lims(y = c(0, 10)) %>% 
+  gf_labs(x = "", y = "") %>% 
+  gf_refine(theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()))
+
+p2 <- gf_point(y ~ x, data = d) %>% 
+  gf_lm() %>% 
+  gf_lims(y = c(0, 10)) %>% 
+  gf_refine(theme(axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank()))
+
+grid.arrange(p2, p1, nrow = 1)
+```
+
+
+
+
+### Ausreißer finden mit der Boxplot-Methode
+
+
+Einen Wert $x_i$, der mehr als $1.5 \cdot \text{IQR}$ vom "Antennenanfang" (Q1 bzw. Q3) im Boxplot entfernt ist, kann man als Ausreißer bezeichnen:
+
+$$
+x_i < \text{Q1} - 1.5 \cdot \text{IQR} \quad \lor \quad x_i > \text{Q3} + 1.5 \cdot \text{IQR}  
+$$
+
+
+
+:::::: {.columns}
+::: {.column width="30%"}
+
+```{r echo = FALSE, fig.asp= 1}
+tips_outlier <- tips %>% 
+  filter(tip >=  quantile(~tip, p = .75, data = tips) + 1.5*IQR(~ tip, data = tips))
+
+tips %>% 
+  gf_boxplot(tip ~ 1, data = tips) %>% 
+  gf_point(tip ~ 1, data = tips_outlier, color = "red", size = 7, alpha = .3) %>% 
+  gf_refine(scale_x_continuous(breaks = NULL)) %>% 
+  gf_labs(x = "")
+```
+
+
+:::
+::: {.column width="70%"}
+
+
+
+```{r}
+tip_iqr <- IQR(~ tip, data = tips)
+tip_q3 <- quantile(~tip, p = .75, data = tips)
+tip_q1 <-  quantile(~tip, p = .25, data = tips)
+
+grenze_oben <- tip_q3 + 1.5 * tip_iqr
+grenze_unten <- tip_q1 - 1.5 * tip_iqr
+
+tips_ohne_outlier <- tips %>% 
+filter(tip <  grenze_oben & tip > grenze_unten)
+```
+
+
+:::
+::::::
+
+
+
+### Einflusspunkte finden in Regressionsanalysen (I/III)
+
+Einzelne Datenpunkte, die die Koeffizienten z.B. im Regressionsmodell stark beeinflussen, werden *Einflusspunkte* genannt. Cook's Distance $D_i$ ist ein Maß für die Stärke des Einflusses eines solchen Datenpunktes $i$:
+
+$$
+\text{Cook's Distance }D_i= \frac{\sum ( \hat{y}_i - \hat{y}_{(i)} )^2 } {(k+1) \hat{\sigma}^2_\epsilon}
+$$
+
+Cook's Distance $D_i$ vergleicht die vorhergesagten Werte  $\hat{y}_i$ für jeden Fall $i$ des Datensatzes mit der Vorhersage, wenn Beobachtung $i$ entfernt wurde ($y_{(i)}$). Diese Differenzen werden dann quadriert und aufsummiert. Der Nenner dient der Standardisierung.
+
+```{r}
+lm1 <- lm(tip ~ total_bill, data = tips)
+cooks <- cooks.distance(lm1) # Cook's distance abspeichern
+cooks %>% head(3)            # nur die ersten 3 Werte anzeigen
+```
+
+
+
+### Einflusspunkte finden in Regressionsanalysen (II/III)
+
+Einflussreiche Punkte können solche sein, deren Cook's Distance deutlich von den anderen abweichen.^[z.B. John Fox, Applied Regression Analysis, 2016, S. 276 f.]
+Dies läßt sich grafisch überprüfen:
+
+```{r, out.width="70%", fig.asp=0.5}
+gf_point(cooks ~ 1:length(cooks))  # Streudiagramm
+```
+
+Hier ließe sich z. B. die Grenze 0.4 identifizieren.^[Allerdings ist die Abweichung nicht sehr groß, so dass die Daten insgesamt eher unaufällig sind.]
+
+
+### Einflusspunkte finden in Regressionsanalysen (III/III)
+
+Welche Beobachtung ist das?
+
+```{r}
+which(cooks.distance(lm1) > 0.4)
+```
+
+Sie können die Werte auch sortiert ausgeben, um zu schauen, wie groß der Sprung ist:
+
+```{r}
+sort(cooks, decreasing = TRUE) %>% head()
+```
+
+So können Sie ggf. die einflussreichen Beobachtungen aus einem Datensatz entfernen:
+
+```{r}
+tips_ohne_einflusspunkte <- tips %>% 
+  filter(cooks < 0.4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r finish-Datenhandling, include=FALSE}
 rm(tipsID)

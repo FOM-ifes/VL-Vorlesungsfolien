@@ -9,7 +9,7 @@ initPart(
     "Regression",  # Dateiname ohne Suffix
     "Regression"     # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 
@@ -40,6 +40,23 @@ my_point <- function(formula, data, caption="", jitter=FALSE) {
 ```
 
 # Lineare Regression
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+Die Studierenden ...
+
+- kennen die Grundlagen der linearen Regression (wie lineare Funktion und Bestimmtheitsmaß) und können diese in Grundzügen erklären.
+- können eine Regression (einfach, mit kategorialem Prädiktor und multipel) in R berechnen, visualisieren und die Ergebnisse interpretieren.
+- können die Grundprinzipien der simulationsbasierten Inferenz (wie Resampling, Bootstrap-Verteilung, Shuffling, Permutationsverteilung, p-Wert) auf informelle Art erläutern.
+- kennen die Voraussetzungen der linearen Regression.
+- wissen, was man unter einer Wechselwirkung im Kontext der Regression versteht und können sowohl Beispiele anführen als auch eine Wechselwirkung in R berechnen.
+
+
+
+
+## Grundlagen
+
 
 ### Modellierung
 
@@ -76,7 +93,7 @@ Zwei mögliche Ziele dabei:^[Shmueli, G. (2015) To Explain or to Predict? Statis
 
 ### Modellierung: Lineare Regression
 
-- [Überwachtes Lernen]{.cstrong} (engl.: *supervised learning*): Kann ein Teil der Variation einer abhängigen Variable $y$ durch unabhängige Variable(n) $x$ modelliert werden: $y = f(x) + \epsilon$^[$\epsilon$: (zufälliger) Fehler, Residuum]?
+- [Überwachtes Lernen]{.cstrong} (engl.: *supervised learning*): Kann ein Teil der Variation einer abhängigen Variable $y$ durch unabhängige Variable(n) $x$ modelliert werden: $y = f(x) + \epsilon$^[$\epsilon$: (zufälliger) Fehler]?
 
 - [Schätze]{.cstrong} $\hat{f}$ anhand der Daten/ Stichprobe. Das *Dach* $\hat{\cdot}$ symbolisiert, dass das Modell *geschätzt* wird.
 
@@ -85,7 +102,8 @@ Hier: $y$ **numerisch**, nur eine unabhängige Variable $x$.
     - $\beta_0$: Achsenabschnitt
     - $\beta_1$: Steigung, d. h. Änderung des Mittelwerts von $y$, wenn $x$ eine Einheit größer beobachtet wird
 
-- [Methode der kleinsten Quadrate:]{.cstrong} Bestimme Vektor $\hat{\beta}=\begin{pmatrix}\hat{\beta}_0\\ \hat{\beta}_1\end{pmatrix}$ so, dass für $\hat{\epsilon}_i = y_i - \hat{f}(x_i)  = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)$ der Wert $\sum \hat{\epsilon}^2_i$ minimal ist.
+- [Methode der kleinsten Quadrate:]{.cstrong} Bestimme Vektor $\hat{\beta}=\begin{pmatrix}\hat{\beta}_0\\ \hat{\beta}_1\end{pmatrix}$ so, dass für den *geschätzten Fehler* ($\hat{\epsilon}$), das Residuum $\hat{\epsilon}_i = y_i - \hat{f}(x_i)  = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i)$, der Wert $\sum \hat{\epsilon}^2_i$ minimal ist. 
+Die geschätzen $y$-Werte werden mit $\hat y$ bezeichnet: $\hat y = \hat{\beta}_0 + \hat{\beta}_1 x_i$.
 
 
 ### FOMshiny: Kleinste Quadrate {.shiny}
@@ -93,6 +111,18 @@ Hier: $y$ **numerisch**, nur eine unabhängige Variable $x$.
 Datenmodellierung über das Kleinste-Quadrate-Kriterium.
 
 [https://fomshinyapps.shinyapps.io/KleinsteQuadrate/](https://fomshinyapps.shinyapps.io/KleinsteQuadrate/)
+
+
+### Mathematik und Optimierung
+
+- Die Quadratsumme der Residuen ($\hat{\epsilon}$), $\sum \hat{\epsilon}^2_i$, hängt ab vom geschäzten Achsenabschnitt ($\hat{\beta}_0$) und der geschätzten Steigung ($\hat{\beta}_1$): Minimiere $\sum \hat{\epsilon}^2_i$ durch optimale Wahl von $\hat{\beta}_0$ und $\hat{\beta}_1$.
+
+- Eine Kurvendiskussion^[über notwendige und hinreichende Bedingungen für die Existenz von Extremwerten] der Funktion $g(\hat{\beta}_0, \hat{\beta}_1)=\sum_{i=1}^n \left( y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_i) \right)^2$ führt zu folgendem Ergebnis:
+
+  - $\hat{\beta}_1=\frac{s_{x,y}}{s^2_x}=\frac{s_y}{s_x}r_{x,y}$, d.h., die geschätzte Steigung ist der Quotient aus der Kovarianz von $x$ und $y$ und der Varianz von $x$.
+
+  - $\hat{\beta}_0=\bar{y}-\hat{\beta}_1\cdot \bar{x}$, d.h., der geschätzte Achsenabschnitt ist der Mittelwert von $y$ minus der geschätzten Steigung multipliziert mit dem Mittelwert von $x$.
+
 
 
 ### Lineare Regression
@@ -159,7 +189,7 @@ p2 <- df2 %>%
   theme(axis.text=element_blank())
 
 
-grid.arrange(p1, p2, nrow = 1)
+gridExtra::grid.arrange(p1, p2, nrow = 1)
 
 rm(df1)
 rm(df2)
@@ -182,7 +212,7 @@ Wie setzt sich im linearen Modell die Gesamtvariation aus modellierter und nicht
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 
@@ -258,7 +288,7 @@ C.  Trinkgeld und Rechnungshöhe sind unabhängig.
 
 ::: {.notes}
 Häufig richtet sich die Trinkgeldhöhe nach der Rechnungshöhe (z.B. 10%), daher ***A***. Aber auch eine Modellierung der Rechnungshöhe anhand des Trinkgeldes wäre möglich. 
-***Beachte:*** Auch ist eine Regression **keine** Kausalanalyse: Was $y$, was $x$ ist, ist i. d. R. eine (sach-)inhaltliche Entscheidung!
+***Beachte:*** Auch ist eine Regression **keine** Kausalanalyse: Was $y$, was $x$ ist, ist i.d.R. eine (sach-)inhaltliche Entscheidung!
 :::
 
 
@@ -332,8 +362,21 @@ $\hat{\beta}_1=`r round(erglm1$coefficients[2],2)`$ (`Estimate`), damit ***D***.
 
 Die geschätzte Gleichung lautet:
 
-$$\widehat{tip} = `r sprintf("%.4f", erglm1$coefficients[1])` + `r sprintf("%.4f", erglm1$coefficients[2])` \cdot \text{total\_bill}$$
+$$\widehat{\text{tip}} = `r sprintf("%.4f", erglm1$coefficients[1])` + `r sprintf("%.4f", erglm1$coefficients[2])` \cdot \text{total\_bill}$$
 
+
+### Punktprognose 
+
+Punktprognose für $x_0=10$ mit Hife der Funktion `predict():`
+
+```{r}
+# Datensatz mit neuer Beobachtung
+x0 <- data.frame(total_bill = 10)
+
+# Prognose
+predict(erglm1, # Modell
+        newdata = x0)
+```
 
 ### Übung `r nextExercise()`: Prognose der Trinkgeldhöhe aus Rechnungshöhe {.exercise type=yesno answer=no}
 
@@ -345,26 +388,22 @@ Stimmt die Aussage: Bei einer Rechnungshöhe von $10\,\$$ wird das Trinkgeld mit
 - Nein.
 
 ::: {.notes}
-***Nein***, nur wenn das Residuum, der Fehler $\epsilon=0$ ist. Im Mittelwert des Modells der Stichprobe liegt das Trinkgeld aber bei  $`r round((round(erglm1$coefficients[1],4) +  round(erglm1$coefficients[2],4)*10),2)`\,\$$.
+***Nein***, nur wenn das Residuum $\hat{\epsilon}=0$ ist. Im Mittelwert des Modells der Stichprobe liegt das Trinkgeld aber bei  $`r round((round(erglm1$coefficients[1],4) +  round(erglm1$coefficients[2],4)*10),2)`\,\$$.
 :::
 
 
-### Prognoseintervalle
+### Cartoon: Wahrsager\*innen
 
-Punktprognose inkl. $95\%$-Prognoseintervall:^[*Hinweis:* Das Prognoseintervall (`"prediction"`) ist breiter als das Konfidenzintervall (`"confidence"`): Während das erste sich auf die Unsicherheit bzgl. des Wertes $y$ gegeben $x$ bezieht, bezieht sich das zweite auf die Unsicherheit bzgl. des Mittelwertes von $y$ gegeben $x$.]
-
-```{r}
-predict(erglm1, # Modell
-        # Neue Beobachtung mit x=10:
-        newdata = data.frame(total_bill = 10), 
-        # Prognoseintervall:
-        interval  = "prediction") 
+```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_05-2019.jpg", "cartoon0519.jpg", pathToImages)
 ```
+"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Überschrift M. Dunlap]
 
 
 ### Übung `r nextExercise()`: Bestimmtheitsmaß  {.exercise type=A-B-C-D answer=D}
 
-Ein Regressionsmodell liefert folgende Ausgabe: `Multiple R-squared = `r round(summary(erglm1)$r.squared,4)` `.]
+Ein Regressionsmodell liefert folgende Ausgabe: `Multiple R-squared =` `r round(summary(erglm1)$r.squared,4)`.
 
 
 Welche Aussage stimmt?
@@ -407,7 +446,7 @@ gridExtra::grid.arrange(p1,p2,p3,p4)
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 Wenn eine andere Stichprobe von Bohnen ($x, y$) eingefüllt wird, kommt aufgrund der zufälligen Variation auch ein anderer Kaffee ($\hat{\beta}$) raus. Wie stark variiert dieser?^[Skizze: Sebastian Sauer]
@@ -483,6 +522,39 @@ tips %>% head() %>% resample()
 :::::::::
 
 
+### Resampling {exclude=bda}
+
+```{r simuboot, echo=FALSE, fig.align="center", out.width="80%"}
+set.seed(1896)
+
+mytips <- tips %>%
+  select(tip, total_bill) %>%
+  sample_n(40)
+
+boottips <- do(12) * resample(mytips)
+
+gf_point(tip ~ total_bill | .index, data = boottips) %>%
+  gf_lm()
+```
+
+
+### Übung `r nextExercise()`: Vergleich Resampling Stichproben {.exercise type=yesno answer=yes exclude=bda}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+gf_point(tip ~ total_bill | .index, data = boottips) %>%
+  gf_lm()
+```
+
+Stimmt die Aussage: Die Regressionen der Resampling Stichproben $1-12$ sehen sich ähnlich?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***: Die Ergebnisse der Resamples sind ähnlich, aber nicht identisch. 
+:::
+
+
 ### Resampling im Modell {exclude=bda}
 
 ::: {.small}
@@ -535,7 +607,7 @@ Setze Zufallszahlengenerator
 Bootvtlg soll sein:
   Wiederhole 10000 Mal:
     - Berechne ein lineares Modell,
-    - Der Datensatz tips soll dabei jedes Mal resampelt werden.
+    - der Datensatz tips soll dabei jedes Mal resampelt werden.
 ```
 
 ```{r do-resample-lm-many-times-no-eval, eval = FALSE}
@@ -581,7 +653,7 @@ quantile( ~ total_bill, data = Bootvtlg,
 
 - Resampling hat ergeben, dass für $95\%$ unser *Resampling*-Stichproben die geschätzte Steigung $\hat{\beta}^*_1$ zwischen `r floor(quantile( ~ total_bill, data = Bootvtlg, probs = c(0.025))*100)/100` und `r ceiling(quantile( ~ total_bill, data = Bootvtlg, probs = c(0.975))*100)/100` liegt.
 - Wir sind uns zu $95\%$ sicher, dass eine erneute Resampling-Stichprobe einen Wert innerhalb dieses Intervalls ergibt. 
-- Dieser Bereich wird auch **Konfidenzintervall** genannt und beschreibt die Unsicherheit einer Schätzung.
+- Dieser Bereich ist eine Schätzung für das **Konfidenzintervall** und beschreibt die Unsicherheit einer Schätzung.
 - Die Unsicherheit resultiert aus der Variation der Schätzung durch die zufällige Stichprobe.
 
 
@@ -684,14 +756,49 @@ tips %>% head() %>% shuffle()
 
 
 
-
 ### Nullhypothese {exclude=bda}
 
-- Unter der Modellannahme (Hypothese!): *Es gibt keinen Zusammenhang*, d. h. $\beta_1=0$, können wir $x$ **permutieren** und die Verteilung von $y$ sollte sich nicht ändern: Wir gehen vorläufig davon aus, dass gilt: $$y=\beta_0 + \beta_1 \cdot x + \epsilon =\beta_0 + 0 \cdot x + \epsilon.$$
+- Unter der Modellannahme (Hypothese!): *Es gibt keinen Zusammenhang*, d.h., $\beta_1=0$, können wir $x$ **permutieren** und die Verteilung von $y$ sollte sich nicht ändern: Wir gehen vorläufig davon aus, dass gilt: $$y=\beta_0 + \beta_1 \cdot x + \epsilon =\beta_0 + 0 \cdot x + \epsilon.$$
 
 - Die Annahme $\beta_1=0$ wird **Nullhypothese** ($H_0$) genannt.
 
 - Durch wiederholtes Permutieren simulieren wir die Verteilung, die gelten würde, wenn die Nullhypothese stimmen würde.
+
+### Simulation {exclude=bda}
+
+```{r simushuffle, echo=FALSE, fig.align="center", out.width="80%"}
+shuffletips <- do(12) * mytips
+shuffletips <- shuffletips %>%
+  group_by(.index) %>%
+  mutate(total_bill = shuffle(total_bill)) %>%
+  ungroup() %>%
+  select(-.row)
+
+orgtips <- mytips %>%
+  mutate(.index = 8)
+
+shuffletips[shuffletips$.index==8, ] <- orgtips
+
+gf_point(tip ~ total_bill | .index, data = shuffletips) %>%
+  gf_lm()
+```
+
+
+### Übung `r nextExercise()`: Vergleich Simulation {.exercise type=yesno answer=no exclude=bda}
+
+```{r, echo=FALSE, fig.align="right", out.width="20%"}
+gf_point(tip ~ total_bill | .index, data = shuffletips) %>%
+  gf_lm()
+```
+
+Stimmt die Aussage: Die Regressionen der Simulationen $1-12$ sehen sich ähnlich?
+
+- Ja.
+- Nein.
+
+::: {.notes}
+***Nein***: Abbildung $8$ weicht ab: Während die Abbildungen $1-7$ und $9-12$ Modelle zeigen, in denen de Variable `total_bill` *durchmischt* wurde, zeigt Abbildung $8$ die **originale Stichprobe**. Das Modell der beobachteten Daten sieht anders aus als die hypothetisch simulierten, in denen es keinen Zusammenhang gibt. 
+:::
 
 
 ### Shuffling im Modell {exclude=bda}
@@ -739,7 +846,7 @@ mosaic::do(3) * lm(tip ~ shuffle(total_bill), data = tips)
 ### Sebastians Kaffeemühle {include-only=sesmill exclude=bda}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 Wie schmeckt der Kaffee ($\hat{\beta}_0$), wenn die Größe der Bohnen ($x$) keine Rolle spielt ($\beta=0$)? Wir simulieren diese Maschine und gucken, ob der Kaffee, den wir probiert haben (Stichprobe, $\hat{\beta}$), so ähnlich schmeckt.^[Skizze: Sebastian Sauer]
@@ -756,7 +863,7 @@ Setze Zufallszahlengenerator
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
     - Berechne ein lineares Modell,
-    - Die Variable total_bill soll dabei jedes mal permutiert werden.
+    - die Variable total_bill soll dabei jedes mal permutiert werden.
 ```
 
 ```{r do-shuffle-lm-many-times-no-eval, eval = FALSE}
@@ -807,7 +914,7 @@ $\hat{\beta}_1=`r round(erglm1$coefficients[2],2)`$ liegt nicht darin, also ***B
 
 ### Abweichung zur Null {exclude=bda}
 
-- $\frac{\hat{\beta}-0}{\widehat{se}}=\frac{`r sprintf("%.2f", erglm1$coefficients[2])`-0}{`r sprintf("%.2f", sd( ~ total_bill, data = Bootvtlg))`}=`r round(erglm1$coefficients[2]/sd( ~ total_bill, data = Bootvtlg),2)`$ Einheiten gemessen in Standardfehlern ist der beobachtete Wert der Stichprobe $\hat{\beta}_1$ vom angenommenen Wert $0$ entfernt.
+- $\frac{\hat{\beta}_1-0}{\widehat{se}}\approx\frac{`r round(erglm1$coefficients[2], 6)`-0}{`r round(sd( ~ total_bill, data = Bootvtlg), 6)`}\approx`r round(erglm1$coefficients[2]/sd( ~ total_bill, data = Bootvtlg),2)`$ Einheiten gemessen in Standardfehlern ist der beobachtete Wert der Stichprobe $\hat{\beta}_1$ vom angenommenen Wert $0$ entfernt.^[Z-Transformation oder Standardisierung: Rechne einen normalverteilten Wert in einen standardnormalverteilten Wert mit Erwartungswert 0 und Standardabweichung 1 um.]
 
 - Der **p-Wert** gibt an, wie wahrscheinlich ein *mindestens* so großer Wert für $|\hat{\beta}_1|$ in einer Stichprobe unter den Annahmen des Nullmodells $\beta_1=0$ ist.
 
@@ -815,7 +922,7 @@ $\hat{\beta}_1=`r round(erglm1$coefficients[2],2)`$ liegt nicht darin, also ***B
 
 Abweichung in der Stichprobe:
 
-::: {.small}
+::: {.scriptsize}
 
 ```{r}
 coef(erglm1) # Koeffizienten
@@ -865,7 +972,7 @@ Innerhalb einer linearen Regression werden diverse Annahmen verwendet, z. B.:
 
 - Kein nicht-linearer Zusammenhang zwischen $x$ und $y$,
 - Keine (einflussreichen) Ausreißer,
-- Residuen unabhängig (d. h. keine (Auto-) Korrelation), identisch (insbesondere konstante Varianz), normalverteilt.
+- Fehler unabhängig (d. h. keine (Auto-) Korrelation), identisch (insbesondere konstante Varianz), normalverteilt.
 
 
 ### Übung `r nextExercise()`: Nicht-linearer Zusammenhang {.exercise type=A-B-C-D answer=A exclude=bda}
@@ -919,7 +1026,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 ### Verteilung der Residuen {include-only=master}
 
-Annahme: Residuen sind normalverteilt.
+Annahme: Fehler sind normalverteilt.
 
 ```{r,  fig.align="center", out.width="70%"}
 gf_histogram( ~ resid(erglm1))
@@ -930,7 +1037,7 @@ gf_histogram( ~ resid(erglm1))
 
 ### Q-Q-Plot Residuen {include-only=master}
 
-Annahme: Residuen sind normalverteilt.
+Annahme: Fehler sind normalverteilt.
 
 ```{r,  fig.align="center", out.width="70%"}
 gf_qq( ~ resid(erglm1)) %>% gf_qqline()
@@ -947,7 +1054,7 @@ p2 <- gf_qq( ~ resid(erglm1)) %>% gf_qqline()
 gridExtra::grid.arrange(p1,p2, ncol=2)
 ```
 
-Ist die Erfüllung der Annahme einer Normalverteilung für die Residuen hier fragwürdig?
+Ist die Erfüllung der Annahme einer Normalverteilung für die Fehler hier fragwürdig?
 
 - Ja.
 - Nein.
@@ -961,7 +1068,7 @@ Eine Verletzung dieser Annahme beeinflusst die Gültigkeit eines auf klassische 
 
 ### Übung `r nextExercise()`: Residualplot {.exercise type=A-B-C-D answer=A exclude=bda}
 
-Wenn die Residuen identisch verteilt sind, sollte im **Residualplot**, d. h. z. B. im Streudiagramm der Residuen (`resid()`) gegen die angepassten Werte (`fitted()`), *kein* Muster zu erkennen sein.
+Wenn die Fehler identisch verteilt sind, sollte im **Residualplot**, d. h. z. B. im Streudiagramm der Residuen (`resid()`) gegen die angepassten Werte (`fitted()`), *kein* Muster zu erkennen sein.
 
 Bei welcher der Abbildungen ist diese Annahme am ehesten erfüllt?
 
@@ -1001,7 +1108,7 @@ Ergänzung: Um evtl. zeitliche Abhängigkeiten zu überprüfen, kann ein Streudi
 
 ### Verteilung der Residuen und angepassten Werte {exclude=bda}
 
-*Annahme:* Residuen sind identisch verteilt.
+*Annahme:* Fehler sind identisch verteilt.
 
 ```{r,  fig.align="center", out.width="50%"}
 gf_point(resid(erglm1) ~ fitted(erglm1))
@@ -1017,12 +1124,15 @@ gf_point(resid(erglm1) ~ fitted(erglm1))
 
 Welche Aussage stimmt?
 
-A.  Die Varianz der Residuen scheint unabhängig von der Höhe der angepassten Werte zu sein.
-B.  Die Varianz der Residuen scheint mit der Höhe der angepassten Werte zu steigen.
-C.  Die Varianz der Residuen scheint mit der Höhe der angepassten Werte zu fallen.
+A.  Die Varianz der Fehler scheint unabhängig von der Höhe der angepassten Werte zu sein.
+B.  Die Varianz der Fehler scheint mit der Höhe der angepassten Werte zu steigen.
+C.  Die Varianz der Fehler scheint mit der Höhe der angepassten Werte zu fallen.
 
 ::: {.notes}
-Man kann einen *Trichter* erkennen: Die vertikale Streuung nimmt von links nach rechts zu, die Varianz steigt also. Damit ist die Annahme der gleichen Varianz (Homoskedastizität) wohl verletzt  (Heteroskedastizität): ***B***.
+
+Der Mittelwert der Residuen scheint relativ konstant bei $\approx 0$ zu sein, egal welchen Wert $\hat{y}$ annimmt. Diese Kennzahl der Verteilung der Residuen könnte also für alle $i$ identisch sein.
+
+Man kann aber einen *Trichter* erkennen: Die vertikale Streuung nimmt von links nach rechts zu, d.h., die Varianz der Fehler steigt. Damit ist die Annahme der gleichen Varianz (Homoskedastizität) wohl verletzt  (Heteroskedastizität): ***B***.
 
 Eine Verletzung dieser Annahme beeinflusst die Effizienz der Schätzung (vgl. Literatur).
 :::
@@ -1030,7 +1140,7 @@ Eine Verletzung dieser Annahme beeinflusst die Effizienz der Schätzung (vgl. Li
 
 ### Extrapolation {exclude=bda}
 
-**Vorsicht** bei Vorhersagen für Werte außerhalb des bekannten, üblichen Wertebereiches.^[Video: [https://www.causeweb.org](https://www.causeweb.org): [Posner M &copy; How Far He'll Go](https://www.causeweb.org/cwis/r2857/video_how_far_hell_go)]
+**Vorsicht** bei Vorhersagen (hier inkl. $95\%$-Prognoseintervall^[*Hinweis:* Das Prognoseintervall (`"prediction"`) ist breiter als das Konfidenzintervall (`"confidence"`): Während das erste sich auf die Unsicherheit bzgl. des Wertes $y$ gegeben $x$ bezieht, bezieht sich das zweite auf die Unsicherheit bzgl. des Mittelwertes von $y$ gegeben $x$.]) für Werte außerhalb des bekannten, üblichen Wertebereiches.^[Video: [https://www.causeweb.org](https://www.causeweb.org): [Posner M &copy; How Far He'll Go](https://www.causeweb.org/cwis/r2857/video_how_far_hell_go)]
 
 ```{r}
 predict(erglm1, # Modell
@@ -1045,7 +1155,7 @@ predict(erglm1, # Modell
 
 ### Trinkgeld und Raucher/Nichtraucher {exclude=bda}
 
-Mittelwerte:
+Mittelwerte, $\bar{x}_{\text{no}}, \bar{x}_{\text{yes}}$:
 
 ::::::::: {.columns}
 ::: {.column width="49%"}
@@ -1060,7 +1170,7 @@ mean(tip ~ smoker, data = tips)
 :::::::::
 
 
-Mittelwertsdifferenzen:
+Mittelwertsdifferenzen, $\bar{x}_{\text{yes}}-\bar{x}_{\text{no}}$:
 
 ::::::::: {.columns}
 ::: {.column width="49%"}
@@ -1080,7 +1190,7 @@ Graphische Darstellung:
 
 ::::::::: {.columns}
 ::: {.column width="49%"}
-```{r gf-point-tip-smoker, echo=TRUE, eval=FALSE, fig.asp = 0.618}
+```{r gf-point-tip-smoker, echo=TRUE, eval=FALSE, fig.asp = 0.5}
 gf_point(tip ~ smoker, data = tips, 
          position = "jitter", 
          width = 0.1, height = 0)
@@ -1099,37 +1209,42 @@ Hinweis: `"jitter"` verrauscht die Position, indem eine kleine Zufallsvariable h
 :::
 
 
-### Indikatormatrizen  {exclude=bda}
+### Indikatormatrizen, Dummykodierung  {exclude=bda}
 
-Kategoriale Variablen werden numerisch/ logisch kodiert.
+Kategoriale Variablen können numerisch/ logisch kodiert werden.
 
-Raucher/ Nichtraucher (`smoker`):
+- Raucher/ Nichtraucher (`smoker`):
 
+::: {.small}
 ```{r, echo=FALSE}
-contrasts(tips$smoker) %>% knitr::kable()
+contrasts(as.factor(tips$smoker)) %>% knitr::kable()
 ```
+:::
 
+- ${\beta}_2={\beta}_{\text{smokerYes}}$ modelliert dann die Änderung von $y$, wenn die Indikatorvariable $x$: $\text{smokerYes}=1$ ist (bei Rauchern), im Vergleich zu $0$ (sonst).^[Mathematisch ist es damit keine lineare Funktion von $\mathbb{R} \rightarrow \mathbb{R}$ (*Gerade*) mehr.]
 
-Wochentag (`day`):
+- Wochentag (`day`):
 
+::: {.footnotesize}
 ```{r, echo=FALSE}
-contrasts(tips$day) %>% knitr::kable()
+contrasts(as.factor(tips$day)) %>% knitr::kable()
 ```
-
+:::
 
 ### Regression: Trinkgeld auf Raucher/Nichtraucher {exclude=bda}
 
-::: {.footnotesize}
+::: {.smalll}
 ```{r tips-erglm2-summary, echo=TRUE, eval=FALSE}
 erglm2 <- lm(tip ~ smoker, data = tips)
 summary(erglm2)
 ```
 :::
 
-::: {.small}
+::: {.footnotesize}
 ```{r ref.label="tips-erglm2-summary", eval = TRUE, echo = FALSE}
 ```
 :::
+
 
 ### Übung `r nextExercise()`: Regression: Trinkgeld und Raucher/Nichtraucher {.exercise type=A-B-C-D answer=A exclude=bda}
 
@@ -1143,7 +1258,6 @@ D.  Nichtrauchergruppen geben immer $`r round(erglm2$coefficients[2],2)`\,\$$ me
 ::: {.notes}
 $\hat{\beta}_{smokerYes}=`r round(erglm2$coefficients[2],2)`$, also ***A***. *C* würde nur dann gelten, wenn alle $\hat{\epsilon}_i=0$ sind. Dann wäre hier aber auch $R^2=1$.
 :::
-
 
 ### Bootstrap-Verteilung {exclude=bda}
 
@@ -1192,7 +1306,7 @@ quantile( ~ smokerYes, probs = c(0.025, 0.975), data = Nullvtlg)
 Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Modell, Nullmodell (Nullhypothese) und die Antwort auf die Forschungsfrage?
 
 1.  [Think:]{.cemph} Überlegen Sie für sich.
-2.  [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit der Nachbar\*in.
+2.  [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit dem Nachbarn/der Nachbarin.
 3.  [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
 
 ::: {.notes}
@@ -1231,7 +1345,7 @@ Da alle geschätzten Koeffizienten $>0$ sind, ist die mittlere Rechnungshöhe an
 
 ### Regression eines Anteils {exclude=bda}
 
-Anteilswerte:
+Anteilswerte $p_{\text{Dinner}}, p_{\text{Lunch}}$:
 
 ::::::::: {.columns}
 ::: {.column width="49%"}
@@ -1248,7 +1362,7 @@ prop(smoker ~ time,
 
 
 
-Anteilswertsdifferenz:
+Anteilswertsdifferenz $p_{\text{Lunch}}-p_{\text{Dinner}}$:
 
 ::::::::: {.columns}
 ::: {.column width="59%"}
@@ -1283,13 +1397,13 @@ lm( (smoker=="Yes") ~ time,
 
 ### Logistische Regression
 
-- Eine **Lineare**  Regression eines Anteils kann nicht so interpretiert werden wie die lineare Regression eines numerischen Merkmals.^[$\hat{\beta}, R^2$] Insbesondere ist $\hat{y} \notin \{0,1\}$ und die **Annahmen sind verletzt**, d. h., p-Werte etc. stimmen **nicht**. 
+- Eine Regression eines Anteils kann nicht so interpretiert werden wie die lineare Regression eines numerischen Merkmals.^[$\hat{\beta}, R^2$] Insbesondere ist $\hat{y} \notin \{0,1\}$ und die **Annahmen sind verletzt**, d. h., p-Werte etc. stimmen **nicht**. 
 
 - Die richtige Herangehensweise wäre z. B. eine **Logistische** Regression: `glm(y ~ x, family = binomial())`.
 
 - Weitere Regressionstypen (Auswahl):
-    - Multinominale Regression: `multinom()` (Nominale abhängige Variable, Paket `nnet`).
-    - Proportional Odds Logistische Regression: `polr()` (Ordinale abhängige Variable, Paket `MASS`).
+    - Multinominale Regression: `multinom()` (nominale abhängige Variable, Paket `nnet`).
+    - Proportional Odds Logistische Regression: `polr()` (ordinale abhängige Variable, Paket `MASS`).
 
 
 ### Übung `r nextExercise()`: Beurteilung lineares Modell {.exercise type=A-B-C-D-E answer=E exclude=bda}
@@ -1303,7 +1417,7 @@ D.  An einer im Betrag großen geschätzten Steigung.
 E.  An einem großen $R^2$.
 
 ::: {.notes}
-*A* und *B* sind falsch, da der p-Wert nur aussagt, wie wahrscheinlich die Daten unter $H_0: \beta_i=0$ sind. *C* und *D* sind falsch, da $|\hat{\beta}_i|$ u.a. davon abhängt, in welcher Einheit $y$ oder $x$ gemessen werden (z.B. Gewicht in $g$ oder $kg$). $R^2$ gibt den Anteil der im Modell und Stichprobe modellierten Variation von $y$ an, daher ist ***E*** korrekt. 
+*A* und *B* sind falsch, da der p-Wert nur aussagt, wie wahrscheinlich die geschätzten Koeffizienten $\hat{\beta}_i$ unter $H_0: \beta_i=0$ sind. *C* und *D* sind falsch, da $|\hat{\beta}_i|$ u.a. davon abhängt, in welcher Einheit $y$ oder $x$ gemessen werden (z.B. Gewicht in $g$ oder $kg$). $R^2$ gibt den Anteil der im Modell und Stichprobe modellierten Variation von $y$ an, daher ist ***E*** korrekt. 
 
 Zusätzlich sollte es aber in einem brauchbaren Modell auch signifikante und von der Größe her relevante geschätzte Koeffizienten geben. Aber wann $R^2$ *groß* ist, hängt von der Varianz und Anwendung ab. Auch sagt $R^2$ nicht, ob das Modell stimmt (siehe z.B. auch Scheinkorrelation), und es ist nicht robust gegen Ausreißer.
 :::
@@ -1317,8 +1431,29 @@ Modellgleichung:
 
 $$y_i = \beta_0 + \beta_1 \cdot x_{i1} + \beta_2 \cdot x_{i2} + \ldots + \beta_p \cdot x_{ip} + \epsilon_i$$
 
-Interpretation der Koeffizienten (Schätzwerte, p-Werte): unter sonst gleichen Umständen, d. h., die anderen Variablen bleiben im Modell konstant/ unverändert (c. p.): marginaler Effekt.^[Durch Versuchsplanung oder eine vorgelagerte Hauptkomponentenanalyse können unabhängige erklärende Variablen $x_j$ erzeugt werden. Vgl. auch partielle Ableitungen.]
+Interpretation der Koeffizienten (Schätzwerte, p-Werte): unter sonst gleichen Umständen, d. h., die anderen Variablen bleiben im Modell konstant/ unverändert (*ceteris paribus*, c.p.): marginaler Effekt.^[Durch Versuchsplanung oder eine vorgelagerte Hauptkomponentenanalyse können unabhängige erklärende Variablen $x_j$ erzeugt werden. Vgl. auch partielle Ableitungen.]
 
+
+### Mathematik der Multiplen Regression {exclude=des}
+
+- Die optimale Lösung ($\hat{\beta}$) gemäß des Kleinste-Quadrate Kriteriums ($\sum \hat{\epsilon}^2_i$) kann über Matrizenrechnung bestimmt werden. Dabei ist:
+
+  - $\textbf{X}$ die (erweiterte) Datenmatrix der unabhängigen Variablen mit $$\textbf{X}=\begin{pmatrix} 
+1 & x_{11} & x_{12}  & \cdots & x_{1p} \\
+1 & x_{21} & x_{22} & \cdots & x_{2p} \\
+\vdots & \vdots & \vdots & \vdots &\vdots \\
+1 & x_{n1} & x_{n2} & \cdots & x_{np} \\
+\end{pmatrix}$$
+
+  - $\textbf{y}$ der Spaltenvektor der abhängigen Variable: $\textbf{y}^\text{T}=\begin{pmatrix} y_1, & y_2, & \cdots, & y_n \end{pmatrix}$
+
+  - $\hat{\bm{\upbeta}}$ der Spaltenvektor der Koeffizienten: $\hat{\bm{\upbeta}}^\text{T}=\begin{pmatrix} \hat{\beta}_0, & \hat{\beta}_1, & \cdots, & \hat{\beta}_p \end{pmatrix}$
+
+- Dann gilt:
+
+$$\hat{\bm{\upbeta}}=(\textbf{X}^\text{T}\textbf{X})^{-1}\textbf{X}^\text{T}\textbf{y}$$
+
+<!-- -->
 
 ### Regression nur mit Achsenabschnitt
 
@@ -1330,27 +1465,27 @@ lm(tip ~ 1, data = tips)
 
 ### Übung `r nextExercise()`: Regression nur mit Achsenabschnitt {.exercise type=A-B-C answer=A}
 
-Was gilt bei `lm(y~1)`, d. h. $y_i=\beta_0 + \epsilon_i$, für das Bestimmtheitsmaß?
+Was gilt bei `lm(y ~ 1)`, d. h. $y_i=\beta_0 + \epsilon_i$, für das Bestimmtheitsmaß?
 
 A.  $R^2=0$
 B.  $0<R^2<1$
 C.  $R^2=1$
 
 ::: {.notes}
-***A***: Ohne erklärende Variable $x$ gilt: $\hat{y}_i=\bar{y}$. 
+***A***: Ohne erklärende Variable $x$ gilt: $\hat{y}_i=\hat{\beta}_0=\bar{y}$. 
 $$R^2= 1-\frac{\sum_{i=1}^n (y_i-\hat{y}_i)^2}{\sum_{i=1}^n (y_i-\bar{y})^2}=1-\frac{\sum_{i=1}^n (y_i-\bar{y})^2}{\sum_{i=1}^n (y_i-\bar{y})^2}=1-1=0$$
 :::
 
 
 ### Übung `r nextExercise()`: Multiple Regressionskoeffizienten {.exercise type=yesno answer=yes}
 
-Können sich die geschätzten Werte ändern, wenn Variablen ins Modell hinzugenommen oder weggenommen werden?
+Können sich die geschätzten Werte der Koeffizienten ändern, wenn Variablen ins Modell hinzugenommen oder weggenommen werden?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
-***Ja*** -- insbesondere, wenn assoziierte Variablen mit ins Modell aufgenommen werden. Das Vorzeichen der Koeffizienten kann sich sogar ändern (vgl. Simpsons Paradox). 
+***Ja*** -- insbesondere, wenn assoziierte Variablen mit ins Modell aufgenommen werden. Das Vorzeichen der Koeffizienten kann sich sogar ändern (vgl. Simpson-Paradox). 
 :::
 
 
@@ -1388,10 +1523,13 @@ summary(erglm3)
 
 ### Modell: Multiple Regression
 
-```{r MMR, out.width = "80%", fig.align="center"}
+
+```{r MMR-CODE, out.width = "80%", fig.align="center",eval=FALSE}
 plotModel(erglm3)
 ```
-
+```{r MMR-Ausgabe, out.width = "80%", fig.align="center", echo=FALSE}
+plotModel(erglm3, col = viridis(2, alpha = 0.6)) + scale_color_viridis_d()
+```
 
 ### Übung `r nextExercise()`: Regression: Trinkgeld auf Rechnungshöhe und Raucher/ Nichtraucher {.exercise type=yesno answer=no}
 
@@ -1425,17 +1563,42 @@ confint(Bootvtlg)
 
 ### Übung `r nextExercise()`: Inferenz Regression: Trinkgeld und Raucher/ Nichtraucher {.exercise type=yesno answer=no exclude=bda}
 
-Gegeben die Rechnungshöhe: Ist der in der Stichprobe beobachtete Wert $\hat{\beta}_2=`r round(summary(erglm3)$coefficients[3,1],2)`$, wenn eigentlich gilt $\beta_2=\beta_{\text{smoker}}=0$, sehr ungewöhnlich?
+Gegeben die Rechnungshöhe: Ist der in der Stichprobe beobachtete Wert $\hat{\beta}_2=`r round(summary(erglm3)$coefficients[3,1],2)`$ sehr unplausibel, wenn eigentlich die Annahme $\beta_2=\beta_{\text{smoker}}=0$ gilt?
 
 - Ja.
 - Nein.
 
 ::: {.notes}
-***Nein***:  Die $0$ liegt im $95\%$-Bootstrap-Konfidenzintervall von `r round(confint(Bootvtlg)[3,2],2)` bis `r round(confint(Bootvtlg)[3,3],2)`. Der beobachtete lineare Zusammenhang ist also nicht unwahrscheinlich -- wenn wir annehmen, dass gar keiner vorliegt.
+***Nein***:  Die $0$ liegt im $95\%$-Bootstrap-Konfidenzintervall von `r round(confint(Bootvtlg)[3,2],2)` bis `r round(confint(Bootvtlg)[3,3],2)`, eine Steigung von $\beta_2=\beta_{\text{smoker}}=0$ scheint also mit den beobachteten Daten *kompatibel* zu sein. Umgekehrt betrachtet ist der beobachtete lineare Zusammenhang nicht unplausibel -- wenn wir annehmen, dass gar keiner vorliegt (vgl. p-Wert (`Pr(>|t|)`) aus `summary(erglm3)`) .
 :::
 
 
-### Modellierte und nicht modellierte Variation {exclude=bda}
+### Modellierte und nicht modellierte Variation {exclude=bda include-only=master}
+
+
+- Wenn $\beta_1=\beta_2=\ldots=\beta_p=0$ gelten sollte, wird keine Variation von $y$ modelliert und es gilt $R^2=0$. 
+
+- Dieses Modell können wir durch zufälliges mischen der $y_i$-Werte simulieren:
+
+```{r}
+set.seed(1896)
+Nullvtlg <- do(10000) *  lm(shuffle(tip) ~ total_bill + smoker,
+                           data = tips)
+```
+
+- Zur Analyse wird die $F$-Statistik (`F-statistic`) verwendet. Diese setzt die modellierte Variation ins Verhältnis zur nicht-modellierten Variation und berücksichtigt dabei, wie viele Parameter ($p: \beta_1,\beta_2,\ldots,\beta_p$) auf Basis wie vieler Beobachtungen ($n$) geschätzt werden.
+
+### $F$-Verteilung {exclude=bda include-only=master}
+
+```{r, out.width = "40%", fig.align="center"}
+gf_histogram( ~ F, data = Nullvtlg)
+```
+
+Das beobachtete Verhältnis an erkärter zu nicht-erklärter Variation in der Stichprobe, $F=`r round(summary(erglm3)$fstatistic[1],2)`$, ist viel größer als die im (globalen) Nullmodell simulierten Werte. Dieses Modell scheint ungeignet zur Erklärung der beobachteten Daten (vgl. `p-value`).
+
+
+
+### Modellierte und nicht modellierte Variation {exclude=bda include-only=deprecated}
 
 Die $F$-Statistik (`F-statistic`) setzt die modellierte Variation ins Verhältnis zur nicht-modellierten Variation und berücksichtigt dabei, wie viele Parameter ($\beta_j$) auf Basis wie vieler Beobachtungen ($n$) geschätzt werden.
 
@@ -1497,10 +1660,10 @@ gf_lm(tip ~ total_bill , data = tips.s.ext) %>%
 
 Der p-Wert (`p-value`) wird dabei unter der Nullhypothese, *das (vorliegende) Modell ist nicht besser als das Nullmodell*, bestimmt.
 
-### $F$ und Zufallsmodell {exclude=bda}
+### $F$ und Zufallsmodell {exclude=bda include-only=deprecated}
 
 ::: {.small}
-Auch wenn es keinen Zusammenhang gibt, kann man einen (zufällig) finden: Durch $2$ Beobachtungen kann man i.d.R. $2$ Parameter bestimmen ($\beta_0, \beta_1$), so dass die Beobachtungen perfekt modelliert sind, egal ob es einen Zusammenhang zwischen $x$ und $y$ gibt. Allgemein gilt dies bei $n$ Beobachtungen für $n$ Parameter.
+Auch wenn es keinen Zusammenhang gibt, kann man einen (zufällig) finden: Durch $2$ Beobachtungen kann man i.d.R. $2$ Parameter bestimmen ($\beta_0, \beta_1$), so dass die Beobachtungen perfekt modelliert sind, egal, ob es einen Zusammenhang zwischen $x$ und $y$ gibt. Allgemein gilt dies bei $n$ Beobachtungen für $n$ Parameter.
 :::
 
 ```{r, echo=FALSE,  out.width = "40%", fig.align="center"}
@@ -1518,7 +1681,7 @@ Die grauen Linien zeigen die Entwicklung des $R^2$, wenn zufällige Variablen hi
 
 ### Übung `r nextExercise()`: Interpretation Regression {.exercise type=A-B-C-D-E answer=E exclude=bda}
 
-Welches ist die korrekteste Interpretation von $\hat{\beta}_1=\hat{\beta}_{\text{total\_bill}} = `r round(coef(erglm3)[2],2)`$?
+Welches ist die korrekteste Interpretation einer geschätzten Steigung im multiplen Regressionsmodell, z.B. von $\hat{\beta}_1=\hat{\beta}_{\text{total\_bill}} = `r round(coef(erglm3)[2],2)`$?
 
 A.  Mit jedem \$ Rechnungshöhe steigt das Trinkgeld um $`r round(coef(erglm3)[2],2)`\,\$$.
 B.  Mit jedem \$ Rechnungshöhe steigt der Mittelwert des Trinkgeldes um $`r round(coef(erglm3)[2],2)`\,\$$.
@@ -1548,9 +1711,9 @@ Z.B. einfaches additives Modell: $y_t=m_t+s_t+e_t$
 
 <!-- -->
 
-### Analyse CO~2~ Konzentration {include-only=wmqd}
+### Analyse CO~2~-Konzentration {include-only=wmqd}
 
-Dr. Pieter Tans, NOAA/ESRL^[[www.esrl.noaa.gov/gmd/ccgg/trends/](www.esrl.noaa.gov/gmd/ccgg/trends/)] und Dr. Ralph Keeling, Scripps Institution of Oceanography^[[scrippsco2.ucsd.edu/](scrippsco2.ucsd.edu/)] stellen aktuelle Daten zur CO~2~ Konzentration zur Verfügung: [https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html](https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html)
+Dr. Pieter Tans, NOAA/ESRL^[[www.esrl.noaa.gov/gmd/ccgg/trends/](www.esrl.noaa.gov/gmd/ccgg/trends/)] und Dr. Ralph Keeling, Scripps Institution of Oceanography^[[scrippsco2.ucsd.edu/](scrippsco2.ucsd.edu/)] stellen aktuelle Daten zur CO~2~-Konzentration zur Verfügung: [https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html](https://www.esrl.noaa.gov/gmd/ccgg/trends/data.html)
 
 <!-- -->
 
@@ -1565,7 +1728,7 @@ CO2 <- read.table(file=url(urlco2))
 
 # Daten vorverarbeiten
 CO2 <- CO2 %>%
-  rename(co2 = V5) %>% # co2 Werte in 5. Spalte
+  rename(co2 = V4) %>% # co2 Werte in 4. Spalte
   mutate(zeit = V1 + (V2-1)/12) %>% # zeit = jahr + (monat-1)/12
   mutate(monat = factor(V2)) %>% # Saisonkomponente
   select(zeit, monat, co2)
@@ -1587,13 +1750,13 @@ gf_line(co2 ~ zeit, data = CO2)
 gf_line(co2 ~ zeit, data = CO2)
 ```
 
-Stimmt die Aussage: Es scheint saisonale Schwankungen in der CO~2~ Konzentration zu geben?
+Stimmt die Aussage: Es scheint saisonale Schwankungen in der CO~2~-Konzentration zu geben?
 
 - Ja.
 - Nein.
 
 <div class="notes">
-***Ja***, bei einer insgesamt steigenden CO~2~ Konzentration gibt es innerhalb der Jahre saisonale Schwankungen.
+***Ja***, bei einer insgesamt steigenden CO~2~-Konzentration gibt es innerhalb der Jahre saisonale Schwankungen.
 </div>
 
 <!-- -->
@@ -1621,9 +1784,9 @@ lm(co2 ~ zeit + monat, data = CO2) %>% coef()
 
 Welche Aussage stimmt?
 
-A.  Die CO~2~ Konzentration ist im Juni höher als im Dezember.
-B.  Die CO~2~ Konzentration ist im Juni geringer als im Dezember.
-C.  Die CO~2~ Konzentration ist im Juni ungefähr so hoch wie im Dezember.
+A.  Die CO~2~-Konzentration ist im Juni höher als im Dezember.
+B.  Die CO~2~-Konzentration ist im Juni geringer als im Dezember.
+C.  Die CO~2~-Konzentration ist im Juni ungefähr so hoch wie im Dezember.
 
 <div class="notes">
 Während die Saisonkomponente im Juni (`monat6`) `r round(coef(lm(co2 ~ zeit + monat, data = CO2))[7],2)` beträgt, ist sie im Dezember (`monat12`) bei `r round(coef(lm(co2 ~ zeit + monat, data = CO2))[13],2)` -- jeweil im Vergleich zum Januar. Also ***A***.
@@ -1635,7 +1798,7 @@ Während die Saisonkomponente im Juni (`monat6`) `r round(coef(lm(co2 ~ zeit + m
 ### Hinweise {include-only=wmqd}
 
 - Sehr starres Modell: Konstanter, linearer Trend über die Zeit.
-- Häufig Autokorrelation der Residuen:
+- Häufig Autokorrelation der Fehler:
 
 ```{r, echo=FALSE, out.width = "35%", fig.align="center"}
 lmco2 <- lm(co2 ~ zeit + monat, data = CO2)
@@ -1651,23 +1814,39 @@ gf_line(resid(lmco2) ~ lmco2$model$zeit) %>%
 
 ## Wechselwirkung {exclude=bda}
 
-### Wechselwirkung, Interaktion {exclude=bda}
 
-::: {.small}
+
+### Wechselwirkung (Interaktion, Moderation) {exclude=bda}
+
 Hängt evtl. auch die Steigung in Richtung Rechnungshöhe mit dem Raucherverhalten zusammen -- d. h., wirkt sich das Raucherverhalten auf den Zusammenhang zwischen Rechnungshöhe und Trinkgeld aus?
 
-```{r, echo=TRUE, out.width = "55%", fig.align="center"}
-erglm4 <- lm(tip ~ total_bill + smoker + total_bill:smoker, 
-             data = tips) 
-plotModel(erglm4)
+```{r}
+erglm4 <- lm(tip ~ total_bill + smoker + total_bill:smoker, data=tips) 
+```
+
+Grafisch^[Das Farbschema im Diagramm kann z.B. so angepasst werden: `plotModel(erglm4, col = viridis(2)) + scale_color_viridis_d()`]:
+
+:::::: {.columns}
+::: {.column width="45%"}
+
+```{r plot-wechselwirkung, echo=FALSE, eval = TRUE, out.width = "95%", fig.align="center"}
+plotModel(erglm4, col = viridis(2)) + 
+  scale_color_viridis_d()
 ```
 :::
 
 
+::: {.column width="55%"}
+
+Da sich in diesem Beispiel das Einflussgewicht von `total_bill` zwischen den beiden Gruppen `SmokerNo` und `SmokerYes` unterscheidet, spricht man von einer *Wechselwirkung*. Im Diagramm erkennt man die Wechselwirkung daran, dass die Regressionsgeraden der beiden Gruppen nicht parallel sind.
+
+:::
+::::::
+
 ### Übung `r nextExercise()`: Wechselwirkung {.exercise type=A-B-C answer=A exclude=bda}
 
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
-plotModel(erglm4)
+plotModel(erglm4, col = viridis(2)) + scale_color_viridis_d()
 ```
 
 
@@ -1701,8 +1880,8 @@ C.  Egal.
 ***B***, da $`r -erglm4$coefficients[4]` \cdot 15 < `r erglm4$coefficients[3]`$, d. h., die Steigung bei den Rauchern ist zwar geringer (`r erglm4$coefficients[4]`), aber der zusätzliche Achsenabschnitt (`r erglm4$coefficients[3]`) wird bei 15\$ noch nicht ausgeglichen.
 
 ```{r, echo=FALSE, fig.align="center", out.width="30%"}
-plotModel(erglm4) %>%
-  gf_vline(xintercept = ~15)
+plotModel(erglm4, col = viridis(2)) %>%
+  gf_vline(xintercept = ~15) + scale_color_viridis_d() 
 ```
 
 Im Vergleich zu dem Modell ohne Interaktion sind die Koeffizienten für `smokerYes` und `total_bill:smokerYes` (Interaktion) jetzt beide signifikant, d. h., die Interaktion war eine notwendige Anpassung des Modells. Auch werden `r round((rsquared(erglm4) - rsquared(erglm3))*100, 0)`\%-Punkte mehr Variation des Trinkgelds durch das Modell erklärt (Differenz der R^2^-Werte der Modelle).
@@ -1711,7 +1890,7 @@ Im Vergleich zu dem Modell ohne Interaktion sind die Koeffizienten für `smokerY
 
 ### R Formeln: `formula()`
 
-Formeln bieten innerhalb der Modellierung in R viele Möglichkeiten:
+Formeln bieten innerhalb der Modellierung in R viele Möglichkeiten:^[Die resultierenden Funktionen müssen nicht linear in $x$ sein.]
 
 - `+`: Hinzunahme von Variablen
 - `.`: Alle unabhängigen Variablen des Datensatzes im Modell
@@ -1721,6 +1900,10 @@ Formeln bieten innerhalb der Modellierung in R viele Möglichkeiten:
 - `/`: Hierarchisch untergeordnet (engl.: nested)
 - `I()`: Arithmetische Operationen der Variablen
 
+*Beispiele*: 
+
+- `lm(Y ~ I(X^2))` schätzt das Modell $y_i=\beta_0 + \beta_1 \cdot x^2 + \epsilon_i$
+- `lm(Y ~ X1 + X2 + X1:X2)` ist identisch zu `lm(Y ~ X1 * X2)` und schätzt das Modell: $y_i=\beta_0 + \beta_1 \cdot x_{i1} + \beta_2 \cdot x_{i2} + \beta_{12}\cdot x_{i1}\cdot x_{i2}+ \epsilon_i$
 
 ### FOMshiny: Modellierung und Simulation {.shiny}
 
@@ -1751,10 +1934,10 @@ Noch besser wäre es zu prüfen, inwieweit sich die Modellgüte verbessert, wenn
 
 ### Variablenselektion {include-only=master}
 
-Die Wahl der *wichtigen* Variablen im Modell ist nicht trivial. Dabei wird ein Kritierum wie z. B. AIC^[Akaike-Informationskriterium, siehe z. B. [https://otexts.org/fpp2/selecting-predictors.html](https://otexts.org/fpp2/selecting-predictors.html)] zur Modellevaluierung verwendet. Mögliche Herangehensweisen sind z. B. 
+Die Wahl der *wichtigen* Variablen im Modell ist nicht trivial. Dabei wird ein Kritierum wie z. B. AIC^[Akaike-Informationskriterium, siehe z. B. [https://otexts.org/fpp2/selecting-predictors.html](https://otexts.org/fpp2/selecting-predictors.html).] zur Modellevaluierung verwendet. Mögliche Herangehensweisen sind z. B. 
 
-- Vorwärts Auswahl: Fange nur mit Achsenabschnitt an und füge schrittweise neue Variablen hinzu, bis sich die Modellgüte nicht mehr verbessert.^[Das *normale* $R^2$ steigt mit jeder Variablen im Modell -- auch wenn diese nicht mit $y$ zusammenhängt.]
-- Rückwärts Auswahl: Fange mit allen Variablen an und eliminiere schrittweise einzelne Variablen, bis sich die Modellgüte nicht mehr verbessert.
+- Vorwärts-Auswahl: Fange nur mit Achsenabschnitt an und füge schrittweise neue Variablen hinzu, bis sich die Modellgüte nicht mehr verbessert.^[Das *normale* $R^2$ sinkt bei Hinzufügen von Variablen zu dem Modell nicht -- auch wenn diese nicht mit $y$ zusammenhängt. Selbst wenn der Erklärungsbeitrag der hinzugefügten Variable nur äußert gering ist, steigt es. Daher ist das normale $R^2$ nicht zur Variablen- oder Modellselektion geeignet.]
+- Rückwärts-Auswahl: Fange mit allen Variablen an und eliminiere schrittweise einzelne Variablen, bis sich die Modellgüte nicht mehr verbessert.
 
 In R: z. B. `step()`
 
@@ -1770,7 +1953,7 @@ Schätzen (auf Basis von $n=100$ Beobachtungen: `Training`) und Testen (auf Basi
 $$y = - x^3 + 8x^2 - 9x - 18 + \epsilon$$
 
 ```{r echo=FALSE, out.width = "60%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "MSE.png"))
+knitr::include_graphics(file.path(pathToImages, "MSE.png"), error=FALSE)
 ```
 
 <!-- -->
@@ -1806,7 +1989,7 @@ Stimmt die Aussage: Je komplexer^[Hier: Grad des Polynoms.] ein Modell ist, dest
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
 - Wie die *wahre* Maschine funktioniert, wissen wir nicht.
@@ -1815,8 +1998,64 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"))
 
 - Ist unser Ziel, möglichst guten Kaffee zu bekommen: $\hat{y}$.^[Skizze: Sebastian Sauer]
 
+Siehe auch: Data Science – Baba Brinkman Music Video: [https://youtu.be/uHGlCi9jOWY](https://youtu.be/uHGlCi9jOWY)
+
 <!-- -->
 
+### Ethische Herausforderungen im Data Science
+
+
+- Unterschiedliche Modelle können unterschiedliche Prognosen und Effekte ergeben -- und wir wissen i.d.R. nicht, was stimmt. Ist im Beispiel Rauchen *gut* oder *schlecht* für die Rechnungshöhe? Sollten wir aus Gründen der Rechnungshöhe Rauchen fördern oder verbieten?^[Abgesehen davon, dass (Passiv-)Rauchen der Gesundheit schadet und daher **nicht** gefördert werden sollte!]
+
+- Modelliert wird i.d.R. der Mittelwert von $y$ gegeben $x$. Es kann aber individuelle Abweichungen (zum *Durchschnitt*) geben. Es können vielleicht Individuen aufgrund eines im Modell *erwarteten* niedrigen Trinkgeldes schlechter bedient werden.  
+
+- Evtl. Verzerrungen in der Datenerhebung können sich auch im Modell wiederspiegeln.
+
+- Der datengenerierende Prozess kann sich ändern, es können neue Werte auftreten, z.B. `day = Mon`. Wie soll damit umgegangen werden?
+
+### Datenbasierte Entscheidungen
+
+$\hat{f}(x)$ kann zur Automatisierung von Entscheidungsprozessen genutzt werden. Bei der Anwendung von solchen Algorithmen sollten Regeln beachtet werden, siehe z.B. [Algo.Rules](https://algorules.org/):
+
+1. Kompetenz aufbauen
+2. Verantwortung definieren
+3. Ziele und erwartete Wirkung dokumentieren
+4. Sicherheit gewährleisten 
+5. Kennzeichnung durchführen
+6. Nachvollziehbarkeit sicherstellen
+7. Beherrschbarkeit absichern
+8. Wirkung überprüfen
+9. Beschwerden ermöglichen
+
+
+### Offene Übung `r nextExercise()`: Nachvollziehbarkeit {.exercise type=yesno answer=no}
+
+Die 6. Regel der [Algo.Rules](https://algorules.org/de/startseite#rule-6) lautet
+
+> Die Entscheidungsfindung eines algorithmischen Systems muss stets nachvollziehbar sein.
+
+Trifft dies auf eine lineare Modellierung zu?
+
+- Ja.
+- Nein.
+
+
+
+::: {.notes}
+
+***Ja***: Anahnd der geschätzten Koeffizienten $\beta$ können die marginalen Zusammenhänge der unabhängigen Variablen $x$ auf die abhängige Variable $y$ nachvollzogen werden -- anders als z.B. bei künstlichen neuronalen Netzen, wo dies teilweise sehr schwer ist. 
+
+
+:::
+
+
+### Cartoon: Ethical Literacy 
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_11-2019.jpg", "cartoon1119.jpg", pathToImages)
+```
+"Nutze die Daten, aber verliere nicht die Kontrolle!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2019/results) &copy; J.B. Landers, Überschrift K. Lübke]
 
 ### Offene Übung `r nextExercise()`: Rechnungshöhe {.exercise type=essay exclude=bda}
 

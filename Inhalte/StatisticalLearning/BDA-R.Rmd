@@ -1,0 +1,339 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup-BDA-R, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "BDA-R",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+```
+
+
+
+
+
+```{r libs-BDA-R, include = FALSE}
+library(mosaic)
+library(tidyverse)
+```
+
+
+
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = FALSE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  size = "tiny"
+)
+
+```
+
+
+
+
+
+
+
+
+
+# Big Data Analytics mit R
+
+## In-Memory-Lösungen
+
+
+### Einfache Lösungen - Überblick
+
+- 64-Bit-Maschine anstelle von 32-Bit verwenden: Auf 32-Bit-Prozessoren sind nur ca. 2 BG Speicher adressierbar
+- Mehr Speicher, mehr und schnellere Kerne verwenden
+- Optimierte Funktionen z.B. via [`RevoScaleR` von Microsoft](https://docs.microsoft.com/en-us/machine-learning-server/r/tutorial-large-data-tips)
+- Ein (geschichtete) Zufallsstichprobe ziehen, also nur einen Teil der Daten verarbeiten
+- Zeitkritische Komponenten in kompilierte Sprachen (wie C++) auslagern, via `Rcpp`
+- Den Datensatz in mehrere Teile teilen, getrennt analysieren (batch procesing) und dann die Ergebnisse aggregieren
+
+
+### Stichprobe des Datensatzes verarbeiten
+
+
+- Zieht man Stichproben verschiedener Größe (`size`), so wird die Streuung der Mittelwerte umso geringer, je größer $n$ wird^[Der Standardfehler sinkt mit steigendem Stichprobenumfang].
+
+- Beispiel: Datensatz `flights`
+
+```{r out.width = "100%", fig.asp = .25, echo = FALSE, dpi = 300}
+
+data(flights, package = "nycflights13")
+
+draw_n_samples <- function(x, n, size, stat = mean) {
+  
+  sample <- vector(mode = "double", length = n)
+  
+  for (i in 1:n) {
+    tmp <- sample(x = x, size = size)
+    sample[i] <- stat(tmp, na.rm = TRUE)
+  }
+  
+  return(sample)
+}
+
+#draw_n_samples(x= flights$arr_delay, n= 10, size = 100)
+
+sample_sizes <- c(10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 20480)
+s_names <- paste0("ss_", sample_sizes)
+true_mean <- mean(flights$arr_delay, na.rm = TRUE)
+
+all_samples <- sample_sizes %>% 
+  map( ~ draw_n_samples(flights$arr_delay, n = 10, size = .)) %>% 
+  set_names(s_names) %>% 
+  map_df(`[`)
+
+
+all_samples_long <- all_samples %>% 
+  gather() %>% 
+  separate(col = key, into = c("sample", "size"), sep = "_", remove = TRUE) %>% 
+  select(-sample) %>% 
+  mutate(size = as.integer(size))
+
+
+p1 <- all_samples_long %>% 
+  ggplot(aes(x = size, y = value)) +
+  geom_point() +
+  scale_x_continuous(breaks = sample_sizes) +
+  geom_hline(yintercept = true_mean, linetype = "dashed") 
+
+p2 <- all_samples_long %>% 
+  ggplot(aes(x = size, y = value)) +
+  geom_point() +
+  geom_hline(yintercept = true_mean, linetype = "dashed") +
+  scale_x_log10(breaks = sample_sizes)
+
+
+gridExtra::grid.arrange(p1, p2, nrow = 1)
+
+rm(flights)
+```
+
+
+Stichprobengrößen: `r sample_sizes`.
+
+## R mit Big-Data-(Datenbanken) verknüpfen
+
+
+### SQL mit `dplyr()`^[Angelehnt an: https://www.rstudio.com/resources/webinars/working-with-big-data-in-r/]
+
+
+- `dplyr` hat ein Schnittstelle zu Datenbank-Managementsystemen (DBMS) und übersetzt R-Befehle in SQL.
+
+- Gängige Befehle (von `dplyr`) haben eine offensichtliche Entsprechung in SQL: filter, select, count, summarise, left_join, mutate, <, &, mean, sum, min, abs, ...
+
+- Beispiel: Datenbank mit allen kommerziellen Flügen in den USA zwischen Okt. 1987 und Apr. 2008, ca. 120 Millionen Flüge, 12 GB (*ziemlich* große Daten)
+
+- Mögliche Strategie:
+  - Ziele Zufallstichprobe aus der Datenbank
+  - Berechne Modell (in R/RAM)
+  - Berechne Modellgüte für Test-Datensatz (in Datenbank)
+  
+
+### Verbindung zur Datenbank aufbauen
+
+- Die Daten^[http://stat-computing.org/dataexpo/2009/] sind auf [Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html) gespeichert, einer SQL-Datenbank mit Big-Data-Fähigkeit (bis in Petabyte-Bereich)
+
+```{r}
+# library(dplyr)
+air <- src_postgres(
+  dbname = 'airontime',
+  host = 'sol-eng.cjku7otn8uia.us-west-2.redshift.amazonaws.com',
+  port = '5439',
+  user = 'redshift_user',
+  password = 'ABCd4321')
+```
+
+
+
+
+
+
+
+### Referenzen zu einer SQL-Tabelle erzeugen
+
+
+- Man kann auf die Datenbank zugreifen, als ob es eine lokale Tabelle in R wäre:
+
+Referenzen zur SQL-Tabelle erzeugen:
+```{r}
+flights <- tbl(air, "flights")
+carriers <- tbl(air, "carriers")
+```
+
+Typische Abfragen stellen:
+
+```{r}
+flights_ref <- flights %>%
+  filter(!is.na(arrdelay), !is.na(depdelay)) %>%
+  filter(depdelay > 15, depdelay < 240) %>%
+  filter(year >= 2002 & year <= 2007) %>%
+  select(year, depdelay, uniquecarrier)
+```
+
+Achtung: Noch sind die Anfragen nur Referenzen, nicht ausgewertet.
+
+
+
+
+### Ein Blick in die Datenbank
+
+
+- Welche Tabellen gibt es  in der Datenbank?
+
+```{r}
+src_tbls(air)
+```
+
+
+- Wie viele Zeilen hat die Tabelle `flights`?
+
+```{r}
+my_query <- flights %>% dplyr::count()
+my_query
+```
+
+### Übersetzung von R in SQL
+
+```{r}
+show_query(my_query)
+```
+
+
+```{r}
+show_query(flights_ref)
+```
+
+
+### Referenzen auswerten
+
+- R wertet die Referenzen zur Datenbank erst aus, wenn wir es explizit verlangen (um Zeit zu sparen)
+
+```{r}
+start_time <- Sys.time()
+
+my_query3 <- flights %>%
+  filter(year > 2007, depdelay > 15) %>%
+  filter(depdelay == 240) %>%
+  collect()  # Auswertung der Referenz zum DBMS
+
+end_time <- Sys.time()
+end_time - start_time  # Zeitbedarf für die Abfrage
+```
+
+
+### Berechnung innerhalb der Datenbank 
+
+- Man kann auch Operationen innerhalb der Datenbank ausführen, wenn die Operation nicht innerhalb des Speichers möglich ist (`collapse()`)
+
+```{r}
+start_time <- Sys.time()
+
+my_query4 <- flights %>%
+   mutate(adjdelay = depdelay - 15) %>%
+   collapse() %>%
+   filter(adjdelay > 0)
+
+end_time <- Sys.time()
+end_time - start_time  # Zeitbedarf für die Abfrage
+```
+
+### Stichprobe aus der Datenbank ziehen
+
+- Zufallstichprobe (1% des Datensatzes) ziehen
+
+```{r}
+flights_sample <- flights_ref %>%
+  mutate(x = random()) %>%
+  collapse() %>%
+  filter(x <= 0.01) %>%
+  select(-x) %>%
+  collect() 
+```
+
+
+### Modell berechnen
+
+Forschungsfrage: Unterscheiden sich die Airlines in ihren mittleren Verspätungen?
+
+
+```{r}
+# Wir brauchen Faktoren, keine Strings für `dummy.coef`:
+flights_sample$uniquecarrier <- factor(flights_sample$uniquecarrier)
+
+mod <- lm(depdelay ~ uniquecarrier, data = flights_sample)
+
+# gibt Koeffizienten für *alle* k Stufen, nicht wie sonst nur k-1 Stufen
+coefs <- dummy.coef(mod) 
+coefs$uniquecarrier %>% head(3)
+```
+
+### Lookup-Tabelle erstellen
+
+
+- Anhand dieser Tabelle werden wir die vorhergesagten Verspätungen berechnen in der Datenbank.
+- In der Datenbank verwenden wir aus Performanzgründen lieber einfache Arithmetik anstelle eines linearen Modells, dazu diese Lookup-Tabelle.
+
+```{r}
+coefs_tab <- tibble(
+  uniquecarrier = names(coefs$uniquecarrier),
+  carrier_score = coefs$uniquecarrier,
+  int_score = coefs$`(Intercept)`)
+
+coefs_tab %>% head(3)
+```
+
+
+### Modellgüte berechnen (in Datenbank)
+
+```{r score-model-in-db}
+score <- flights %>% 
+  filter(year == 2008) %>% 
+  filter(!is.na(depdelay) & !is.na(uniquecarrier)) %>% 
+  filter(depdelay > 15 & depdelay < 240) %>% 
+  select(depdelay, uniquecarrier) %>% 
+  left_join(carriers, by = c("uniquecarrier" = "code")) %>% 
+  left_join(coefs_tab, copy = TRUE) %>% 
+  mutate(pred = int_score + carrier_score) %>% 
+  group_by(description) %>% 
+  summarise(depdelay = mean(depdelay),
+            pred = mean(pred))
+
+scores <- collect(score)
+```
+
+### Visualisieren der Verspätungen
+
+
+```{r out.width = "100%", fig.asp = .3}
+gf_point(pred ~ depdelay, data = score) %>% 
+  gf_abline(intercept = ~0, slope = ~1, alpha = .1)
+```
+
+
+

@@ -9,13 +9,13 @@ initPart(
     "PraDA-Organisatorisches",  # Dateiname ohne Suffix
     "Organisatorisches"         # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 ```
 
 
-# `r nextChapter()` `r if(abschluss) WDH` Organisatorisches
+# `r if(abschluss) WDH` Organisatorisches
 
 ```{r child = './Organisatorisches/Literatur.Rmd'}
 ```
@@ -70,7 +70,7 @@ Workload:
 Genauigkeit der Persönlichkeits-Einschätzung durch den Computer (Y-Achse) als Funktion der Anzahl der verfügbaren Facebook-Likes (X-Achse)
 
 ```{r echo = FALSE, , out.width = "50%"}
-knitr::include_graphics(file.path(pathToImages, "Wu_etal_2015.png"))
+knitr::include_graphics(file.path(pathToImages, "Wuetal2015.png"), error=FALSE)
 ```
   
 :::
@@ -91,7 +91,7 @@ knitr::include_graphics(file.path(pathToImages, "Wu_etal_2015.png"))
 1,1 Mrd. Taxifahrten (2009-2015); helle Punkte zeigen mehr Taxifahrten an.
 
 ```{r echo = FALSE, out.width = "70%"}
-knitr::include_graphics(file.path(pathToImages, "taxi_pickups_map.png"))
+knitr::include_graphics(file.path(pathToImages, "taxipickupsmap.png"), error=FALSE)
 ```
 :::
 
@@ -101,12 +101,13 @@ knitr::include_graphics(file.path(pathToImages, "taxi_pickups_map.png"))
 Entwicklung der Fahren nach Taxigesellschaften aus NYC im Zeitverlauf: Uber ist im Aufwärtstrend.
 
 ```{r echo = FALSE, out.width = "70%"}
-knitr::include_graphics(file.path(pathToImages, "nyc_taxi_uber_lyft.png"))
+knitr::include_graphics(file.path(pathToImages, "nyctaxiuberlyft.png"), error=FALSE)
 ```
 :::  
 </div></div>
 ::: {.tiny}
 [©2015 Todd Schneider](http://toddwschneider.com/posts/analyzing-1-1-billion-nyc-taxi-and-uber-trips-with-a-vengeance/), Genehmigte Reproduktion
+:::
 
 ```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
 ```
@@ -116,4 +117,3 @@ knitr::include_graphics(file.path(pathToImages, "nyc_taxi_uber_lyft.png"))
 abschluss <<- TRUE
 rm(pathToImages)
 ```
-:::

@@ -1,0 +1,818 @@
+
+```{r setup-BDA-Infrastruktur, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "BDA-Hadoop",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+```
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  size = "tiny"
+)
+
+```
+
+
+
+
+```{r libs-bda-hadoop, include = FALSE}
+library(mosaic)
+library(gridExtra)
+library(tidyverse)
+```
+
+
+
+# Technische Infrastruktur für Big Data
+
+
+
+
+
+## Verteilte Parallelverarbeitung großer Datenbestände
+
+
+### Herausforderungen an die IT-Infrastruktur
+
+- Speicherung und Verarbeitung immer größerer Datenmengen bringt bisherige Infrastrukturen an ihre Grenzen
+- Zwei Arten von Skalierung:
+  - vertikal (scale up): Einzelne Rechner "aufrüsten"; Problem: Kosten steigen exponentiell
+  - horizontal (scale out): Weitere Rechner an einen Rechnerverbund (Cluster) hinzufügen
+  
+- Vorteile:  
+  - Kosten steigen (quasi-)linear
+  - Bearbeitungszeit bleibt konstant - genügend Rechner im Cluster vorausgesetzt
+  - Einfache Neuskalierung je nach Bedarf möglich durch Hinzunahme/Wegnahme von Rechnern (elastic computing)
+  - Standard Hardware (commodity) ist nutzbar
+  - Große Datenmengen werden handhabbar
+  - Hohe Verfügbarkeit ist möglich
+- Nachteile:
+  - Bisherige Software und Infrastruktur nicht (oder nur eingeschränkt) nutzbar
+      
+  
+ 
+- Große Datenmengen verlangen nach horizontaler Skalierung
+  
+
+### Was ist Hadoop?
+
+>    Hadoop is an *open source* software platform for *distributed storage* and *distributed processing* of very large data sets on computer clusters built from *commodity hardware* (Hortonworks)
+
+
+>    Hadoop is an open source software framework for storing and processing large volumes of distributed data. It provides a set of instructions that organizes and processes data on many servers rather than from a centralized management nexus (informatica)
+
+
+- Hadoop ist ein Projekt der Apache Software Foundation (Open Source)
+- in Java programmiert
+- aktuell als Standard für Big Data und verteilte Parallelverarbeitung etabliert
+- horizontale Skalierung bis auf mehrere Tausend Knoten möglich
+
+
+### Hadoop Distributed File System (HDFS)
+
+
+::::::{.columns}
+:::{.column}
+:::{.scriptsize}
+- Hoch (horizontal) skalierbares verteiltes Dateisystem
+- optimiert für hohe Volumina und hohe Verfügbarkeit
+- durch die Parallelisierung (Verteilung) auf viele Rechner eines Clusters hoher Ausfallschutz (Fault Tolerance) und hohe Geschwindigkeit
+
+- Daten sind in *DataNodes* (Worker/Slaves Nodes) verteilt
+- Steuerung über *einen* *NameNode* (Master Nodes), der die Metadaten verwaltet und die (Auslastung und Zustand) der DataNodes überwacht
+- Fällt ein DataNode aus, so weist der NameNode einem anderen Rechner die Aufgabe zu
+- Um gegen Ausfall gewappnet zu sein, werden zwei NameNodes auf verschiedenen Rechnern im Cluster aufgesetzt (Hot Stand-by)
+
+- Im Standard werden drei Kopien eines Blocks vorgehalten
+
+:::
+:::
+
+:::{.column}
+```{r echo = FALSE, out.width = "100%"}
+knitr::include_graphics(file.path(pathToImages, "hdfs.png"))
+```
+:::
+::::::
+
+
+### Das Hadoop-Ökosystem 1
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "hadoop-ecosystem.png"))
+```
+
+
+### Das Hadoop-Ökosystem 2
+
+- [Spark]{.cemph} bietet In-Memory-Datenbank-Funktionen, dadurch erhöht sich die Geschwindigkeit eines Hadoop-Clusters enorm. Bei bestimmten Analysen wie z.B. Maschine Learning ist dies von Vorteil.
+- [Pig]{.cemph} ist eine vereinfachte Abfragesprache für Hadoop.
+- [Scoop]{.cemph} ist ein Werkzeug zum Importieren von Daten aus relationalen Datenbanken nach Hadoop.
+- [Yarn]{.cemph} verwaltet Rechenressourcen für die einzelnen Knoten im Cluster.
+- [HBase]{.cemph} ist eine nicht-relationale Kolumnen orientierte Datenbank.
+- [Hive]{.cemph} bietet SQL-Methoden und Data-Warehouse-Funktionen im Hadoop-System.
+- [Mahout]{.cemph} stellt Funktionen des maschinellen Lernens zur Verfügung.
+
+
+### Übung `r nextExercise()`: Datenplattformen {.exercise type=essay}
+
+
+1. Loggen Sie sich in der Horton Data Plattform (HDP) ein.
+2. Laden Sie eine Tabelle Ihrer Wahl über Hive hoch.
+3. Erstellen Sie eine Abfrage für diese Tabelle.
+
+:::{.notes}
+Individuell
+:::
+
+
+
+
+
+## MapReduce
+
+
+### MapReduce - Grundlagen
+
+- MapReduce ist ein System, das eine Aufgabe in eine Vielzahl von Teilaufgaben (Map-Tasks) zerlegt.
+- Diese werden auf mehrere Rechner (Knoten) zur parallelen Verarbeitung verteilt.
+- Zwischenergebnisse werden zwischen den Rechnern ausgetauscht.
+- Die Ergebnisse der einzelnen Map-Tasks werden dann zu einem Endergebnis zusammengefasst (Reduce-Task).
+- Die Bearbeitungsprozesse werden zu den Daten bewegt (nicht umgekehrt!), so dass Netzbelastung deutlich verringert wird.
+- Das MapReduce-System übernimmt die Ablaufsteuerung:
+  - Der Master (JobTracker) teilt Job ein Teilaufgaben auf;
+  - diese werden als Task an die TaskTracker (zumeist auf den Worker Nodes) vergeben.
+- Ist ein Worker Node überlastet, wird ein möglichst naher Knoten ausgesucht (möglichst im gleichen Rack)
+- Meldet ein Knoten keine Fortschritte, so kann der JobTracker den Job an einen anderen Knoten vergeben.
+
+
+### MapReduce 1: Lade Daten ins HDFS, in Blöcken unterteilt^[vgl. https://www.youtube.com/watch?v=Px2PNpYWErA]
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "hdfs-uml3.png"))
+```
+
+
+- Lade eine große Datei in das HDFS hoch
+- Teile die Datei in 64MB-Blöcke auf
+- Verteile dieses Blöcke auf alle Data Nodes (1, 2, ..., n)
+- Halte 3 Kopien jedes Blocks vor (im Default)
+  - so wird Ausfallschutz (Failover) gewährleistet 
+  - wenn ein Knoten ausfällt, so ist der Block von einem anderen Knoten auslesbar
+  - außerdem kann die Rechenlast balanciert werden (load balancing)
+
+
+```{uml include = FALSE}
+@startuml
+
+
+
+package "HDFS" {
+ component comp2 [Große Datei in HDFS
+ wird in mehrere Blöcke B (1, 2,..., n) aufgeteilt
+ und auf Data Nodes vereilt
+ ]
+ 
+ node "DN1" {
+ [B 1] as dn1
+ }
+ 
+ node "DN2" {
+ [B 2,3] as dn2
+ }
+ 
+ node "DN3" {
+ [B 2] as dn3
+ }
+ 
+ node "DN4" {
+ [B 1] as dn4
+ }
+ 
+  node "DN ..." {
+ [B ...] as dn5
+ }
+
+  node "DN n" {
+ [B 1] as dnn
+ }
+ 
+ comp2 --> dn1
+ comp2 --> dn2
+ comp2 --> dn3
+ comp2 --> dn4
+ comp2 --> dn5
+ comp2 --> dnn
+}
+
+
+[Große Datei]  --> comp2
+
+@enduml
+```
+
+
+
+### MapReduce 1 - Beispiel in R
+
+Ein großer Datensatz wird in mehrere Blöcke aufgeteilt:
+
+
+```{r}
+data(flights, package = "nycflights13")  # Daten laden
+
+# Aufteilung in n Blöcke
+block1_delay <- flights %>% slice(1:64000) %>% pull(arr_delay)
+block2_delay <- flights %>% slice(640001:128000) %>% pull(arr_delay)
+# etc.
+```
+
+
+
+### MapReduce 2: Map
+
+- Führe für jedes Element (Tupel) eines Blocks die zu mappende Funktion (z.B. `Map1`) aus
+- Das läuft (parallel) für jeden Block aus (aber nur einmal pro Block)
+
+
+
+```{uml, include = FALSE}
+@startuml
+
+
+
+package "HDFS" {
+ component comp2 [Große Datei in HDFS
+ wird in mehrere Blöcke B (1, 2,..., n) aufgeteilt
+ und auf Data Nodes vereilt
+ ]
+ 
+ node "DN1" {
+ [B 1] as dn1
+  dn1 --> [B1M]  : Map1
+ }
+ 
+ node "DN2" {
+ [B 2,3] as dn2
+  dn2 --> [B3M]  : Map3
+
+ }
+ 
+ node "DN3" {
+ [B 2] as dn3
+  dn3 --> [B2M]  : Map2
+
+ }
+ 
+ node "DN4" {
+ [B 1] as dn4
+ }
+ 
+  node "DN ..." {
+ [B ...] as dn5
+ }
+
+  node "DN n" {
+ [B 9] as dnn
+  dnn --> [B9M]  : Map9
+
+ }
+ 
+ comp2 --> dn1
+ comp2 --> dn2
+ comp2 --> dn3
+ comp2 --> dn4
+ comp2 --> dn5
+ comp2 --> dnn
+ 
+ 
+
+
+}
+
+
+[Große Datei]  --> comp2
+
+@enduml
+```
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "Map-uml.png"))
+```
+
+
+### MapReduce 2 - Beispiel in R
+
+- Pro Block wird eine Map-Funktion `f` auf jedes Tupel angewandt.
+- M.a.W.: Eine Funktion `f` wird auf jedes Tupel angewandt ("gemapt"); das geschieht für jeden Block (genau einmal).
+
+
+```{r}
+# "Größer-als-Funktion" soll gemapt werden
+map_function <- function(x) `>`(x, 0)
+
+# Jetzt mappen wir:
+block1_mapped <- map(block1_delay, map_function)
+```
+
+Ergebnis:
+
+```{r eval = FALSE}
+head(block1_mapped) 
+```
+
+
+```{r echo = FALSE}
+head(block1_mapped) %>% simplify()
+```
+
+
+
+Für jeden Fall liegt jetzt ein Wert vor (pro Block).
+
+### MapReduce 3: Shuffle
+
+- Gruppierung der Zwischenergebnisse
+- Daten werden über das Netzwerk geschickt und neu verteilt
+- Durch die Verteilung können Ergebnisse mit einem bestimmten Wert alle auf einen Node gespeichert werden, dadurch ist es einfacher, die Ergebnisse abzurufen
+- danach müssen die Ergebnisse nicht mehr über das Netzwerk verteilt werden
+
+
+```{uml, include = FALSE}
+@startuml
+
+
+
+package "HDFS" {
+ 
+ 
+ node "DN1" {
+ [A-B] as dn1
+ }
+ 
+ node "DN2" {
+ [C-D] as dn2
+ }
+ 
+ node "DN3" {
+ [E-F] as dn3
+
+ }
+ 
+ node "DN4" {
+ [G-H] as dn4
+ }
+ 
+  node "DN ..." {
+ [...] as dn5
+ }
+
+  node "DN n" {
+ [Y-Z] as dnn
+
+ }
+ 
+ network <--> dn1
+ network <--> dn2
+ network <--> dn3
+ network <--> dn4
+ network <--> dn5
+ network <--> dnn
+ 
+}
+
+
+
+
+@enduml
+```
+
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "shuffle-uml.png"))
+```
+
+
+
+
+### MapReduce 4: Reduce
+
+- Auf jedem Datenknoten wird die Reduce-Funktion des Nutzers angewendet (d.h. auf jedem DataNode wird ein ReduceTask angestoßen).
+- Die Reduce-Funktion wird für jeden Wert einmal aufgerufen (parallel auf jeden DataNode).
+- Von jedem Ergebnis werden wieder Kopien (z.B. 3) vorgehalten.
+- Diese Ergebnisliste wird dem Nutzer zurückgemeldet; die Aufgabe ist abgeschlossen.
+
+
+```{uml, include = FALSE}
+@startuml
+
+
+
+package "HDFS" {
+ 
+ 
+ node "DN1" {
+ [A-B] as dn1
+ dn1 -> [R(A-B)]
+ }
+ 
+ node "DN2" {
+ [C-D] as dn2
+ dn2 -> [R(C-D)]
+ }
+ 
+ node "DN3" {
+ [E-F] as dn3
+ dn3 -> [R(E-F)]
+ }
+ 
+ node "DN4" {
+ [G-H] as dn4
+ dn4 -> [R(G-H)]
+ }
+ 
+  node "DN ..." {
+ [...] as dn5
+ dn5 -> [R(...)]
+ }
+
+  node "DN n" {
+ [Y-Z] as dnn
+ dnn -> [R(Y-Z)]
+
+ }
+ 
+ network <--> dn1
+ network <--> dn2
+ network <--> dn3
+ network <--> dn4
+ network <--> dn5
+ network <--> dnn
+ 
+
+}
+
+
+
+
+@enduml
+```
+
+
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "reduce-uml.png"))
+```
+
+
+
+### MapReduce: 4 - Beispiel in R
+
+
+Die Ergebnisse eines Blocks werden jetzt zu *einem* Wert zusammengefasst (reduziert):
+
+
+```{r}
+# Vorverarbeitung:
+block1_mapped_simplified <- simplify(block1_mapped) %>% discard(is.na)
+# So sieht der zu reduzierende Vektor aus:
+head(block1_mapped_simplified)
+
+# Hier kommt die Antwort:
+reduce(block1_mapped_simplified, `sum`)
+```
+
+Dies geschieht parallel für jeden Block. 
+
+
+## Datenbanken für Big Data
+
+
+### Mehr als Data Warehouses
+
+Ein Data Warehouse (Datenlager) ist ...
+
+- eine für betriebliche Analysezwecke optimierte Datenbank,
+- von den produktiven System abgetrennt,
+- die Daten aus mehreren Quellen zusammenführt,
+- um quantitative Abschätzungen des Zustands der Unternehmung zu erhalten.
+
+- Um die Geschäftsprozesse nicht zu beeinträchtigen, werden Reporting-/Analyseaufgaben von den Transaktionsdatenbanken des Alltagsgeschäfts getrennt.
+
+- Primäre Analyseart sind OLAP-Prozesse (Online Analytical Processing).
+  - Dabei wird eine multidimensionale Datenstruktur zusammengefasst. Beispiel: Wie viele Produkte wurden im Jahr 2018 (und nicht in allen Jahren) verkauft? Wie viele Jeans der Marke XYZ wurde im Jahr 2018 (oder in allen Jahren) verkauft?
+  
+- Da Data Warehouses auf strukturierten Daten begrenzter Größe aufbauen, sind sie für Big Data nur eingeschränkt nutzbar.
+
+- [Produkt]{.cemph}: [Microsoft Azure](https://azure.microsoft.com/en-us/services/sql-data-warehouse/?&OCID=AID2000076_SEM_Olx9rmIe&MarinID=Olx9rmIe_367962746322_data%20warehouses_e_c__79189265231_kwd-302011292826&lnkd=Google_Azure_Nonbrand&dclid=CPPaiLfg8eMCFdAHiwod3VUMpA)
+
+
+### Data Lakes
+
+- Data Lakes (Datenseen) speichern große Mengen von Daten aus verschiedenen Quellen (IoT, Webseiten, sozialen Medien, Produktivsysteme, ...) ohne Vorverarbeitung ab.
+- Solche Datenseen werden häufig als Grundlage für z.B. prädiktive Analysen und aufwändige Analysen herangezogen.
+- [Vorteile]{.cemph}: 
+  - Im Gegensatz zu Data Marts oder Data Warehouses sind die Daten der Organisation nicht fragmentiert, was eine übergreifende Analyse behindert. 
+  - Im Gegensatz zu klassischen Data Warehouses können Data Lakes große Datenmengen verarbeiten.
+- [Nachteile]{.cemph}:
+  - Daten sammeln kann zum Selbstzweck verkommen ("Datensumpf")
+  - Genau wie für andere Datenspeicher ist die Datensicherheit essenziell.
+
+- *Anbieter*: Apache Hadoop, Microsoft Azure, Amazon S3 
+
+
+### NoSQL-Datenbanken als Ergänzung zu relationalen Datenbanken
+
+- Relationale Datenbanken eignen sich für Transaktionsverarbeitung strukturierter Daten begrenztem Umfangs.
+- Die ACID-Eigenschaften (Atomicity, Consistency, Isolation, Durability) von relationalen Datenbanken erzeugen eine Overhead, der Zugriffszeiten bei hohem Datenaufkommen über die Maßen erhöht.
+- NoSQL-Datenbanken ("Not-Only-SQL") adressieren jeweils nur eine spezialisierte Aufgabenstellung und erreichen so hohe Durchsatzraten.
+- Da sie kein festes Schema aufweisen, können neue Datentypen leicht aufgenommen bzw. Datentypen verändert werden.
+- NoSQL-Datenbanken sind gut horizontal (linear) skalierbar.
+- Fehler in einem Knoten dürfen nicht zum Abbruch der ganzen Query führen.
+
+
+
+
+### Schlüssel-Wert-Datenbanken (Key-Value-Stores)
+
+- Paare aus Schlüsseln und Werte werden in großen Mengen gespeichert.
+- Der Zugriff auf den Wert erfolgt über den Schlüssel, der den Wert eindeutig identifiziert.
+
+
+|  key| value| 
+|--:|--:|
+| FacebookUser1233423414_Color|  Red| 
+| TwitterUser2342342_Color |  Brownish|
+| LinkedInUser32432423_Job | "Data Scientist"|
+| FacebookUser2342342411_Age | 99|
+
+
+- [Produkt]{.cemph}: [Riak](https://riak.com/products/) (Apache Lizenz 2.0)
+
+### Dokument-Datenbanken
+
+- In dokumentorientierten Datenbanken werden Daten  in Form von Dokumenten wie HTML-Seiten gespeichert.
+- Dabei wird den Seiten kein fixes Schema auferlegt.
+- Typische Schemata sind XML, YAML oder JSON.
+- Solche Datenbanken sind nützlich, um Berichte aus Teilementen, die sich häufig ändern, zusammenzustellen.
+- Twitter nutzt eine Dokumentendatenbank zur Verwaltung der Nutzerprofile inkl. Tweets.
+
+- [Produkt]{.cemph}: [MongoDB](https://www.mongodb.com/)
+
+
+### Dokument-Datenbanken - Beispiele für Dokument-Schemata
+
+::::::{.columns}
+:::{.column width="40%"}
+Dokument in JSON:
+
+:::{.footnotesize}
+```{json, eval = FALSE}
+{
+    "FirstName": "Bob", 
+    "Address": "5 Oak St.", 
+    "Hobby": "sailing"
+}
+```
+:::
+
+Dokument in YAML:
+
+
+:::{.footnotesize}
+
+```{yaml, eval = FALSE}
+---
+title: mein_dokument
+output: 
+  html_document:
+    theme: pretty_doc
+---
+```
+:::
+
+:::
+:::{.column width="59%"}
+
+Dokument in XML:
+
+:::{.footnotesize}
+
+```{xlm, eval = FALSE}
+ <contact>
+    <firstname>Bob</firstname>
+    <lastname>Smith</lastname>
+    <phone type="Cell">555-0178</phone>
+    <phone type="Work">555-0133</phone>
+    <address>
+      <type>Home</type>
+      <street1>123 ?</street1>
+      <city>Boys</city>
+      <state>AR</state>
+      <zip>32225</zip>
+      <country>US</country>
+    </address>
+  </contact>
+```
+:::
+
+:::
+
+::::::
+
+
+### Graphen-Datenbanken
+
+- Eine Graphen-Datenbank speichert Informationen in Form einer Graph-Struktur, also in Form von Kanten und Knoten, ab.
+- Die Kanten spiegeln die Beziehungen zwischen den Objekten (in Form der Knoten) wider.
+- Eine typische Anfrage ist IDE die Suche nach dem kürzesten Weg durch den Graphen.
+- Anwendungsgebiete sind z.B. Fahrplanoptimierung, Hyperlink-Strukturen oder Nutzerbeziehungen.
+
+- [Produkt]{.cemph}: [Neo4J](https://neo4j.com/)
+  
+### Beispiel für einen Graph
+
+
+::::::{.columns}
+:::{.column width="40%"}
+
+UML mit PlantUML:
+```{uml, eval = FALSE}
+@startuml
+
+object Anna
+object Bert
+object Carl
+object Dana
+
+Anna --> Bert : liebt
+Bert --> Anna : kennt
+Bert --> Carl : hasst
+Carl --> Dana : mag
+Dana --> Carl : liebt
+Dana -> Anna : kennt
+
+@enduml
+```
+
+:::
+:::{.column}
+
+```{r echo = FALSE, out.width = "70%"}
+knitr::include_graphics(file.path(pathToImages, "graph.png"))
+```
+
+:::
+::::::
+
+
+## Cloud-Computing
+
+
+### Was ist Cloud-Computing?
+
+
+- [Cloud-Computing]{.cemph} bezeichnet das Bereitstellen und Nutzen von IT-Ressourcen über ein Netzwerk wie das Internet ("die Cloud"). Beispiele für IT-Ressourcen sind Anwendungen (Software), Datenspeicherung bis hin zu kompletten Rechenzentren.
+
+- Dieser Prozess funktioniert dynamisch ("elastisch"), d.h.  in Quantität und Qualität an den Bedarfen des Nutzers angepasst.
+
+- Damit muss der Nutzer die IT-Ressourcen nicht selber bereitstellen (kaufen, warten, ...), sondern nimmt diese Ressourcen als Dienstleistung entgegen.
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+
+- Gängige Geschäftsmodelle ("Business-Modelle") umfassen:
+  - Software-as-a-Service (SaaS)
+  - Platform-as-a-Service (PaaS;)
+  - Infrastructure-as-a-Service (IaaS)
+  
+  
+:::
+::: {.column width="50%"}
+
+
+```{r echo = FALSE, out.width="100%"}
+knitr::include_graphics(file.path(pathToImages, "cloudcomputing.png"))
+```
+
+:::{.tiny}
+Quelle: [Wikipedia](https://de.wikipedia.org/wiki/Cloud_Computing#/media/Datei:Architektur_Cloud_Computing.svg) Sebbl2go, CC BY SA 3.0 de
+:::
+
+:::
+::::::
+
+
+### Übung `r nextExercise()`: Beispiele für SaaS, PaaS und IaaS
+
+Beschreiben Sie für jedes der drei Geschäftsmodelle 
+
+- die zentralen Charakteristiken
+- ein Beispiel
+- einen Anbieter!
+
+
+
+### Amazon Web Services (AWS)
+
+- Einer der größten Anbieter von Cloud-Computing
+- Bekannte Dienste sind
+  - Elastic Comute Cloud (EC2)
+  - Simple Storage Service (S3)
+- Breite Palette von Diensten
+- Die Angebote richten sich zumeist nicht an Endnutzer, sondern richten sich eher an Entwickler und Administratoren
+- Die FOM ist Kunde von AWS Educate und stellt ihren Studierenden Nutzungspakete zur Verfügung
+  - Eine Datenschutzerklärung ist dafür zu unterschreiben
+  - Eine große Auswahl an Diensten steht im Unterricht zur Verfügung
+  - Es stehen nur AWS-Server in der Region *North Virginia (USA)* zur Verfügung im Rahmen von AWS Educate 
+  - **Wichtig:** Ihr Nutzungspaket ist finanziell beschränkt (und wird von der FOM getragen). Die Abrechnung ihres Guthabens erfolgt nach Nutzungsdauer -- *beenden Sie daher unbedingt eine Instanz, wenn Sie sie nicht mehr benötigen* ("Actions - Instance State - Stop")! 
+  - Zur Nutzung dieser Dienste müssen Sie ein Nutzerkonto haben und eingeloggt sein.
+
+  
+## Cloud-Computing mit AWS
+
+
+### Tutorial: RStudio-Server bei AWS anlegen^[[s. Quelle](https://towardsdatascience.com/how-to-run-rstudio-on-aws-in-under-3-minutes-for-free-65f8d0b6ccda)]
+
+
+
+1. Passendes AMI ([dieses](https://console.aws.amazon.com/ec2/home?region=us-east-1#launchAmi=ami-0226a8af83fcecb43)) auswählen^[Ein AMI ([Amazon Machine Image](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)) stellt Software wie Betriebssystem und Anwendungen zur Verfügung, die benötigt werden, um einen Server (eine "Instanz") zu betreiben. Das ist komfortabel, da man dann sich dann nicht um die Installation/Konfiguration selber kümmern muss; weitere Infos [hier](http://www.louisaslett.com/RStudio_AMI/)]. 
+
+2. Klicken Sie sich bei *Launch Instance* durch. Bei *Step 6: Configure Security Group* ist mit *Add Rule* der Typ *HTTP* und Source *Anywhere* hinzuzufügen.
+
+4. Schlüsselpaar auswählen (oder neu erstellen) und Instanz starten.
+
+5. Geben Sie die angezeigte *IPv4 Public IP* in Ihren Browser in der Suchleiste ein. Unsername: "rstudio"; Password: <Instance ID> des Servers.
+
+
+
+### Tutorial: Windows-Server bei AWS anlegen^[[s. Quelle](https://www.datacamp.com/community/tutorials/aws-ec2-beginner-tutorial)]
+
+
+
+
+1. Unter *AWS Services - Compute - EC2* auswählen
+
+2. *Launch Instance* klicken und *Microsoft Windows Server 2016 Base* AMI auswählen.
+
+4. Weitere Spezifikationen (wie Prozessor- und Festplattengröße) wählen.
+
+5. Schlüsselpaar auswählen (oder neu erstellen) und Instanz starten.
+
+6. *Connect* klicken (sobald verfügbar) und dann *Download Remote Desktop File* klicken; die RDP-Datei lokal speichern.
+
+7. Auf *Get Password* klicken (geht erst, wenn der Server läuft), Passwort einfügen und auf *Decrypt Password* klicken.
+
+8. Doppelklicken Sie die RDP-Datei, um die Verbindung herzustellen: Mac-User müssen sich noch [Microsoft Remote Desktop](https://apps.apple.com/us/app/microsoft-remote-desktop-10/id1295203466?mt=12) herunterladen.
+
+9. Installieren Sie nach Bedarf weitere Software.
+
+
+
+
+### Tutorial: Linux-Server bei AWS anlegen
+
+
+1. Unter *AWS Services - Compute - EC2* auswählen
+
+2. *Launch Instance* klicken und Ubuntu AMI auswählen. 
+
+3. Weitere Spezifikationen (wie Prozessor- und Festplattengröße) wählen.
+
+4. Schlüsselpaar auswählen (oder neu erstellen) und Instanz starten.
+
+5. Bei *Step 6: Configure Security Group* ist mit *Add Rule* der Typ *Custom TCP* der Port 5901 und die *Source* (IP-Bereich) 0.0.0.0/0 zu wählen.
+
+6. *Connect* klicken (sobald verfügbar) und den Anweisungen folgen.
+
+7. VNC-Server installieren wie [hier](https://developpaper.com/aws-lightsail-ec2-ubuntu-installation-desktop/) beschrieben. Nutzernamen und Passwort lokal speichern.
+
+8. Auf dem Host einen [VNC-Viewer](https://www.realvnc.com/en/connect/download/viewer/) oder [Microsoft Remote Desktop](https://apps.apple.com/us/app/microsoft-remote-desktop-10/id1295203466?mt=12) starten und sich mit  <IPv4 Public IP:Port> einloggen.

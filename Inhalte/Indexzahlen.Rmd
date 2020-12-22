@@ -9,24 +9,24 @@ initPart(
     "Indexzahlen",              # Dateiname ohne Suffix
     "Wirtschaftsstatistik"  # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 
 ```
 
-# `r nextChapter()` Indexzahlen
+# Indexzahlen
 
 ### Preisentwicklung
 
-Angenommen vor zwei Jahren haben Sie für eine Party $2$ Flaschen Korn für je $10\,€$ und 2 Flaschen Cola je $1\,€$ eingekauft. Heute kaufen Sie nur $1$ Flasche Korn für $10{,}50\,€$, dafür $3$ Cola für je $1{,}10\,€$.
+Angenommen vor zwei Jahren haben Sie für eine Party $2$ Flaschen Korn für je $10\,\oureuro$ und 2 Flaschen Cola je $1\,\oureuro$ eingekauft. Heute kaufen Sie nur $1$ Flasche Korn für $10{,}50\,\oureuro$, dafür $3$ Cola für je $1{,}10\,\oureuro$.
 
 Wie haben sich die Preise entwickelt?
 
-- Früher kostete die Party $22\,€$, heute nur noch $13{,}80\,€$. Damit beträgt der Partypreisindex $\frac{13{,}80\,€}{22\,€}=0{,}6275$.
-- Wenn Sie heute genau so viel Korn kaufen würden wie früher, würde die Party heute $2\cdot 10{,}50\,€+2\cdot 1{,}10\,€=23{,}20\,€$ kosten. Damit würde die Partypreisentwicklung $\frac{23{,}20\,€}{22\,€}=1{,}0545$ betragen.
-- Wenn Sie früher schon so bescheiden gewesen wären, hätte die Party damals $1\cdot 10\,€+3 \cdot 1\,€=13\,€$ gekostet. Damit hätte  die Partypreisentwicklung $\frac{13{,}80\,€}{13\,€}=1{,}0615$ betragen.
+- Früher kostete die Party $22\,\oureuro$, heute nur noch $13{,}80\,\oureuro$. Damit beträgt der Partypreisindex $\frac{13{,}80\,\oureuro}{22\,\oureuro}=0{,}6275$.
+- Wenn Sie heute genau so viel Korn kaufen würden wie früher, würde die Party heute $2\cdot 10{,}50\,\oureuro+2\cdot 1{,}10\,\oureuro=23{,}20\,\oureuro$ kosten. Damit würde die Partypreisentwicklung $\frac{23{,}20\,\oureuro}{22\,\oureuro}=1{,}0545$ betragen.
+- Wenn Sie früher schon so bescheiden gewesen wären, hätte die Party damals $1\cdot 10\,\oureuro+3 \cdot 1\,\oureuro=13\,\oureuro$ gekostet. Damit hätte  die Partypreisentwicklung $\frac{13{,}80\,\oureuro}{13\,\oureuro}=1{,}0615$ betragen.
 
 ### Indexzahlen
 
@@ -62,7 +62,7 @@ $$g_0(i)=\frac{{q_{0i}p_{0i}}}{\sum{q_{0j}p_{0j}}}.$$
 Die Gewichte $g$ innerhalb eines Warenkorbes (hier Verbraucherpreisindex) sind im Wägungsschema angegeben.^[Quelle: [Statistisches Bundesamt](https://www.destatis.de/DE/ZahlenFakten/GesamtwirtschaftUmwelt/Preise/_Grafik/Fokus_Waegungsschema.html)]
 
 ```{r echo=FALSE, out.width = "55%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages,"Fokus_Waegungsschema.png"))
+knitr::include_graphics(file.path(pathToImages,"Fokus_Waegungsschema.png"), error = FALSE)
 ```
 
 
@@ -80,7 +80,7 @@ Angenommen die Preise aller Güter sind gestiegen. Stimmt die Aussage: Es gilt i
 
 ### Offene Übung `r nextExercise()`: Indexzahlen {.exercise type=essay}
 
-Eine Drogerie stellt das Sortiment um: Während vor einem Jahr zu $80\,\%$ eher preiswerte Marken und Produkte im Durchschnitt zu $5\,€$ verkauft wurden und $20\,\%$ hochpreisige Marken im Durchschnitt zu $50\,€$, werden heute $50\,\%$ preiswerte Produkte zu $5{,}50\,€$ und $50\,\%$ hochpreisige zu $45\,€$ verkauft.
+Eine Drogerie stellt das Sortiment um: Während vor einem Jahr zu $80\,\%$ eher preiswerte Marken und Produkte im Durchschnitt zu $5\,\oureuro$ verkauft wurden und $20\,\%$ hochpreisige Marken im Durchschnitt zu $50\,\oureuro$, werden heute $50\,\%$ preiswerte Produkte zu $5{,}50\,\oureuro$ und $50\,\%$ hochpreisige zu $45\,\oureuro$ verkauft.
 
 Bestimmen Sie zur Analyse der Preisentwicklung eine Indexzahl Ihrer Wahl.
 

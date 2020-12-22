@@ -9,7 +9,7 @@ initPart(
     "PCA",            # Dateiname ohne Suffix
     "Clusterananlyse"   # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
@@ -18,7 +18,23 @@ library(psych)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
-# `r nextChapter()` PCA
+# PCA
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+- wissen, was *Unüberwachtes* Lernen in diesem Zusammenhang bedeutet.
+- können die Hauptidee der Hauptkomponentenanalyse (PCA) erläutern.
+- wissen, wozu ein *Screeplot* verwendet wird.
+- wissen, wie man eine PCA ein R berechnet.
+- wissen, wozu ein *Biplot*  verwendet wird.
+- wissen, dass *Cronbachs Alpha* eine Kennzahl, um die Güte einer PCA-Lösung zu quantifizieren.
+
+
+
 
 ### Unüberwachtes Lernen
 
@@ -39,7 +55,7 @@ mit den Ladungen $\lambda$ und den zentrierten ($\bar{\tilde{x}}=0$) und ggfs. s
 
 ### Beispiel 
 
-Zusammenfassung der Multi-Item Likert Skala zu: *Schwierigkeit von Statistik*:^[Auf einer Skala von 1 (Trifft überhaupt nicht zu) über 4 (Weder zutreffend, noch unzutreffend) bis 7 (Trifft voll und ganz zu) [Candace Schau: Survey of Attitudes Toward Statistics, SATS-36](http://www.evaluationandstatistics.com/)]
+Zusammenfassung der Multi-Item Likert Skala zu: *Leichtigkeit beim Verständnis von Statistik*:^[Auf einer Skala von 1 (Trifft überhaupt nicht zu) über 4 (Weder zutreffend, noch unzutreffend) bis 7 (Trifft voll und ganz zu) [Candace Schau: Survey of Attitudes Toward Statistics, SATS-36](http://www.evaluationandstatistics.com/)]
 
 - Statistische Formeln sind leicht zu verstehen.
 - Statistik ist ein kompliziertes Fach.*
@@ -130,14 +146,14 @@ install.packages(c("corrplot", "psych"))
 ### Vorbereitung: Skalierung numerischer Variablen
 
 ```{r, eval=FALSE}
-tipscale <- tips %>% 
+tipsscale <- tips %>% 
   select(size, total_bill, tip) %>% # metrische Variablen wählen
   scale() %>%                       # Skalieren 
   data.frame()                      # Als Datensatz definieren
 ```
 
 ```{r, echo=FALSE}
-tipscale <- tips %>% 
+tipsscale <- tips %>% 
   dplyr::select(size, total_bill, tip) %>% # Variablen wählen
   scale() %>%                              # Skalieren 
   data.frame()                             # Als Datensatz definieren
@@ -160,7 +176,7 @@ Stimmt die Aussage: Bei skalierten/standardisierten^[d. h., $\bar{x}=0, sd=1$] V
 
 ```{r  fig.align="center", out.width="40%"}
 library(corrplot) # ggfs. einmalig vorab installieren
-cor(tipscale) %>%
+cor(tipsscale) %>%
   corrplot()
 ```
 
@@ -177,19 +193,19 @@ D.  Es gibt nur negative Korrelation.
 <div class="notes">
 Alle Korrelationen sind *blau*, also ist *D* falsch und ***A*** richtig. *B* und *C* falsch, da die Korrelation zwischen `tip` und `total_bill` (und damit nicht `size`) die höchste ist: Der Kreis ist größer und die Farbe intensiver. (Beachte: *Korrelationen* innerhalb einer Variable (Diagonale, z.B. `cor(tip ~ tip)`) sind immer $=1$ und uninterssant.)
 
-`r kable(cor(tipscale))`  
+`r kable(cor(tipsscale))`  
 </div>
 
 
-### Hauptkomponentenanalyse 
+### Hauptkomponentenanalyse mit R
 
 ```{r}
 ergpca <- prcomp( ~ size + total_bill + tip, 
-                  data=tipscale)
+                  data=tipsscale)
 ```
 
 
-### Screeplot tipscale
+### Screeplot tipsscale
 
 Ein **Screeplot** stellt die Varianz ($y$-Achse) der Hauptkomponenten ($x$-Achse) dar.^[Ein Kriterium zur Bestimmung der Anzahl Hauptkomponenten ist: Nimm die Anzahl, die links der Knickstelle liegt (hier bei $2$), also eine Hauptkomponente.]
 ```{r  fig.align="center", out.width="60%"}
@@ -229,7 +245,7 @@ C.  Die Varianz der Hauptkomponenten nimmt zu.
 </div>
 
 
-### tipscale: Biplot
+### tipsscale: Biplot
 
 Ein **Biplot** visualisiert die Ladungen der Variablen sowie die Werte der Beobachtungen auf den ersten Hauptkomponenten (*Scores*).
 
@@ -249,7 +265,7 @@ C.  Weiß nicht.
 <div class="notes">
 Beobachtung `171` liegt rechts unten. D. h. in Richtung der Variablen `tip` und `total_bill` ein hoher Wert, in Richtung der Variablen `size` eher durchschnittlich, daher ***A***.
 
-`r kable(round(tipscale[171,],2))`
+`r kable(round(tipsscale[171,],2))`
 
 Unskaliert:
 
@@ -278,20 +294,21 @@ C.  Je höher der Wert für `tip` ist, desto höher ist der Wert auf der zweiten
 </div>
 
 
+
 ### Cronbachs Alpha 
 
-**Cronbachs Alpha** ist eine Maßzahl für die **interne Konsistenz** einer Skala (*Reliabilität*). Sollte i.d.R. $>0.7$ sein.^[Wird i.d.R. für sog. Multi-Item Skalen verwendet. Hier eigentlich nicht angebracht, da keine Multi-Item Skala vorliegt!]
+**Cronbachs Alpha** ist eine Maßzahl für die **interne Konsistenz** einer Skala (*Reliabilität*). Sollte i.d.R. $>0.7$ sein.^[Wird i.d.R. für sog. Multi-Item Skalen verwendet. Hier **nicht** angebracht, da keine Multi-Item Skala vorliegt!]
 
 ```{r echo=TRUE, eval=FALSE}
 library(psych) # ggfs. einmalig vorab installieren
-ca <- alpha(tipscale, check.keys = TRUE)
+ca <- alpha(tipsscale, check.keys = TRUE)
 summary(ca)
 ```
 
 ::: {.small}
 ```{r echo=FALSE, eval=TRUE}
 library(psych) # ggfs. einmalig vorab installieren
-ca <- psych::alpha(tipscale, check.keys = TRUE)
+ca <- psych::alpha(tipsscale, check.keys = TRUE)
 summary(ca)
 ```
 :::
@@ -315,12 +332,12 @@ Aber: **Cronbachs Alpha** ist eine Maßzahl für die **interne Konsistenz** eine
 Lassen sich die Variablen `size` und `total_bill` zu einer zusammenfassen?
 
 ```{r,include=FALSE}
-tipscaleUeb <- tips %>% 
+tipsscaleUeb <- tips %>% 
   dplyr::select(size, total_bill) %>% # Variablen wählen
   scale() %>%                         # Skalieren 
   data.frame()                        # Als Datensatz definieren
 
-pcaUeb <- prcomp( ~. ,  data=tipscaleUeb)
+pcaUeb <- prcomp( ~. ,  data=tipsscaleUeb)
 summary(pcaUeb)
 ```
 
@@ -328,8 +345,8 @@ summary(pcaUeb)
 <div class="notes">
 Eine Hauptkomponentenanalyse ergibt, dass die erste Hauptkomponenten mehr als $75\,\%$ der Gesamtvarianz beinhaltet.
 
-`tipscaleUeb <- tips %>% select(size, total_bill) %>% scale() %>% data.frame()`  
-`pcaUeb <- prcomp( ~. ,  data=tipscaleUeb)` 
+`tipsscaleUeb <- tips %>% select(size, total_bill) %>% scale() %>% data.frame()`  
+`pcaUeb <- prcomp( ~. ,  data=tipsscaleUeb)` 
 `summary(pcaUeb)`
 </div>
 

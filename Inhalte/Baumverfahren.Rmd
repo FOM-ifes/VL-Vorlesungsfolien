@@ -9,16 +9,33 @@ initPart(
     "Baumverfahren",          # Dateiname ohne Suffix
     "Baum-basierte-Verfahren"   # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
 library(rpart)
 library(rpart.plot)
+library(viridis)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
-# `r nextChapter()` Baum-basierte Verfahren
+# Baum-basierte Verfahren
+
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+Die Studierenden ...
+
+- können die Begriffe *Klassifikationsbaum* und *Regressionsbaum* erläutern.
+- wissen, wie man einen Klassifikations- oder Regressionsbaum in R berechnet.
+- wissen, wie man die Modellgüte eines Baummodells quantifizieren kann.
+- können Vor- und Nachteile von Baummodellen anführen.
+- wissen, was man unter einem *Random Forest*-Modell versteht.
+- kennen Verfahren, um die Variablenwichtigkeit zu quantifizeren.
+
+
+
 
 ### Modellierung
 
@@ -39,22 +56,30 @@ $$y=f(x)+\epsilon$$
 
 ### Beispiel Klassifikationsbaum Raucher (I/II)
 
-```{r, echo=FALSE, fig.align="center", out.width="70%"}
-b1 <- rpart(smoker~sex+day+time+size, data=tips)
-rpart.plot(b1)
+```{r Baumverfahren_Beispiel_1, echo=FALSE, fig.align="center", out.width="70%"}
+b1 <- rpart(smoker ~ sex+day+time+size, data = tips)
+rpart.plot(b1, box.palette = viridis(2, alpha = 0.6))
 ```
 
 ### Beispiel Klassifikationsbaum Raucher (II/II)
 
-```{r, echo=FALSE, fig.align="center", out.width="70%"}
-b1b <- rpart(smoker~total_bill+tip, data=tips, minsplit = 30)
-rpart.plot(b1b)
+```{r Baumverfahren_Beispiel_2, echo=FALSE, fig.align="center", out.width="70%"}
+b1b <- rpart(smoker~total_bill+tip, minsplit = 30, data = tips)
+rpart.plot(b1b, box.palette = viridis(2, alpha = 0.6))
 ```
 
 ### Beispiel Partition Klassifikationsbaum Raucher
 
-```{r, echo=FALSE, fig.align="center", out.width="80%"}
-klaR::partimat(smoker~tip+total_bill, data=tips, method="rpart", minsplit=30) 
+```{r Baumverfahren_Beispiel_3, echo=FALSE, fig.align="center", out.width="80%"}
+tips_fac <- tips
+tips_fac$smoker <- as.factor(tips$smoker)
+klaR::partimat(smoker ~ tip + total_bill, 
+                method = "rpart", 
+                minsplit = 30, 
+                imageplot = TRUE, 
+                image.colors = viridis(2, alpha = 0.6), 
+                data = tips_fac)
+rm(tips_fac)
 ```
 
 
@@ -70,7 +95,7 @@ klaR::partimat(smoker~tip+total_bill, data=tips, method="rpart", minsplit=30)
 
 Einlesen der "Tipping"^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] Daten sowie laden des Pakets `rpart`.
 
-```{r, eval= FALSE, message=FALSE}
+```{r Baumverfahren_Vorbereitung_Trinkgelddaten, eval= FALSE, message=FALSE}
 download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
 tips <- read.csv2("tips.csv")
 # Alternativ - heruntergeladene Datei einlesen:
@@ -99,7 +124,7 @@ ergregbaum <- rpart( (tip/total_bill) ~ size +
                        day + time + smoker + sex, 
                      data=tips)
 
-rpart.plot(ergregbaum)
+rpart.plot(ergregbaum, box.palette = viridis(2, alpha = 0.6))
 ```
 
 *Hinweis:* Die obere Zahl in den Wurzeln, Aufteilungen und Blättern gibt $\hat{y}$ an, die Prozentzahl darunter ist der jeweilige Anteil der Beobachtungen (bezogen auf $n$) in diesem Zweig.
@@ -108,9 +133,9 @@ rpart.plot(ergregbaum)
 ```{r, echo=FALSE, fig.align="center", out.width="85%"}
 ergregbaum <- rpart( (tip/total_bill) ~ size + 
                        day + time + smoker + sex, 
-                     data=tips)
+                     data = tips)
 
-rpart.plot(ergregbaum)
+rpart.plot(ergregbaum, box.palette = viridis(2, alpha = 0.6))
 ```
 
 ### Übung `r nextExercise()`: Ergebnis Aufteilung relative Trinkgeldhöhe {.exercise type=A-B-C-D answer=C}
@@ -164,7 +189,7 @@ Weiß nicht (***C***), da die Variable `time` nicht im Baum angezeigt wird.
 ergklassbaum <- rpart(sex ~ size + day + time + smoker, 
                      data=tips)
 
-rpart.plot(ergklassbaum)
+rpart.plot(ergklassbaum, box.palette = viridis(2, alpha = 0.6))
 ```
 
 *Hinweis:* Die obere Zahl in den Wurzeln, Aufteilungen und Blättern gibt $\hat{y}$ an, bei binären Merkmalen also $P(Y=1)$. Somit bezieht sich die angegebene Wahrscheinlichkeit auf die zweite Merkmalsausprägung -- im Vergleich zur ersten, der Referenz. Hier wird also $P(\text{sex=='Male'})$ ausgegeben. Die Prozentzahl darunter ist wie bei metrischen Zielvariablen der jeweilige Anteil der Beobachtungen in diesem Zweig. Der Name der Wurzel, der Aufteilung und des Blattes bezieht sich immer darauf, welche Ausprägung der Zielvariable in diesem Zweig den höheren Anteil hat.
@@ -173,9 +198,9 @@ rpart.plot(ergklassbaum)
 ### Ergebnis Modellierung Geschlecht 
 ```{r, echo=FALSE, fig.align="center", out.width="85%"}
 ergklassbaum <- rpart(sex ~ size + day + time + smoker, 
-                     data=tips)
+                     data = tips)
 
-rpart.plot(ergklassbaum)
+rpart.plot(ergklassbaum, box.palette = viridis(2, alpha = 0.6))
 ```
 
 ### Übung `r nextExercise()`: Ergebnis Aufteilung Modellierung Geschlecht  {.exercise type=A-B-C answer=A}
@@ -243,7 +268,7 @@ Zwei Drittel der Beobachtungen als Lernstichprobe, ein Drittel als Teststichprob
 ```{r}
 set.seed(1896)
 n <- nrow(tips)
-lern <- sample(1:n, size=round(n*(2/3)))
+lern <- sample(1:n, size = round(n*(2/3)))
 
 train <- tips[lern,]
 test <- tips[-lern,]
@@ -252,11 +277,11 @@ test <- tips[-lern,]
 ### Modelle lernen
 
 ```{r}
-ergbase <-lm(total_bill ~ 1, data=train)
+ergbase <- lm(total_bill ~ 1, data = train)
 erglm <- lm(total_bill ~ size + day + time + 
-              smoker + sex, data=train)
+              smoker + sex, data = train)
 ergbaum <- rpart(total_bill ~ size + day + time + 
-                   smoker + sex, data=train)
+                   smoker + sex, data = train)
 ```
 
 ### Modelle anwenden, Vorhersagen
@@ -275,11 +300,11 @@ ydachbaum <- predict(ergbaum, newdata = test)
 
 ```{r}
 # Nullmodell
-sqrt(mean((ytest-ydachbase)^2))
+sqrt(mean((ytest - ydachbase)^2))
 # lm
-sqrt(mean((ytest-ydachlm)^2))
+sqrt(mean((ytest - ydachlm)^2))
 # rpart
-sqrt(mean((ytest-ydachbaum)^2))
+sqrt(mean((ytest - ydachbaum)^2))
 ```
 
 ### Übung `r nextExercise()`: RMSE {.exercise type=A-B-C answer=B}
@@ -298,7 +323,7 @@ Die Lineare Regression hat den kleinsten $RMSE$ mit $RMSE=`r round(sqrt(mean((yt
 ### Vorteile Baumverfahren
 
 - leicht zu erklären und zu interpretieren
-- Evtl. spiegeln sie menschliches Verhalten wieder
+- Evtl. spiegeln sie menschliches Verhalten wider
 - Robust gegen Ausreißer
 - Bimodale/nicht-monotone Zusammenhänge können dargestellt werden
 - Qualitative und quantitative Variablen können direkt verwendet werden, fehlende Werte ggf. als eigene Merkmalsausprägung
@@ -366,11 +391,11 @@ Die Einheitlichkeit steigt am stärksten mit der Rechnungshöhe `total_bill`, da
 
 ```{r}
 ergwald <- randomForest(total_bill ~ size + day + time + 
-                   smoker + sex, data=train)
+                   smoker + sex, data = train)
 
 ydachwald <- predict(ergwald, newdata = test)
 
-sqrt(mean((ytest-ydachwald)^2))
+sqrt(mean((ytest - ydachwald)^2))
 ```
 
 ### Eigenschaften Random Forests

@@ -1,0 +1,626 @@
+```{r setup-Datenvis, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "TrendsDatenvisualisierung",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+```
+
+
+
+
+
+```{r libs-trends-datenvis, include = FALSE}
+library(mosaic)
+library(here)
+library(gridExtra)
+library(tidyverse)
+library(gapminder)
+library(rnaturalearth)
+library(plotly)
+library(plantuml)
+library(DiagrammeR)
+```
+
+
+
+# Trends der Datenvisualisierung
+
+
+## Grundlagen
+
+
+### Werkzeuge
+
+- Datenvisualisierung
+
+  - [Tableau](https://www.tableau.com/)
+  - ggplot2 inkl. [Erweiterungen](http://www.ggplot2-exts.org/gallery/) und [Spickzettel](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+  - [matplotlib](https://matplotlib.org/tutorials/introductory/sample_plots.html)
+  - [Plot.ly](https://plot.ly/)
+  - JavaScript (JS) basierte Libraries:
+    - [D3](https://d3js.org/), [sehr umfangreich](https://github.com/d3/d3/wiki/Gallery)
+    - [JS-Anbindung in R](http://www.htmlwidgets.org/)
+    - [Google Charts](https://developers.google.com/chart/)
+
+
+- Prozess- und Konzeptvisualisierung
+
+  - [Mermaid](https://mermaidjs.github.io/#/)
+  - [GraphViz](https://www.graphviz.org/)
+  - [Unified Modeling Language (UML)](https://en.wikipedia.org/wiki/Unified_Modeling_Language), z.B. [PlantUML](https://www.planttext.com/)
+  
+  
+### Spickzettel: Datenvisualisierung mit `mosaic`
+
+
+
+
+```{r class-stats, echo = FALSE}
+df <- readr::read_csv("ggformula-cheatsheet.csv")
+
+knitr::kable(df)
+```
+
+
+
+### Übung `r nextExercise()`: Geben Sie einen Überblick über Datenvisualisierungen {.exercise type=essay}
+
+
+Beziehen Sie sich auf diese Taxonomie: https://www.data-to-viz.com/
+
+
+:::{.notes}
+individuell
+:::
+
+
+
+
+## Interaktive Diagramme 
+
+
+### Punktediagramme mit `plotly` in R^[vgl. https://plotly-r.com/index.html]
+
+Eine interaktive Version findet sich hier: http://rpubs.com/sebastian-sauer/517914
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r eval = FALSE, echo = TRUE}
+library(plotly)
+
+set.seed(42)
+d <- diamonds %>% 
+  sample_n(1000)
+
+p1 <- gf_point(y ~ carat, 
+               data = d) %>% 
+  gf_smooth(colour = ~cut, 
+            fill = ~ cut) %>% 
+  gf_facet_wrap(~ cut)
+
+ggplotly(p1)
+```
+
+:::
+
+
+:::{.column width="50%"}
+
+```{r plotly-points, echo = FALSE, out.width="90%", dpi = 300}
+set.seed(42)
+d <- diamonds %>% 
+  sample_n(1000)
+
+knitr::include_graphics(file.path(pathToImages, "plotly1.png"))
+```
+
+
+:::
+::::::
+
+
+### Heatmaps
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r eval = FALSE}
+p1 <- gf_bin2d(cut ~ clarity, 
+               data = d) %>% 
+  gf_refine(scale_fill_viridis_c())
+
+ggplotly(p1)
+```
+:::
+
+:::{.column width="50%"}
+
+```{r plotly-bin2d, echo = FALSE, out.width="90%"}
+knitr::include_graphics(file.path(pathToImages, "plotly2.png"))
+```
+
+:::
+::::::
+
+
+### Boxplots
+
+
+
+```{r plotly-boxplot-no-eval, eval = FALSE, out.width="70%", fig.asp = .3}
+p1 <- gf_boxplot(price ~ cut, color = ~ cut, data = d) %>% 
+  gf_refine(scale_fill_viridis_c())
+
+ggplotly(p1)
+```
+
+
+
+```{r plotly-boxplot, echo = FALSE, out.width="90%"}
+knitr::include_graphics(file.path(pathToImages, "plotly-boxplot.png"))
+```
+
+
+
+
+### 3D-Streudiagramme
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r eval = FALSE}
+plot_ly(mpg, 
+        x = ~cty, 
+        y = ~hwy,
+        z = ~cyl) %>%
+  add_markers(color = ~cyl)
+```
+
+
+:::
+
+:::{.column width="50%"}
+
+```{r three-d, echo  = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "plotly-3d.png"))
+```
+
+
+
+:::
+::::::
+
+
+
+### Animationen
+
+::::::{.columns}
+:::{.column width="50%"}
+
+```{r eval = FALSE}
+library(gapminder)
+
+p1 <- gapminder %>% plot_ly(
+    x = ~gdpPercap, 
+    y = ~lifeExp, 
+    size = ~pop, 
+    color = ~continent, 
+    frame = ~year, 
+    text = ~country, 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers') %>%
+  layout(xaxis = list(type = "log"))
+p1
+```
+
+:::
+:::{.column width="50%"}
+
+
+```{r echo = FALSE, out.width = "70%"}
+knitr::include_graphics(file.path(pathToImages, "gapminder.png"))
+```
+
+
+:::
+::::::
+
+Jedem Frame der Animation wird hier ein Jahr zugeordnet.
+
+
+## Geo-Visualisierung (Choroplethen-Diagramme)
+
+
+### Lebenserwartung im Alter von 10 Jahren von 
+
+Forschungsfrage: Wie sehr unterscheidet sich die Lebenserwartung (im Alter von 10 Jahren) zwischen den Ländern?^[Quelle: [Our World in Data](https://ourworldindata.org/), vgl. https://fallstudien.netlify.com/fallstudie_lebenserwartung/fallstudie-lebenserwartung#geovisualisierung]
+
+:::{.tiny}
+```{r}
+d_url <- "https://fallstudien.netlify.com/fallstudie_Lebenserwartung/life-expectancy-at-age-10.csv"
+exp_raw <- read.csv(d_url)
+glimpse(exp_raw)
+```
+
+```{r}
+exp <- exp_raw %>% rename(e10 = e10..years.)  # neu = alt
+exp_2015 <- filter(exp, Year == 2015)  # nur die neuesten Daten
+```
+:::
+
+
+
+### Weltkarte zeichnen
+
+- Weltkarten (verschiedener Auflösung) sind z.B. im R-Paket `rnaturalearth` enthalten.
+- Der Objekttyp `sf` (Simple Feature) ist ein Standard, um Geo-Objekte zu visualisieren.
+
+```{r message = FALSE, out.width = "70%", fig.asp = .5}
+library(rnaturalearth)
+world <- ne_countries(scale = "medium", returnclass = "sf")
+gf_sf(data = world)
+```
+
+
+
+### Daten der Weltkarte mit Daten der Lebenserwartung zusammenführen
+
+- Um die Länder auf der Weltkarte entsprechend der Lebenserwartung einzufärben, müssen alle Daten ein einer Tabelle (einem Dataframe) vorliegen.
+- Tabellen kann man mit einer Variante des Befehls `join()` zusammenführen:
+
+```{r}
+exp_2015_joined <- world %>% 
+  left_join(exp_2015, by = c("sovereignt" = "Entity"))
+```
+
+
+- `left_join(x, y, by)` vereinigt zwei Tabellen `x`, `y` anhand eines Schlüssels `by`, so dass alle Zeilen von `x` und alle Spalten beider Tabellen (`x`, `y`) zurückgegeben werden. Zeilen aus `x` ohne korrespondieren Zeilen in `y` werden als fehlende Werte (`NA`) zurückgegeben.
+
+
+
+### Weltkarte einfärben
+
+```{r geo1}
+gf_sf(fill = ~e10, data = exp_2015_joined) 
+```
+
+
+### Ein paar Schnörkel für die Weltkarte
+
+```{r geo2, out.width="70%"}
+gf_sf(fill = ~e10, data = exp_2015_joined) %>% 
+  gf_refine(scale_fill_viridis_c()) %>% 
+  gf_labs(fill = "Lebenserwartung",
+          title = "Lebenserwartung im Alter von 10 Jahren")
+```
+
+
+### Übung `r nextExercise()`: Wo sind die USA?
+
+Auf der Weltkarte werden u.a. die USA nicht angezeigt. Dass für so ein prominentes Land keine Daten vorliegen, verwundert. 
+
+1.  Stellen Sie eine begründete Vermutung dazu auf!
+2.  Finden Sie eine Lösung!
+
+
+:::{.notes}
+
+S. Fallstudie <https://fallstudien.netlify.com/fallstudie_lebenserwartung/fallstudie-lebenserwartung>
+
+:::
+
+
+
+
+
+
+## Dashbaords
+
+
+### Was sind Dashboards?
+
+
+::::::{.columns}
+:::{.column width="50%"}
+
+- Ein *Dashboard*  ist eine dem *Armaturenbrett des Autos* nachempfundene Anzeigensammlung verschiedener, primär quantitativer Informationen eines Systems.
+- Häufig ist ein Dashboard in mehrere Teile untergliedert oder macht reichlich Gebrauch von Datenvisualisierungen.
+- Dashboards werden zur Überwachung (direkt) bzw. Steuerung (indirekt) eines Systems (z.B. einer Maschine oder eines Unternehmens) verwendet.
+- Dashboards sollen ein geringe Latenz aufweisen, d.h. aktuell sein.
+
+:::
+  
+:::{.column width="50%"}
+
+```{r echo = FALSE, out.width="90%"}
+
+knitr::include_graphics(file.path(pathToImages, "dashboard.png"))
+knitr::include_graphics(file.path(pathToImages, "flexboard-gallery.png"))
+
+```
+
+
+:::{.tiny}
+https://github.com/sol-eng/db-dashboard
+https://db.rstudio.com/best-practices/dashboards/
+https://edgarruiz.shinyapps.io/db-dashboard/
+
+Einige Dashboard-Bilder stammen von RStudio
+:::
+  
+:::
+::::::
+  
+
+
+### Browser- vs. Server basierte Dashboards
+
+::::::{.columns}
+:::{.column width="48%"}
+
+#### Browser basiert
+
+- Schlank und schnell
+- keine weitere Software/Hardware nötig (statisches HTML)
+- Läuft in allen (aktuellen) Browsern
+- Eingeschränkte Funktionalität, zumeist nur Diagramme auf JavaScript-Basis
+
+:::
+:::{.column width="48%"}
+
+
+#### Server basiert
+
+- Aufwändig
+- Mächtig
+- Server nötig, der Dashboard mit Daten (Ergebnissen von Berechnungen) versorgt
+- Die ganze Bandbreite moderner Analysen können direkt vom Dashboard berechnet werden
+
+
+:::
+::::::
+
+
+### Werkzeuge
+
+Es gibt mehrere Werkzeuge, um Dashboards zu erstellen, z.B.:
+
+#### In R
+  
+- [Shiny](https://www.showmeshiny.com/) ([Beispiel](https://rich.shinyapps.io/college_map/))
+- [Flexdashboards](https://rmarkdown.rstudio.com/flexdashboard/) ([Beispiele](https://rmarkdown.rstudio.com/flexdashboard/examples.html), [Beispiel](https://beta.rstudioconnect.com/jjallaire/htmlwidgets-highcharter/htmlwidgets-highcharter.html))
+- [Plotly](https://dash.plot.ly/) ([Beispiele](https://dash-gallery.plotly.host/Portal/?search=%20[Energy]))
+
+
+#### Andere
+
+- [Tableau](https://www.tableau.com/trial/dashboards?utm_campaign_id=2017047&utm_campaign=Prospecting-ANLYTDASH-ALL-ALL-ALL-ALL&utm_medium=Paid+Search&utm_source=Google+Search&utm_language=EN&utm_country=DACH&kw=dashboard%20tools&adgroup=CTX-Dashboards-Tool-EN-E&adused=330063895434&matchtype=e&placement=&gclid=Cj0KCQjwp5_qBRDBARIsANxdciksFWIN8vyS-1alJoVjSHC8AdFUK-767qx9RshWz3tEK4PO2yG1ZPQaAmETEALw_wcB&gclsrc=aw.ds)
+- [Qlik](https://www.qlik.com/us/)
+- [MS PowerBI](https://powerbi.microsoft.com/en-us/)
+
+
+
+
+
+  
+  
+  
+
+
+  
+  
+
+
+
+### Dashboards mit Flexdashboards^[https://rmarkdown.rstudio.com/flexdashboard/]
+
+
+- Auf Basis von Textdateien (Markdown), daher gut steuerbar
+- Open Source, keine Lizenzkosten
+- in aktiver Entwicklung
+- Als R-Paket implementiert
+- Einfach zu entwickeln^[s. Tutorial: https://beta.rstudioconnect.com/jmcphers/flexdashboards/flexdashboards.html]
+- Keine Verarbeitung via R möglich 
+
+
+
+
+
+
+  
+
+
+
+
+### Erste Schritte 
+
+- R-Paket `flexdashboard` muss installiert sein.
+- RStudio: File > New File > R Markdown ... From Template > Flex Dashboard
+
+- Ein Flexboard ist in Seiten, Spalten und Zeilen aufgeteilt^[Bildquelle: https://rmarkdown.rstudio.com/flexdashboard/]:
+
+```{r out.width = "70%", echo = FALSE}
+knitr::include_graphics(file.path(pathToImages, "flexboard-code.png"))
+```
+
+
+
+### Übung `r nextExercise()`: Einfache Fallstudie zu Dashboards {.exercise type=essay}
+
+- Kopieren Sie den Code dieses Fallbeispiels: http://rpubs.com/sebastian-sauer/517705 (oben rechts: "Source Code").
+- Adaptieren Sie das Beispiel nach eigenem Ermessen.
+
+```{r p-dashboard, out.width="70%", echo = FALSE}
+
+knitr::include_graphics(file.path(pathToImages, "dashboard-cs.png"))
+
+```
+
+
+
+:::{.notes}
+Individuell
+:::
+
+
+
+## Prozess- und Konzeptvisualisierung
+
+
+
+### Systemvisualisierung mit UML
+
+- UML ([United Modeling Language](https://www.uml.org/what-is-uml.htm)) ist eine Sprache, um Systeme darzustellen.
+- Hauptvisualisierungen:
+  - Wenn-Dann-Relationen (Abläufe, Prozesse)
+  - Teil-Ganzes-Relationen (Bestandteile, Klassen)
+  
+- [PlantUML](http://plantuml.com/faq) ist eine Software, um UML-basierte Modelle zu visualisieren
+  - Einfaches Web-Interface: https://www.planttext.com/
+  - Viele Beispiele finden sich hier: https://real-world-plantuml.com/
+  - R-Paket `plantuml`^[https://github.com/rkrug/plantuml]
+    - basiert auf [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) und [GraphViz](https://www.graphviz.org/) (beide müssen installiert sein)
+    - Open Source
+  
+  
+Installation des PlantUML-R-Pakets: 
+  
+```{r eval = FALSE}
+install.packages("devtools")
+devtools::install_github("rkrug/plantuml")
+updatePlantumlJar() # update Programm
+```
+
+
+
+
+
+
+
+
+### Demo: Wenn-Dann-Relationen
+
+::::::{.columns}
+:::{.column width="40%"}
+```{r eval = FALSE}
+library(plantuml)
+x <- '
+(*) --> "Initialization"
+
+if "Some Test" then
+  -->[true] "Some Activity"
+  --> "Another activity"
+  -right-> (*)
+else
+  ->[false] "Something else"
+  -->[Ending process] (*)
+endif
+'
+x <- plantuml(x)
+
+plot(x = x)
+```
+:::
+
+:::{.column width="40%"}
+
+```{r echo = FALSE, out.width="100%"}
+knitr::include_graphics(file.path(pathToImages, "prozess-uml.png"))
+```
+:::
+::::::
+
+
+
+
+
+### Prozessvisualisierung mit `mermaid`^[Prozessvisualisierung ist gut implementiert mit `mermaid` über `DiagrammeR` in R, aber Konzeptvisualisierung ist in `DiagrammeR` offenbar noch nicht gut angebunden.]
+
+
+::::::{.columns}
+:::{.column width="40%"}
+```{r eval = FALSE}
+library(diagrammeR)
+mermaid("
+graph TB
+  A-->B
+  A-->C
+  C-->E
+  B-->D
+  C-->D
+  D-->F
+  E-->F
+")
+```
+
+
+[Live Editor](https://mermaidjs.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiY2xhc3NEaWFncmFtXG5DbGFzczAxIDx8LS0gQXZlcnlMb25nQ2xhc3MgOiBDb29sXG5DbGFzczAzICotLSBDbGFzczA0XG5DbGFzczA1IG8tLSBDbGFzczA2XG5DbGFzczA3IC4uIENsYXNzMDhcbkNsYXNzMDkgLS0-IEMyIDogV2hlcmUgYW0gaT9cbkNsYXNzMDkgLS0qIEMzXG5DbGFzczA5IC0tfD4gQ2xhc3MwN1xuQ2xhc3MwNyA6IGVxdWFscygpXG5DbGFzczA3IDogT2JqZWN0W10gZWxlbWVudERhdGFcbkNsYXNzMDEgOiBzaXplKClcbkNsYXNzMDEgOiBpbnQgY2hpbXBcbkNsYXNzMDEgOiBpbnQgZ29yaWxsYVxuQ2xhc3MwOCA8LS0-IEMyOiBDb29sIGxhYmVsIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifX0)
+
+:::
+
+
+:::{.column width="40%"}
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics(file.path(pathToImages, "mermaid"))
+```
+
+
+
+
+
+
+:::
+::::::
+
+
+
+
+
+
+
+### Demo: Teil-Ganzes-Visualisierung^[http://plantuml.com/wbs-diagram]
+
+
+::::::{.columns}
+:::{.column width="40%"}
+
+```
+@startwbs
+* Business Process Modelling WBS
+** Launch the project
+*** Part 1-1
+*** Paret 1-2
+** Design phase
+*** Part 2-1
+**** Part 2-1-1
+**** Part 2-1-2
+*** Part 2-2
+*** Part 2-3
+** Part 3
+@endwbs
+```
+
+:::
+:::{.column width="40%"}
+
+```{r echo = FALSE, out.width="100%"}
+knitr::include_graphics(file.path(pathToImages, "plantuml1.png"))
+```
+
+:::
+::::::
+
+

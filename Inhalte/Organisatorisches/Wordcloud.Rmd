@@ -1,6 +1,6 @@
 ### Themen der Vorlesung
 
 ```{r, echo=FALSE, fig.align="center", out.width="100%"}
-knitr::include_graphics(file.path(pathToImages,"wordcloud.pdf"))
+knitr::include_graphics(file.path(pathToImages,"wordcloud.pdf"), error = FALSE)
 ```
 

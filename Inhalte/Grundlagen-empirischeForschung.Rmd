@@ -1,0 +1,276 @@
+```{r setup-Grundlagen-empirischeForschung, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser
+#%   
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "0-Grundlagen-empirischeForschung",  # Dateiname ohne Suffix
+    "Grundlagen"                  # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+library(mosaic)
+```
+
+# Grundlagen empirischer Forschung
+
+### Nicht-empirische Wissenschaften
+
+
+| Formalwissenschaften  | Geisteswissenschaften  |
+|-----------------------|------------------------|
+| Mathematik            | Rechtswissenschaft     |
+| Philosophie           | Medienwissenschaft     | 
+| etc.                  | Sprachwissenschaft     | 
+|                       | Geschichte             | 
+|                       | Theologie              | 
+|                       | etc.                   | 
+
+
+### Empirische Wissenschaften
+
+
+| Sozialwissenschaften^[auch: Human- / Gesellschaftswissenschaften]| Naturwissenschaften  | Technikwissenschaften^[auch :Ingenieurwissenschaften] |
+|---------------------------------------------|-----------------------|--------------------|
+| Soziologie                                  | Physik                | Maschinenbau       |
+| Wirtschaftswissenschaft                     | Chemie                | Elektrotechnik     |
+| Kommunikations-wissenschaft                 | Biologie              | Verfahrens-technik |
+| Psychologie                                 | Astronomie            | Informatik         |
+| Medizin                                     | etc.                  | etc.               |
+| etc.                                        |                       |                    |
+
+
+## Wissenschaftliche Forschung und Erkenntnisgewinn
+
+### Wissenschaftliche Forschung
+
+Wer wissenschaftliche Forschung betreibt, sucht 
+
+- mithilfe anerkannter wissenschaftlicher Methoden und Methodologien, 
+- auf der Basis des bisherigen Forschungsstandes, 
+- zielgerichtet, 
+- nach gesicherten neuen Erkenntnissen, 
+- dokumentiert nachvollziehbar den Forschungsprozess und Ergebnisse,
+- stellt die Studie in Vorträgen und Publikationen der Fachöffentlichkeit vor.
+
+=> [Wissenschaftlicher Erkenntnisgewinn]{.cemph} 
+
+
+### Wissenschaftlicher Erkenntnisgewinn
+
+- Wissenschaftlicher Erkenntnisgewinn basiert in Erfahrungswissenschaften wie den Sozial- und Humanwissenschaften auf der systematischen **Sammlung, Aufbereitung und Analyse** von **empirischen Daten** im Rahmen eines geordneten und dokumentierten **Forschungsprozesses**. 
+
+- Des Weiteren ist der empirische Forschungsprozess **theoriebasiert**. In seinem Verlauf werden **wissenschaftliche Theorien** über den Forschungsgegenstand (sowie über die Forschungsmethodik) **angewendet** und **geprüft** oder **gebildet** und **weiterentwickelt**. 
+
+- Dabei kommen **sozialwissenschaftliche Methoden** der Untersuchungsplanung, Stichprobenziehung, Datenerhebung, Datenaufbereitung und Datenanalyse zum Einsatz. 
+
+- Erst mit Bezug auf Theorien sind empirische Daten sinnvoll interpretierbar.
+
+### Empirische Daten
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "EmpirischeDaten.png"), error=FALSE)
+```
+
+
+### Wissenschaftliche Methoden
+
+Wissenschaftliche Methoden sind in der empirischen Sozialforschung vor allem **einzelne Verfahren bzw. Techniken** der **Datenerhebung und Datenanalyse**. 
+
+Bsp.: Psychologische Testverfahren: 
+
+- Intelligenztest, 
+- physiologische Messungen wie die EKG-Messung oder 
+- Interviewtechniken wie das Leitfaden-Interview
+
+Bsp.: Wissenschaftliche Datenanalysemethoden
+
+- qualitative Inhaltsanalyse oder 
+- statistische Varianzanalyse.
+
+
+### Wissenschafltiche Methodologie
+
+Wissenschaftliche **Methodologien** oder **Forschungsstrategien** sind Anweisungen zur Gestaltung des Forschungsprozesses und des Untersuchungsdesigns. 
+
+#### Methodologien geben an, in **welcher Weise** einzelne Methoden in einen Untersuchungsplan zu **integrieren** sind und was beim Durchlaufen des Forschungsprozesses zu beachten ist, um Wissenschaftlichkeit und hohe Aussagekraft zu gewährleisten. 
+
+- So stehen z. B. hinter ethnografischer Feldforschung oder experimenteller Laborforschung unterschiedliche Methodologien, welche die Basis bilden für Entscheidungen über Untersuchungsbedingungen, Untersuchungszeitpunkte, Untersuchungsdauer, Auswahl von Untersuchungspersonen, Anzahl und Rolle der Forschenden, Art der Dokumentation der Daten etc. 
+
+- Im Rahmen einer bestimmten Methodologie können unterschiedliche Methoden einzeln oder kombiniert zum Einsatz kommen. In einer zweiten Begriffsbedeutung meint Methodologie die wissenschaftstheoretische Begründung der Methoden bzw. die Lehre von den wissenschaftlichen Methoden.
+
+
+### Wichtige quantitative Methodologien
+
+- **Umfrageforschung**: Sehr großen und teilweise bevölkerungsrepräsentativen Stichproben, welche anhand standardisierter Fragebögen untersucht werden. 
+
+- **Experimentalforschung**: Prüfung der Ursache-Wirkungs-Relationen durch kontrollierte Variation der Bedingungen und Messung der Effekte im Feld oder im Labor. 
+
+
+### Wichtige qualitative Methodologien:
+
+- **Ethnografische Feldforschung**: Die Forschenden tauchen über längere Zeiträume hinweg in das untersuchte soziale Feld ein, um durch Miterleben des Alltags ein umfassendes Verständnis zu gewinnen. 
+
+- **Biografieforschung**: Betrachtung der interessierenden sozialen Sachverhalte im Kontext der Lebensgeschichten von Menschen und im Zuge von narrativen Interviews Raum geben für ausführliche Erzählungen von Lebensereignissen. 
+
+
+### Forschungsthema und Forschungsproblem
+
+**Das Forschungsthema benennt einen [Untersuchungsgegenstand]{.cemph} **
+
+**Das Forschungsproblem kennzeichnet**,
+
+- zu welchen Aspekten des [Untersuchungsgegenstandes]{.cemph},
+- welche Erkenntnisse,  
+- auf welcher theoretischen, 
+- empirischen und methodischen Basis gewonnen werden sollen. 
+
+=> Das Forschungsproblem wird auch oft als **Fragestellung einer Studie** bezeichnet und in mehrere **Forschungsfragen** und/oder **-hypothesen** ausdifferenziert
+
+
+### Bsp: Forschungsthema Computerspiele
+
+Drei verschiedene:
+
+- Forschungsprobleme
+- Forschungsfragen / -hypothesen 
+- Untersuchungsdesigns
+
+### Qualitative Studie
+
+- **Forschungsproblem:** Forschungslücke in der Literatur: Jugendliche gelten als die typischen Computer-spieler und werden oft untersucht, aber was kennzeichnet das Erleben und Verhalten älterer Computerspielender?
+
+- **Vier Forschungsfragen:**
+
+    - F1: Warum bzw. aus welchem Anlass haben die älteren Spieler ursprünglich mit dem Computerspielen begonnen? 
+    - F2: Wie haben die älteren Spieler die für Computerspiele notwendigen Kenntnisse und Fähigkeiten erworben? 
+    - F3: Wie integrieren die älteren Spieler das Computerspielen in ihren Alltag? 
+    - F4: Wie und durch welche Einflussfaktoren (z. B. Familie, Beruf) verändert sich das Spielverhalten der älteren Spieler mit der Zeit?
+
+- **Untersuchungsdesign und Datenerhebung:** Explorative Interviewstudie, n = 21 Computerspielerinnen und -spieler im Alter zwischen 35 und 73 Jahren aus Deutschland
+
+
+### Quantitative Studie
+
+- **Forschungsproblem:** Zwei konkurrierende Thesen in der Literatur: Führen gewalthaltige Computerspielinhalte (weil sie negative Emotionen wecken) zu einer Verschlechterung der Spielleistung oder umgekehrt (weil sie positive Emotionen auslösen) zu einer Verbesserung der Spielleistung?
+
+- **Eine Forschungshypothese** auf der Basis der zweitgenannten Theorie: H1: Mit steigender Gewalthaltigkeit der Spielinhalte (nicht gewalthaltiges - moderat gewalthaltiges - sehr gewalthaltiges Spiel) steigt die Spielleistung (Schnelligkeit und Genauigkeit von Treffern). (Gerichtete Unterschiedshypothese mit 3 Gruppen, UV: Grad der Gewalthaltigkeit des Spiels mit 3 Ausprägungen, AV: Spielleistung)
+
+- **Untersuchungsdesign und Datenerhebung**: Laborexperiment mit n = 50 männlichen Studenten ohne Erfahrung mit gewalthaltigen Computerspielen aus Deutschland
+
+
+### Quantitative Studie
+
+- **Forschungsproblem:** Forschungslücke in der Literatur: Die Nutzung von Computerspielen wurde bislang nicht systematisch daraufhin untersucht, inwiefern sie Erholung vom Arbeitsstress bietet. Das theoretisch gut elaborierte Konzept der „Erholung“ wird theorieprüfend auf Computerspiele angewendet.
+
+- **Sechs Forschungshypothesen** (Auszug)
+
+    - H1: Je erholsamer das Computerspielen empfunden wird, umso häufiger wird für Erholungszwecke auf Computerspiele zurückgegriffen. (Bivariate positiv gerichtete Zusammenhangshypothese; Prädiktor: Erholsamkeitserleben des Computerspiels, Kriterium: Häufigkeit des Computerspielens zu Erholungszwecken)
+    - H2: Je mehr arbeitsbezogene Erschöpfung empfunden wird, umso häufiger wird für Erholungszwecke auf Computerspiele zurückgegriffen. (Bivariate positiv gerichtete Zusammenhangshypothese)
+
+- **Untersuchungsdesign und Datenerhebung:** Online-Befragung von n = 1.614 Internet-Usern (4% Frauen; Durchschnittsalter 23 Jahre), rekrutiert über Gamebezogene Websites
+
+
+## Theoretischer Hintergrund und Stand der Forschung
+
+### Grundsätzliches
+
+- Jede wissenschaftliche Studie sollte auf den **aktuellen Forschungsstand** („state of research“) eingehen, um das gewählte Forschungsproblem bzw. die Fragestellung der Untersuchung zu verorten.
+- Die Darstellung des Forschungsstandes kann mehr oder minder ausführlich geschehen  in wenigen Sätzen oder auf mehreren Seiten. 
+- Explorative und deskriptive Studien begründen ihren Satz an **Forschungsfragen** mit Verweisen auf frühere Studien sowie Forschungslücken. 
+- Demgegenüber werden **Forschungshypothesen** in explanativen Studien meist aus Theorien abgeleitet 
+
+
+### Theoretischer Hintergrund
+
+In der Regel identifiziert man im Rahmen der **Literaturrecherche** eine oder sogar eine Reihe von etablierten wissenschaftlichen Theorien, die auf das gewählte Forschungsproblem anwendbar sind. 
+
+
+### Stand der Forschung
+
+Bei der Darstellung des Forschungsstandes sollten folgende Fragen beantwortet werden:
+
+- Wie hat sich die Forschung zum Thema in den letzten Jahren bzw. Jahrzehnten entwickelt? 
+- Welche zentralen Forschungslinien und Befunde zum Thema sind auszumachen? 
+- Welche Anwendungsfelder hat die Forschung zu diesem Themengebiet? 
+- Wie ist der Forschungsstand zum Thema insgesamt zu beurteilen?
+- Wie ordnet sich die eigene Studie in den Forschungsstand ein? 
+
+
+### Forschungsfragen
+
+- Die Forschungsfrage basiert auf dem **bisherigen Forschungsstand** und zielt v. a. auf **Forschungslücken** ab. 
+- Sie fordert dazu auf zu ermitteln, ob 
+
+    - Regelhaftigkeiten vorliegen, 
+    - welche Beschaffenheit sie haben, 
+    - in welche Richtung sie weisen, 
+    - wie stark sie sind, 
+    - wie sie zustande kommen etc. 
+
+- Die Beantwortung von Forschungsfragen trägt zur **Erkundung eines Sachverhaltes** sowie zur **Generierung neuer Theorien** bei.
+- Bei Forschungsfragen wird **ergebnisoffen** gefragt, ob ein Effekt existiert (Richtung, Größe, qualitative Beschaffenheit).
+- Empirische Befunde zu Forschungsfragen dienen der Gegenstandsbeschreibung und Hypothesenbildung.
+
+
+### Forschungshypothesen
+
+- Die **Forschungshypothese** wird aus etablierten **Theorien** und / oder gut gesicherten empirischen Befunden abgeleitet und postuliert die Existenz, Richtung und Stärke eines bestimmten Effekts. 
+- Anhand von **Hypothesenprüfungen** werden bestehende Theorien getestet und weiterentwickelt.
+- Zu jeder **Forschungshypothese** bzw. **Alternativhypothese** (H1) lässt sich eine komplementäre Nullhypothese (H0) aufstellen, die den postulierten Effekt negiert. 
+- Das Hypothesenpaar bestehend aus H1 und H0 bildet die Grundlage des **Nullhypothesen-Signifikanztests**.
+- In Forschungsberichten und Publikationen werden **nur die Forschungshypothesen** angegeben.
+
+
+## Forschungsprozess
+
+### Forschungsprozess – schematische Darstellung
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "EmpForschungsprozess.png"), error=FALSE)
+```
+
+
+
+## Untersuchungsdesign
+
+### Bedeutung
+
+Das Untersuchungsdesign (Untersuchungsart, Untersuchungsplan, Forschungsdesign, Studiendesign, „research design“) charakterisiert ganz allgemein die **methodische Vorgehensweise** einer Studie. 
+
+
+### Klassifikationskriterien für Untersuchungsdesigns - illustrativ
+
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Untersuchungsdesign.png"), error=FALSE)
+```
+
+
+### Empfohlene R Pakete für die Datenanalyse
+
+- qualitativ
+
+    - *quanteda* zur Verwaltung und Analyse von Textdaten 
+    - *RQDA* zur Durchführung qualitativer Datenanalyse
+
+- quantitativ
+    
+    - *mosaic* für die deskriptive Analyse und alle Signifikanztests
+    - *plspm* für Strukturgleichungsmodellierung
+
+### Literatur
+
+- Bryman, A., Bell, E., (2015), Business Research Methods, 4th edition, Oxford. 
+- Döring, N., Bortz, J. (2016), Forschungsmethoden und Evaluation in den Sozial- und Humanwissenschaften, 5. Auflage, Heidelberg.
+- Kuß, A., Eisend, M. (2016) Grundlagen empirischer Forschung, Wiesbaden.
+
+
+
+
+```{r finish-Grundlagen-empirischeForschung, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

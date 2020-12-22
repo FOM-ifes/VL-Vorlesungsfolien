@@ -1,0 +1,4 @@
+Wahrheit,Als negativ (-) vorhergesagt,Als positiv (+) vorhergesagt,Summe
+negativ (-),Richtig negativ ,Falsch positiv,N
+positiv (+),Falsch negativ,Richtig positiv,P
+Summe,N*,P*,N+P

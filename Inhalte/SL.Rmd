@@ -1,0 +1,100 @@
+```{r setup-SL, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Bianca Krol
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "SL",                # Dateiname ohne Suffix
+    "SL"         # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+# Science Lounge
+
+<!-- ```{r child = './Organisatorisches/Literatur.Rmd'} -->
+<!-- ``` -->
+
+<!-- ```{r child = './Organisatorisches/LizenzVersion.Rmd'} -->
+<!-- ``` -->
+
+
+### Data Literacy
+
+*\LARGE Because all of science itself will soon become data that can be mined, the imminent revolution in data science is not about mere “scaling up,” but instead the emergence of scientific studies of data analysis science-wide.*
+
+David Donoho (2017): 50 Years of Data Science, Journal of Computational and Graphical Statistics, 26:4, 745-766, DOI: 10.1080/10618600.2017.1384734
+
+
+### Academic Institutions Should Prepare for a Data-Driven Workplace
+
+WASHINGTON – All U.S. undergraduate students should develop a basic understanding of data science to prepare them adequately for the workforce, says a new report from the National Academies of Sciences, Engineering, and Medicine. The report examines the importance and benefits of postsecondary data science education and recommends offering a range of educational pathways, attracting students with varied backgrounds to the discipline, and embedding ethics and privacy into the curriculum.
+
+“We live in a data-driven era in which people constantly generate data about their whereabouts, habits, and preferences. The evolution and spread of data science creates a demand for more, well-trained data science talent,” said Laura Haas, co-chair of the committee that wrote the report, and dean of the College of Information and Computer Sciences at the University of Massachusetts, Amherst. “The undergraduate setting is a critical link in offering more data science exposure to students and expanding the supply of data science talent.”^[[http://www8.nationalacademies.org/onpinews/newsitem.aspx?RecordID=25104](http://www8.nationalacademies.org/onpinews/newsitem.aspx?RecordID=25104)]
+
+
+### Cartoon: Statistik
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_07-2017.jpg", "cartoon0717.jpg", pathToImages)
+```
+"Traue Dich, in die Daten einzutauchen, navigiere mit Statistik und tauche erfrischt mit sinnvollen Erkenntnissen wieder auf."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2017/results) &copy; J.B. Landers, Überschrift D. Nandy]
+
+### Cartoon: Kausalität
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_03-2017.jpg", "cartoon0317.jpg", pathToImages)
+```
+"Mal sehen, was das Rad der nicht-ursächlichen Beziehungen diesmal als stärksten Prädiktor für die Krankheit X ausgibt."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2017/results) &copy; J.B. Landers, Überschrift M. Posner]
+
+### Cartoon: Computereinsatz in der Statistik
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
+```
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+
+### Cartoon: Visualisierung
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_08-2016.jpg", "cartoon0816.jpg", pathToImages)
+```
+"Ich weiß, dass Datenvisualisierung ein heißes Thema ist, aber gehst Du hier nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2016/results) &copy; J.B. Landers, Überschrift B. Osyk]
+
+
+### Cartoon: Simulation
+
+```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_10-2018.jpg", "cartoon1018.jpg", pathToImages)
+```
+"Bevor es Computer gab, musste man Zufallszahlen per Hand erzeugen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2018/results) &copy; J.B. Landers, Überschrift A. Bonifonte]
+
+### Cartoon: Man kann die $H_0$ nicht bestätigen, höchstens nicht verwerfen
+
+```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_11-2016.jpg", "cartoon1116.jpg", pathToImages)
+```
+"Dr. Frankenstein akzeptierte die Nullhypothese zum letzten Mal."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2016/results) &copy; J.B. Landers, Überschrift A. Boito]
+
+### Cartoon: Signifikanz
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_04-2018.jpg", "cartoon0418.jpg", pathToImages)
+```
+"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Überschrift D. Nandy]
+
+```{r, include=FALSE}
+abschluss <<- TRUE
+rm(pathToImages)
+```

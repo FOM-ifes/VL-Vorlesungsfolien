@@ -9,135 +9,190 @@ initPart(
     "Evaluation",  # Dateiname ohne Suffix
     "Evaluation"       # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 ```
 
-# `r nextChapter()` Evaluationsforschung
-
-### Grundlagen: Definition
-
-**(Wissenschaftliche) Evaluation (nach Balzer, 2005): Bewertung eines Gegenstandes nach zuvor festgelegten Zielen und explizit auf den Sachverhalt bezogenen und begründeten Kriterien**
-
-  - Unter Zuhilfenahme sozialwissenschaftlicher Methoden und durch Personen, die dafür besonders qualifiziert sind
-  - systematisch und evidenzbasiert
-  - Rückmeldung verwertbarer Ergebnisse (Beschreibung, Interpretation, Empfehlung)
-  - Zum Zwecke der Unterstützung und Optimierung des Evaluationsgegenstandes
- 
-<!-- entscheiden, ob diese Folie mit der Definition oder die darauf folgende -->
-
-### Grundlagen: Alternative Definition 
-
-Die **Evaluationsforschung** („evaluation research“) bzw. **wissenschaftliche Evaluation** („evaluation“) (nach **Bortz/Döring, 2016**)
-
-  - nutzt sozialwissenschaftliche Methoden, 
-  - um einen **Evaluationsgegenstand** (z. B. ein Produkt oder eine Maßnahme) unter Berücksichtigung der relevanten **Anspruchsgruppen** (z. B. Patienten, Angehörige, Produktenwickler, Evaluationsauftraggeber)
-  - anhand bestimmter **Evaluationskriterien** (z.B. Akzeptanz, Wirksamkeit, Effizienz, Nachhaltigkeit) und Maßgaben zu ihren Ausprägungen zu bewerten
-  - erfüllt im Ergebnis unterschiedliche Evaluationsfunktionen (z. B. Legitimations- oder Optimierungsfunktion), was eine aktive Evaluationsnutzung, d. h. ein praktisches Aufgreifen der laufenden
-und/oder abschließenden **Evaluationsergebnisse** verlangt (z. B. unterstützt durch schriftliche Reports, mündliche Berichte und/oder Workshops des Evaluationsteams für die relevanten Anspruchsgruppen)
+# Evaluationsforschung
 
 
-### Fragestellungen Evaluation
+### Lernziele {exclude-only=NOlernziele}
 
-```{r echo=FALSE, out.width = "60%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Fragestellung.png"))
-```
 
+Die Studierenden ...
+
+- den Begriff Evaluationsforschung definiern und abgrenzen.
+- kennen die Einsatzgebiete der Evaluationsforschung.
+- kennen zentrale Begriffe und können diese aktiv nutzen und definieren.
+- kennen den Ablauf und die Standards der Evaluationsforschung.
+- kennen die Evalutationsphasen.
+- sind in der Lage die Evaluation an (eigenen) Forschungsprojekten in groben Zügen zu planen.
+
+
+
+
+## Definition der Evaluationsforschung
+
+### Definition der Evaluationsforschung I
+
+**Es gibt keine einheitliche Definition der Evaluationsforschung**
+
+**Definition 1:**
+
+Nach ***Westermann (2002)*** muss eine Evaluation – eine Bewertung – systematisch unter Verwendung und Beachtung wissenschaftlicher Methoden (primär sozialwissenschaftl. Methoden) erfolgen.^[Westermann, R . (2002). Westermann, R. (2002). Merkmale und Varianten von Evaluationen: Überblick und Klassifikation. Zeitschrift für Psychologie, 210 (1), 4-26.] 
+
+**Definition 2:**
+
+Nach ***Spiel (2003)*** untersucht die Evaluationsforschung wissenschaftsgestützt unter Berücksichtigung geltender Standards die Effektivität und Effizienz von Gegenständen.^[Spiel, C. (2003). Wissenschaftliche Evaluation. Eine Maßnahme der Qualitätssicherung. Erziehung und Unterricht, 153(7-8).]  
+*(Effektivität: Ausmaß der Zielerreichung – ist die Maßnahme geeignet, Effizienz = Verhältnis von Aufwand und Nutzen)*
+
+
+### Definition der Evaluationsforschung II
+**Definition 3:**
+
+Nach ***Balzer (2005)***
+
+> [...] Die Evaluation ist ein Prozess der Optimierung der Überprüfung von Maßnahmen bei dem nach zuvor festgelegten Zielen und explizit auf den Sachverhalt	bezogenen und begründeten Kriterien ein Evaluationsgegenstand bewertet wird. Dies geschieht unter Zuhilfenahme sozialwissenschaftlicher Methoden durch Personen, welche hierfür besonders qualifiziert sind. [...] ^[Balzer, L.(2005). Wie werden Evaluationsprojekte erfolgreich? Ein integrierender theoretischer Ansatz und eine empirische Studie zum Evaluationsprozess. Landau: Empirische Pädagogik.]
+
+**Begriff:** *Evaluation (engl.: "value" = Wert, "to evaluate" = bewerten)*
+
+Die wissenschaftliche Evaluation ist die Bewertung, gestützt auf empirischen Daten, die unter Einsatz (sozial-)wissenschaftlicher Methoden systematisch und evidenzbasiertund regelgeleitet erhoben werden. 
+
+In der Evaluationsforschung kommen sowohl qualitative, als auch quantitative Methoden der empirischen Sozialforschung zum Einsatz.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.]
+
+
+## Einsatzgebiete der Evaluationsforschung
+### Evaluation als Auftrags- und Anwendungsforschung
+
+- [Angewandte Forschung]{.cstrong}
+Evaluationsforschung ist ein Teilgebiet der angewandten (Sozial-)Forschung. 
+Ziele der Evaluation sind von Forscher*innen/ Evaluatoren/-innen selbst gesetzt.   
+
+- [Auftragsforschung]{.cstrong}
+Bei der Auftragsforschung sind die Zielsetzungen und Rahmenbedingungen von extern festgelegt (z.B. Kommissionen, Ministerien).
+Die Ergebnisse müssen nicht nur wissenschaftlich fundiert sein, sondern auch für die Praxis nutzbar sein.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.]
+
+Somit stellt die Auftragsforschung häufig eine Diskrepanz zwischen methodisch-wissenschaftlichem Anspruch und der Kosteneffizienz dar.^[Spiel, C. et al. (2010). Grundlagen der Evaluationsforschung. In H. Holling H. & B. Schmitz (Hrsg.), Handbuch Statistik, Methoden und Evaluation (S. 223-232). Göttingen: Hogrefe.]
+
+[Personen, die mit der Evaluation beauftragt sind]{.cemph}
+
+**intern**: Evaluierende sind Angehörige derselben Organisation, bzw. des Projektträgers.
+
+**extern**: Außenstehende, projektferne Personen werden mit der Evaluation beauftragt. 
+
+
+### Der Evaluation verwandte Konzepte
+
+[Qualitätsmanagement (QM)]{.cstrong} und [Monitoring]{.cstrong}
+
+*Ziel des QM*: Beschreibung, Bewertung und Optimierung von Vorgängen oder Organisationen. Basis sind empirisch ermittelbare Sachverhalte. Anforderungen häufig international normiert und festgelegt.
+
+*Ziel des Monitoring*: regelmäßige, systematische Erfassung von Messungen/ Beobachtungen und dadurch die Überwachung der Durchführung z.B. eines Prozesses.
+
+*Unterschied zur Evaluation*:
+QM und Monitoring (auch Controlling) sind kontinuierliche, datenbasierte Verfahren um Maßnahmen/Organisationen zu bewerten und optimieren. 
+Die wissenschaftliche Evaluation ist dagegen eher punktuell ausgeführt. ^[Spiel, C. et al. (2010). Grundlagen der Evaluationsforschung. In H. Holling H. & B. Schmitz (Hrsg.), Handbuch Statistik, Methoden und Evaluation (S. 223-232). Göttingen: Hogrefe.]^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.]
+^[Westermann, R. (2002). Merkmale und Varianten von Evaluationen: Überblick und Klassifikation. Zeitschrift für Psychologie, 210 (1), 4-26. ]  
+
+
+### Was, wer, wie wird evaluiert
+
+1. [Was wird evaluiert?]{.cstrong}  
+• Programme, Interventionen, Organisationen   
+• Z.B. ein Projekt in Planung, ein bereits implementiertes   Projekt, Effekt einer Intervention   
+• Notwendige Informationen: Ziel der Intervention, Wer ist die Zielgruppe, Was ist Evaluierungsgegenstand.   
+2. [Wer evaluiert?]{.cstrong}  
+• „Personen, die zur Evaluation legitimiert u. besonder befähigt sind.“   
+• Externe Auftragsforscher/ Wissenschaftler, Betroffene…   
+3. [Wie wird evaluiert?]{.cstrong}    
+• Experimentell/ nicht-experimentell, formativ/ summativ, qualit./ quant. Methoden. Welche Methoden werden angewandt (in jeder Instanz)   
+4. [Nach welchen Kriterien wird evaluiert?]{.cstrong}   
+• Zielerreichung, Effekte, Effizienz, Sozialverträglichkeit, Zielgruppenbezug   
+
+
+## Zentrale Begriffe
 ### Zentrale Begriffe der Evaluationsforschung
 
 - Evaluationsgegenstand
 - Anspruchsgruppen/Stakeholder
 - Evaluationskriterien
 - Evaluationsfunktionen
-- Evaluationsnutzung
+- Evaluationsnutzung ^[https://www.degeval.org/degeval-standards/glossar-der-standards-fuer-evaluation/]
+
+### Zentrale Begriffe der Evaluationsforschung I
+
+**Evaluationsgegenstand** (auch Evaluandum, Evaluationsobjekt)    
+ - das was im Rahmen einer Evaluation untersucht und bewertet wird und worauf sich mögliche Konsequenzen in Folge der Evaluation beziehen.  
+Beispiel: Interventionsmaßnahme, Lehrveranstaltung.
+ 
+**Anspruchsgruppen/ Stakeholder**   
+auch Beteiligte (v.a. Durchführenden einer Maßnahme) und Betroffene (v.a. Zielgruppen einer Maßnahme)  
+
+ Sind alle an einer Evaluation und/ oder Ihrem Gegenstand beteiligte/betroffene Personen und Institutionen. 
 
 
-### Durchführungsformen der Evaluation
+### Zentrale Begriffe der Evaluationsforschung II
 
-- **summativ**: Zusammenfassende Beurteilung der Wirksamkeit einer Intervention
+**Evaluationskriterien** 
+Eine wissenschaftlich fundierte Bewertung eines Evaluationsgegenstandes erfordert definierte und messbare Bewertungskriterien und die Erhebung entsprechender Daten.  
 
-- **formativ**: Regelmäßige Erstellung von Zwischenergebnissen, um die laufende Intervention zu modifizieren oder zu verbessern
+Bewertungskriterien müssen zuvor festgelegt werden. 
+Die Wahl der Evaluationskriterien und die Bestimmung der Bewertung der Ausprägungen bestimmen folglich das Evaluationsergebnis.
 
-- **intern**: Durchführung der Evaluation durch organisations angehörige Personen
+### Zentrale Begriffe der Evaluationsforschung III 
 
-- **extern**: Evaluation durch Außenstehende
+**Evaluationsfunktionen** (auch Evaluationszweck)  
 
-### Formen der Evaluation: Konzept-, Prozess- und Ergebnisevaluation
+Die Bewertung eines Evaluationsgegenstandes mittels Evaluationskriterien sollen Funktionen, Ziele und Zwecke für die Praxis haben. Hier werden fünf Funktionen unterschieden:  ^[Stockmann R. (2002). Was ist eine gute Evaluation? Ceval-Arbeitspapiere (Vol.9), Saarbrücken Zentrum für Evaluation.]$^,$ ^[Döring N. (2014). Evaluationsforschung. In N. Baur & J. Blasius, Handbuch der empirischen Sozialforschung, (S.173-187). Springer VS.].   
 
-Unterschiedliche Erhebungszeitpunkte:
+- *Erkenntnisfunktion:* wissenschaftliche Erkenntnisse (Wirkungen/ Eigenschaften) über Evaluandum werden erfasst. 
+- *Lern- und Dialogfunktion:* Evaluationsbeteiligte Lernen und treten in den Dialog. Erfordert aktive Einbeziehung der Anspruchsgruppen.
+- *Optimierungsfunktion:* Zielgerichtete Optimierung des Evaluandums.
+- *Entscheidungsfunktion:* Welche Maßnahme soll aufgrund der erlangten Erkenntnisse umgesetzt werden.
+- *Legitimationsfunktion:* Aufgewendete Ressourcen lassen sich legitimieren. z.B. öffentlicher Gelder.
 
-- **Konzeptevaluation**: Bewertet das Konzept einer Maßnahme bereits im Vorfeld der Umsetzung
 
-- **Prozessevaluation**: Bewertet die Durchführung einer laufenden Maßnahme
+### Zentrale Begriffe der Evaluationsforschung IV
+**Evaluationsnutzung**
 
-- **Ergebnisevaluation**: Bewertet die Effekte der Maßnahme
+Verlangt die schriftliche und verständliche Darstellung der Evaluationsergebnisse, inkl. der Bewertung und Praxisempfehlungen.
+Zudem sollten, um die Nutzungsmöglichkeit zu erhöhen, diese in Workshops, Schulungen, Beratungen etc. aktiv und mit der praktischen Konsequenz an die Evaluationsnutzenden (relevante Anspruchsgruppen) weitergeben.
+
+## Ablauf und Standards der Evaluationsforschung
+### Evaluation im zeitlichen Verlauf;
+*Unterschiedliche Erhebungszeitpunkte der Evaluation*:
+
+**Konzeptevaluation**  
+Bewertet das Konzept einer Maßnahme bereits im Vorfeld der Umsetzung. Werden die Bedürfnisse der Zielgruppe richtig berücksichtigt? Sind die geplanten Ressourcen ausreichend? Bezieht sich das Konzept auf aktuelle wissenschaftliche Erkenntnisse?
+
+**Prozessevaluation/ formative Evaluation**  
+Bewertet die Durchführung einer laufenden Maßnahme - die Evaluation begleitet den Prozess.
+Handlungsabläufe und die planmäßige Realisierung der Maßnahmenkonzeption werden durch regelmäßige Erstellung von Zwischenergebnissen evaluiert. Mit dem Ziel der Modifikation und Optimierung. 
+Nimmt Einfluss auf die Gestaltung.
+
+**Ergebnisevaluation/ summative Evaluation**  
+Ist die abschließende, zusammenfassende Beurteilung, z.B. über die Wirksamkeit einer Intervention oder den Erfolg einer Maßnahme. 
+Bewertet die Effekte der Maßnahme und erfolgt am Ende einer Maßnahme oder Phase.
+Im Gesundheitsbereich sind longitudinale Studien oder Follow ups sinnvoll.
 
 ### Standards für Evaluation
 
 Qualitätsstandards der Gesellschaft für Evaluation (**DeGEval**)^[[https://www.degeval.de/publikationen/standards-fuer-evaluation/](https://www.degeval.de/publikationen/standards-fuer-evaluation/)]:
 
-- 1. **Nützlichkeit**:"Die Nützlichkeitsstandards sollen sicherstellen, dass  die Evaluation sich an abgestimmten und geklärten Evaluationszwecken sowie soweit möglich am Informationsbedarf der vorgesehenen Nutzerinnen und Nutzer ausrichtet"
+1. [Nützlichkeit]{.cstrong}:"Die Nützlichkeitsstandards sollen sicherstellen, dass  die Evaluation sich an abgestimmten und geklärten Evaluationszwecken sowie soweit möglich am Informationsbedarf der vorgesehenen Nutzerinnen und Nutzer ausrichtet"
 
-- 2. **Durchführbarkeit**: "Die Durchführbarkeitsstandards sollen sicherstellen, dass eine Evaluation realistisch, gut durchdacht, diplomatisch und kostenbewusst ausgeführt wird"
+2. [Durchführbarkeit]{.cstrong}: "Die Durchführbarkeitsstandards sollen sicherstellen, dass eine Evaluation realistisch, gut durchdacht, diplomatisch und kostenbewusst ausgeführt wird"
 
-- 3. **Fairness**: "Die Fairnessstandards sollen sicherstellen, dass in einer Evaluation respektvoll und fair mit allen beteiligten und betroffenen Personen und Gruppen umgegangen wird"
+3. [Fairness]{.cstrong}: "Die Fairnessstandards sollen sicherstellen, dass in einer Evaluation respektvoll und fair mit allen beteiligten und betroffenen Personen und Gruppen umgegangen wird"
 
-- 4. **Genauigkeit**: "Die Genauigkeitsstandards sollen sicherstellen, dass eine Evaluation gültige und nachvollziehbare Informationen und Ergebnisse zu dem jeweiligen Evaluationsgegenstand und den Evaluationsfragestellungen hervorbringt und vermittelt. In diesem Zusammenhang kommt wissenschaftlichen Gütekriterien eine besondere Bedeutung zu."  
+4. [Genauigkeit]{.cstrong}: "Die Genauigkeitsstandards sollen sicherstellen, dass eine Evaluation gültige, nachvollziehbare Informationen und Ergebnisse zum jeweiligen Evaluationsgegenstand und Evaluationsfragestellungen hervorbringt und vermittelt. Hier kommen wissenschaftlichen Gütekriterien eine besondere Bedeutung zu." siehe hierzu auch: DeGeVal ^[https://www.degeval.org/degeval-standards/kurzfassung/]
 
 
-### Standards für Evalutaion: Nützlichkeit
-
-- **N1** - Identifizierung der Betiligten und Betroffenen
-- **N2** - Klärung der Evaluationszwecke
-- **N3** - Kompetenz und Glaubwürdigkeit des Evaluators/der Evaluatorin
-- **N4** - Auswahl und Umfang der Informationen
-- **N5** - Transparenz von Werthaltungen
-- **N6** - Vollständigkeit und Klarheit der Berichterstattung
-- **N7** - Rechtzeitigkeit der Evaluation
-- **N8** - Nutzung und Nutzen der Evaluation
-
-### Standards für Evalutaion: Durchführbarkeit
-
-- **D1** - Angemessene Verfahren
-- **D2** - Diplomatisches Vorgehen
-- **D3** - Effizienz von Evaluation
-
-### Standards für Evalutaion: Fairness
-
-- **F1** - Formale Vereinbarungen
-- **F2** - Schutz individueller Rechte
-- **F3** - Umfassende und faire Prüfung
-- **F4** - Unparteiische Durchführung und Berichterstattung
-- **F5** - Offenlegung von Ergebnissen und Berichten
-
-### Standards für Evalutaion: Genauigkeit
-
-- **G1** - Beschreibung des Evaluationsgegenstandes
-- **G2** - Kontextanalyse
-- **G3** - Beschreibung von Zwecken und Vorgehen
-- **G4** - Angabe von Informationsquellen
-- **G5** - Valide und reliable Informationen
-- **G6** - Systematische Fehlerprüfung
-- **G7** - Angemessene Analyse qualitativer und quantitativer Informationen
-- **G8** - Begründete Bewertungen und Schlussfolgerungen
-- **G9** - Meta-Evaluation  
-
-### Standards für Evaluation: Überblick (I)
-
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "DeGEval1.png"))
-```
-
-### Standards für Evaluation: Überblick (II)
-
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "DeGEval2.png"))
-```
-
+## Phasen einer Evalutaionsstudie
 ### Phasen einer Evaluationsstudie
 
-**Fünf-Phasen-Modell** (Döring/Bortz, 2014)
+**Fünf-Phasen-Modell** ^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.] 
 
 1. Initiierungsphase 
 
@@ -151,12 +206,15 @@ knitr::include_graphics(file.path(pathToImages, "DeGEval2.png"))
 
 ### Phasen einer Evaluationsstudie: Initiierungsphase
 
-- Evaluationsmöglichkeiten identifizieren
-- potenzielle Evaluationsprojekte akquirieren
-- Evaluationsziele kritisch hinterfragen
+- potenzielle Evaluationsprojekte akquirieren durch
+- Identifikation von Evaluationsmöglichkeiten
+- Evaluationsziele prüfen und festlegen
+- Problemdefinition und Zielsetzung
+
 
 ### Phasen einer Evaluationsstudie: Konzeptionsphase
 
+- Exploration Merkmale des Evaluationsgegenstandes und Zielgruppe sollten möglichst genau eruiert sein.
 - Evaluationskonzept bzw. Projektangebot ausarbeiten
 - Sicherstellen der Evaluationsstandards von Beginn an
 - Verbindliche Vereinbarungen zwischen Evaluierenden und Auftraggebenden
@@ -189,6 +247,20 @@ Besondere Bedeutung der Evaluationsstandards beachten:
 - Vorbereitung ihrer prakrtischen Umsetzung 
 - ggf. wissenschaftliche Bewertung der Evaluation: Systematische Meta-Evaluation
 - publizieren der Ergebnisse
+
+
+### Evaluation in der Anwendung & Übung
+
+**Schauen Sie sich in Kleingruppen folgendes Beispiel an:**
+
+[Essen-Bewegen-Wohlfühlen]{.cstrong}   ^[https://www.lzg.nrw.de/ges_foerd/qualitaet/evaluationstools/beispiele-aus-der-praxis/essen-bewegen-wohlfuehlen/index.html]
+
+1. Ordnen Sie die erlernten Begriffe der Evaluationsforschung zu. Wie sind diese in der Praxis umgesetzt?  
+
+2. Öffnen Sie den Fragebogen für Eltern, diskutieren Sie diesen. Schreiben Sie positive /negative Kritik auf - was ist gut, was gehört Ihrer Meinung nach optimiert?  
+
+3. Lesen Sie sich den Abschnitt "Ziele" und "Ergebnisse" durch, sind die Ziele erfüllt worden? Geben die Ergebnisse ausreichend Auskunft, wirkt das Projekt ausreichend gut und abgeschlossen? 
+
 
 
 

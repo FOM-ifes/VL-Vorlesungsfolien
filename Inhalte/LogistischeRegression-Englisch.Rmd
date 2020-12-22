@@ -1,0 +1,387 @@
+```{r setup-Logistische-Regression-Englisch, include=FALSE}
+source("../prelude.R")
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "LogistischeRegression",  # Dateiname ohne Suffix
+    "Regression"                # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(knitr)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+# Logistic Regression
+
+
+
+
+### Exercise `r nextExercise()`: Scale level `smoker`  {.exercise type=A-B-C-D answer=A}
+
+What's the scale level of `smoker` (values `Yes` and `No`)?
+
+
+A.  Categorical - nominal.
+B.  Categorical - ordinal.
+C.  Numeric - discrete.
+D.  Numeric - continuous.
+
+
+::: {.notes}
+***A***
+:::
+
+
+
+### Statistical modelling and logistic regression
+
+$$y=f(x) + \epsilon $$
+
+Let's start with one independent variable only:
+
+- Linear Regression: Dependent Variable $y$ numeric: $y_i=\beta_0 + \beta_1 \cdot x_i + \epsilon_i$
+- **Logistische Regression**: **Dependent Variable** $y$ **binary**, ie., categorical with two levels $y_i \in \{0,1\}$. 
+
+Let $p_i$ the probability that $y_i=1$, then:
+
+$logit(p_i)=\ln(\frac{p_i}{1-p_i})=\beta_0 + \beta_1 \cdot x_i$.  
+
+
+- In R: `glm(y ~ x, data = my_data,  family='binomial')`
+
+
+### Examples
+
+- Will a given student pass the next exam successfully?
+- Will a given coworker quit within the next six months?
+- Will a given product being bought, given some customers data?
+- Will a case become a "high cost case" given some data on the case and on the customer?
+
+*For what question could you employ this method?*
+
+### Setup 
+
+Load the `tips` data set^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing]
+
+Start the package `mosaic`.
+
+
+```{r, eval= FALSE, message=FALSE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
+tips <- read.csv2("tips.csv")
+
+library(mosaic) # load the package 
+```
+
+
+### What's the probability that a man pays the bill?
+
+
+... conditional on the amount of the bill (`total_bill`)?
+
+
+
+```{r, fig.align="center", out.width="40%"}
+gf_point( (sex=="Male") ~ total_bill, 
+        data = tips)
+```
+
+Note: The gender distribution at a table is unknown. If for example there are only women or only men at the table, then the probability will be $0$ ($1$).
+
+
+### Introducing the Logit
+
+$$p(y=1)=\frac{e^\eta}{1+e^\eta}=\frac{e^{\beta_0 + \beta_1 \cdot x}}{1+e^{\beta_0 + \beta_1 \cdot x}} = \frac{1}{1+e^{-(\beta_0 + \beta_1 \cdot x)}}$$
+```{r, echo=FALSE, fig.align="center", out.width="33%"}
+eta <- seq(-10,10,by = 0.1)
+y <- 1/(1+exp(-eta))
+gf_line(y ~ eta, xlab = expression(eta), ylab = "p(y=1)")  
+```
+
+Estimate $\beta$ based on the data: $\hat{\beta}$.
+
+
+- $\beta_1>0$: Probability $p(y=1)$ increases with $x$.
+- $\beta_1<0$: Probability $p(y=1)$ decreases with $x$.
+
+
+### Preparing the data: Set reference factor level
+
+In R' logistic regression, $y$ is modelled according to the *factor levels*. The first level is assigned to $0$, the other levels are assigned to $1$.^[NB: Use the $-operator to call a variable in a data frame: my_data_frame$my_variable.] 
+
+```{r}
+# define reference level: 
+tips$sex<- relevel(tips$sex, ref = "Female")
+# check:
+levels(tips$sex)
+```
+
+
+### Logistic Regression: Sex to total bill (I/II)
+
+```{r, eval=FALSE}
+# save output of regression as "my_glm1"
+my_glm1 <- glm(sex ~ #  dependent variable (dv) 
+               total_bill, # independent variables (iv) 
+              data = tips, # data set 
+              # DV is binomial
+              # Link function:  Logit
+              family = binomial("logit"))
+              
+
+summary(my_glm1)
+```
+
+
+
+
+### Logistic Regression: Sex to total bill (II/II) {.shrink}
+
+
+```{r, echo=FALSE}
+# save output of regression as "my_glm1"
+my_glm1 <- glm(sex ~ # abhängige Variable
+                 total_bill, # unabghängige Variable(n)
+              data = tips, # Datensatz
+              # Abhängige Variable binomial,
+              # Verknüpfung Logit
+              family = binomial("logit"))
+              
+
+summary(my_glm1)
+```
+
+
+
+
+
+### Output: Logistics Regression sex to total bill
+
+```{r, fig.align="center", out.width="66%"}
+plotModel(my_glm1)
+```
+
+
+### Exercise `r nextExercise()`: regression coefficients  {.exercise type=A-B-C answer=A}
+
+Which proposition is true?
+
+
+A.  According to the model, the probability of a man paying increases with the total bill.
+B.  According to the model, the probability of a man paying decreases with the total bill.
+
+C.  According to the model, the probability of a man paying is not associated  with the total bill.
+
+
+
+::: {.notes}
+**A**
+:::
+
+
+
+### Modelling sex by number of persons  {.shrink}
+
+```{r}
+ergglm2 <- glm(sex ~ size, 
+              data = tips,
+              family = binomial("logit"))
+              
+summary(ergglm2)
+```
+
+
+### Exercise `r nextExercise()`: Results: sex by number of persons {.exercise type=A-B-C answer=A}
+
+At what level of `size` is the probability maximal that a *female* pays the bill?
+
+A.  $1$ individual.
+B.  $2$ individuals.
+C.  $4$ individuals.
+
+::: {.notes}
+As $\hat{\beta}_1=`r round(coef(ergglm2)[2],2)`>0$ holds, the probability that a *man* pays increases with total bill increasing. Thus, the probability that a women pays is maximized when there the least number of individuals at the table, hence ***A***.
+:::
+
+
+### Predicting and the logistics regression
+
+What's the probability that a man pays, given that there are $4$ persons:
+
+
+```{r}
+predict(ergglm2, 
+        newdata = data.frame(size = 4), 
+        type = "response")
+```
+
+
+### Model assessment
+
+Typical model assessment for classification models include:
+
+- accuracy: proportion of correctly classified cases
+- Cohen's Kappa: Comparison of observed accuracy to expected accuracy (expected under independency)
+
+
+### Modelling sex by time {.shrink}
+
+```{r}
+ergglm3 <- glm(sex ~ time, data = tips,
+              family = binomial("logit"))
+summary(ergglm3)
+```
+
+
+### Exercise `r nextExercise()`: Results -- Modelling sex by time {.exercise type=A-B-C answer=B}
+
+According to the model, when is the probability maximized that a man pays the bill?
+
+
+A.  Lunch.
+B.  Dinner.
+C.  No difference.
+
+::: {.notes}
+ $\hat{\beta}_{timeLunch}=`r round(coef(ergglm3)[2],2)`<0$.Hence ***B***.
+:::
+
+
+### Odds Ratio^[Chance vs. probability: The *probability* $p$ to roll a 6 (assuming a fair die) is $\frac{1}{6}$. The *chance* $\frac{\textrm{p}}{\textrm{1-p}}$, assuming a fair die, amounts to  $\frac{1}{5}$.]
+
+
+
+
+
++------------------------+-----------------------+---------------------------+
+|                        | **Variable B: yes **  | **Variable B: no **       |
++========================+=======================+===========================+
+| **Variable A: yes **   | eg., $n_{11}=100$     |  eg., $n_{12}=200$        |
++------------------------+-----------------------+---------------------------+
+| **Variable A: no **    | eg., $n_{21}=150$     |  eg., $n_{22}=550$        | 
++------------------------+-----------------------+---------------------------+
+
+
+```{r echo = FALSE, message = FALSE, eval = TRUE, cache = FALSE}
+d <- read_csv("../Inhalte/StatisticalLearning/class-results.csv")
+
+
+
+d %>% 
+  kable(escape = FALSE, booktabs = TRUE) %>% 
+  kable_styling() %>% 
+  column_spec(1, width = "1.8cm") %>% 
+  column_spec(2, width = "1.8cm") %>% 
+  column_spec(3, width = "4cm") %>% 
+  column_spec(3, width = "4cm")
+```
+
+
+
+
+
+- The odds for "yes" are $\frac{n_{11}+n_{12}}{n_{21}+n_{22}}=\frac{100+200}{150+550}$.
+
+
+
+
+- The odds ratio for "yes" at $A$, if $B$ is "yes" too, amounts to: 
+$$OR=\frac{\frac{n_{11}}{n_{21}}}{\frac{n_{12}}{n_{22}}}=\frac{\frac{100}{150}}{\frac{200}{550}}=\frac{55000}{30000}\approx1.83$$
+
+
+### Odds Ratio and the logistic regression
+
+Odds ratio:
+
+$$OR=\frac{\frac{p_{\text{Lunch}}}{1-p_{\text{Lunch}}}}{\frac{p_{\text{Dinner}}}{1-p_{\text{Dinner}}}}=e^{\beta_{\text{time}}}$$
+```{r}
+exp(coef(ergglm3))
+```
+
+The *chance* that a man pays at lunch is `r round(exp(coef(ergglm3))[2],2)` times larger than at dinner (ie., at lunch the chance is *lower* than at dinner that a man pays). 
+
+
+
+### Exercise `r nextExercise()`: Odds Ratio {.exercise type=A-B-C answer=C}
+
+
+What's the odds ratio indicating that the chances are the same in both situations?
+
+
+A.   $OR=0$
+B.   $OR=0.5$
+C.   $OR=1$
+
+::: {.notes}
+***C*** 
+:::
+
+
+### Multiple logistic regression
+
+```{r}
+ergglm4 <- glm(sex ~ 
+                 total_bill + size + time,
+              data = tips,
+              family = binomial("logit"))
+              
+exp(coef(ergglm4)) # Odds Ratio
+```
+
+
+### Coefficients: Multiple logistic regression {.shrink}
+
+```{r}
+summary(ergglm4)
+```
+
+
+### Exercise `r nextExercise()`: Results -- Multiple logistic regression {.exercise type=A-B-C-D-E answer=D}
+
+Which of the following options correctly indicates that a man pays the bill?
+
+
+
+A.  Positive coefficient for total bill only.
+B.  Negative coefficient for number of persons.
+C.  Dinner.
+D.  Positive coefficient for total bill, negative coefficient for number of persons, and dinner.
+E.  None of the abov None of the abovee 
+
+::: {.notes}
+***D***.
+:::
+
+
+
+### Exercise `r nextExercise()`: Modelling sex  {.exercise type=essay}
+
+
+Come up with a model to predict the probability that a man pays the bill using the predictors `total_bill`, `smoker` and `day`.
+
+
+```{r, include=FALSE}
+ergglmUeb <- glm(sex ~ total_bill + smoker + day, data = tips, family = binomial("logit"))
+summary(ergglmUeb)
+exp(coef(ergglmUeb))
+```
+
+::: {.notes}
+`ergglmUeb <- glm(sex ~ total_bill + smoker + day, data = tips, family = binomial("logit"))`  
+`summary(ergglmUeb)`  
+`exp(coef(ergglmUeb))` 
+
+:::
+
+
+```{r finish-Logistische-Regression, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

@@ -1,0 +1,565 @@
+
+
+```{r libs, echo = FALSE}
+library(boot)
+library(latex2exp)
+library(tidyverse)
+library(knitr)
+library(mosaic)
+```
+
+
+```{r load-data, echo = FALSE}
+data(tips, package = "reshape2")
+```
+
+
+# Vorbereitungen
+
+
+### Didaktische Ziele des Statistikkonzepts
+
+- Besseres Verständnis von *statistischem Denken*
+
+- Stärkere *Computer- und Datenorientierung*
+
+- Praktische *Kompetenz in Datenanalyse* (echter Daten)
+
+
+### Daten und Paket laden
+
+Daten (Trinkgeld-Datensatz):
+```{r eval = FALSE, echo = TRUE}
+download.file("https://goo.gl/whKjnl", destfile = "tips.csv") 
+tips <- read.csv2("tips.csv")
+
+# Alternative 1 - heruntergeladene Datei einlesen:
+tips <- read.csv2(file.choose())
+
+# Alternative 2: Aus Paket "reshape2"
+data(tips, package = "reshape2")
+```
+
+Paket `mosaic`:
+```{r}
+library(mosaic) # Paket "mosaic" laden
+```
+
+
+# Was ist simulationsbasierte Inferenzstatistik?
+
+
+### Vergleich klassischer und simulationsbasierter Inferenz
+
+- Klassisch: Leite Stichprobenverteilung aus Theorie ab
+- Simulationsbasiert: Führe das Experiment laut $H_0$ häufig aus
+
+
+```{r simu-df, echo = FALSE}
+#  dauert lange:
+set.seed(42)
+simu_df <- do(10000) * mean(rflip(100))
+```
+
+
+```{r simu-vs-analyse, echo = FALSE, out.width="100%", fig.asp=.5}
+p <- 0.5
+q <- 1 - p
+n <- 100
+
+
+mue <- n*p
+se <- sqrt(n*p*q)
+
+hits <- 60
+
+
+lo2 <- 30
+hi2 <- 70
+
+
+nv_tex <- "$f(x|\\mu,\\sigma^2) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}}e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$"
+
+
+nv_expr <- TeX(nv_tex)
+
+
+
+labx <- "Anzahl Treffer bei 100 fairen Münzwürfen"
+
+p_klassisch <- ggplot(NULL, aes(c(lo2,hi2))) +
+  labs(title = "Berechne das Integral der Fläche unter der Kurve",
+       #   caption = "Analytischer Weg",
+       x = labx,
+       y = "Wahrscheinlichkeit",
+       parse = TRUE) +
+  stat_function(fun = dnorm, geom = "area", fill = "grey40", args = list(mean = mue, sd = se), xlim = c(lo2, hi2)) +
+  stat_function(fun = dnorm, geom = "area", args = list(mean = mue, sd = se), fill = "firebrick", xlim = c(hits, hi2)) +
+  geom_vline(xintercept = hits, linetype = "dashed") +
+  annotate(geom = "label", x = hits, y= 0, label = hits, size = 4) +
+  annotate(geom = "label", x = hi2/2, y= 0.05, label =TeX(nv_tex), size = 4, hjust=0) +
+  theme(line = element_blank(),
+        axis.text.y = element_blank(),
+        legend.title = element_text(size = rel(0.5)),
+        title = element_text(size = rel(1)),
+        legend.text=element_text(size=6))
+
+
+
+
+
+
+simu_df %>%
+  mutate(extreme = ifelse(mean >= 60, "Extreme Stichproben", "common")) -> simu_df
+
+
+p_simuliert <- simu_df %>%
+  ggplot(aes(x = mean)) +
+  geom_histogram(bins = 15) +
+  geom_histogram(data = filter(simu_df, extreme == "Extreme Stichproben"), aes(fill = extreme), bins = 15) +
+  labs(x = labx,
+      # title = "Wirf viele Male 10 faire Münzen; zähle die Anzahl der Treffer",
+       title = "Führe Experiment oft aus; berechne jeweils Teststatistik",
+   #    caption = "Simulationsweg",
+       fill = "",
+       y = "relative Häufigkeit") +
+  geom_vline(xintercept = hits, linetype = "dashed") +
+  annotate(geom = "label", x = hits, y= 0, label = hits, size = 4) +
+  theme(line = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.title = element_text(size = rel(0.5)),
+        title = element_text(size = rel(1)),
+        legend.text=element_text(size=4))
+
+
+
+gridExtra::grid.arrange(p_klassisch, p_simuliert, nrow = 1)
+```
+
+
+### Einführendes Beispiel: Ist die Münze gezinkt?
+
+Jemand lädt Sie zu einem Glücksspiel ein: Die Person wirft eine Münze 10 Mal. 
+
+Bei *Kopf* gewinnt die Person, bei *Zahl* gewinnen Sie. 
+
+Die Person gewinnt *8* der *10* Würfe... 
+
+Ob die Münze wohl fair ist?
+
+
+### Das Münz-Experiment
+
+Angenommen, die Münze ist fair ($H_0$). Wie viele Treffer sind zu erwarten?
+
+1. Wirf 10 Münzen und zähle die Anzahl der Treffer (Kopf)
+3. Wiederhole 1. oft (z.B. 1000 Mal)
+4. Erstelle Histogramm der Treffer
+5. Prüfe die Häufigkeit des empirischen Ergebnisses im Histogramm
+6. Wenn 8 von 10 Treffern selten ist unter den Stichproben im Histogramm, verwirf die Annahme der fairen Münze
+
+
+Dieses Vorgehen nennt man *simulationsbasierte* Inferenz.
+
+
+### Vorteile simulationsbasierter Inferenz
+
+- *Elegant*: Eine Idee statt vieler inferenzstatistischer Verfahren
+
+- *Einfach*: Stichproben ziehen statt Verteilungen theoretisch herleiten
+
+- *Robust*: Normalverteilungsannahme nicht nötig
+
+- *Vielseitig*: Für manche Fragen gibt es keine (einfachen) theoretischen Verteilungen, aber Simulationen sind möglich
+
+
+# Wie funktioniert simulationsbasierte Inferenz?
+
+
+### Drei Varianten simulationsbasierter Inferenz
+
+1. *Einfache Simulation*: Erstelle eine Stichprobenverteilung  für die Verteilung laut $H_0$.
+
+2. *Permutationstest*: Mische die Werte einer Variablen
+
+3. *Bootstrapping*: Erstelle eine Konfidenzintervall durch Ziehen mit Zurücklegen
+
+
+## Einfache Simulation
+
+
+### Einfache Simulation: Überblick
+
+- *Ziel*: Testen, ob ein Paramater einen bestimmten Wert aufweist
+- *Beispiele*:
+  - Ist die Münze fair? ($\pi=1/2$)
+  - Sind die Fommies im Schnitt normal schlau? ($\mu = 100$)
+- *Anwendungsfälle*: Für jede deskriptive Kennzahl/ Teststatistik (M, md, sd, ...), sofern nur *eine* Variable involviert ist
+- *Vorgehen*: Ziehe viele Stichproben aus $H_0$, berechne jeweils Teststatistik, zähle Statistiken mit extremen Wert in der Teststatistik
+
+
+### Einfache Simulation: Sinnbild
+
+```{r out.width="90%", echo = FALSE}
+knitr::include_graphics("images/simu-kurz/simu-einfach.pdf", error=FALSE)
+```
+
+
+### Einfache Simulation: Ablauf
+
+1. Definiere $H_0$ und $H_A$
+2. Ziehe Stichprobe aus $H_0$ und berechne Teststatistik
+3. Wiederhole 2. oft
+4. Erstelle Verteilung der simulierten Stichproben
+5. Vergleiche empirische Teststatistik mit simulierter Verteilung
+
+
+### Einfache Simulation: R-Syntax (kategorial)
+
+```{r echo = FALSE}
+data(tips, package = "reshape2")  # Daten laden
+```
+
+
+<!-- $H_0: \pi = 1/2$ -->
+<!-- $H_A: \pi \ne 1/2$ -->
+```{r simu1, echo = TRUE, out.width="50%"}
+simu1 <- do(10000) * sum(rflip(10))
+histogram(~sum, data = simu1, nint = 10,
+          main = "8/10 Treffer: nicht so selten",
+          xlab = "Anzahl Treffer",
+          v = 8)
+```
+
+
+## Permutationstest
+
+
+### Permutationstest: Überblick
+
+- *Ziel*: Auf Zusammenhänge (bzw. Unterschiede) testen
+- *Beispiele*: 
+    - Hängt die Raucherquote und Geschlecht zusammen? ($\pi_F =\pi_M$)
+    - Sind Fommies im Mittel schlauer als der deutsche  Durchschnitt? ($\mu_{FOM} = \mu_{De}$)
+    - Sind Stress und Arbeitsleistung korreliert? ($r_{S,AL} = 0$)
+- *Anwendungsfälle*: Hypothesen, die zwei Variablen (Spalten in der Tabelle) in Verbindung bringen
+- *Vorgehen*: Eine Variable (Spalte) mischen und Teststatistik berechnen, häufig wiederholt, die resultierende Verteilung wird mit der empirischen Teststatistik verglichen
+
+
+### Permutationstest: Sinnbild
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics("images/simu-kurz/shuffle.pdf", error=FALSE)
+```
+
+
+### Permutationstest: Ablauf
+
+1. Definiere $H_0$ und $H_A$ (z.B. $H_0: \mu_A = \mu_B$)
+2. Mische Variable (Spalte) $X$ in der empirischen Stichprobe und berechne die Teststatistik (z.B. Mittelwertsunterschied)
+3. Wiederhole 2. oft
+4. Erstelle Verteilung der simulierten Stichproben
+5. Vergleiche die empirische Teststatistik mit der simulierten Verteilung
+
+
+### Permutationstest: R-Syntax (numerisch)
+
+```{r simu3, echo = TRUE, out.width="50%"}
+diffmean(total_bill ~ time, data = tips)  # empirisch
+simu3 <- do(1000) * diffmean(total_bill ~ shuffle(time), data = tips)
+histogram( ~ diffmean, data = simu3, v = -3.63)
+```
+
+
+### Permutationstest: R-Syntax (kategorial)
+
+```{r simu4, echo = TRUE, out.width="50%"}
+diffprop(smoker ~ time, data = tips)  # empirisch
+simu4 <- do(1000) * diffprop(smoker ~ shuffle(time),
+data = tips)
+histogram( ~ diffprop, data = simu4, v = 0.06)
+```
+
+
+## Bootstrapping
+
+
+### Bootstrapping: Überblick
+
+- *Ziel*: Konfidenzintervalle (KI, z.B. 95%) berechnen, um Parameterbereiche zu schätzen
+- *Beispiele*:
+  - Auf welchen Bereich schätzen wir die *mittlere* Intelligenz der Fommies?
+  - Was ist das Konfidenzintervall zum Unterschied der Raucherquote bei Männer vs. Frauen?
+- *Anwendungsfälle*: Zur Berechnung des Konfidenzintervalls einer Statistik
+- *Vorgehen*: Viele Stichproben der Größe $n$ mit Zurücklegen ziehen, jeweils Teststatistik berechnen, Stichprobenverteilung erstellen
+
+
+### Boostrapping: Sinnbild
+
+```{r echo = FALSE, out.width="100%"}
+knitr::include_graphics("images/simu-kurz/bootstrapping.pdf", error=FALSE)
+```
+
+
+### Bootstrapping: Ablauf
+
+1. Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe und berechne Statistik (z.B. Anteil $p$) in der Bootstrap-Stichprobe
+2. Wiederhole 1. oft
+3. Zeichne Histogramm der Bootstrap-Verteilung der Statistik
+4. Die inneren 95% sind das 95%-Konfidenzintervall
+
+
+### Bootstrapping: R-Syntax
+
+```{r simu5, echo = TRUE, out.width="50%"}
+simu5 <- do(10000) * prop( ~ sex, data = resample(tips))
+```
+
+Grenzen des 95%-KI:
+```{r echo = TRUE}
+quantile( ~ prop_Female, data = simu5, probs = c(0.025, .975)) 
+```
+
+```{r out.width = "33%"}
+histogram( ~ prop_Female, data = simu5, v = c(0.30, .42))
+```
+
+
+# Fazit
+
+
+### Drei Varianten an Simulationen
+
+1. *Einfache Simulation*: Erstelle eine Stichprobenverteilung  für die Verteilung laut $H_0$.
+
+```{r eval = FALSE}
+do(oft) * ziehe_aus_verteilung(n, parameterwerte)
+```
+
+
+2. *Permutationstest*: Mische die Werte einer Variablen
+
+```{r eval = FALSE}
+do(oft) * statistik(y ~ shuffle(x), data = Daten)
+```
+
+
+3. *Bootstrapping*: Erstelle eine Konfidenzintervall durch Ziehen mit Zurücklegen
+
+```{r eval = FALSE}
+do(oft) * statistik(y ~ x, data = resample(Daten))
+```
+
+
+### Ein Prinzip -- ein statistischer Test
+
+```{r echo = FALSE, out.width = "90%"}
+knitr::include_graphics("images/EinfuehrungInferenz/OneTest.png", error=FALSE)
+```
+
+
+### Anstatt vieler Bäume
+
+```{r echo = FALSE, out.width = "50%"}
+knitr::include_graphics("images/simu-kurz/baum_a1.pdf", error=FALSE)
+```
+
+
+### Nutzen und Grenzen
+
+
+- Es ist einfacher, das Prinzip der simulationsbasierten Inferenz zu lernen, als eine Vielzahl an unterschiedlichen "klassischen" Testverfahren
+
+- Für $\chi^2$-Tests, ANOVAs etc. ist die simulationsbasierte Inferen ebenfalls einsetzbar (nach dem exakt gleichen Prinzip), allerdings ist die Berechnung der Teststatistik (z.B. $\chi^2$-Quadrat-Wert) u.U. aufwändiger. Daher haben wir für solche Fälle darauf verzichtet, die simulationsbasierte Inferenz anzuwenden
+
+- Wir raten, klassische Verfahren aus Gründen der Anschlussfähigkeit weiterhin vorzustellen, aber deren Theorie nur kurz anzureißen
+
+
+### Gegenüberstellung klassischer und simulationsbasierter Inferenz
+
+- *t-Test für eine Stichprobe*: Einfache Simulation mit `mean()` als Statistik
+- *t-Test für unabhängige Stichproben*: Permutationstest mit `mean()` als Statistik
+- *Mann-Whitney-U-Test für zwei unabhängige Stichproben*: Sofern es das Skalenniveau zulässt, besser auf einen Mittelwertsvergleich ausweichen
+- *Korrelation*: Permutationstest mit `corr()` als Statistik
+- *Einfache Regression*: Permutationstest mit `lm()` als Statistik
+- *Konfidenzintervall*  für eine beliebige Statistik: Bootstrapping für diese Statistik
+
+
+### Fragen, Feedback, Feierlichkeiten?
+
+**Sprechen Sie uns an!**
+
+Das aktuelle Statistikskript wurden von Karsten Lübke zusammen mit Kolleg*innen von der FOM https://www.fom.de/ entwickelt.
+
+
+Mitarbeit und Hinweise von Thomas Christiaans, Oliver Gansser, Matthias Gehrke, Jörg Horst, Bianca Krol, Norman Markgraf, Sebastian Sauer, Daniel Ziggel. 
+
+
+Diese Folien liegen auf der [OC-Seite von Sebastian Sauer](https://campus.bildungscentrum.de/nfcampus/Course.do?action=read&n=5220&m=854502).
+
+
+# Fallbeispiele
+
+
+## Fallbeispiel: Rechnungshöhe
+
+
+### Beträgt die mittlere Rechnungshöhe *signifikant* mehr als 15\$?
+
+$H_0$: Die mittlere Rechnungshöhe (`total_bill)` beträgt nicht mehr als 15\$; $\mu \leq 15$.
+$H_A$: Die mittlere Rechnungshöhe ist größer als 15\$; $\mu > 15$.
+
+*Annahme*: Das Merkmal Rechnungshöhe ist normalverteilt mit $\mu=15$ und $\sigma=sd=`r round(sd(tips$total_bill), 2)`$. Das Signifikanzniveau betrage $\alpha=5\%$.
+
+```
+Lege die Zufallszahlen fest.
+Wiederhole 10000 Mal:
+  - Berechne den Mittelwert von n=244 normalverteilten
+      Zufallsvariablen mit Mittelwert 15 und 
+      Standardabweichung 8.90
+Speichere das Ergebnis im Datasatz "Nullvtlg". 
+```
+
+```{r }
+set.seed(1896)
+Nullvtlg <- do(10000) * mean(rnorm(mean = 15, 
+                              sd = 8.90,
+                              n = 244))
+```
+
+
+### p-Wert zur Überprüfung der mittleren Rechnungshöhe
+
+```{r, out.width="25%"}
+histogram(~mean, Nullvtlg, v = mean(~total_bill, data = tips))
+```
+
+Anteil der Simulationen unter $H_0: \mu=15$ mit einem mindestens so großem Mittelwert wie in der Stichprobe ($\hat{\mu}=\bar{x}=`r round(mean(~total_bill, data = tips),2)`$):
+
+```{r}
+prop( ~ mean >= mean( ~ total_bill, data = tips), data = Nullvtlg)
+```
+
+
+Die $H_0$ muss verworfen werden. Das beobachtete Stichprobenerereignis ist selten ($p<0.0001$) in den simulierten Verteilungen im Modell $H_0$.
+
+
+### Bootstrap Verteilung mittlere Rechnungshöhe
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896) # Reproduzierbarkeit
+
+Bootvtlg <- do(10000) *
+  mean( ~ total_bill, data = resample(tips))
+
+histogram( ~ mean, data = Bootvtlg, 
+           v = quantile( ~ mean, probs = c(0.025,.975), 
+                         data = Bootvtlg))
+```
+
+
+## Fallbeispiel: Raucher vs. Nichtraucher
+
+
+### Boxplot Rechnungshöhe Raucher/ Nichtraucher
+
+Analyse des Unterschieds der Rechnungshöhe zwischen Rauchern und Nichtrauchern:
+
+```{r, fig.align="center", out.width="66%"}
+bwplot(total_bill ~ smoker, data = tips)
+```
+
+
+### Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher 
+
+In der Stichprobe wurden folgende (Mittel-)Werte beobachtet:
+
+```{r}
+# Mittelwert Stichprobe
+mean(total_bill ~ smoker, data = tips)
+
+# Differenz Mittelwert Stichprobe
+diffmean(total_bill ~ smoker, data = tips)
+```
+
+
+### 95%-Konfidenzintervall 
+
+... zur Differenz der mittleren Rechnungshöhe von Raucher vs. Nichtraucher:
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896)
+Bootvtlg2 <- do(10000) *
+  diffmean(total_bill ~ smoker, data = resample(tips))
+quantile( ~ diffmean, data = Bootvtlg2, probs = c(0.025, 0.975))
+histogram( ~ diffmean, data = Bootvtlg2, v = c(-0.80, 3.95))
+```
+
+
+### Permutationstest
+
+... zur Differenz der mittleren Rechnungshöhe zwischen Rauchern und Nichtrauchern:
+
+$H_0: \mu_R = \mu_{\text{NR}},$
+$H_A: \mu_R \ne \mu_{\text{NR}}$
+
+```{r, fig.align="center", out.width="33%"}
+set.seed(1896) # Reproduzierbarkeit
+Nullvtlg3 <- do(10000) *
+  diffmean(total_bill ~ shuffle(smoker), data = tips)
+
+quantile(~diffmean, probs = c(.025, .975), data = Nullvtlg3)
+```
+
+
+### Entscheidung zur $H_0$ 
+
+Der empirische Wert der Teststatistik (1.56$) liegt im Bereich der *Beibehaltung*; die $H_0$ wird *nicht verworfen*:
+
+```{r out.width="50%"}
+histogram( ~ diffmean, data = Nullvtlg3, 
+           v = quantile(~diffmean, probs = c(.025, .975), 
+                        data = Nullvtlg3))
+```
+
+
+### p-Wert für den Permutationstest
+
+```{r}
+# Absolute Differenz in der Stichprobe:
+dm <- abs(diffmean(total_bill ~ smoker, data = tips))
+dm
+# Anteil Abweichungen unter H0 größer als in Stichprobe:
+prop( ~ abs(diffmean) >= dm, data = Nullvtlg3)
+```
+
+Die $H_0$ kann nicht verworfen werden, da $p > 5\%$.
+
+
+### t-Test Rechnungshöhe Raucher/ Nichtraucher
+
+Alternativ kann der t-Test eingesetzt werden:
+
+```{r}
+t.test(total_bill ~ # Abhängige Variable
+            smoker, # Unabhängige Variable
+         data = tips) # Datensatz
+```
+
+
+# Anhang
+
+
+### Einfache Simulation: R-Syntax (numerisch)
+
+$H_0: \mu = 100,$
+$H_A: \mu \ne 100,$
+
+$n=30, \sigma = 15, \bar{X} = 109$
+```{r simu2, echo = TRUE, out.width="50%"}
+simu2 <- do(10000) * mean(rnorm(30, 100, 15))
+histogram(~mean, data = simu2, type = "count", v = 109)
+```
+

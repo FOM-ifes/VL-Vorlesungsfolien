@@ -1,0 +1,1052 @@
+
+```{r setup-stichprobenplanung, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Sebastian sauer 
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "Stichprobenplanung",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+options(tinytex.verbose = TRUE)
+
+```
+
+
+
+
+
+```{r libs-stichprobenplanung, include = FALSE}
+library(mosaic)
+library(pwr)
+library(simr)
+library(DiagrammeR)
+library(lsr)
+library(gridExtra)
+library(tidyr)
+library(MBESS)
+library(MASS)
+```
+
+
+
+
+# Stichprobenplanung
+
+
+## Grundlagen
+
+
+### Wie groß soll die Stichprobe sein?
+
+
+Plant man eine Studie, so stellt sich die Frage, wie groß die Stichprobe sein soll.
+
+
+Mit steigendem $n$ ...
+
+- werden Schätzungen von Populationsparametern genauer
+- werden Effekte (sofern vorhanden) schneller gefunden, d.h. Studien werden "schneller signifikant".
+- steigen (oft) die Kosten für die Erhebung.
+
+
+
+### Beispiel: Wie groß ist der Frauenanteil der Studierenden?
+
+Zwei Forscherteams möchten  herausfinden, wie groß der Frauenanteil unter den Studierenden einer Hochschule ist.
+
+
+Sei $\pi = 0.6$ (den Forscherteams aber unbekannt).
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+
+Team $A$ zieht Stichproben der Größe $n=10$
+
+
+```{r echo = FALSE}
+s1 <- do(1000) * rflip(n = 10, prob = .6)
+
+gf_bar(~ prop, data = s1) %>% 
+  gf_lims(x = c(0, 1)) %>% 
+  gf_labs(x = "Anteil Frauen") +
+  annotate("label",
+           x = -Inf, 
+           y = +Inf,
+           label = paste0("SD: ", round(sd(s1$prop), 2)),
+           hjust = 0,
+           vjust = 1)
+  
+```
+
+ 
+
+:::
+
+
+::: {.column width="50%"}
+
+Team $B$ zieht Stichproben der Größe $n=100$
+
+
+```{r echo = FALSE}
+s2 <- do(1000) * rflip(n = 100, prob = .6)
+
+gf_bar(~ prop, data = s2) %>% 
+  gf_lims(x = c(0, 1)) %>% 
+  gf_labs(x = "Anteil Frauen") +
+  annotate("label",
+           x = -Inf, 
+           y = +Inf,
+           label = paste0("SD: ", round(sd(s2$prop), 2)),
+           hjust = 0,
+           vjust = 1)
+  
+```
+
+
+:::
+::::::
+
+
+Die größeren Stichproben hat den wahren Wert genauer geschätzt als die kleinen Stichpbroben.
+
+
+
+### Übung `r nextExercise()`: Simulieren Sie den Effekt der Stichprobengröße!
+
+>   Zwei Forscherteams möchten  herausfinden, wie groß der Frauenanteil unter den Studierenden einer Hochschule ist.
+
+
+Variieren Sie die Stichprobengröße und den wahren Anteil $\pi$ in der Population. Vergleichen Sie die Effekte auf die Präzision der Schätzung.
+
+```{r eval = FALSE}
+library(mosaic)
+s1 <- do(1000) * rflip(n = 10, prob = .6)
+s2 <- do(1000) * rflip(n = 100, prob = .6)
+
+gf_bar(~ prop, data = s1)
+gf_bar(~ prop, data = s2)
+```
+
+
+
+
+
+
+### Ablauf: Hypothesenprüfung
+
+1.  Inhaltliche Hypothese operationalisieren.
+2.  Nullhypothese $H_0$ (und Alternativhypothese $H_A$, Forschungsvermutung) festlegen. Dazu passende Teststatistik bestimmen: 
+    - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
+    - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
+    - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
+3.  Verteilung der Teststatistik unter $H_0$ bestimmen.
+4.  Prüfung über p-Wert: Ist der beobachtete Wert der Teststatistik der Stichprobe unter $H_0$ (sehr) selten?
+    - Nein: $H_0$ kann nicht verworfen werden. Abweichung *nicht signifikant*.
+    - Ja: $H_0$ wird verworfen. Abweichung *signifikant*.
+
+
+
+
+
+
+### Alternativhypothese und Signifikanz
+
+- Die **Alternativhypothese** $H_A, H_1$ ist das Gegenteil der Nullhypothese. Die Rollen von $H_0$ und $H_A$ können *nicht* vertauscht werden.
+
+- Alternativen können *einseitig*, *gerichtet* (z.B. $\pi>\pi_0$ bzw. $\pi<\pi_0$) oder *zweiseitig*, *ungerichtet* (z. B. $\pi \neq \pi_0$) sein.
+
+- Das *vorab* festgelegte **Signifikanzniveau** $\alpha$^[üblich: $\alpha=1\%, 5\%, 10\%$] eines Tests gibt die maximal zugebilligte Irrtumswahrscheinlichkeit dafür an, $H_0$ zu verwerfen, obwohl $H_0$ gilt.
+
+- Damit können *vorab* kritische Werte der Verteilung unter $H_0$ bestimmt werden: liegt der Wert der Teststatistik der Stichprobe außerhalb, wird $H_0$ verworfen, sonst nicht.
+
+- Auf Grundlage der Alternative kann eine geeignete Teststatistik und der nötige Stichprobenumfang bestimmt werden.
+
+- Ist der p-Wert $< \alpha$, so wird $H_0$ verworfen, ansonsten nicht.
+ 
+- Wird die $H_0$ verworfen, so nennt man das Ergebnis (statistisch) *signifikant* zum Niveau $\alpha$.
+
+
+
+
+
+
+### Fehlerarten
+
+|   | Testentscheidung $H_0$ nicht verwerfen| Testentscheidung $H_0$ verwerfen  |
+|:---|:---:|:---:|
+| Realität: $H_0$  | Ok | **Fehler 1. Art**^[Auch $\alpha$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers wird durch das Signifikanzniveau nach oben beschränkt.] |
+| Realität: $H_A$  | **Fehler 2. Art**^[Auch $\beta$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers ist schwieriger zu bestimmen, aber siehe z. B. Paket [pwr](https://cran.r-project.org/package=pwr). Bei guten Tests sinkt sie mit größerem Stichprobenumfang $n$.]  | Ok  |
+
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Hypothesis on Trial](https://www.causeweb.org/cause/resources/fun/songs/hypothesis-trial)
+
+
+
+
+
+
+
+
+### Alpha- und Betafehler visualisiert
+
+
+```{r echo = FALSE, out.width="70%"}
+gf_dist("norm", mean = 0, sd = 1, fill = ~ cut(x, c(-Inf, 2, 100, Inf)), geom = "area", alpha = .5) %>%
+  gf_dist("norm", mean = 4, sd = 1, fill = ~ cut(x, c(-Inf, -100, 2, Inf)), geom = "area", alpha = .5) %>%
+  gf_labs(x = "p", y = "") %>%
+  gf_vline(xintercept = 2) %>%
+  gf_refine(annotate(geom = "text", x = .75, y = .42, label = "H0 beibehalten")) %>% 
+  gf_refine(annotate(geom = "text", x = 2.95, y = .42, label = "H0 verwerfen")) %>% 
+  gf_refine(annotate(geom = "text", x = 0, y = .15, size = 3, label = "H0")) %>% 
+  gf_refine(annotate(geom = "text", x = 1.35, y = .01, size = 2.5, label = "BetaFehler")) %>%
+  gf_refine(annotate(geom = "text", x = 2.6, y = .01, size = 2.5, label = "Alphafehler")) %>% 
+  gf_refine(annotate(geom = "text", x = 4, y = .15, size = 3, label = "HA")) +
+  guides(fill = FALSE) # To remove the legend
+```
+
+
+
+
+
+### Fomshiny: Stichprobenumfang {include-only=shiny}
+
+Zusammenhang des Stichprobenumfangs mit den Fehlerarten.
+
+[https://fomshinyapps.shinyapps.io/Stichprobenumfang/](https://fomshinyapps.shinyapps.io/Stichprobenumfang/)
+
+
+
+
+
+### Einflussfaktoren auf die Power
+
+
+Die Power (und Präzision einer Schätzung) hängt von mehreren Faktoren ab:
+
+
+```{r echo = FALSE, out.width = "70%"}
+grViz("
+     digraph precision {
+     
+     graph [overlap = true, fontsize = 14, layout = dot, rankdir = LR, fontname = Helvetica]
+     
+     node [shape = box, fixedsize = true, width = 2]
+     
+     Effektstärke;
+     Populationsvarianz;
+     Konfidenzniveau;
+     Stichprobengröße;
+     Präzision;
+     
+     Effektstärke -> Power
+     Populationsvarianz -> Power
+     Konfidenzniveau -> Power
+     Stichprobengröße  -> Power
+     
+     }
+")
+
+
+```
+
+
+### Lieber Präzisions- als Powerschätzung?
+
+
+Was sagt Andrew Gelman dazu?^[https://statmodeling.stat.columbia.edu/2004/12/29/type_1_type_2_t/]
+
+>   I’ve never in my professional life made a Type I error or a Type II error. But I’ve made lots of errors. How can this be?
+
+>    A Type 1 error occurs only if the null hypothesis is true (typically if a certain parameter, or difference in parameters, equals zero). In the applications I’ve worked on, in social science and public health, I’ve never come across a null hypothesis that could actually be true, or a parameter that could actually be zero.
+
+>   A Type 2 error occurs only if I claim that the null hypothesis is true, and I would certainly not do that, given my statement above!
+
+
+
+
+
+
+## Effektgröße
+
+### Effektgröße: Vorbereitung
+
+Der p-Wert gibt (nur) die Wahrscheinlichkeit der Teststatistik unter der Nullhypothese an. Er sagt nicht, wie groß/relevant ein Unterschied ist. Mit größerem Stichprobenumfang $n$ sinkt (c. p.) der p-Wert.
+
+**Cohens d**^[Anwendbar für den Vergleich zweier Mittelwerte. Es gibt auch weitere Effektgrößen. Siehe z. B. Paket [compute.es](https://cran.r-project.org/package=compute.es).] ist ein Maß für die Überlappung: $$d=\frac{\bar{x}_A-\bar{x}_B}{\text{sd}_{\text{pool}}}$$ mit $${\text{sd}_{\text{pool}}=\sqrt{\frac{1}{n_A+n_B-2}\left((n_A-1)\cdot\text{sd}^2_A+(n_B-1)\cdot\text{sd}^2_B \right)}}$$
+
+
+```{r, eval=FALSE}
+# Einmalige Installation 
+install.packages("lsr")
+
+# Paket laden
+library(lsr)
+```
+
+```{r load-library-lsr-power, echo=FALSE}
+library(lsr)
+```
+
+
+### Effektgröße - Abschätzung
+
+Daumenregel:
+
+
+- $|d|\geq 0.2$ kleiner Effekt.
+- $|d|\geq 0.5$ mittlerer Effekt.
+- $|d|\geq 0.8$ großer Effekt. 
+
+
+Mehr Daumenregeln bekommt man z.B. so:
+
+```{r}
+library(pwr)  # ggf. installieren!
+
+cohen.ES(test = "r", size = "large")
+# ?cohen.ES
+```
+
+
+
+
+### Beispiel: Effektgrößen
+
+```{r plot-cohens-d-effsize2, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- 1000
+x <- scale(rnorm(n))
+x02 <- x+0.2
+x05 <- x+0.5
+x08 <- x+0.8
+x11 <- x+1.1
+
+cohendata <- data.frame(x=c(x, x02, x, x05, x, x08, x, x11), 
+                   Gruppe=rep(c(rep(c("A","B"), each=n)), 4),
+                   d=c(rep("d=0.2", 2*n), rep("d=0.5", 2*n), rep("d=0.8", 2*n) , rep("d=1.1", 2*n)))
+
+gf_fitdistr(gformula=~x|d, color=~ordered(Gruppe), data=cohendata, size = 2) %>%
+    gf_labs(y="f(x)", x="x", color = "Gruppe")
+
+rm(n,x,x02,x05,x08,x11,cohendata)
+```
+
+
+### FOMshiny: Mittelwertsvergleich {includeonly=shiny}
+
+Einflussgrößen beim Vergleich von Mittelwerten:
+
+[https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/](https://fomshinyapps.shinyapps.io/Mittelwertsvergleich/)
+
+
+[Power und p-Werte bei Mittelwertsvergleichen](http://shinyapps.org/showapp.php?app=https://tellmi.psy.lmu.de/felix/lakens_pcurve/&by=Daniel%20Lakens&title=P-value%20distribution%20and%20power%20curves%20for%20an%20independent%20two-tailed%20t-test&shorttitle=P-value%20distribution%20and%20power%20curves)
+
+
+### Power-Analyse: Simulation $d, n$ und p-Wert
+
+```{r plot-p-value-n-d2, echo=FALSE, out.width="80%", fig.align="center"}
+set.seed(1896)
+n <- c(30, 100)
+d <- c(0, 0.2, 0.5, 0.8)
+pvalue <- matrix(nrow=10000*8, ncol = 4)
+zaehler <- 1
+for(i in 1:10000)
+  for(j in n)
+    for(k in d)
+    {
+      x0 <- rnorm(j)
+      x1 <- rnorm(j, mean=k)
+      pvalue[zaehler,1] <- j
+      pvalue[zaehler,2] <- k
+      pvalue[zaehler,3] <- t.test(x0,x1)$p.value
+      zaehler <- zaehler+1
+    }
+pvalsim <- data.frame(n=paste0("n=",pvalue[,1]), d=paste0("d=",pvalue[,2]), pvalue=pvalue[,3])
+
+gf_histogram(~pvalue, data = pvalsim, bins=20, 
+             breaks=seq(0, 1, by=0.025), fill=~ordered(pvalue<0.05)) %>%
+  gf_refine(scale_y_log10()) %>%
+  gf_vline(xintercept = ~0.05) %>%
+  gf_facet_grid(n~d) %>%
+  gf_theme(legend.position="bottom") %>%
+  gf_labs(title="Ergebnis der Simulation mit logarithmischer y-Achse",
+          fill = "p-Wert < 0.05") %>% 
+  gf_refine(scale_x_continuous(name = "p-Wert", breaks = c(0, .5, 1)))
+
+
+```
+
+
+```{r rm-simu-values3, echo=FALSE}
+rm(n)
+rm(d)
+rm(pvalue)
+rm(zaehler)
+rm(i)
+rm(j)
+rm(k)
+rm(pvalsim)
+```
+
+### Übung  `r nextExercise()`: Effektgröße und Power {.exercise type=A-B-C answer=A}
+
+Welche Aussage stimmt? 
+
+A.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, sinkt mit der Effektgröße.
+B.  Die Wahrscheinlichkeit einen Fehler 2. Art zu begehen, steigt mit der Effektgröße.
+C.  Effektgröße und Wahrscheinlichkeit Fehler 2. Art stehen in keinem Zusammenhang.
+
+::: {.notes}
+Je größer in der Population der Effekt ist ($H_A$), desto eher wird $H_0$ verworfen, also ***A***. Gleichzeitig sinkt die Wahrscheinlichkeit für einen Fehler 2. Art ($H_0$ wird nicht verworfen, obwohl $H_0$ nicht gilt) mit zunehmendem Stichprobenumfang. $d$ und $n$ bestimmen die *Power* eines Tests.
+:::
+
+
+
+
+
+### Stichprobenumfang und Schätzgenauigkeit
+
+
+Der wahre Effekt liege bei Cohens $d = 0.5$.
+
+
+```{r echo = FALSE, fig.asp= .618, out.width = "70%"}
+compute_d_ci <- function(n, d = 0.5) {
+  
+  d <- tibble(
+    sample1 = rnorm(n = n),
+    sample2 = rnorm(n = n, mean = d)  
+  ) %>% 
+    pivot_longer(cols = everything(), names_to = "Gruppe", values_to = "Wert")
+  
+  sample_d <- cohensD(Wert ~ Gruppe, data = d)
+  
+  return(d = sample_d)
+  
+}
+
+s1 <- do(1000) * compute_d_ci(n = 30)
+s2 <- do(1000) * compute_d_ci(n = 100)
+s3 <- do(1000) * compute_d_ci(n = 1000)
+
+
+
+p1 <- gf_histogram(~compute_d_ci, data = s1) %>% 
+  gf_labs(title = "n = 30") %>% 
+  gf_lims(x = c(0, 1.5)) %>% 
+  gf_vline(xintercept = c(confint(s1)$lower[1], confint(s1)$upper[1]), linetype = "dashed")
+p2 <- gf_histogram(~compute_d_ci, data = s2) %>% 
+  gf_labs(title = "n = 100") %>% 
+  gf_lims(x = c(0, 1.5)) %>% 
+  gf_vline(xintercept = c(confint(s2)$lower[1], confint(s2)$upper[1]), linetype = "dashed")
+p3 <- gf_histogram(~compute_d_ci, data = s3) %>% 
+  gf_labs(title = "n = 1000") %>% 
+  gf_lims(x = c(0, 1.5)) %>% 
+  gf_vline(xintercept = c(confint(s2)$lower[1], confint(s3)$upper[1]), linetype = "dashed")
+
+grid.arrange(p1, p2, p3, nrow = 1)
+```
+
+:::{.tiny}
+Die vertikalen gestrichelten Linien zeigen 95%-Konfidenzintervalle an.
+:::
+
+
+Mit steigendem Stichprobenumfang sinkt das Konfidenzintervall für $d$: Cohens d wird genauer geschätzt, wenn die Stichprobe größer wird.
+
+
+
+
+
+### Übung  `r nextExercise()`: Aus kleinen Schulen kommen die besten/schlechtesten Schüler/innen? {.exercise type=essay}
+
+Das Bildungsministerium legt eine neue Studie vor. Dort wird u.a. der Zusammenhang von Lernstand der Schülerinnen und Schüler mit der Schulgröße erfasst. Dabei zeigt sich: 
+
+- Zu den *besten* Schulen (höchster mittlerer Lernstand über alle Schülerinnen und Schüler der Schule) gehören überproportional viele kleine Schulen.
+- Zu den *schlechtesten* Schulen (geringster mittlerer Lernstand über alle Schülerinnen und Schüler der Schule) gehören überproportional viele kleine Schulen.
+
+
+
+\vspace{3cm}
+
+Ist das möglich? Begründen Sie.
+
+:::{.notes}
+
+**Ja**, es ist möglich. Da kleine Stichproben tendenziell eine höhere Varianz aufweisen als größere Stichproben (ceteris paribus), werden Ergebnisse aus kleineren Stichproben vergleichsweise stark streuen (im Verhältnis zu größeren Stichproben). Auf dieses Beispiel bezogen heißt das, dass einfach aufgrund der Schulgröße unterschiedlich genaue Schätzungen des Leistungsniveaus zu erwarten sind. Auch wenn die Schulen alle das gleiche mittlere Leistungsniveau haben sollten, ist zu erwarten, dass die extremsten Ergebnisse (sowohl gute als auch schlechte Leistungsniveaus) tendenziell aus kleineren Schulen stammen.
+
+:::
+
+
+
+
+### Effektstärken in der freien Wildbahn sind klein
+
+
+>   The analysis reveals that the 25th, 50th, and 75th percentiles corresponded to correlation coefficients values of 0.12, 0.25, and 0.42 and to Hedges’ g values of 0.15, 0.38, and 0.69, respectively. 
+
+```{r echo = FALSE, out.width="70%",}
+knitr::include_graphics(file.path(pathToImages,"effectsizes-wild.png"))
+```
+
+Ca. 10000 Korrelationskoeffizienten aus 3498 Studien wurden in dieser Studie untersucht.
+
+
+Publizierte Effektstärken sind eine *optimistische* Schätzung des wahren Wertes; [diese Studie](https://www.frontiersin.org/articles/10.3389/fpsyg.2019.00813/full) fand ca. um 50% reduzierte Effektstärken bei präregistrierten Studien.
+
+
+
+:::{.tiny}
+Lovakov, A., & Agadullina, E. (2017, November 27). Empirically Derived Guidelines for Interpreting Effect Size in Social Psychology. https://doi.org/10.31234/osf.io/2epc4
+:::
+
+### Power in der freien Wildbahn ist gering (Psychologie/Neurowissenschaft)
+
+- Bakker, van Dijk und Wicherts (2012):
+
+  - Mittlere Stichprobengröße: $n=40$
+  - Mittlere (publizierte) Effektgröße: $d = 0.5; r = .21$
+
+In der Konsequenz wird die mittlere Power auf dieser Grundlage auf **<34 %** geschätzt.
+
+
+:::{.tiny}
+Bakker, M., van Dijk, A., & Wicherts, J. M. (2012). The Rules of the Game Called Psychological Science. *Perspectives on Psychological Science, 7(6)*, 543–554.
+:::
+
+
+- [Szucs und Ioannidis (2017)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2000797):
+
+>   Median power to detect small, medium, and large effects was 0.12, 0.44, and 0.73, reflecting no improvement through the past half-century. 
+
+>    Journal impact factors negatively correlated with power. 
+
+
+:::{.tiny}
+Szucs, D., & Ioannidis, J. P. A. (2017). Empirical assessment of published effect sizes and power in the recent cognitive neuroscience and psychology literature. PLOS Biology, 15(3), e2000797. https://doi.org/10.1371/journal.pbio.2000797
+:::
+
+
+
+
+### Warum die meisten publizierten Studien falsch sind
+
+
+
+```{r p-most-studies-wrong, echo = FALSE, out.width="70%"}
+
+grViz("digraph manystudies {
+
+      node [fontname = Helvetica, shape = rectangle]        
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+      tab6 [label = '@@6']
+      tab7 [label = '@@7']
+      
+      
+      tab1 -> tab2;
+      tab1 -> tab3;
+      tab2 -> tab4;
+      tab2 -> tab5;
+      tab3 -> tab6;
+      tab3 -> tab7;
+      
+}
+      
+      [1]: '1000 Studien durchgeführt'
+      [2]: '100 echte Effekte'
+      [3]: '900 Nulleffekte'
+      [4]: '50 Effekte gefunden'
+      [5]: '50 Effekte übersehen'
+      [6]: '810 Nichteffekte gefunden'
+      [7]: '90 Fehlalarme'
+      ")  
+```
+
+
+- In Summe werden von 100 echten Effekten ($E+$) 50 als Effekt klassifiziert ("Test positiv"): $\text{Power} = p(T+|E+) = .5$.
+- In Summe werden 140 Effekte gemeldet ($T+$); davon sind 50 echte Effekte: $\text{PPV}:= p(E+|T+) = 50/140 \approx .7$
+- 50 von 100 Effekten werden übersehen: Betafehler ($p(T-|E+)$: .5
+- Es werden 90 Fehlarme (von 900) produziert: Alphafehler ($p(T+|E-)$): .1
+
+
+
+### Übung `r nextExercise()`: Signifikanter p-Wert = wahrer Effekt?  {.exercise type=essay}
+
+
+
+
+Die Wahrscheinlichkeit, eine $H_0$ zurückzuweisen, obwohl sie gilt, liegt meist bei 5%, dem Signifikanzniveau. Das heißt, 5% aller signifikanten Studien werden Fehlalarme sein, richtig?
+
+*Nein.*
+
+Wir suchen die Wahrscheinlichkeit $p$, dass ein Effekt (E+) vorliegt, wenn ein Test signifikant (positiv) wird: $p(E+|T+)$, *positiver Vorhersagewert*.
+
+Probieren Sie diese [App](http://shinyapps.org/showapp.php?app=https://tellmi.psy.lmu.de/felix/PPV&by=Michael%20Zehetleitner%20and%20Felix%20Sch%C3%B6nbrodt&title=When%20does%20a%20significant%20p-value%20indicate%20a%20true%20effect?&shorttitle=When%20does%20a%20significant%20p-value%20indicate%20a%20true%20effect?) aus, um herauszufinden, wann ein p-Wert einen wahren Effekt anzeigt.
+
+
+:::{.notes}
+
+s. z.B. [hier](https://www.nature.com/news/scientific-method-statistical-errors-1.14700)
+
+:::
+
+
+### Vorhersagewerte in der freien Wildbahn sind klein
+
+
+
+```{r echo = FALSE, out.width="50%"}
+knitr::include_graphics(file.path(pathToImages,"allfalse.png"))
+```
+
+PPV (Positive Predictive Value) of Research Findings for Various Combinations of Power ($1-\beta$), Ratio of True to Not-True Relationships (R), and Bias (u)
+
+:::{.tiny}
+https://doi.org/10.1371/journal.pmed.0020124.t004, Lizenz: [CC-BY](https://journals.plos.org/plosone/s/licenses-and-copyright)
+
+Ioannidis, J. P. (2005). Why most published research findings are false. *PLoS medicine, 2(8)*, e124.
+
+:::
+
+
+## Poweranalyse in der Praxis
+
+
+### Einfache Poweranalyse mit R
+
+
+Eine Forscherin vermutet für Ihre Hyothese einen starken Effekt, $d = .9$, da frühere Studien eine hohe Effektstärke ermittelt haben^[Achtung: Publication Bias: "Beeindruckend gute" Ergebnisse werden überproportional häufig publiziert.]. Jetzt plant sie den Stichprobenumfang für ihre nächste Studie.
+
+Details zur Analyse:
+
+- Verfahren: $t$-Test für zwei unabhängige Stichproben
+- Signifikanzniveau: 5%
+- Angestrebte Power: 80%
+- Alternativhypothese: einseitig
+
+
+```{r eval = FALSE}
+library(pwr)  # ggf. vorab installieren!
+pwr.t.test(d = 0.5, power = 0.8, alternative  = "greater", 
+           type = "two.sample")
+```
+
+
+```{r echo = FALSE}
+p <- pwr.t.test(d = 0.5, power = 0.8, alternative  = "greater", type = "two.sample")
+
+```
+
+
+Liefert ein $n$ von `r round(p$n)` *pro Gruppe*.
+
+
+
+### Übung  `r nextExercise()`: Welche Tests beinhaltet das R-Paket `pwr`? {.exercise type=essay}
+
+
+Stellen Sie einen Überblick über die Tests zusammen, für die das R-Paket `pwr` eine Poweranalyse bereitstellt!
+
+
+
+
+:::{.notes}
+
+https://cran.r-project.org/web/packages/pwr/vignettes/pwr-vignette.html
+
+
+
+pwr.p.test: one-sample proportion test
+pwr.2p.test: two-sample proportion test
+pwr.2p2n.test: two-sample proportion test (unequal sample sizes)
+pwr.t.test: two-sample, one-sample and paired t-tests
+pwr.t2n.test: two-sample t-tests (unequal sample sizes)
+pwr.anova.test: one-way balanced ANOVA
+pwr.r.test: correlation test
+pwr.chisq.test: chi-squared test (goodness of fit and association)
+pwr.f2.test: test for the general linear model
+::::
+
+
+
+
+### Ab welchem Stichprobenumfang stabilisieren sich Korrelationskoeffizienten?
+
+
+
+```{r echo = FALSE, out.width="70%",}
+knitr::include_graphics(file.path(pathToImages,"evolDemo-1024x621.jpg"))
+```
+
+:::{.tiny}
+Quelle: Felix Schönbrodt [osf](https://osf.io/5u6hv/), Lizenz: [MIT](https://osf.io/b5ahz/)
+:::
+
+
+>    The bottom line is: For typical scenarios in psychology (i.e., rho = .21, w = .1, confidence = 80%), correlations stabilize when n approaches 250. That means, estimates with n > 250 are not only significant, they also are fairly accurate [Quelle](https://www.nicebread.de/at-what-sample-size-do-correlations-stabilize/)
+
+
+### Konservative Schätzung einer Effektgröße
+
+Eine Studie teste einen Mittelwertsunterschied mit einem $t$-Test, wobei $n_1 = n_2 = 30$. Frühere Studien berichten Cohens $d=0.5$.
+
+Eine konservative Schätzung reduziert die berichtete Effektstärke, ca. auf die untere Grenze eine 60%-Konfidenzintervalls^[Perugini, M., Gallucci, M., & Costantini, G. (2014). Safeguard Power as a Protection Against Imprecise Power Estimates. *Perspectives on Psychological Science, 9*(3), 319–332. http://doi.org/10.1177/1745691614528519]
+
+```{r eval = FALSE}
+library(MBESS)  # ggf. installieren
+ci.smd(smd=0.5, n.1=30, n.2=30, conf.level=0.60)  #  gives lower: 0.28
+
+library(pwr)
+pwr.t.test(d = 0.28, power = 0.8)  # gives n of 202 (per group)
+```
+
+
+
+### Präzisionsplanung statt Powerplanung
+
+
+Mit dem R-Pakett `MBESS` lassen sich komfortabel benötigte Fallzahlen schätzen^[AIPE: accuracy in parameter estimation], um einen erwarteten Effekt mit gewünschter Genauigkeit zu finden.
+
+Abschätzung der benötigten Fallzahl (ss: sample size) zur Präzisionsschätzung (AIPE) für einen standardisierten Mittelwertsunterschied (smd), z.B. für ein 95%-Konfidenzintervall, das nicht breiter sein soll als 0,5-SD-Einheiten:
+
+```{r}
+library(MBESS)  # Für Hilfe: ?MBESS 
+ss.aipe.smd(delta = .5, conf.level = .95, width = .5)  
+```
+
+
+
+
+### Posthoc-Power ist zu ungenau
+
+
+
+[Beispiel]([https://statmodeling.stat.columbia.edu/2019/01/13/post-hoc-power-calculation-like-shit-sandwich/): Eine Interventionsstudie untersucht $n=200$ Patienten ($n=100$ jeweils in Experimental- bzw. Kontrollgruppe). In der Experimentalgruppe liegt der Erfolg bei 94 Patienten; Kontrollgruppe: 90 Patienten); die Effektstärke liegt bei 0.04, SE = 0.04. 
+
+
+```{r}
+se <- sqrt(0.94*0.06/100 + 0.90*0.1/100); se
+```
+
+
+D.h. der Effekt in der Population liegt grob im Bereich $[-0.04,0.12]$. Die Schätzung der Power wird sehr ungenau, ca. $[5%;92%]$
+
+
+
+
+:::::: {.columns}
+::: {.column width="50%"}
+```{r echo = FALSE, out.width="70%", fig.asp= .618}
+gf_dist("norm", mean = 0, sd = 1, fill = ~ cut(x, c(1.65, Inf)),
+          geom = "area", alpha = .5) %>% 
+  gf_labs(fill = "", y = "", title = "Mu1 = 0;Power = 5%") %>% 
+  gf_refine(theme(legend.position = "none"))
+
+```
+
+
+:::
+::: {.column width="50%"}
+
+```{r echo = FALSE, out.width="70%", fig.asp= .618}
+gf_dist("norm",  geom = "area", alpha = .5) %>% 
+  gf_dist("norm", mean = 3, sd = 1, fill = ~ cut(x, c(1.65, Inf)),
+          geom = "area", alpha = .5) %>% 
+  gf_labs(fill = "", y = "", title = "Mu1 = 3; Power = 92%") %>% 
+  gf_refine(theme(legend.position = "none"))
+```
+
+:::
+::::::
+
+
+### Simulationsbasierte Planung
+
+- Auf Basis von Simulationen kann man maßgeschneiderte Antworten zur Analyse von Powerfragen auch für komplexe Designs erhalten.
+
+- [Fallstudie zum Einstieg](https://tobiasdienlin.com/2019/03/07/what-is-statistical-power-an-illustration-using-simulated-data/)
+
+- Das R-Paket [simr](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12504) eignet sich für die komfortable Power-Simulation von Mehrebenenmodellen.
+
+
+
+
+## Beispiel zur simulationsbasierten Fallzahlplanung
+
+
+### Beispiel für eine Forschungsfrage
+
+Ein Forschungsteam interessiert sich für den Zusammenhang $\rho$ zweier Variablen
+
+$X$: Lautstärke eines Tons 
+
+$Y$: Wahrgenommene Tonhöhe.
+
+In der Population sei $\rho_{XY} = 0.3$.
+
+Wie groß sollte die Stichproben sein, um den Effekt mit hoher Power zu finden bzw. mit hoher Präzision zu schätzen?
+
+Die Fragen sollen mit Hilfe von Simulationstechniken beantwortet werden.
+
+```{r}
+my_rho <- .3
+
+# benötigte Pakete:
+library(MASS)
+library(mosaic)
+library(tidyverse)
+```
+
+
+### Korrelation zweier bivariat-normalverteilter Variablen
+
+$\rho = 0.3$
+
+
+:::::: {.columns}
+::: {.column width="70%"}
+```{r echo = FALSE}
+bivn <- mvrnorm(100000, mu = c(0, 0), Sigma = matrix(c(1, .3, .3, 1), nrow = 2))
+
+# now we do a kernel density estimate
+bivn.kde <- kde2d(bivn[,1], bivn[,2], n = 50)
+
+persp(bivn.kde, phi = 45, theta = 30)
+```
+
+
+:::
+::: {.column width="30%"}
+
+```{r echo = FALSE}
+
+bivn_df <- as_tibble(bivn) 
+
+ggplot(bivn_df) +
+  aes(x = V1, y = V2) +
+  geom_point(alpha = .01) +
+  stat_density_2d(aes(fill = ..density..), geom = "raster", contour = FALSE) +
+  scale_fill_viridis_c()
+```
+
+
+:::
+::::::
+
+
+### Simulation einer Korrelation
+
+
+:::::: {.columns}
+::: {.column width="40%"}
+
+Korrelationsmatrix:
+
+```{r}
+sigma <- matrix(c(1, my_rho, 
+                  my_rho, 1), 
+                nrow = 2)
+sigma
+```
+
+
+Die Varianzen (Hauptdiagonale) betragen 1; die Korrelation betragen 0.3.
+
+:::
+::: {.column width="55%"}
+
+Population (mit $n=1000$ Fällen):
+
+```{r}
+pop_rho <- mvrnorm(n = 1000, 
+                   mu = c(0, 0),  
+                   Sigma = sigma) %>% 
+  as_tibble()
+
+head(pop_rho, 3)
+```
+
+
+:::
+::::::
+
+
+### Kennwerte einer Stichprobe aus der Population
+
+Stichprobe von Daten ($d$) ziehen, z.B. mit $n=30$:
+
+```{r}
+set.seed(42)
+d <- sample_n(pop_rho, size = 30, replace = TRUE)
+```
+
+Kennwerte berechnen:
+
+```{r}
+sim_r <- cor(V1 ~ V2, data = d) 
+sim_r_p <- cor_test(V1 ~ V2, data = d)$p.value
+
+sim_r
+sim_r_p
+```
+
+
+### Alle Schritte in einer Funktion
+
+Alle vorherigen Schritten sind aus Gründen der Einfachheit in eine Funktion gelagert:
+
+```{r}
+simulate_r <- function(size, rho = .3, verbose = TRUE){
+  
+  sigma <- matrix(c(1, rho, rho, 1), nrow = 2) 
+  pop_rho <- mvrnorm(n = 1e03, mu = c(0, 0),  #
+                   Sigma = sigma) %>% as_tibble()
+  d <- sample_n(pop_rho, size = size, replace = TRUE)
+  sim_r <- cor(V1 ~ V2, data = d) 
+  sim_r_p <- cor_test(V1 ~ V2, data = d)$p.value
+  if (verbose == TRUE) cat("simulated r: ", round(sim_r, 2),"\n")
+  return(c(r = sim_r, p = sim_r_p))
+}
+
+set.seed(42)
+simulate_r(size = 50, verbose = FALSE)
+```
+
+
+### Umfang der Poweranalyse bestimmen
+
+Das Forschungsteam einigt sich, die Power und Präzision für Stichproben 30 verschiedene Größen $n \in \{10, 20, 30, \ldots , 300\}$ zu berechnen, unter der Annahme $\rho=0.3$.  Für jede Stichprobengröße sollen 30 Durchläufe (trials) simuliert werden, um der Variation beim Stichprobenziehen Rechnung zu tragen. Insgesamt sind also $30\cdot30=900$ Versuche zu simulieren.
+
+In Tabelle `combinations` sind die 900 Kombinationen aufgeführt:
+
+```{r}
+combinations <- crossing(sizes = seq(from = 10, by = 10, 
+                                     length.out = 30),
+                 trials = 1:30)
+
+glimpse(combinations)
+```
+
+
+
+
+### Simulationen durchführen
+
+Mit `map(.x, .f)` wird für jedes Element von `.x` die Funktion `.f` ausgeführt. Die resultierende Liste wird als Spalte `r_list` gespeichert.
+
+```{r eval = FALSE}
+r_simulated <- combinations %>% 
+  mutate(r_list = map(.x = combinations$sizes, 
+                      .f = ~ simulate_r(size = ., rho = my_rho))) 
+head(r_simulated)
+```
+
+
+```{r echo = FALSE}
+r_simulated <- combinations %>% 
+  mutate(r_list = map(.x = combinations$sizes, .f = ~ simulate_r(size = ., rho = my_rho, verbose = FALSE))) 
+
+head(r_simulated, 3)
+```
+
+
+Die Spalte `r_list` ist eine Liste, d.h. sie birgt mehrere Informationen (Korrelationswert und zugehöriger $p$-Wert).
+
+
+
+### Spalte "entschachteln"
+
+Die Spalte `r_list` ist eine Liste, d.h. sie birgt mehrere Informationen (erstens Korrelationswert und zweitesn den zugehörigen $p$-Wert).
+
+Diese Spalte muss noch in zwei Spalten "entschachtelt" werden -- eine Spalte für den Korrelationswert, eine für den $p$-Wert.
+
+
+```{r}
+r_simulated_unnested <- r_simulated %>% 
+  unnest_wider(r_list) %>% 
+  mutate(is_significant = p < .05)  # Prüfung, ob signifikant
+
+head(r_simulated_unnested)
+```
+
+
+### Visualisieren der Power
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+Berechne für jede Stichprobengröße (mit je 30 Trials) die Anzahl der signifikanten Trials:
+
+```{r}
+r_sig_per_size <-  
+  r_simulated_unnested %>% 
+  group_by(sizes) %>% 
+  summarise(power = 
+              sum(is_significant) / n())
+```
+
+
+:::
+::: {.column width="40%"}
+
+```{r}
+gf_line(power ~ sizes, 
+        data = 
+          r_sig_per_size) %>% 
+  gf_smooth() %>% 
+  gf_hline(yintercept = .8)
+```
+
+
+:::
+::::::
+
+
+### Visualisierung der Schätzgenauigkeit
+
+
+:::::: {.columns}
+::: {.column width="60%"}
+
+```{r}
+r_sim_per_size <- 
+  r_simulated_unnested %>% 
+  group_by(sizes) %>% 
+  summarise(r_iqr = 
+              iqr(r))
+```
+
+
+:::
+::: {.column width="40%"}
+
+
+```{r}
+gf_line(r_iqr ~ sizes, 
+        data = 
+          r_sim_per_size) %>% 
+  gf_smooth() %>% 
+  gf_hline(yintercept = 0.1)
+```
+
+
+
+
+:::
+::::::
+
+
+
+

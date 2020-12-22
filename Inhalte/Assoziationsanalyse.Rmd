@@ -9,7 +9,7 @@ initPart(
     "Assoziationsanalyse",  # Dateiname ohne Suffix
     "Assoziationsanalyse"              # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 rm(inspect)
@@ -19,7 +19,7 @@ library(arules)
 library(arulesViz)
 ```
 
-# `r nextChapter()` Assoziationsanalyse
+# Assoziationsanalyse
 
 
 ### Einführung
@@ -49,6 +49,14 @@ Assoziationsregeln sind eine explorative Analysemethode, die keine (statistische
 - *Support($A\rightarrow B$)*=Support($A\cup B$)$=\frac{|\{t\in D; (A\cup B) \subseteq t\}|}{|D|}$: Relative Häufigkeit, d. h. der Anteil der Transaktionen, in denen die Vereinigung einer Menge von Items $A$ und $B$ vorkommt, bezogen auf alle Transaktionen (vgl. gemeinsame Wahrscheinlichkeit, $P(A \cap B)$)
 - *Confidence*($A \rightarrow B$)$=\frac{support(A \cup B)}{support(A)}$: Relative Häufigkeit von $B$ (rechte Seite), bezogen auf alle Transaktionen mit $A$ (linke Seite; vgl. bedingte Wahrscheinlichkeit, $P(B|A)$)
 - *Lift*($A \rightarrow B$)$=\frac{support(A \cup B)}{support(A) \cdot support(B)}$: Steigerung des Supports von $A$ und $B$ im Vergleich zur unter Unabhängigkeit von $A$ und $B$ erwarteten Häufigkeit (vgl. $\frac{P(A\cap B)}{P(A) \cdot P(B)}=\frac{P(B|A)}{P(B)}$)
+
+### Beispiel
+
+- Support(Chips)$=0.05$, d. h. 5% der Transaktionen enthalten Chips
+- Support(Bier)$=0.01$, d. h. 1% der Transaktionen enthalten Bier
+- Support(Bier $\cup$ Chips)$=0.002$, d. h. 0,2% der Transaktionen enthalten Bier und Chips, dann:
+- Confidence(Bier$\rightarrow$Chips)$=\frac{0.002}{0.01}=0.2$, d. h. 20% aller Transaktionen mit Bier enthalten auch Chips
+- Lift(Bier$\rightarrow$Chips)$=\frac{0.002}{0.01\cdot 0.05}=\frac{0.2}{0.05}=4$, d. h. die Chance, dass eine Transaktion Chips enthält ist 4x größer als zu erwarten wäre, wenn es keinen Zusammenhang zwischen Bier und Chips gäbe
 
 
 ### Übung `r nextExercise()`: Support {.exercise type=yesno answer=yes}
@@ -84,27 +92,6 @@ Stimmt die Aussage: Der Lift ist symmetrisch, d. h.: *Lift*($A \rightarrow B$)=*
 
 <div class="notes">
 ***Ja***, da $\frac{support(A \cup B)}{support(A) \cdot support(B)}=\frac{support(B \cup A)}{support(B) \cdot support(A)}$.
-</div>
-
-
-### Beispiel
-
-- Support(Chips)$=0.05$, d. h. 5% der Transaktionen enthalten Chips
-- Support(Bier)$=0.01$, d. h. 1% der Transaktionen enthalten Bier
-- Support(Bier $\cup$ Chips)$=0.002$, d. h. 0,2% der Transaktionen enthalten Bier und Chips, dann:
-- Confidence(Bier$\rightarrow$Chips)$=\frac{0.002}{0.01}=0.2$, d. h. 20% aller Transaktionen mit Bier enthalten auch Chips
-- Lift(Bier$\rightarrow$Chips)$=\frac{0.002}{0.01\cdot 0.05}=\frac{0.2}{0.05}=4$, d. h. die Chance, dass eine Transaktion Chips enthält ist 4x größer als zu erwarten wäre, wenn es keinen Zusammenhang zwischen Bier und Chips gäbe
-
-
-### Übung `r nextExercise()`: Vergleich Support und Konfidenz {.exercise type=yesno answer=no}
-
-Stimmt die Aussage: Die Konfidenz ist stets größer als der Support: *Confidence*($A \rightarrow B$)>*Support*($B$)?
-
-- Ja.
-- Nein.
-
-<div class="notes">
-***Nein***, nur wenn *Lift*>1: z. B. könnten $10\,\%$ aller Kunden Gemüse kaufen, aber nur $5\,\%$ aller Kunden von Korn.
 </div>
 
 ### Beispiel
@@ -151,6 +138,19 @@ C.  0,5
 </div>
 
 
+### Übung `r nextExercise()`: Vergleich Support und Konfidenz {.exercise type=yesno answer=no}
+
+Stimmt die Aussage: Die Konfidenz ist stets größer als der Support: *Confidence*($A \rightarrow B$)>*Support*($B$)?
+
+- Ja.
+- Nein.
+
+<div class="notes">
+***Nein***, nur wenn *Lift*>1: z. B. könnten $10\,\%$ aller Kunden Gemüse kaufen, aber nur $5\,\%$ aller Kunden von Korn.
+</div>
+
+
+
 ### Übung `r nextExercise()`: Berechnung Lift {.exercise type=A-B-C answer=C}
 
 Angenommen Sie haben 100000 Kunden, von denen kaufen insgesamt 25000 Cola und 20000 Würstchen. Davon kaufen 10000 Cola und Würstchen.
@@ -164,6 +164,7 @@ C.  2
 <div class="notes">
 ***C***: $\frac{0,5}{0,25}$.
 </div>
+
 
 
 ### Assoziationsanalyse mit R

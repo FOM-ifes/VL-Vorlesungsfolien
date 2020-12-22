@@ -1,0 +1,33 @@
+```{r, setup-EmpFo-Organisatorisches, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Oliver Gansser
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "EmpFo-Organisatorisches",  # Dateiname ohne Suffix
+    "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r nextChapter()` Inhalt des Workshop/Seminar
+
+
+- Grundlegenden Überblick über die empirische Forschung. 
+- Vorstellung masterkongruente Forschungsmethodologien.
+- Anwendung im Rahmen empirischer Arbeiten in der Lehre und der eigenen Forschung. 
+
+*Ziel:*
+
+Vergleichbarkeit in den Anforderungen und Bewertungen von wissenschaftlichen Haus- und Abschlussarbeiten standortübergreifend.
+
+
+```{r finish--Kind-EmpFo-Organisatorisches, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

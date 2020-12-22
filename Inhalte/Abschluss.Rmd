@@ -1,7 +1,16 @@
 ```{r setup-Abschluss, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
 source("../prelude.R")
-pathToImages = getPathToImages("Abschluss")
-
+initPart(
+    "Abschluss",  # Dateiname ohne Suffix
+    "Abschluss"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
 ```
 
 ### Klausur
@@ -20,7 +29,7 @@ Song [https://www.causeweb.org](https://www.causeweb.org): [Lawrence Mark Lesser
 
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Rplot.pdf"))
+knitr::include_graphics(file.path(pathToImages, "Zusammenhang-Lernen-Noten.pdf"), error=FALSE)
 ```
 
 Siehe Blogbeitrag [Sebastian Sauer (20.12.2017) "Zusammenhang von Lernen und Noten im Statistikunterricht"](https://data-se.netlify.com/2017/12/20/zusammenhang-von-lernen-und-noten-im-statistikunterricht/)

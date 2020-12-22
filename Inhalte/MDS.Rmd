@@ -9,7 +9,7 @@ initPart(
     "MDS",  # Dateiname ohne Suffix
     "Marketingcontrolling"        # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
@@ -25,10 +25,10 @@ library(mosaic)
 - Daten für die MDS aufbereiten.
 - Anwendung der MDS.
 - Interpretation und Schlussfolgerungen der MDS.
-- Evaluation des Einsates der MDS in der Marketing Controlling Praxis.
+- Evaluation des Einsatzes der MDS in der Marketing Controlling Praxis.
 
 
-### Multidimensiononale Skalierung (MDS)
+### Multidimensionale Skalierung (MDS)
 
 MDS ist eine Methode, mit der auch niedrigdimensionale Darstellungen von Daten gefunden werden können. Statt Komponenten oder latente Faktoren wie bei der PCA oder EFA zu extrahieren, arbeitet das MDS stattdessen mit Entfernungen (oder Ähnlichkeiten). 
 
@@ -62,7 +62,7 @@ Konstruktion eines möglichst niedrig dimensionierten Wahrnehmungsraums aus der 
 
 Gründe für den Umweg:
 
-- Verzichtet auf Vorgabe von Merkmalen um nicht auf bestimmte Merkmale aufmerksam zu machen.
+- Verzichtet auf Vorgabe von Merkmalen, um nicht auf bestimmte Merkmale aufmerksam zu machen.
 - Die Merkmale, die Personen bei Beurteilungsobjekten wahrnehmen, sind dem Untersuchungsleiter unbekannt.
 - Bei direkt erfragten Wahrnehmungen (konfirmatorischen Messungen) ist die interne Konsistenz der Daten nicht prüfbar
 - Die Merkmale sind z. T. sehr subjektiver oder emotionaler Art, sie lassen sich nicht gut in Worte fassen.
@@ -110,7 +110,7 @@ Bei der Bestimmung der Konfiguration verwendet die MDS einen **iterativen Prozes
 Die **Idee** hinter diesem Prozess:
 
 1. Alle Objekte werden willkürlich im Raum angeordnet.
-2. Die Distanzen zwischen den Objekten werden nun mit den Ähnlichkeiten verglichen. Liegen nun zwei Objekte im Verhältnis zur Ähnlichkeit weit **auseinander/bei einander**, werden sie **aufeinander zu-/voneinander** weg geschoben
+2. Die Distanzen zwischen den Objekten werden nun mit den Ähnlichkeiten verglichen. Liegen nun zwei Objekte im Verhältnis zur Ähnlichkeit weit **auseinander/bei einander**, werden sie **aufeinander zu-/voneinander** weggeschoben
 3. Dieser Vorgang wird so lange wiederholt, bis die Konfiguration der Objekte die erhobenen Ähnlichkeiten zufriedenstellend abbildet.
 
 
@@ -136,7 +136,7 @@ knitr::include_graphics(file.path(pathToImages, "Euklid.png"))
 
 ### Übung `r nextExercise()`: Eukliddistanz {.exercise type=A-B-C answer=A}
 
-Wie Lang ist die eukliddistanz im Schaubild auf der letzten Folie?
+Wie lang ist die Euklid Distanz im Schaubild auf der letzten Folie?
 
 A.  2,82
 B.  4
@@ -161,7 +161,7 @@ Wenn andere Daten vorliegen, wie z.B. die Markenbewertungsdaten, die wir bereits
 
 
 ```{r}
-# Download der skalierten aggreguierten Markenbewertungen 
+# Download der skalierten aggregierten Markenbewertungen 
 # (10 Marken, 9 Dimensionen)
 load(url("http://gansser.de/data/brand/brand.mean.Rdata")) 
 brand.dist <- dist(brand.mean) # Distanzmatrix berechnen
@@ -186,7 +186,7 @@ text(brand.mds, rownames(brand.mds), cex=2)
 ```
 
 
-### Übung `r nextExercise()`: MDS Lösung {.exercise type=essy}
+### Übung `r nextExercise()`: MDS Lösung {.exercise type=essay}
 
 Diskutieren Sie, welche Schlüsse das Marketing aus diesen Ergebnissen ziehen kann. 
 
@@ -204,7 +204,7 @@ clusplot(fanny(brand.dist, k=3), color="TRUE", shade=FALSE,
          main="Brandbeurteilungen Clusterlösung")
 ```
 
-### Übung `r nextExercise()`: Cluster/PCA  {.exercise type=essy}
+### Übung `r nextExercise()`: Cluster/PCA  {.exercise type=essay}
 
 Was fällt Ihnen auf, wenn Sie das Ergebnis mit den Ergebnissen aus dem Kapitel PCA vergleichen?
 
@@ -213,13 +213,13 @@ Was fällt Ihnen auf, wenn Sie das Ergebnis mit den Ergebnissen aus dem Kapitel 
 </div>
 
 
-### Übung `r nextExercise()`: Fallstudie/praktische Anwendung zur MDS  {.exercise type=essy}
+### Übung `r nextExercise()`: Fallstudie/praktische Anwendung zur MDS  {.exercise type=essay}
 
 Ausgangssituation und Aufgabenstellung: 
 
 1.	Diskutieren Sie in der Vorlesung, welches Produkt Sie positionieren wollen.
 2.	Wieviele Markenanbieter gibt es zu diesem Produkt? (Die Anzahl Anbieter sollte 10 nicht übersteigen, da sonst die Matrix zu groß wird und der Paarvergleich zu umfangreich.
-3.	Wie groß ist die Anzahl Paarvergleiche die bewertet werden müssen? (Berechnung mit Formel)
+3.	Wie groß ist die Anzahl Paarvergleiche, die bewertet werden müssen? (Berechnung mit Formel)
 4.	Erstellen Sie ein Fragebogendesign für die Abfrage aller Paarvergleiche.
 5.	Welche Skala wählen Sie?
 6.	Erfassen Sie die Daten je Teilnehmer im Kurs und aggregieren Sie die Daten anschließend so, dass Sie eine Unähnlichkeitsmatrix bekommen.

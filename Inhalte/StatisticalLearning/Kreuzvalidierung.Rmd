@@ -1,0 +1,245 @@
+```{r setup-Kreuzvalidierung, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+# ---------------------------------------------------------------------------
+source("../../prelude.R")
+initPart(
+    "LernenVonDaten",  # Dateiname ohne Suffix
+    "StatisticalLearning"      # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages = getPathToImages()
+# ---------------------------------------------------------------------------
+
+
+```
+
+
+```{r include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  out.width = "70%",
+  fig.align = 'center',
+  fig.width = 6,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  size = "tiny"
+)
+
+```
+
+
+
+
+```{r libs-kreuzvalidierung, include = FALSE}
+library(mosaic)
+library(gridExtra)
+library(tidyverse)
+```
+
+
+
+# Kreuz-Validierung
+
+
+## Trennung in Trainings- und Test-Datensatz
+
+
+### Güte im Trainings- vs. Test-Datensatz
+
+Die Modellgüte kann im Trainings-Datensatz deutlich anders sein als im Test-Datensatz: Zumeist ist die Modellgüte im Test-Datensatz *schlechter*.
+
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "2.9.pdf"), error = FALSE)
+
+```
+
+Links: Daten simuliert von $f$ mit drei Variaten von $\hat{f}$. Rechts: Trainings-MSE (grau), Test-MSE (rot). Gestrichelte Linie: Minimum-MSE
+
+
+### Aufteilung in Trainings- vs. Test-Datensatz
+
+
+Zufällige Aufteilung in Trainings- und Test-Datensatz ("hold-out set").
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "5.1.pdf"), error = FALSE)
+
+```
+
+
+
+Z.B. 50-50-Aufteilung oder (häufig) 80-20-Aufteilung
+
+
+
+### Vor- und Nachteile
+
+
+#### Vorteile
+
+Weniger rechenintensiv als andere Kreuzvalidierungsmethoden.
+
+
+
+#### Nachteile
+
+
+Keine Quantifizierung der Genauigkeit der Schätzung der Modellgüte.
+
+
+
+
+
+### MSE bei verschiedenen Aufteilungen
+
+
+Je nach Zufallsziehung der Aufteilung kann es zu unterschiedlichen Modellgüten (z.B. gemessen mit MSE) kommen.
+
+
+Welche Aufteilung (Modellgüte) ist die "richtige"?
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "5.2.pdf"), error = FALSE)
+
+```
+
+
+Links: Test-MSE bei einer bestimmten Train-Test-Aufteilung. Rechts: 10 Wiederholung der Aufteilung mit jeweils Test-MSE.
+
+
+
+## Leave-one-out Cross Validation (LOOCV)
+
+
+### LOOCV: Eine Beobachtung für den Test-Datensatz
+
+Bei der LOOCV wird eine einzige Beobachtung für den Test-Datensatz verwendet; der Rest der $n-1$ Beobachtungen für den Trainings-Datensatz. Diese Aufteilung wird für alle Beobachtungen des Datensatzes wiederholt und so der Test-MSE berechnet:
+
+$$CV_{n}  = \frac{1}{n}\sum_{i=1}^{n}MSE_i$$
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "5.3.pdf"), error = FALSE)
+
+```
+
+
+
+
+### Vor- und Nachteile
+
+
+#### Vorteile
+
+Der Bias ist gering.
+
+
+#### Nachteile
+
+Hoher Rechenaufwand
+
+
+
+## k-fache Kreuzvalidierung
+
+
+### Mehrfache Train-Test-Aufteilung
+
+Die Stichprobe wird in $k$ Gruppen (Faltungen; "folds") aufgeteilt (von etwa gleicher Größe). Die erste Faltung wird als Test-Datensatz verwendet; die übrigen $k-1$ Faltungen als Train-Datensatz. Dieses Vorgehen wird $k$ mal wiederholt: $k$-fache Kreuzvalidierung (k-KV).
+
+Die Modellgüte wird oft als Mittelwert (der Test-MSE) berechnet:
+
+
+$$CV_{(k)} = \frac{1}{n} \sum_{i=1}^k MSE_i$$
+
+LOOCV ist ein Spezialfall der k-fachen Kreuzvalidierung, wo $k=n$.
+
+Häufig wird $k=5$ oder $k=10$ verwendet.
+
+
+### Schema
+
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "5.5.pdf"), error = FALSE)
+
+```
+
+
+
+
+### Vor- und Nachteile
+
+
+#### Vorteile
+
+Weniger rechenintensiv als LOOCV.
+
+
+
+#### Nachteile
+
+
+Der Bias kann höher sein als in LOOCV.
+
+
+
+
+
+
+### Vergleich von LOOCV und k-fache Kreuzvalidierung
+
+
+```{r echo = FALSE, out.height="60%"}
+knitr::include_graphics(file.path(pathToImages, "5.4.pdf"), error = FALSE)
+
+```
+
+
+LOOCV hat einen geringen Bias als die k-KV, aber mehr Varianz als k-KV (da die Modelle hoch korreliert sind).
+
+
+
+## Kreuzvalidierung bei Klassifikationsproblemen
+
+
+### Korrektklassifikationsrate anstelle von MSE
+
+Bei Klassifikationsproblemen werden Kennzahlen der Klassifikationsgüte verwendet wie die Korrektklassifikationsrate, anstelle von z.B. MSE. Bei LOOCV:
+
+$$CV_{n} = \frac{1}{n} \sum_{i=1}^n \text{Err}_i, \qquad \text{wobei } Err_i = I(y_i \ne \hat{y}_i)$$
+
+
+
+
+
+
+```{r echo = FALSE, out.height="50%"}
+knitr::include_graphics(file.path(pathToImages, "5.8.pdf"), error = FALSE)
+
+```
+
+Testfehler (braun), Trainingsfehler (blau), $10k-CV$ (schwarz). Links: Logististische Regression. Rechts: $kNN-$Methode.
+
+
+
+
+
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```
+

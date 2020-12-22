@@ -1,0 +1,487 @@
+```{r setup-ggformula-tipps, echo=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Norman Markgraf
+#%
+#% Zur Wiederholung oder als Crashkurs
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Wiederholung-R.",    # Dateiname ohne Suffix
+    "EinfuehrungInferenz"   # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+# URL
+daten_url <- "http://statistix.org/Data/SaratogaHouses.csv"
+# Daten einlesen
+Houses <- read.csv2(daten_url)
+knitr::opts_chunk$set(
+    fig.align="center", 
+    out.width="62%"
+)
+width.left = "55%"
+width.right = "40%"
+
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+ggplot2::theme_set(
+    ggplot2::theme_classic(
+        base_size = 22*1.6,
+        base_line_size = 1.6,
+        base_rect_size = 1.6
+    )
+)
+
+```
+
+
+# Tipps für die Darstellung mit `ggformula`
+
+### Säulendiagramme
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, saeule_einfach, eval=FALSE}
+# Säulendiagramm
+gf_bar( ~ Klimaanlage, 
+        data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="saeule_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, saeule_einfach_prozent, eval=FALSE}
+# Säulendiagramm mit Prozentangabe
+gf_percents( ~ Klimaanlage, 
+             data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="saeule_einfach_prozent", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, saeule_einfach_anteilswerte, eval=FALSE}
+# Säulendiagramm mit Anteilswerten
+gf_props( ~ Klimaanlage, 
+          data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="saeule_einfach_anteilswerte", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Balkendiagramme
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, balken_einfach, eval=FALSE}
+# Balkendiagramm
+gf_countsh( ~ Klimaanlage, 
+            data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="balken_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, balken_einfach_prozent, eval=FALSE}
+# Balkendiagramm mit Prozentangabe
+gf_percentsh( ~ Klimaanlage, 
+              data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="balken_einfach_prozent", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, balken_einfach_anteilswerte, eval=FALSE}
+# Balkendiagramm mit Anteilswerten
+gf_propsh( ~ Klimaanlage, 
+           data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="balken_einfach_anteilswerte", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Histogramme
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogramm_einfach, eval=FALSE}
+# Histogramm (Anzahl)
+gf_histogram( ~ Preis, 
+              data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogramm_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dhistogramm_einfach, eval=FALSE}
+# Histogramm (Dichte)
+gf_dhistogram( ~ Preis, 
+               data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dhistogramm_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dhistogramm_gruppiert, eval=FALSE}
+# Histogramm (Dichte), gruppiert
+gf_dhistogram( ~ Preis,
+               fill = ~ Kamin,
+               data = Houses) + 
+    scale_fill_viridis_d() + 
+    theme(axis.text.x = element_text(angle = 90))
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dhistogramm_gruppiert", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Horizontale Histogramme 
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogramm_einfach_horizontal, eval=FALSE}
+# Histogramm (Anzahl)
+gf_histogramh( ~ Preis, 
+           data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogramm_einfach_horizontal", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dhistogramm_einfach_horizontal, eval=FALSE}
+# Histogramm (Dichte)
+gf_dhistogramh( ~ Preis, 
+                data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dhistogramm_einfach_horizontal", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Histogramme mit der Option `bins=`
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogram_bin_5, eval=FALSE}
+# Histogramm mit 5 Rechtecken
+gf_histogram( ~ Preis, 
+             bins = 5,
+             data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogram_bin_5", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogram_bin_15, eval=FALSE}
+# Histogramm mit 15 Rechtecken
+gf_histogram( ~ Preis, 
+             bins = 15,
+             data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogram_bin_15", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogram_bin_40, eval=FALSE}
+# Histogramm mit 40 Rechtecken
+gf_histogram( ~ Preis, 
+             bins = 40,
+             data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogram_bin_40", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Histogramme mit der Option `binwidth=` und `center=`
+
+```{r}
+h <- diff(range( ~ Preis, data=Houses)) # Gesamtbreite bestimmen
+```
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogramm_binwidth_1, eval=FALSE}
+# Histogramm mit 1/4 der Gesamtbreite
+# pro Korb
+gf_histogram( ~ Preis, 
+             binwidth = h/4,
+             center = h/8,
+             data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogramm_binwidth_1", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogramm_binwidth_2, eval=FALSE}
+# Histogramm mit 1/19 der Gesamtbreite
+# pro Korb
+gf_histogram( ~ Preis, 
+             binwidth = h/19,
+             center=h/38,
+             data = Houses)
+
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogramm_binwidth_2", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, histogramm_binwidth_3, eval=FALSE}
+# Histogramm mit Korbbreite 20000
+gf_histogram( ~ Preis, 
+             binwidth = 20000,
+             center = 10000,
+             data = Houses)
+
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="histogramm_binwidth_3", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Dichte(schätzer)
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dentity_einfach, eval=FALSE}
+# Kerndichteschätzung
+gf_density( ~ Preis, 
+            data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dentity_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dens_einfach, eval=FALSE}
+# Kerndichteschätzung
+gf_dens( ~ Preis, 
+         data = Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dens_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dens_gruppiert, eval=FALSE}
+# Kerndichteschätzung, gruppiert 
+# mit Farbe
+gf_dens( ~ Preis, 
+         color = ~ Kamin,
+         data = Houses) + scale_color_viridis_d() + 
+    theme(axis.text.x = element_text(angle = 90))
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dens_gruppiert", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Violinen-Plots 
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, violine_einfach, eval=FALSE}
+# Violine mit Mittelwert
+gf_violin( Preis ~ 1, 
+            data = Houses) %>%
+    gf_point(Preis ~ 1, stat="summary", 
+             fun.y="mean", color="red", 
+             data= Houses)
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="violine_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, violine_vergleich, eval=FALSE}
+# Violinen mit Mittelwerten
+gf_violin( Preis ~ Heizung, 
+            data = Houses) %>%
+    gf_point(Preis ~ Heizung,
+             stat="summary", 
+             fun.y="mean", color="red", 
+             data= Houses)
+``` 
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="violine_vergleich", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+### Dot-Plots 
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dotplot_einfach, eval=FALSE}
+# Dotplot
+gf_dotplot( Alter ~ 1, 
+            data = sample(Houses, 50))
+```
+:::
+::: {.column width="40%"}
+
+```{r, ref.label="dotplot_einfach", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+:::::: {.columns}
+::: {.column width="55%"}
+```{r, dotplot_vergleich, eval=FALSE}
+library(viridis)
+# Dotplot zweier Gruppen
+gf_dotplot(  ~ Alter, 
+            fill = ~ Kamin, 
+            stackgroups = TRUE, 
+            binpositions="all",
+            data = sample(Houses, 120)
+        ) + scale_fill_viridis_d()
+``` 
+:::
+::: {.column width="44%"}
+
+```{r, ref.label="dotplot_vergleich", eval=TRUE, echo=FALSE}
+```
+:::
+::::::
+
+
+
+### Überschrift, Untertitel, Y- & X-Achsenbezeichner und Abbildungsunterschrift
+
+```{r, fig.align="center", out.width="40%"}
+# Säulendiagramm
+gf_bar( ~ Klimaanlage, 
+        title = "Das ist der Titel",
+        subtitle = "Das ist der Untertitel",
+        xlab = "X-Achsenbeschriftung",
+        ylab = "Y-Achsenbeschriftung",
+        caption = "Abbildungsunterschrift",
+        data = Houses)
+```
+
+```{r finish-ggformula-tipps, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```

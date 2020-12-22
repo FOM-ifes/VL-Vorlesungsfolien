@@ -9,12 +9,24 @@ initPart(
     "Fragebogen",  # Dateiname ohne Suffix
     "Fragebogen"       # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 ```
 
-# `r nextChapter()` Entwicklung des Fragebogens
+# Entwicklung eines Fragebogens
+
+
+### Lernziele {exclude-only=NOlernziele}
+
+
+Die Studierenden ...
+
+- können Befragungen und Fragen/Items taxonomisch einteileen (z.B. nach Kommunikationsform).
+- kennen Grundlagen der Formulierung von Fragen.
+- kennen typische Fehlerquellen bei der Beantwortung von Fragen und wissen um Ansätze, solche Fehler zu vermeiden.
+- können Richtlinien für gute Qualität beim Erstellen eines Fragebogens nennen.
+
 
 ### Formen der Befragung
 
@@ -66,7 +78,22 @@ pathToImages = getPathToImages()
 - Fragen nach Eigenschaften der APN (Antwortperson)
   - "Was ist ihr höchster Bildungsabschluss?"
   - Antwortkategorie: "Hauptschulabschluss" / "Mittlere Reife" / "Fachhochschulreife" / "Allgemeine Hochschulreife" / "Kein Abschluss"
-  
+
+
+### Übung `r nextExercise()`: Fragetypen {.exercise type=A-B-C-D answer=B}
+
+Um welchen Fragentyp handelt es sich bei der Frage: „Im Abgangsjahr 2017 haben mehr Schulabsolventen/ -abgänger die Schule mit allgemeiner Hochschulreife als mit einem Realschulabschluss verlassen.“
+
+A.  Einstellungs - oder Meinungsfrage.
+B.  Überzeugungsfrage.
+C.  Verhaltensfrage.
+D.  Frage nach Eigenschaften der APN (Antwortperson).
+
+::: {.notes}
+Die Frage zielt darauf ab, eine Einschätzung der APN zu bekommen, ob der beschriebene Sachverhalt richtig oder falsch ist, daher Antwort ***B***.
+:::
+
+
 ### Die Frage: Formen, Struktur und Funktionen 
 <!-- Eigentlich als Tabelle mit zwei Spalten formatiert --> 
 **geschlossene Fragen**
@@ -92,6 +119,21 @@ pathToImages = getPathToImages()
   - Unterschiedliches Verbalisierungsvermögen der Befragten
   - schwierige und zeitaufwändige Auswertung
 
+
+### Übung `r nextExercise()`: Geschlossene und offene Fragen {.exercise type=A-B-C-D answer=C}
+
+Was ist ein Vorteil von offenen Fragen?
+
+A.  Unterschiedliches Verbalisierungsvermögen der Befragten.
+B.  Geringerer Zeitaufwand für Befragte.
+C.  Befragter muss sich nicht an vorgegebene Antwortkategorien halten.
+D.  Vergleichbarkeit der Antworten.
+
+::: {.notes}
+Offene Fragen erlauben dem Befragten frei zu antworten, ohne sich dabei an vorgegebene Antwortkategorien halten zu müssen, daher Antwort ***C***.
+:::
+
+
 ### Die Frage: Formen, Struktur und Funktionen 
 
 **Antwortformate**
@@ -115,22 +157,22 @@ pathToImages = getPathToImages()
 - oft maximale Abstufung von 5 bis 7 Kategorien
 - unipolare vs. bipolare Ratingskala
 ```{r echo=FALSE, out.width = "60%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Rating.png"))
+knitr::include_graphics(file.path(pathToImages, "Rating.png"), error=FALSE)
 ```
 
 - Skala mit der Angabe der Ausprägungen pro Antwortmöglichkeit: Ordinalskala
 ```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Ordinalskala.png"))
+knitr::include_graphics(file.path(pathToImages, "Ordinalskala.png"), error=FALSE)
 ```
 
 - **Likert-Skala** mit Angabe an den Extrempunkten: Intervallskala
 ```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Intervallskala1.png"))
+knitr::include_graphics(file.path(pathToImages, "Intervallskala1.png"), error=FALSE)
 ```
 
 - **Likert-Skala** mit Angabe aller *gleichabständigen* Skalenwerte: Intervallskala
 ```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"))
+knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"), error=FALSE)
 ```
 
 
@@ -165,7 +207,22 @@ knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"))
   - "Sind Sie nicht auch der Meinung, dass ausländische Straftäter schneller abgeschoben werden müssten?"
 - Befragte nicht überfordern
   - "Wie viel Prozent des Monatseinkommens geben Sie für die Miete aus?"
-  
+
+
+### Übung `r nextExercise()`: Fragenformulierung {.exercise type=A-B-C-D answer=C}
+
+Welche dieser Fragen entspricht den genannten Kriterien zur Fragenformulierung?
+
+A.  Freuen Sie sich nicht auch auf Weihnachten und kaufen schon ab September Weihnachtsgebäck?
+B.  Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?
+C.  Wieviel Prozent der Weltbevölkerung lebt in Afrika?
+D.  Denken Sie nicht, dass es nicht verboten sein sollte in öffentlichen Gebäuden zu rauchen?
+
+::: {.notes}
+***C***: Nur die Frage "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?" entspricht den genannten Kriterien.
+:::
+
+
 ### Fehlerquellen
 
 - soziale Erwünschtheit
@@ -182,7 +239,7 @@ knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"))
 ### Wie beurteilen Sie diese Fragen?
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Fragen.png"))
+knitr::include_graphics(file.path(pathToImages, "Fragen.png"), error=FALSE)
 ```
 
 ### Bewährte Fragebögen
@@ -215,7 +272,7 @@ Grundsätzlich auf **NUTZUNGSRECHTE** Acht geben
 ### Schriftliche Befragung: Aufbau des Fragebogens 
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"))
+knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"), error=FALSE)
 ```
   
 ### Schriftliche Befragung: Aufbau des Fragebogens 
@@ -246,7 +303,7 @@ knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"))
 ### Schriftliche Befragung: Das Anschreiben
 
 ```{r echo=FALSE, out.width = "50%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"))
+knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"), error=FALSE)
 ```
 
 ### Schriftliche Befragung: Der Pretest
@@ -278,6 +335,20 @@ knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"))
 - Risiko, dass einzelne Fragen wenig sorgfältig, unvollständig oder überhaupt nicht ausgefüllt werden
 
 
+### Übung `r nextExercise()`: Schriftliche Befragung {.exercise type=A-B-C-D answer=C}
+
+Was ist *kein* Vorteil einer schriftlichen Befragung?
+
+A.  Geeignet bei der Befragung großer homogener Gruppen.
+B.  Keine Beeinflussung durch Merkmale und Verhalten des Interviewers.
+C.  Geringerer Zeit- und Personalaufwand, geringere Kosten.
+D.  Befragungssituation ist hinreichend kontrollierbar.
+
+::: {.notes}
+Die Befragungssituation ist bei schriftlichen Befragungen kaum hinreichend kontrollierbar, da der Interviewer häufig nicht vor Ort ist, daher Antwort ***C***.
+:::
+
+
 ### Schriftliche Befragung: Aufbereitung der Daten (1)
 
 - Antwortbögen durchnummerieren, sowohl auf den Bögen als auch im Datensatz
@@ -293,7 +364,7 @@ knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"))
 ### Schriftliche Befragung: Aufbereitung der Daten (2)
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Datenaufbereitung.png"))
+knitr::include_graphics(file.path(pathToImages, "Datenaufbereitung.png"), error=FALSE)
 ```
 
 

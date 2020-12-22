@@ -1,0 +1,45 @@
+```{r setup-Ablaufplan-WissMeth, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Bianca Krol
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Ablaufplan-WissMeth",                # Dateiname ohne Suffix
+    "Ablaufplan"         # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+### Terminübersicht {.shrink}
+
+Verteilung der Inhalte auf 10 Vorlesungstermine (à 4 UE)
+\vspace{1cm}
+
+\begin{tabular}{rl}
+\toprule
+Termin & Inhalt \\
+\midrule
+1 & Organisatorisches, Wissenschaftliche Grundlagen \\
+2 & Grundlagen Quantitative Datenanalyse, Einführung R \\
+3 & Explorative Datenanalyse \\
+4 & Explorative Datenanalyse (Forts.) \\
+5	& Lineare Regression \\
+6 & Lineare Regression \\
+7 & Logistische Regression \\
+8	& Inferenz  \\
+9 & Inferenz (Forts.) oder Kausale Modellierung (optional)\\
+10& Postersession, Wiederholung \\
+
+\bottomrule
+\end{tabular}
+
+
+```{r finish-Ablaufplan-WissMeth, include=FALSE}
+rm(pathToImages)
+finalizePart()
+```

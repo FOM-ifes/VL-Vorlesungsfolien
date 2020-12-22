@@ -1,0 +1,12 @@
+"Y","X","simulation based","parametric"
+"binary",".", "prop()", "binom.test()"
+"categorical",".","xchisq.test()","xchisq.test()"
+"categorical",".","chisq.test()", "chisq.test()"
+"numeric",".", "mean()", "t.test()"
+"binary"," binary","diffprop()", "prop.test()"
+"numeric","binary","diffmean()", "t.test()"
+"categorical","categorical", "xchisq.test()","xchisq.test()"
+"numeric","categorical","aov()", "aov()"
+"numeric","numeric","cor(), lm()", "cor.test(), lm()"
+"categorical","numeric","glm(family= 'binomial')", "glm(family= 'binomial')"
+

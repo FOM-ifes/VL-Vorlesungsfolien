@@ -9,14 +9,15 @@ initPart(
     "NaiveBayes",  # Dateiname ohne Suffix
     "NaiveBayes"              # Verzeichnisname im Bilderverzeichnis 
     )
-pathToImages = getPathToImages()
+pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
 library(mosaic)
+library(viridis)
 
-tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl", stringsAsFactors=TRUE)
 ```
-# `r nextChapter()` Naive Bayes
+# Naive Bayes
 
 ### Vorhersage des Geschlechts
 
@@ -25,13 +26,23 @@ Die Größe (in cm) einer Person ist ungefähr normalverteilt. Z. B. in Deutschl
 Kann man anhand der Größe einer Person das Geschlecht vorhersagen?
 
 ### Größenverteilung je Geschlecht
+
 ```{r, echo=FALSE, fig.align="center", out.width="65%", message=FALSE}
 library(klaR)
 set.seed(1896)
 n <- 1000
-daten <- data.frame(Geschlecht=rep(c("Frau", "Mann"), each=n), Groesse=c(rnorm(n, 165,7), rnorm(n, 178,7)))
-nb_geschlecht <- NaiveBayes(Geschlecht~Groesse, data=daten)
-plot(nb_geschlecht, lwd=2, main="Größenverteilung", col=c("red", "blue"), cex=1.5, lty = c(1,1))
+daten <- data.frame(
+    Geschlecht = as.factor(rep(c("Frau", "Mann"), each = n)), 
+    Groesse = c(rnorm(n, 165,7), rnorm(n, 178,7))
+)
+nb_geschlecht <- NaiveBayes(Geschlecht ~ Groesse, data = daten)
+plot(nb_geschlecht, 
+     lwd = 2, 
+     main = "Größenverteilung", 
+     col = viridis(2), 
+     cex = 1.5, 
+     lty = c(1,1)
+)
 
 rm(daten)
 rm(n)
@@ -113,25 +124,25 @@ Einlesen der "Tipping"^[Bryant, P. G. and Smith, M (1995) Practical Data Analysi
 
 ```{r, eval= FALSE, message=FALSE}
 download.file("https://goo.gl/whKjnl", destfile = "tips.csv")
-tips <- read.csv2("tips.csv")
+tips <- read.csv2("tips.csv", stringsAsFactors=TRUE)
 # Alternativ - heruntergeladene Datei einlesen:
 # tips <- read.csv2(file.choose()) 
 
 library(mosaic) # Paket laden
 ```
 
-### `NaiveBayes()` 
+### `naiveBayes()` 
 
-Es gibt mehrere Implementierungen von Naive Bayes in R. Eine flexible Implementierung bietet das Paket `klaR`.
+Es gibt mehrere Implementierungen von Naive Bayes in R, z. B. im Paket `e1071`.
 
 ```{r, eval=FALSE}
 # Einmalig installieren
-install.packages("klaR")
+install.packages("e1071")
 ```
 
 ```{r}
 # Paket laden
-library(klaR)
+library(e1071)
 ```
 
 ### Training- und Testdaten
@@ -143,7 +154,7 @@ set.seed(1896) # Reproduzierbarkeit
 n <- nrow(tips) # Anzahl Beobachtungen
 
 # Beobachtungsnummern für Training
-lern <- sample(1:n, size=round(n*(2/3)))
+lern <- sample(1:n, size = round(n*(2/3)))
 
 train <- tips[lern,] # Trainingsdaten
 test <- tips[-lern,] # Testdaten - nicht Trainingsdaten
@@ -155,7 +166,7 @@ Können Sie anhand der Rechnungshöhe und der Tageszeit vorhersagen, welches Ges
 
 Modelliere das Geschlecht auf Basis der Rechnungshöhe und der Tageszeit:
 ```{r}
-ergNB <- NaiveBayes(sex ~ total_bill + time,
+ergNB <- naiveBayes(sex ~ total_bill + time,
                      data = train)
 ```
 
@@ -172,26 +183,16 @@ sd(total_bill ~ sex, data = train)
 tally(time ~ sex, data = train, format="proportion")
 ```
 
-
-### Ergebnis Naive Bayes
-
-```{r, out.width="65%"}
-par(mfrow=c(1,2))
-plot(ergNB)
-```
-
-
-
 ### a posteriori Wahrscheinlichkeit
 
 Anwenden des Modells auf den Testdaten:
 ```{r}
-progNB <- predict(ergNB, newdata = test)
+progNB.post <- predict(ergNB, newdata = test, type = "raw")
 ```
 
 *a posteriori* Wahrscheinlichkeiten:
 ```{r}
-head(progNB$posterior)
+head(progNB.post)
 ```
 
 
@@ -210,9 +211,15 @@ Weil die a priori Wahrscheinlichkeit größer ist. `ergNB$apriori`:
 
 Vorhergesagte Klassen:
 ```{r}
-head(progNB$class)
+progNB.class <- predict(ergNB, newdata = test)
 
-tally( ~ progNB$class)
+tally( ~ progNB.class)
+```
+
+Zum Datensatz hinzufügen:
+```{r}
+test <- test %>%
+  mutate(sexdach = progNB.class)
 ```
 
 
@@ -220,12 +227,12 @@ tally( ~ progNB$class)
 
 Wie oft entspricht die vorhergesagte Klasse der wahren Klasse bei den Testdaten? **Korrektklassifikationsrate**
 ```{r}
-mean( ~ (progNB$class == test$sex))
+mean( ~ (sex == sexdach), data = test)
 ```
 
 Wie oft entspricht die vorhergesagte Klasse *nicht* der wahren Klasse bei den Testdaten? **Fehlklassifikationsrate**
 ```{r}
-mean( ~ (progNB$class != test$sex))
+mean( ~ (sex != sexdach), data = test)
 ```
 
 
@@ -241,10 +248,10 @@ Da in den Trainingsdaten mehr `male` als `female` ist, würde die Prognose immer
 ### Konfusionsmatrix
 
 ```{r}
-tally(test$sex ~ progNB$class)
+tally(sex ~ sexdach, data = test)
 ```
 ```{r, echo=FALSE}
-tt <- tally(test$sex ~ progNB$class)
+tt <- tally(sex ~ sexdach, data = test)
 ```
 
 
@@ -264,15 +271,15 @@ D.  `r tt[2,2]` (Rechts unten)
 
 ### Übung `r nextExercise()`: Interpretation {.exercise type=A-B-C-D answer=C}
 
-Was ist die beste Interpretation der a posteriori Wahrscheinlichkeit von `r progNB$posterior[1,1]` für `r colnames(progNB$posterior)[1]`?
+Was ist die beste Interpretation der a posteriori Wahrscheinlichkeit von `r progNB.post[1,1]` für `r colnames(progNB.post)[1]`?
 
-A.  Die Rechnungszahler\*in ist zu `r progNB$posterior[1,1]` `r colnames(progNB$posterior)[1]`.
-B.  Die Rechnungszahler\*in ist zu `r 1-progNB$posterior[1,1]` `r colnames(progNB$posterior)[1]`.
-C.  Bei der Rechnungshöhe und der Tagezeit können wir auf lange Sicht erwarten, dass `r progNB$posterior[1,1]` der Rechnungen von `r colnames(progNB$posterior)[1]` bezahlt werden.
+A.  Die Rechnungszahler\*in ist zu `r progNB.post[1,1]` `r colnames(progNB.post)[1]`.
+B.  Die Rechnungszahler\*in ist zu `r 1-progNB.post[1,1]` `r colnames(progNB.post)[1]`.
+C.  Bei der Rechnungshöhe und der Tagezeit können wir auf lange Sicht erwarten, dass `r progNB.post[1,1]` der Rechnungen von `r colnames(progNB.post)[1]` bezahlt werden.
 
 
 ::: {.notes}
-Die Rechnungszahler\*in ist entweder eine Frau oder nicht. Wir können nur sagen, dass auf lange Sicht bei gegebenen $x$ der Anteil von $y=`r colnames(progNB$posterior)[1]`$ bei `r progNB$posterior[1,1]` in unserem Modell liegt (***C***).
+Die Rechnungszahler\*in ist entweder eine Frau oder nicht. Wir können nur sagen, dass auf lange Sicht bei gegebenen $x$ der Anteil von $y=`r colnames(progNB.post)[1]`$ bei `r progNB.post[1,1]` in unserem Modell liegt (***C***).
 
 Nicht nur die Prognose ist unsicher, auch die Schätzwerte innerhalb des Modells (Anteile, Mittelwerte, Standardabweichungen) variieren mit der Stichprobe.
 :::
@@ -282,16 +289,16 @@ Nicht nur die Prognose ist unsicher, auch die Schätzwerte innerhalb des Modells
 Modellieren Sie die Wahrscheinlichkeit, dass es sich um einen Tisch mit Rauchern handelt als Funktion von Trinkgeld, Anzahl Personen und Tageszeit. Wie hoch ist die Fehlklassifikationsrate auf den Testdaten?
 
 ```{r, include=FALSE}
-ergNBueb <- NaiveBayes(smoker ~ tip + size + time, data = tips)
+ergNBueb <- naiveBayes(smoker ~ tip + size + time, data = tips)
 progNBueb <- predict(ergNBueb, newdata = test)
 ```
 
 ::: {.notes}
-`ergNBueb <- NaiveBayes(smoker ~ tip + size + time, data = tips)`  
+`ergNBueb <- naiveBayes(smoker ~ tip + size + time, data = tips)`  
 `progNBueb <- predict(ergNBueb, newdata = test)`    
-`mean( ~ (progNBueb$class != test$smoker))` 
+`mean( ~ (progNBueb != test$smoker))` 
 
-Die Fehlklassifikationsrate liegt bei `r mean( ~ (progNBueb$class != test$smoker))`.
+Die Fehlklassifikationsrate liegt bei `r mean( ~ (progNBueb != test$smoker))`.
 
 
 :::
@@ -299,9 +306,10 @@ Die Fehlklassifikationsrate liegt bei `r mean( ~ (progNBueb$class != test$smoker
 
 ```{r finish-NaiveBayes, include=FALSE}
 rm(n)
+rm(tt)
 rm(train)
 rm(test)
-detach("package:klaR", unload = TRUE)
+detach("package:e1071", unload = TRUE)
 rm(pathToImages)
 finalizePart(partname)
 ```

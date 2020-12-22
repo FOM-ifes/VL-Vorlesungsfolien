@@ -1,7 +1,7 @@
 # ===========================================================================
-# prelude_rendertools.R (Release 0.1.2)
+# prelude_rendertools.R (Release 0.3.2)
 # =====================------------------------------------------------------
-# (W) by Norman Markgraf in 2018
+# (W) by Norman Markgraf in 2018/19
 #
 # 23. Feb. 2018  (nm)  Erstes Schritte. Extraktion aus der prelude.R
 #                      (0.1.0)
@@ -9,8 +9,18 @@
 #                      (0.1.1)
 # 18. Mär. 2018  (nm)  Dokumentation angepasst.
 #                      (0.1.2)
+# 22. Jan. 2019  (nm)  Bugfixe bzgl. Private.Yaml, Refoktoring
+#                      (0.2.0)
+# 11. Jun. 2019  (nm)  PreTitel und PostTitel nun in private.R!
+#                      (0.3.0)
+# 03. Sep. 2019  (nm)  "makeSkriptTypeOf()" ersetzt die make*() Funktionen.
+#                      (0.3.1)
+# 04. Sep. 2019  (nm)  "makeS*riptTypeOf()", "setTypeOfS*ript()" um *={k,c} 
+#                      erweitert, damit "pseudo-native-speaker" nicht merken.
+#                      Laysiness bei den drei Skriptarten erweitert. Cool man!
+#                      (0.3.2)
 #
-#   (C)opyleft Norman Markgraf in 2018
+#   (C)opyleft Norman Markgraf in 2018/19
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -31,6 +41,8 @@
 #                                                      -- Unbekannter Autor
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+library(futile.logger)
+
 if (!exists("prelude.rendertools")) {
   prelude.rendertools <<- "LOADED!"
   defaults.dir <- "defaults"
@@ -38,38 +50,64 @@ if (!exists("prelude.rendertools")) {
   inc.notes.dozi <- "include-notes-dozentenversion.tex"
   inc.notes.lsgskript <- "include-notes-loesungen.tex"
   inc.notes <- "include-notes.tex"
+
   
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  createPrivateYaml <- function(DozInfo=NULL, Semester="SoSe 2018", Standort, path=".") {
+  createPrivateYaml <- function(
+      DozInfo=NULL, 
+      Semester="SoSe 2019",
+      Institute="FOM",
+      Studienort="", 
+      path=".",
+      forced=TRUE) {
     privymlfn <- file.path(path, "private.yaml")
-    file.create(privymlfn)
+    if (file.exists(privymlfn) && !forced) {
+        # Falls die Datei existiert und nicht unbedingt überschrieben 
+        # werden soll, dann beenden!
+        flog.info(paste0("File ", privymlfn, "' will not be overwritten!"))
+        return(TRUE)
+    }
+    if (Institute != "") {
+        if (Studienort != "") {
+            # Falss ein Institute angegeben ist, wird es vor den Studienort gestellt.
+            tmpInst <- paste(Institute, Studienort)
+        } else {
+            # Falls kein Studienort angegeben ist, dann nur das Institute!
+            tmpInst <- Institute
+        }
+    } else {
+        # Fall kein Institute angegeben ist, wird nur der Studienort verwendet.
+        tmpInst <- Studienort
+    }
+    
+    out <- file(privymlfn, "w", encoding = "UTF-8")
     if (is.null(DozInfo)) {
       tmp <- paste0(
         "---\nauthor: \"FOM\"\ndate: \"", Semester, "\"",
-        "\ninstitute: \"FOM\"",
+        "\ninstitute: \"", tmpInst ,"\"",
         "\n---\n"
       )
-      
     } else {
-      preTitel <- ""
-      postTitel <- ""
-      preTitels <- "[Prof|Dipl|Dr]"
-      postTitels <- "[MBA|M.Sc|M.A.|B.A|MPA]"
-      if (stringr::str_detect(DozInfo$Titel, preTitels)) {
-        preTitle <- paste0(DozInfo$Titel, " ")
-      } else if (stringr::str_detect(DozInfo$Titel, postTitels)) {
-        postTitle <- paste0(" (", DozInfo$Titel, ")")
+      if (is.character(DozInfo)) {
+        tmp <- paste0(
+          "---\nauthor: \"", DozInfo, "\"\ndate: \"", Semester, "\"",
+          "\ninstitute: \"", tmpInst ,"\"",
+          "\n---\n"
+        )
+      } else {
+        preTitel <- DozInfo$PreTitel
+        postTitel <- DozInfo$PostTitel
+        tmp <- paste0(
+          "---\nauthor: \"", preTitel, " ", DozInfo$Vorname, " ", DozInfo$Nachname, " ", postTitel, "\"\ndate: \"", Semester, "\"",
+          "\ninstitute: \"", tmpInst, "\"",
+          "\n---\n"
+        )
       }
-      tmp <- paste0(
-        "---\nauthor: \"", preTitel, DozInfo$Vorname, " ", DozInfo$Nachname, postTitel, "\"\ndate: \"", Semester, "\"",
-        "\ninstitute: \"FOM ", Standort, "\"",
-        "\n---\n"
-      )
-      
     }
-    flog.info(paste0("Create '", privymlfn, "'"))
-    flog.debug(paste0("Content of '", privymlfn, "':\n", tmp))
-    cat(tmp, file = privymlfn)
+    flog.info(paste0("Create new '", privymlfn, "'"))
+    flog.info(paste0("Content of '", privymlfn, "':\n", tmp))
+    cat(iconv(tmp, to="UTF-8"), file = out)
+    close(out)
   }
 
   
@@ -142,7 +180,33 @@ if (!exists("prelude.rendertools")) {
           doCopyAndLog(file.path(defaults.dir, "cachecontrol-NoCache.R"), "cachecontrol.R")
       }
   }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  myLazyCompareStrings <- function(patterns, probe) {
+    for (pattern in patterns) {
+      if (agrepl(pattern, probe, ignore.case = TRUE)) {
+        return(TRUE)
+      }
+    }
+    return(FALSE)
+  }
   
+  makeSkriptOfType <- function(type="DozentenSkript") {
+    if (myLazyCompareStrings(c("Dozi", "DozentenFassung", "DozentenSkript"), type)) {
+      makeDozi()
+    } else {
+      if (myLazyCompareStrings(c("Studi", "StudentenFassung", "StudierendenSkript"), type)) {
+        makeStudi()
+      } else {
+        if (myLazyCompareStrings(c("Lösg", "Musterlösungen", "Lsg", "LösungsSkript"), type)) {
+          makeLsgSkript()
+        }
+      }
+    }
+  }
+  makeScriptOfType <- makeSkriptOfType
+  setTypeOfScript <- makeSkriptOfType
+  setTypeOfSkript <- makeSkriptOfType
+    
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   cleanUp <- function(path) {
     flog.debug(paste("Remove:", file.path(path, "*_files")))

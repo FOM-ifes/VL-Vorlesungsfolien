@@ -1,0 +1,952 @@
+```{r setup-Oeko-Regressionsdiagnostik, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke, Bianca Krol
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "Oeko-Regressionsdiagnostik",  # Dateiname ohne Suffix
+    "Regression"     # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+library(mosaic)
+library(gridExtra)
+
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+```
+
+# `r nextChapter()` Regressionsdiagnostik
+
+### Beispieldatensatz laden
+
+Wir arbeiten mit einem Datensatz, der 1496 Beobachtungen aus der 1994er Umfrage in Belgien zum Haushaltspanel der EU enthält. Der Datensatz^[Modifiziert aus Marno Verbeek (2012): A Guide to Modern Econometrics, 4th ed.] enthält folgende Variablen:
+
+Variable|Bedeutung
+---|---
+`wage` | Stundenlohn in Euro 
+`exper` | Berufserfahrung in Jahren
+`educ` | Höchster Ausbildungslevel (1 bis 5)
+`sex` | Geschlecht (`male`, `female`)
+
+```{r, eval=TRUE}
+load("../datasets/bwages.RData")
+```
+
+### Lineare Regression {.shrink}
+
+```{r}
+bW.lm1 <- lm(wage ~ sex + exper + educ, data = bwages)
+summary(bW.lm1)
+```
+
+### Anwendungsvoraussetzungen der linearen Regression
+
+Die lineare Regression unterliegt einer Reihe von Anwendungsvoraussetzungen. Nur wenn diese erfüllt sind, sind die Ergebnisse der linearen Regression im Sinne eines linearen Einflusses der unabhängigen Variablen auf die abhängige Variable interpretierbar.
+
+Auch ist die lineare Regression nicht robust gegenüber Ausreißern. So können Ausreißer die Schätzer für die Regressionskoeffizienten verzerren und damit auch die Ergebnisse für die t-Tests zu diesen Koeffizienten.
+
+Die Methoden zur Prüfung der Anwendungsvoraussetzungen werden allgemein als Regressionsdiagnostik bezeichnet. Ein Großteil dieser Methoden basiert auf der Analyse der Residuen und wird deshalb auch Residuenanalyse genannt.
+
+### Anwendungsvoraussetzungen der linearen Regression
+
+**Anwendungsvoraussetzungen**
+\begin{tabular}{lp{13cm}}
+A1:&Der Zusammenhang zwischen der abhängigen und den unabhängigen Variablen muss linear sein. Wichtig: Nicht-Linearität in den Variablen ist möglich! \\
+A2:&Der Erwartungswert der Residuen ist Null. \\
+A3:&Die Residuen dürfen nicht untereinander korrelieren (keine Autokorrelation). \\
+A4:&Die Varianz der Residuen ist konstant und endlich (Homoskedastizität bzw. keine Heteroskedastizität). \\
+A5:&Es darf kein sehr starker linearer Zusammenhang zwischen den einzelnen erklärenden Variablen bestehen (keine bzw. höchstens geringe Multikollinearität). \\
+A6:&Die Residuen sind normalverteilt. \\
+A7:&Zwischen den Residuen und der bzw. den unabhängigen Variablen besteht keine Korrelation (Erklärende Variablen dürfen nicht endogen sein).\\
+\end{tabular}
+
+**Robustheit**
+\begin{tabular}{lp{13cm}}
+R1:&Es liegen keine Ausreißer in der abhängigen Variable oder der bzw. den unabhängigen oder in beiden vor. \\
+\end{tabular}
+
+### Bedeutung der Anwendungsvoraussetzungen
+
+Sind die Annahmen A2, A3 und A4 erfüllt, so ist die kleinste-Quadrate-Schätzung der Regressionskoeffizienten (nach dem Satz von Gauss-Markov) unverzerrt (unbiased) und effizient (best) und erfüllt die BLUE-Eigenschaft (BLUE – Best Linear Unbiased Estimator).  
+
+Gütekriterien für Schätzer
+
++ Ein Schätzwert wird in der Regel nie mit dem wahren Wert der Grundgesamtheit übereinstimmen (außer die GG wird erhoben).
++ Aussagen über die Qualität der Schätzung sind nicht möglich.
++ Bei erwartungstreuen (unverzerrten), konsistenten und effizienten Schätzungen kann man aussagen, dass der Schätzwert im Durchschnitt mit dem unbekannten Parameter übereinstimmt (Erwartungstreue), dass er mit zunehmendem Stichprobenumfang immer weniger vom unbekannten Parameter abweichen wird (Konsistenz), dass seine Varianz klein ist (Effizienz).
+
+Ist Annahme A5 erfüllt, so sind die t-Tests auf Signifikanz der Regressionskoeffizienten zuverlässig.  
+
+### Bedeutung der Anwendungsvoraussetzungen
+
+Die Erfüllung der Annahme A6 wird i. d. R. nicht besonders streng gesehen, da für größere Stichprobenumfänge der zentrale Grenzwertsatz gilt. Demzufolge werden in der Praxis die verschiedenen Tests für lineare Regressionen wie etwa die t-Tests für die Regressionskoeffizienten, den F-Test für das Bestimmtheitsmaß sowie Tests der Regressionsdiagnostikauch ohne eine vorherige Prüfung der Residuen auf Normalverteilung durchgeführt.^[Siehe z.B. Backhaus et al. (2011), S. 86, 93f.; Bleymüller/Weißbach (2014), S. 186; Poddig et al. (2008), S. 231ff., S. 331.]
+
+## Robustheit und einflussreiche Beobachtungen
+
+### Robustheit
+
+\small 
+
+Einzelne Beobachtungen, welche nicht dem Trend der großen Mehrheit der Beobachtungen folgen, werden als Ausreißer bezeichnet. Ausreißer zeichnen sich durch einen großen Wert für ihr Residuum aus. Eine Veränderung oder gar Weglassen dieser Ausreißer hätte einen wesentlichen Einfluss auf den Verlauf der Regressionsgerade.
+
+```{r echo=FALSE, fig.align="center", out.width="50%"}   
+y <- anscombe$y3
+x <- anscombe$x3
+# Hinweis: mit Linien anfangen, damit die Punkte als oberstes Layer kommen
+gf_lm(y[-3] ~ x[-3], color = "grey") %>% 
+  gf_lm(y ~ x) %>% 
+  gf_point(y ~ x, xlim = c(3, 15), ylim = c(3, 15), xlab = "", ylab = "") %>% 
+  gf_point(y[3] ~ x[3], size = 5, shape = 1, color = "red")
+```
+\vspace{-0.5cm}
+
+Würde der markierte Punkt bei der Anpassung der Regressionsgerade an die Daten weggelassen, so verliefe die Gerade genau durch die übrige Punkte (graue Linie). Das Weglassen anderer Punkte hätte keine derart gravierende Auswirkung auf den Verlauf der Regressionsgeraden.^[Siehe z.B. Anscombe (1973), S. 20; Weisberg (2005), S. 194 ff.] 
+
+
+### Robustheit
+
+Das Beispiel zeigt deutlich, dass Ausreißer die Regressionsgerade verzerren. Die Schätzer für die Regressionskoeffizienten werden verzerrt und damit auch  die Ergebnisse für die t-Tests zu diesen Koeffizienten.  
+Ggf. ist es sinnvoll, Ausreißer vor der eigentlichen Regressionsdiagnostik zu entfernen. Hierzu müssen Ausreißer zunächst als solche erkannt werden.   
+Die Grundidee der Ausreißeranalyse ist es, den Einfluss einzelner Beobachtungen auf die Regressionsgerade zu untersuchen. Ist dieser groß, so handelt es sich bei dem Datenpunkt um einen potenziellen Ausreißer.   
+
+Gängig sind neben dem Streudiagramm und der damit durchgeführten visuellen Inspektion folgende Methoden zur Ausreißeranalyse:^[Siehe z.B. Weisberg (2005), S. 198.]
+
++ Cook‘s Distance
++ Leverage Werte
+
+### Leverage Werte
+
+Die Leverage Werte (Hat Values) $h_{ii}$ sind ein Maß für die Abweichung der Werte der unabhängigen Variablen für Beobachtung $i$ von den Durchschnittswerten der unabhängigen Variablen $x_1,\dots x_k$.^[Siehe z.B. Kutner et al (2005), S.398 ff.]  
+
+Je größer $h_{ii}$, desto weiter ist die Beobachtung $i$ vom Durchschnitt der unabhängigen Variablen entfernt. Große Leverage-Werte deuten demnach auf Ausreißer hin. Leverage Werte schwanken zwischen 0 und 1 und werden nach einer der folgenden Regeln als groß angesehen:
+- Wenn sie doppelt so groß sind wie der Quotient aus der Anzahl der unabhängigen Variablen $k$ und dem Stichprobenumfang $n$.
+- Wenn sie größer 0,5 sind.
+- Wenn einzelne Werte einen deutlichen Abstand zu den übrigen Leverage Werten aufweisen.
+
+Die Leverage Werte sind die Diagonalelemente der Hat-Matrix:^[Zur Hat-Matrix siehe auch eLearning Unterlagen Mathematik, Teil 3.]
+
+$$\mathbf{\hat{y}=X\hat{\mathbold{\beta}}=\underbrace{\mathbf{X(X'X)^{-1}X'}}_{\textrm{Hat-Matrix}}y} $$
+
+### Cook's Distance
+
+Für jede einzelne Beobachtung $i$ kann die Cook's Distance berechnet werden.  
+
+Dazu wird eine erneute Regression durchgeführt, wobei die Daten der Beobachtung $i$ weggelassen werden. Die erneute Regression verwendet also einen Datenpunkt weniger.  
+
+Die so neu bestimmten Regressionskoeffizienten unterscheiden sich von den ursprünglichen Regressionskoeffizienten $\hat{\beta}_k$. Cook's Distance fasst diesen Unterschied der neuen Regressionskoeffizienten zu den ursprünglichen in einer Kennzahl zusammen.  
+
+Große Werte für Cook's Distance bedeuten einen großen Unterschied in den Regressionskoeffizienten und damit einen starken Einfluss der zugehörigen einzelnen Beobachtung und weisen so auf potenzielle Ausreißer hin.  
+
++ Ein Wert für Cook's Distance ist groß, wenn er erheblich von den übrigen Werten für Cook's Distance abweicht.^[Siehe z.B. Kutner et al (2005), S.402 ff; Weisberg (2005), S. 198 ff.]
+
+### Cook's Distance
+
+Bei der Regression ohne den Datenpunkt $i$ werden erneut die Schätzwerte für die abhängige Variable berechnet. Cook's Distance $D_i$ für den Datenpunkt $i$ ergibt sich aus der Summe aller quadrierten Differenzen zwischen den ursprünglichen $\hat{y}_j$ Werten und den $\hat{y}_{j(i)}$ Werten, bei denen die Beobachtung $i$ entfernt wurde:
+
+$$D_i= \frac{\sum\limits_{j=1}^n \Big(\hat{y}_j-\hat{y}_{j(i)}\Big)^2}{(K+1)\cdot \sigma_e^2} $$
+
+Vereinfacht kann Cook's Distance auch aus den Leverage Werten abgeleitet werden:
+
+$$D_i= \frac{e_i^2}{(K+1)\cdot \sigma_e^2}\cdot \frac{h_{ii}}{\big(1-h_{ii}\big)^2} $$
+
++ eine große Cook's Distance kann sich daher aus einem großem Residuum $e_i$ und/oder einem großen Hat-Value $h_{ii}$ ergeben.
+
+### Einflussreiche Beobachtungen -- Beispiel 
+
+\scriptsize
+
+Als Beispiel wird der B3 Datensatz benutzt. Es wird eine Regression für das Wachstum des Bruttosozialprodukts (`BSP91JW`) in Abhängigkeit vom Wachstum des privaten Konsum (`CP91JW`) und des kurzfristigen Zinssatzes (`ZINSK`) durchgeführt.
+
+```{r}
+data(B3, package = "klaR")
+B3.lm <- lm(BSP91JW ~ CP91JW + ZINSK, data = B3)
+summary(B3.lm)
+```
+
+### Einflussreiche Beobachtungen -- Beispiel {.shrink}
+
+Zunächst werden die Streudiagramme betrachtet, vereinzelt sind potentielle Ausreißer zu erkennen.
+
+\footnotesize
+
+```{r fig.align="center", out.width="50%"}
+p1 <- gf_point(BSP91JW ~ CP91JW, data = B3) %>% 
+  gf_point(BSP91JW ~ CP91JW, data = B3[c("1956,1", "1960,1"),], color = "red", 
+           size = 5, shape = 1)
+p2 <- gf_point(BSP91JW ~ ZINSK, data = B3) %>% 
+  gf_point(BSP91JW ~ ZINSK, data = B3["1973,3",], color = "red", 
+           size = 5, shape = 1)
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Einflussreiche Beobachtungen -- Beispiel
+
+\scriptsize
+
+Plot von Leverage Values (Hat Values) und Cook's Distance
+
+```{r LinReg_Leverage, eval = FALSE}
+# Index für x-Achse anlegen
+index <- 1:nrow(B3)
+# Leverage Werte
+lev <- hatvalues(B3.lm)
+# Welche Punkte sind größer als 0.06
+# Hinweis: Grenze nur als Beispiel, hier nicht sinnvoll
+xp <- which(lev > 0.06)
+# Plot der Leverage Werte
+p1 <- gf_point(lev ~ index, title = "Leverage Values") %>% 
+  # Umkreise auffällige Punkte
+  gf_point(lev[xp] ~ index[xp], color = "red", size = 5, shape = 1)
+  
+# Cook's Distance
+cook <- cooks.distance(B3.lm)
+# Welche Punkte sind größer als 0.04
+# Hinweis: Grenze nur als Beispiel, hier nicht sinnvoll
+xp <- which(cook > 0.04)
+# Plot der Cook's Distance
+p2 <- gf_point(cook ~ index, title = "Cook's Distance") %>% 
+  # Umkreise auffällige Punkte
+  gf_point(cook[xp] ~ index[xp], color = "red", size = 5, shape = 1)
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Einflussreiche Beobachtungen -- Beispiel 
+
+```{r LinReg_Leverage, echo = FALSE, fig.align="center", out.width="70%"}
+```
+
+Insgesamt sind die Werte im Beispiel unauffällig.
+
+## Linearität des Zusammenhangs
+
+### Nicht-linearer Zusammenhang
+
+\scriptsize
+
+Im Fall von Nichtlinearität liefert die Regressionsgerade nicht mehr die besten Schätzer (d. h., sie minimieren nicht mehr den Abstand zwischen tatsächlichen und geschätzten Werten, da eine nicht-lineare Anpassung besser wäre).  
+
+Die Folge ist eine Verzerrung der Schätzwerte der Parameter, d. h., die Schätzwerte $\hat{\beta}_k$ streben mit wachsendem Stichprobenumfang nicht mehr gegen die wahren Parameter $\beta_k$.^[Siehe z.B. Kutner et al. (2005), S. 104 ff.]
+
+Für eine einfache lineare Regression (eine unabhängige Variable) kann die Prüfung über ein Streudiagramm der abhängigen (y-Achse) gegen die unabhängige (x-Achse) Variable erfolgen. Sind in der Punktewolke Muster zu beobachten, so spricht dies gegen einen linearen Zusammenhang von unabhängiger und abhängiger Variable.
+
+```{r echo=FALSE, fig.align="center", out.width="50%"}
+set.seed(4711)
+n <- 30
+x <- seq(1,n)
+# linearer Zusammenhang
+yl <- x + 2*rnorm(n)
+# nicht-linearer Zusammenhang
+ynl <- (x/2 + 0.5*rnorm(n))^3
+
+# Plots
+# Regressionsgrade
+p1 <- gf_lm(yl ~ x) %>% 
+  # Streudiagramm
+  gf_point(yl ~ x, title = "linearer Zusammenhang", xlab = "", ylab = "") %>%
+  # ohne Achsenticks
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+
+# Regressionsgrade
+p2 <- gf_lm(ynl ~ x) %>% 
+  # Streudiagramm
+  gf_point(ynl ~ x, title = "nicht-linearer Zusammenhang", xlab = "", ylab = "") %>%
+  # ohne Achsenticks
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank()) 
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Nicht-linearer Zusammenhang
+
+\small 
+
+Bei einer multiplen linearen Regression ist ein Streudiagramm der Residuen (`resid(lmObject)`) gegen die durch das lineare Modell geschätzten Werte (`fitted(lmObject)`) geeigneter.  
+
+Die Residuen müssen gleichmäßig und ohne erkennbare Muster um 0 streuen. Ist dies nicht der Fall, so spricht dies gegen einen linearen Zusammenhang von unabhängiger und abhängiger Variable.
+
+```{r echo=FALSE, fig.align="center", out.width="60%"}
+# linearer Zusammenhang
+lm1 <- lm(yl ~ x)
+x1 <- fitted(lm1)
+y1 <- resid(lm1)
+# Nicht-linearer Zusammenhang
+lm2 <- lm (ynl ~ x)
+x2 <- fitted(lm2)
+y2 <- resid(lm2)
+
+# Plots
+# Horizontale Linie
+p1 <- gf_hline(yintercept = 0, color = "blue") %>% 
+  # Streudiagramm
+  gf_point(y1 ~ x1, title = "linearer Zusammenhang", xlab = "", ylab = "") %>%
+  # ohne Achsenticks
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+
+  # Horizontale Linie
+p2 <- gf_hline(yintercept = 0, color = "blue") %>% 
+  # Streudiagramm
+  gf_point(y2 ~ x2, title = "nicht-linearer Zusammenhang", xlab = "", ylab = "") %>%
+  # ohne Achsenticks
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Nicht-linearer Zusammenhang -- Beispiel
+
+\footnotesize 
+
+Wir setzen das Beispiel mit dem B3 Datensatz fort. Es werden die Residuen gegen die geschätzen Werte geplottet.
+
+```{r fig.align="center", out.width="60%"}
+gf_point(resid(B3.lm) ~ fitted(B3.lm), 
+         xlab = expression(italic(hat(y)[i])), ylab = expression(italic(e[i]))) %>% 
+  gf_hline(yintercept = 0, color = "blue")
+```
+
+Es ist kein besonderes Muster erkennbar, daher können wir von einem linearen Zusammenhang ausgehen.
+
+### Der Zusammenhang ist nicht linear. Was tun? 
+
+```{r echo=FALSE, fig.asp=0.25, fig.align="center", out.width="100%"}
+x <- seq(1:100)
+# log
+y1 <- log(x)
+# quadratische Funktion
+y2 <- x^2
+# reziproke Funktion
+y3 <- 1/x
+# Plots
+p1 <- gf_line(y1 ~ x, size = 2, color = "blue", xlab = "", ylab = "") %>% 
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+p2 <- gf_line(y2 ~ x, size = 2, color = "blue", xlab = "", ylab = "") %>% 
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+p3 <- gf_line(y3 ~ x, size = 2, color = "blue", xlab = "", ylab = "") %>% 
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank())
+grid.arrange(p1, p2, p3, nrow = 1)
+```
+
+\vspace{-0.5cm}
+
+\footnotesize
+\begin{tabular}{p{0.2cm}p{4.7cm}p{4.7cm}p{4.7cm}}
+&\textbf{Mögliche Transformationen} & \textbf{Mögliche Transformationen} & \textbf{Mögliche Transformationen} \\
+&Logarithmusfunktion & Exponentialfunktion mit $+x$ & Exponentialfunktion mit $-x$ \\
+&Wurzelfunktion & Quadratische Funktion oder höhere Exponenten & Kehrwert\\
+\end{tabular}
+\small
+
+Dabei können die ursprünglichen unabhängigen Variablen mit den Transformationen ihrerselbst kombiniert werden. **Wichtig**: In der Regressionsformel für `lm` muss meist ein `I()` (as Is) um die eigentliche Rechenoperation ergänzt werden, damit tatsächlich eine Berechnung erfolgt und die Eingabe nicht als Formelparameter interpretiert wird.
+
+Beispiel: `lm(y ~ x + I(x^2))`
+
+
+### RESET Test
+
+Der REgression Specification Error Test (RESET Test) von Ramsey testet allgemein auf eine Fehlspezifikation eines Regressionsmodells. Ursachen für eine Fehlspezifikation können entweder fehlende wichtige erklärende Variablen oder ein nichtlinearer Zusammenhang zwischen abhängiger und unabhängigen Variablen sein.^[Siehe z.B. Poddig et al. (2008), S. 391 ff.]  
+
+Ramsey konnte zeigen, dass die fitted values $\hat{y}$ in potenzierter Form ($\hat{y}^2, \hat{y}^3, \dots$) eine geeignete Näherung für eine Fehlspezifikation darstellen, wobei eine Potenzierung bis zur vierten Potenz als ausreichend angesehen wird.
+
+$y=\beta_0+\sum\beta_kx_k+u$ ist das Regressionsmodell und $\hat y=\hat\beta_0+\sum\hat\beta_kx_k$ die dazugehörigen fitted values. Das erweiterte Regressionsmodell ist dann 
+$$y=\beta_0+\sum\beta_kx_k+\gamma_1\hat y^2+\gamma_2\hat y^3+\gamma_3\hat y^4+u$$
+
+Sofern die neu aufgenommen unabhängigen Variablen $\hat y^2, \hat y^3, \hat y^4$ gemeinsam einen signifikanten Erklärungsbeitrag leisten, ist von einer Fehlspezifiaktion auszugehen. In diesem Fall ist die Summe der quadrierten Residuen $SSE$ (Error Sum of Squares) für das erweiterte Modell $e$ kleiner als für das ursprüngliche Modell $u$, d. h., $SSE_e < SSE_u$.
+
+### RESET Test
+
+Daraus lässt sich ein F-Test konstruieren:
+
+$$F=\frac{\frac{SSE_u-SSE_e}{L}}{\frac{SSE_e}{n-K-L-1}}$$
+
+mit $L$ und $n-K-L-1$ Freiheitsgraden. 
+
++ Darin sind $L$ die Anzahl der Potenzen von $\hat y$ (i. d. R. $L=3$), $K$ die Anzahl der unabhängigen Variablen und $n$ der Stichprobenumfang.
+
+Die Nullhypothese $H_0$ lautet: kein Spezifikationsfehler. Wird die Teststatistik $F$ groß, so wird $H_0$ abgelehnt und die Alternativhypothese $H_1$: Spezifikationsfehler gilt.
+
+### RESET Test -- Beispiel
+
+```{r}
+library(lmtest)
+resettest(B3.lm, 2:4, type = "fitted")
+```
+
+Für den RESET Test wird das Paket `lmtest` benötigt.
+
+Nebem dem Modell hat der Befehl zwei Parameter. Der erste legt fest, welche Potenzen berücksichtigt werden sollen (ohne Angabe sind dies nur `2:3`, also die zweite und dritte Potenz), der zweite, ob die fitted values genutzt werden sollen. Für Alternativen siehe `?resettest`.
+
+Der p-Wert verwirft die Nullhypothese, keine Fehlspezifikation, nicht. Somit bestätigt der Test die vorherigen Überlegungen, dass ein linearer Zusammenhang zwischen den Variablen besteht (und dass das Modell auch nicht fehlspezifiziert ist).
+
+
+### Übung `r nextExercise()`: Einflussreiche Beobachtungen und Fehlspezifikation 
+
+Untersuchen Sie die Regression `wage ~ sex + exper + educ` mit dem Datensatz `bwages` auf einflussreiche Beobachtungen und mögliche Fehlspezifikationen.
+
+## Autokorrelation
+
+### Autokorrelation 
+
+Mit Autokorrelation wird die Korrelation zwischen zwei i. d. R. aufeinander folgenden Residualgrößen $e_i$ und $e_j$ bezeichnet. Autokorrelation tritt typischerweise auf, wenn
+
++ ein relevanter Regressor im Modell nicht berücksichtigt wird (Fehlspezifikation),
++ die funktionale Form eines Regressors fehlerhaft spezifiziert ist (Nichtlinearität),
++ die abhängige Variable in einer Weise autokorreliert ist, die durch den systematischen Teil des Modells nicht adäquat dargestellt wird.
+
+Autokorrelation ist oftmals bei Längsschnittregressionen mit Kapitalmarktdaten zu beobachten, es ist aber auch räumliche Autokorrelation in Querschnittdaten möglich. Autokorrelationen können entweder bei benachbarten Residuen (Autokorrelation erster Ordnung) oder auch bei "weiter entfernten" Residuen auftreten (Autokorrelation höherer Ordnung) auftreten.^[Siehe z.B. Backhaus et al. (2011), S. 92 f.; Poddig et al. (2008), S. 308 ff.]
+
+### Autokorrelation
+
+**Auswirkungen von Autokorrelation**
+
+Die Abweichungen von der Regressionsgeraden sind nicht mehr zufällig, sondern von den Abweichungen der vorangehenden Werte abhängig.
+Die Kleinste-Quadrate-Schätzer $\hat{\beta}_k$ sind zwar erwartungstreu und konsistent, aber sie sind keine effizienten Schätzer (keine BLUE-Eigenschaft). Die Varianz der Schätzer ist nicht mehr valide.  
+
+Daraus folgt unmittelbar: t-Test und F-Test liefern irreführende Ergebnisse. Die Kleinste-Quadrate-Schätzung für die lineare Regression kann nicht zuverlässig interpretiert werden!^[Siehe z.B. Poddig et al. (2008), S. 308 ff.]
+
+### Autokorrelation 
+
+\small
+
+Grafisch lassen sich Autokorrelationen am besten mit einem Streudiagramm für die Residuen oder die Zielgröße (y-Achse) gegen die Zeitvariable (x-Achse) darstellen.  
+Dabei ergeben sich für positive und negative Autokorrelationen (erster Ordnung^[Die grafische Darstellung von Autokorrelationen höherer Ordnung kann mittels der Autokorrelationsfunktion in sogenannten Korrelogrammen erfolgen (vgl. Abschnitt zur Zeitreihenanalyse).], d. h. benachbarter Residuen) nachfolgende typische Erscheinungen:^[Siehe z.B. Backhaus et al. (2008), S. 91; Kutner et al. (2005), S. 108 ff.]
+
+```{r echo=FALSE, fig.align="center", out.width="60%"}
+set.seed(100)
+
+# Definiere Stichprobenumfang n, weise x die Werte 1 bis n zu (Zeitvariable) und weise y den Startwert 1 zu (abhängige Variable)
+n <- 200
+x <- c(1:n)
+y1 <- c(1, rep(NA, n-1))
+y2 <- c(1, rep(NA, n-1))
+
+# Berechne y[i+1] in fest definierter Abhängigkeit von y[i]
+# Erzeuge dazu gleichverteilte Zufallsvariable zwischen 0.8 und 1.2 und multipliziere diese mit y[i]
+# Positive Autokorrelation
+for(i in 2:n){
+  y1[i]<-runif(1,.8, 1.2) * y1[i-1]
+}
+# Negative Autokorrelation
+for(i in 2:n){
+  y2[i]<-runif(1,.8, 1.2) * y2[i-1] * (-1)
+}
+
+# Lineare Regressionen 
+lm1 <- lm(y1~x)
+lm2 <- lm(y2~x)
+
+# Residuenplots
+# Positive Autokorrelation
+p1 <- gf_line(resid(lm1)[1:100] ~ x[1:100], title = "Positive Autokorrelation", xlab = "Zeit", ylab = "Residuen") %>% 
+  gf_point(resid(lm1)[1:100] ~ x[1:100], shape = 1) %>% 
+  gf_hline(yintercept = 0, color = "blue")
+
+# Negative Autokorrelation
+p2 <- gf_line(resid(lm2)[1:20] ~ x[1:20], title = "Negative Autokorrelation", xlab = "Zeit", ylab = "Residuen") %>% 
+  gf_point(resid(lm2)[1:20] ~ x[1:20], shape = 1) %>% 
+  gf_hline(yintercept = 0, color = "blue")
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Test auf Autokorrelation: Durbin-Watson Test 
+
+Der *Durbin-Watson-Test* prüft die Autokorrelation erster Ordnung, indem es die Residuen zweier benachbarter Beobachtungen $u_t$ und $u_{t-1}$ miteinander vergleicht ($r$ bezeichnet hier die Korrelation zweier benachbarter Residuen): 
+
+$$DW=\frac{\sum\limits_{t=2}^T(u_t-u_{t-1})^2}{\sum\limits_{t=1}^Tu_t^2}\approx2(1-r) $$
+
+Die Nullhypothese lautet: Es liegt keine Autokorrelation erster Ordnung vor.  
+Sind zwei benachbarte Residuen nahezu gleich, d. h., die Zielgröße unterliegt einem Trend, dann wird auch $DW$ klein. Niedrige Werte von DW deuten demnach auf positive Autokorrelation hin. Umgekehrt führen starke Sprünge in den Residuen zu einem großen $DW$, hohe Werte von $DW$ deuten also auf negative Autokorrelation hin.^[Siehe z.B. Backhaus et al. (2008), S. 93; Hackl (2013), S. 212 f.; Poddig et al. (2008), S. 316 f.]  
+\footnotesize
+Generell gilt:   
+    $DW = 0 \to r = +1 \to$ Perfekt positive Autokorrelation  
+    $DW = 2 \to r = \enspace\:\, 0 \to$ Keine Autokorrelation  
+    $DW = 4 \to r = -1 \to$  Perfekt negative Autokorrelation 
+\normalsize
+
+### Test auf Autokorrelation: Kritik am Durbin-Watson Test
+
+Bei der Anwendung des Durbin-Watson-Tests sind einige Dinge zu beachten:
+
++ Wird die Nullhypothese verworfen, so gibt der DW-Test keinen Hinweis auf Ursachen für ein Verwerfen der Nullhypothese und darauf, wie das Modell zu modifizieren ist.
++ Der Test ist lediglich für Autokorrelation erster Ordnung geeignet. Liegt Autokorrelation höherer Ordnung vor, bspw. bei Quartalsdaten, kann ein Test auf Autokorrelation vierter Ordnung geeigneter sein. Allerdings ist Autokorrelation höherer Ordnung ist i. d. R. eher selten zu beobachten, wenn keine Autokorrelation erster Ordnung vorliegt.
++ Die Verteilung des $DW$-Wertes ist nicht exakt bestimmbar, sodass kritische Werte über Simulationsstudien tabelliert worden sind. 
++ Weiter hängen diese kritischen Werte von der konkreten Datenmatrix ab, was dazu führt, dass es einen Unentscheidbarkeitsbereich gibt. Liegt der Wert für $DW$ in diesem Bereich, so kann nicht entschieden werden, ob die Nullhypothese verworfen wird oder nicht. Dies macht den Durbin-Watson Test "unhandlich".^[Siehe z.B. Hackl (2013), S. 213 f.; Poddig et al. (2008), S. 317 f.]
+
+### Test auf Autokorrelation:
+
+**Durchführung des Durbin-Watson Tests**
+
+Wieder am Beispiel der `B3` Daten, Befehl `dwtest()` aus dem Paket `lmtest`.
+```{r}
+lmtest::dwtest(B3.lm)
+```
+
+Die Teststatistik liegt bei `r round(lmtest::dwtest(B3.lm)$statistic, 4)` und der p-Wert ist sehr klein. Das deutet auf eine deutlich positive Autokorrelation (ist bei diesem Datensatz aber auch zu erwarten).  
+
+Zusätzlich kann noch als Option `alternative=""` eingegeben werden, ob ein- oder zweiseitig gestestet werden soll (`"greater", "two.sided", "less"`).
+
+
+### Test auf Autokorrelation höherer Ordnung 
+
+**Breusch-Godfrey Test**: Bei diesem Test wird von einer linearen Regression $Y_t = \beta_0 + \beta_1X_1 + \dots + \beta_KX_K + u_t$ ausgegangen. Dazu wird eine Hilfsregression gebildet:
+
+$$u_t=\alpha_0+\alpha_1 u_{t-1}+\dots +\alpha_m u_{t-m} + \epsilon_t $$
+
+Liegt eine Autokorrelation höherer Ordnung vor, so sind die Regressionskoeffizienten der Hilfsregression nicht alle gleich 0.Getestet wird die Nullhypothese $H_0$: Alle $\alpha_i=0$ bzw. $H_0$: Es liegt keine Autokorrelation $m$-ter Ordnung vor.
+
+Die zugehörige Teststatistik $n\cdot R^2$ ist asymptotisch Chi-Quadrat-verteilt mit $m$ Freiheitsgraden, wobei $R^2$ das Bestimmtheitsmaß der Hilfsregression ist. Für große Stichprobenumfänge $n$ kann die Nullhypothese also mit einem Chi-Quadrat-Test getestet werden. Ist also $R^2$ ausreichend groß, so wird die Nullhypothese verworfen und es wird von einer Autokorrelation $m$-ter Ordnung ausgegangen. Vor dem Anwenden dieses Tests ist zu entscheiden, von welcher Ordnung die Autokorrelation maximal sein darf. Wird $m$ zu niedrig gewählt, wird ggf. eine Autokorrelation höherer Ordnung nicht erkannt, wird $m$ zu hoch gewählt, so ist die Güte des Tests schlecht.^[Siehe z.B. Hackl (2013), S. 214f.]
+
+### Test auf Autokorrelation höherer Ordnung
+
+**Durchführung des Breusch-Godfrey Tests**
+
+Auch dieser Befehl `bgtest()` stammt aus dem Paket `lmtest`. Der Parameter `order` gibt die Ordnung an, bis zu der getestet werden soll. Hier im Beispiel 4, da im `B3` Datensatz quartalsweise Daten vorliegen.
+
+```{r}
+bgtest(B3.lm, order = 4)
+```
+
+Auch dieser Test deutet auf eine signifikante Autokorrelation hin.
+
+### Es liegt Autokorrelation vor. Was tun? 
+
+Es ist zunächst zu prüfen, ob eine Fehlspezifikation des Modells vorliegt, also ob wichtige unabhängige Variablen im Modell fehlen oder ob es einen nichtlinearen Zusammenhang zwischen Einfluss- und Zielgröße gibt (vgl. RESET Test).
+Lässt sich die Autokorrelation auf diesem Wege nicht beseitigen, so können ggf. Verfahren der Zeitreihenanalyse (ARIMA- / GARCH-Modelle) helfen.^[Vgl. hierzu den Abschnitt zu Zeitreihen im Skript.]
+Weiter ist es möglich, die fehlerhaften Varianzen für die Kleinste-Quadrate-Schätzer durch die korrekten Varianzen zu ersetzen. Hierzu sei auf die Literatur verwiesen, als Ausgangspunkt kann bspw. Hackl (2013), S. 216 ff. dienen.
+Auch können robuste Schätzer eingesetzt werden, so dass die Standardfehler und die p-Werte korrigiert werden.
+
++ Funktion `coeftest()` aus dem Paket `lmtest`. In der Regel muss diese in Verbindung mit der Funktion `vcovHC` oder `vcovHAC` aus dem Paket `sandwich` genutzt werden (siehe auch `?coeftest`).
+
+Schließlich können auch geeignete Variablentransformationen wie etwa die Cochrane-Orcutt-Schätzer zu einer Beseitigung der Autokorrelation führen. Auch hier sei auf die Literatur verwiesen.^[Siehe z.B. Hackl (2013), S. 216 ff.; Kleiber/Zeileis (2008), S. 106 ff; Poddig et al. (2008), S. 320.]
+
+
+
+## Heteroskedastizität
+
+### Heteroskedastizität 
+
+Heteroskedastizität bedeutet, dass die Varianz nicht konstant bzw. zufällig gestreut ist, sondern in einem bestimmten Muster auftritt. Grafisch lässt sich die Heteroskedastizität am besten mit einem Streudiagramm für die Residuen oder die Absolutwerte der Residuen ($y$-Achse) gegen die fitted values oder, im Falle einer linearen Regression mit nur einer unabhängigen Variablen, gegen die unabhängige Variable ($x$-Achse) darstellen.^[Siehe z.B. Backhaus et al. (2008), S. 90; Kutner et al. (2005), S. 107.]  
+
+```{r echo = FALSE, fig.align="center", out.width="60%"}
+set.seed(100)
+
+# Weise x Werte zwischen 0 und 10 zu und erzeuge einen aufsteigenden und einen absteigenden Trichter
+xx=seq(0.15,10,length=200)
+y1 <- xx+log(xx)*rnorm(xx)
+y2 <- xx+log(11-xx)*rnorm(11-xx)
+
+p1 <- gf_hline(yintercept = 0, color = "blue") %>% 
+  gf_point(resid((lm(y1 ~ xx))) ~ fitted((lm(y1 ~ xx)))) %>% 
+  gf_lims(y = c(-7, 7)) %>% 
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank()) %>% 
+  gf_labs(title = "Varianz nimmt zu", x = "Gefittete Werte", y = "Residuen")
+
+p2 <- gf_hline(yintercept = 0, color = "blue") %>% 
+  gf_point(resid((lm(y2 ~ xx))) ~ fitted((lm(y2 ~ xx)))) %>% 
+  gf_lims(y = c(-7, 7)) %>% 
+  gf_theme(axis.ticks = element_blank(), axis.text = element_blank()) %>% 
+  gf_labs(title = "Varianz nimmt ab", x = "Gefittete Werte", y = "Residuen")
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Heteroskedastizität 
+
+Wenn die Streuung der Residuen in einer Reihe von Werten der prognostizierten abhängigen Variablen nicht konstant ist, d. h., wenn die Fehlerterme systematisch streuen, dann liegt Heteroskedastizität vor.  
+Heteroskedastizität tritt typischerweise auf bei:
++ Querschnitterhebungen,
++ Daten mit einem Messfehler, wobei der Messfehler einen Trend aufweist, 
++ Daten aus dem Bereich der Finanzmärkte wie bspw. Wechselkurse oder Renditen von Wertpapieren,
++ Nicht-Berücksichtigung eines relevanten Regressors im Modell (Fehlspezifikation) sowie
++ bei fehlerhafte Spezifikation der funktionalen Form eines Regressors (Nichtlinearität).
+
+Die Auswirkungen sind die gleichen wie bei Autokorrelation. Die Kleinste-Quadrate-Schätzer $\hat\beta_k$ sind zwar erwartungstreu und konsistent, aber sie sind keine effizienten Schätzer (keine BLUE-Eigenschaft). Die Varianz der Schätzer ist nicht mehr valide. Daraus folgt unmittelbar: t-Test und F-Test liefern irreführende Ergebnisse. Die Kleinste-Quadrate-Schätzung für die lineare Regression kann nicht zuverlässig interpretiert werden!^[Siehe z.B. Backhaus et al. (2011), S. 90; Hackl (2013), S. 190; Poddig et al. (2008), S. 321 f.]
+
+### Test auf Heteroskedastizität: Goldfeld-Quandt Test 
+
+Der **Goldfeld-Quandt-Test** prüft die Nullhypothese der Homoskedastizität gegen die Alternative, dass sich die Daten der Stichprobe in zwei (nicht notwendigerweise gleich große) Teilmengen aufteilen lassen, deren Residuen unterschiedliche Varianzen aufweisen.^[Siehe z.B. Hackl (2013), S. 192f.]  Zum Aufteilen der Daten in zwei Teilstichproben kann auch eine Prädiktorvariable Z des Modells verwendet werden, etwa der Zeitfaktor t bei Zeitreihen oder eine bestimmte Variable wie etwa die Unternehmensgröße bei Querschnittregressionen.  
+
+Das Testverfahren läuft dann in folgenden Schritten ab:
+1. Sortieren der Beobachtungen nach steigenden Werten der Variablen Z.
+2. Entfernen einer Anzahl von Beobachtungen aus der Mitte der sortierten Beobachtungen. Dies erhöht die Trennschärfe des Tests, allerdings sollte die Stichprobe dafür ausreichend groß sein.
+3. Getrennte Regressionen für die beiden Teilstichproben und Vergleich der Residuen über einen F-Test.
+
+Unter Nullhypothese (Homoskedastizität) müssen sich die Summen der quadrierten Residuen der beiden Teilstichproben (nahezu) entsprechen. Andernfalls wird die Nullhypothese verworfen.
+
+### Test auf Heteroskedastizität: Kritik am Goldfeld-Quandt Test
+
+Das Entfernen von Werten aus der Mitte der nach Z sortierten Beobachtungen hat zwar eine Erhöhung der Trennschärfe des Tests zur Folge, setzt aber voraus, dass der Stichprobenumfang nicht zu klein wird.
+
+Sind die Residuen nicht normalverteilt, dann ist die Prüfgröße für den Test nur asymptotisch F-verteilt, d. h., auch hier muss dann ein ausreichend großer Stichprobenumfang vorliegen.
+
+Die Bildung der zwei Teilstichproben erfolgt anhand einer Variablen Z. Hängt die Residuenvarianz von mehr als einer Variablen Z ab, ist eine solche Teilstichprobenbildung nicht möglich und der Goldfelt-Quandt-Test kann nicht angewendet werden.
+
+Der größte Nachteil ist aber: Ein signifikantes Testergebnis muss nicht bedeuten, dass die Annahme der Homoskedastizität verletzt ist und dass Heteroskedastizität vorliegt. Ein signifikantes Testergebnis kann sich auch ergeben, wenn die Regressionskoeffizienten der beiden Teilregressionen unterschiedlich sind, auch bei gleicher Streuung der Residuen.^[Siehe z.B. Hackl (2013), S. 193; Poddig et al. (2008), S. 324.]
+
+### Test auf Heteroskedastizität: Breusch-Pagan Test
+
+Der **Breusch-Pagan Test** verallgemeinert den Goldfeld-Quandt-Test, indem er über eine Hilfsregression überprüft, ob die Residuenvarianz $var(u_i) = \sigma_i^2$ von mehr als einer Variablen abhängt:
+
+$$\sigma_i^2=\alpha_0+\alpha_1 z_{1i}+\dots + \alpha_Kz_{Ki}$$
+
+Die erklärenden Variablen $z_{ki}$ können dabei die unabhängigen Variablen des ursprünglichen Regressionsmodells oder auch andere Variablen sein.  
+
+Als Nullhypothese wird geprüft: $H_0: \alpha_1=\dots =\alpha_K=0$ gegen die Alternative, dass mindestens ein $\alpha_k \ne 0$. Trifft die Nullhypothese zu, so ist $\sigma_i^2=\alpha_0$, d. h. konstant, und Homoskedastizität liegt vor.  
+
+Die Prüfgröße zum Breusch-Pagan Test ist näherungsweise $n\cdot R^2$, wobei $R^2$ das Bestimmtheitsmaß der Hilfsregression ist. Diese ist asymptotisch Chi-Quadrat-verteilt mit $K$ Freiheitsgraden.^[Siehe z.B. Hackl (2013), S. 194; Poddig et al. (2008), S. 324 ff.]
+
+### Test auf Heteroskedastizität: White Test 
+
+Der wesentliche Nachteil des Breusch-Pagan-Tests ist, dass die Residuen der Ursprungsregression normalverteilt sein müssen.  Andernfalls ist die Prüfgröße nicht asymptotisch Chi-Quadrat-verteilt und der Test kann nicht angewendet werden.
+
+Der **White Test** hingegen kann auch bei nicht-normalverteilten Residuen angewendet werden. Analog zum Breusch-Pagan-Test wird die Residuenvarianz über eine Hilfsregression modelliert. Als unabhängige Variablen der Hilfsregression werden die unabhängigen Variablen des ursprünglichen Regressionsmodells, deren Quadrate sowie die Kreuzprodukte dieser Variablen verwendet. Außerdem hat die Hilfsregression einen Intercept.
+
+Im Falle von zwei unabhängigen Variablen $x_1$ und $x_2$ ergibt sich beispielsweise
+
+$$\sigma_i^2=\alpha_0+\alpha_1 x_{1i}+\alpha_2 x_{2i}+\alpha_2 x_{1i}^2+\alpha_4 x_{2i}^2 +\alpha_5 x_{1i} x_{2i}$$
+
+### Test auf Heteroskedastizität: White Test 
+
+Als Nullhypothese wird formuliert: $H_0: \sigma_i^2 = \sigma^2 \textrm{ für alle }i=1,\dots ,n$, d. h. Homoskedastizität.
+
+Die Prüfgröße des White Test ist näherungsweise $n\cdot R^2_h$, wobei $R^2_h$ das Bestimmtheitsmaß der Hilfsregression ist. Diese ist asymptotisch Chi-Quadrat-verteilt mit $K$ Freiheitsgraden, wobei $K$ die Anzahl der unabhängigen Variablen der Hilfsregression ist.^[Siehe z.B. Hackl (2013), S. 194 f., Poddig et al. (2008), S. 328 ff.]
+
+### Test auf Heteroskedastizität -- Beispiel
+
+\footnotesize 
+
+Wir überprüfen das Modell `BSB91JW ~ CP91JW + ZINSK` aus dem `B3` Datensatz auf Heteroskedastizität. Zunächst schauen wir uns den Plot der Residuen gegen die fitted values an:
+
+```{r fig.align="center", out.width="40%"}
+gf_hline(yintercept = 0, color = "blue") %>% 
+  gf_point(resid(B3.lm) ~ fitted(B3.lm)) %>% 
+  gf_labs(x = "Gefittete Werte", y = "Residuen")
+```
+
+Es ist kein ausgeprägtes Muster oder ein Trichter zu erkennen, was auf Homoskedastizität hindeutet.
+
+### Test auf Heteroskedastizität -- Beispiel
+
+\small
+
+Der Goldfeldt-Quandt Test wird mit dem Befehl `gqtest()` aus dem Paket `lmtest` durchgeführt.
+
+```{r}
+gqtest(B3.lm, point = 0.5, fraction = 0.05, alternative = "two.sided", 
+       order.by = B3$PHASEN)
+```
+
+Verschiedene Parameter können angegeben werden: Wo erfolgt die Teilung der Daten (`point =`), welcher Anteil der Beobachtungen soll an der Grenze weggelassen werden (`fraction =`) und soll ein ein- oder zweiseitiger Test durchgeführt werden (`alternative =`)? Zudem kann angegegen werden, nach welcher Variable die Daten geordnet werden sollen (`order.by =`). Falls dieser Parameter weggelassen wird, so wird davon ausgegangen, dass die Daten bereits geordnet sind (z. B. Zeitreihen).
+
+Das Ergebnis zeigt keine Signifikanz für Heteroskedastizität.
+
+### Test auf Heteroskedastizität -- Beispiel {.shrink}
+
+Sowohl der Breusch-Pagan als auch der White Test werden mit dem Befehl `bptest()` aus dem Paket `lmtest` durchgeführt. Für den White Test müssen noch die quadratischen Terme und das Kreuzprodukt als zusätzliche unabhängige Variablen angegeben werden.
+
+\footnotesize
+
+```{r}
+# Breusch-Pagan Test
+bptest(B3.lm)
+# White Test
+bptest(B3.lm, ~ I(CP91JW^2) + I(ZINSK^2) + CP91JW * ZINSK, data = B3)
+```
+
+\normalsize
+
+Die Ergebnisse der beiden Tests deuten ebenfalls auf Homoskedastizität hin.
+
+\footnotesize
+
+*Hinweis*: Für den White Test müssen auch bei mehr als zwei unabhängigen Variablen nur die quadratischen Terme und die Angabe von `V1 * V2 * V3` usw. ergänzt werden, die jeweiligen paarweisen Kreuzprodukte werden daraus automatische bestimmt. Die Funktion `I()` (*as Is*) um die Quadrierung bedeutet, dass die Rechnung direkt so durchgeführt werden soll (also keine Interpretation als Formelparameter).
+
+
+
+### Es liegt Heteroskedastizität vor. Was tun? 
+
+Auch bei Heteroskedastizität ist wie bei Autokorrelation im ersten Schritt zu prüfen, ob eine Fehlspezifikation des Modells vorliegt. Fehlen wichtige unabhängige Variablen im Modell fehlen oder gibt es einen nichtlinearen Zusammenhang zwischen Einfluss- und Zielgröße?
+
+Falls ein sogenanntes Volatilitätscluster auftritt, können ggf. Verfahren der Zeitreihenanalyse (ARCH-/GARCH-Modelle) hilfreich sein.
+
+Weiterhin ist es möglich, die fehlerhaften Varianzen für die Kleinste-Quadrate-Schätzer durch die korrekten Varianzen zu ersetzen, etwa unter Verwendung der sogenannten White-Standardfehler. Hierzu sei auf die Literatur verwiesen, als Ausgangspunkt kann bspw. Hackl (2013), S. 197 f. dienen.
+
+Auch können robuste Schätzer eingesetzt werden, so dass die p-Werte korrigiert werden.
+
++ Funktion `coeftest()` aus dem Paket `lmtest`. In der Regel muss diese in Verbindung mit der Funktion `vcovHC` oder `vcovHAC` aus dem Paket `sandwich` genutzt werden (siehe auch `?coeftest`).
+
+### Es liegt Heteroskedastizität vor. Was tun? 
+
+Ist die Varianz der Residuen bekannt, so kann eine Transformation der abhängigen und aller unabhängigen Variablen helfen. Dabei werden die ursprünglichen abhängigen und unabhängigen Variablen durch die Varianzen der Störvariablen dividiert und anschließend erfolgt eine erneute Regression mit den transformierten Daten.^[Siehe z.B. Hackl (2013), S. 216 ff.; Kleiber/Zeileis (2008), S 106 ff., S. 116 ff.; Poddig et al. (2008), S. 331.]
+
+
+### Übung `r nextExercise()`: Autokorrelation und Heteroskedastizität
+
+1. Untersuchen Sie die Regression `wage ~ sex + exper + educ` mit dem Datensatz `bwages` auf Autokorrelation und Heteroskedastizität.
+2. Geben sie korrigierte p-Werte der Regression mit Hilfe von `coeftest()` aus. Achten Sie dabei auf korrekte Anwendung von `coeftest`.
+3. Führen Sie mit dem Datensatz `tips` (laden mit `data(tips, package="reshape2")`) eine Regression von `tip` auf `total_bill` durch und Überprüfen das Ergebnis graphisch und mittels geeigneter Tests auf Heteroskedastizität.
+
+
+## Multikollinearität
+
+### Multikollinearität 
+
+Mit Multikollinearität wird eine hohe Korrelation zwischen den erklärenden Variablen bezeichnet. Multikorrelation tritt immer dann auf, wenn mehrere unabhängige Variablen zumindest in Teilen das Gleiche messen.  
+
+Beispiele für Multikorrelation sind:
+
++ Marktkapitalisierung und Umsatzerlöse
++ Marktkapitalisierung und Liquidität der Unternehmensanteile
++ Marktkapitalisierung und Bilanzsumme
++ ROE und ROA
+
+### Multikollinearität 
+
+Bei perfekter Multikollinearität (eine unabhängige Variable lässt sich linear durch eine oder mehrere andere unabhängige Variablen abbilden, d. h. bspw. $X_1 = \alpha_0 + \alpha_1 X_2 + \alpha_2 X_3 + \dots \alpha_{K-1} X_K$) ist eine Schätzung der Regressionskoeffizienten nicht möglich.  
+
+Mit zunehmender Multikollinearität ist eine Schätzung der Regressionskoeffizienten zwar möglich und der Gesamteinfluss aller unabhängiger Variablen auf die abhängige wird korrekt modelliert, allerdings ist die Zurechnung des Gesamteinflusses auf die einzelnen unabhängigen Variablen nicht mehr möglich.  
+
+Die geschätzten Regressionskoeffizienten werden unsicher, kleine Änderungen an den zugrunde liegenden Daten spiegeln sich in deutlichen Änderungen bei den geschätzten Regressionskoeffizienten wider. Dies macht sich bemerkbar am Standardfehler der Regressionskoeffizienten, der größer wird, d. h., die t-Werte sinken.^[Siehe z.B. Backhaus et al. (2008), S. 93 f.; Poddig et al. (2008), S. 373 ff.] 
+
+### Test auf Multikollinearität
+
+Einen ersten Hinweis auf potenzielles Vorliegen von Multikollinearität kann durch Vergleich von Bestimmtheitsmaß und der Signifikanz der Regressionskoeffizienten erhalten werden. So ist ein hohes Bestimmtheitsmaß bei gleichzeitiger Nicht-Signifikanz des Großteils der Regressionskoeffizienten ein deutlicher Hinweis auf Multikollinearität.  
+
+Die Korrelationsmatrix der unabhängiger Variablen gibt ebenfalls einen Hinweis auf Multikollinearität. Allerdings können so nur paarweise Abhängigkeiten aufgedeckt werden. Werte größer 0.8 werden in der Literatur als kritisch angesehen.  
+
+Ein Test auf Multikollinearität kann über die Variance Inflations Factors ($VIF$) erfolgen. Die Variance Inflation Factors sind die Faktoren, um die sich die Varianzen der Regressionskoeffizienten mit zunehmender Multikollinearität erhöhen. Sie können neben paarweiser Multikollinearität auch Multikollinearität erkennen, die durch Linearkombinationen der unabhängigen Variablen hervorgerufen wird.^[Siehe z.B. Backhaus et al. (2008), S. 93 ff.; Poddig et al. (2008), S. 378 ff.]
+
+### Test auf Multikollinearität
+
+Wird eine unabhängige Variable $X_k$ durch eine Linearkombination der übrigen $K-1$ unabhängigen Variablen erklärt, so kann diese Beziehung über eine multiple Regression modelliert werden. Die Güte dieses Zusammenhangs wird über das Bestimmtheitsmaß $R^2_k$ dieser Hilfsregression erfasst.  
+
+Der Variance Inflation Factor berechnet sich daraus zu: 
+
+$$VIF_k=\frac{1}{1-R^2_k} $$
+
+
+Je besser sich eine unabhängige Variable linear durch alle anderen unabhängigen Variablen erklären lässt, desto größer wird $R^2_k$ und desto größer wird $VIF_k$.  
+
+Dabei wird ein Wert von 10 oder größer als kritisch erachtet, was einem Bestimmtheitsmaß von mindestens 0.9 entspricht. Andere Quellen bezeichnen bereits einem Wert von 5 als kritisch, was einem Bestimmtheitsmaß von mindestens 0.8 entspricht.^[Siehe z.B. Backhaus et al. (2008), S. 93 ff.; Poddig et al. (2008), S. 379 ff.]
+
+### Test auf Multikollinearität -- Beispiel {.shrink}
+
+Wir führen mit dem B3 Datensatz eine Regression von `BSP91JW` auf alle anderen metrischen Variablen durch (lassen also `PHASEN` als Faktorvariable weg):
+
+```{r}
+B3.lmall <- lm(BSP91JW ~ . -PHASEN, data = B3)
+```
+
+In der Modellierungsformel bedeutet `~ .` "nehme alle anderen Variablen" und `-PHASEN` bedeutet "lasse `PHASEN` weg".
+
+Die Korrelationsmatrix zeigt hohe Korrelationen zwischen einzelnen Variablen. `B3[,-(1:2)]` bedeutet ohne die erste und zweite Spalte, also ohne `PHASEN` und `BSP91JW`.
+
+\tiny
+
+
+```{r include = FALSE}
+# cutoff funktioniert hier nicht, daher tiny
+```
+
+```{r tidy.opts=list(width.cutoff=100)}
+round(cor(B3[,-(1:2)]),2)
+```
+
+### Test auf Multikollinearität -- Beispiel
+
+Die Varianz Inflation Factors werden mit der Funktion `vif()` aus dem Paket `car` berechnet. Hier mal ohne laden des Pakets, sondern Aufruf einer einzelnen Funktion aus einem Paket durch `package::function`. Dazu muss das Paket natürlich trotzdem installiert sein.
+
+\footnotesize
+
+```{r}
+car::vif(B3.lmall)
+```
+
+\normalsize
+
+Die Variance Inflation Factors sind bei `PBSPJW` sehr hoch und bei weiteren vier Variablen immerhin über 5.0.
+
+Wird `PBSPJW` aus der Regression entfernt und $VIF$ erneut berechnet, erreichen die meisten dieser vier Variablen davon Werte unter 5.0.
+
+### Test auf Multikollinearität -- Beispiel
+
+\footnotesize
+
+```{r}
+B3.lmall2 <- lm(BSP91JW ~ . -PHASEN -PBSPJW, data = B3)
+car::vif(B3.lmall2)
+```
+
+\normalsize
+
+`PSBSPJW` scheint also recht gut die anderen vier Variablen erklärt werden zu können. (Was beudeutet das inhaltlich?)
+
+### Multikollinearität liegt vor. Was tun? 
+
+Ist es das Ziel der Modellierung, einen Gesamteffekt aller Variablen aufzudecken, sodass die Betrachtung einzelner Variablen nicht relevant ist, so kann Multikollinearität vernachlässigt werden.
+
+Weisen einzelne unabhängige Variablen eine sehr hohe Korrelation zu den anderen unabhängigen Variablen auf, so können diese aus dem Modell entfernt werden. Der daraus resultierende Informationsverlust ist gering. Allerdings kann dies zu einer Fehlspezifizierung des Modells führen.
+Die hoch korrelierende Variable wird auf die anderen erklärenden Variablen regressiert. Die daraus ermittelbaren Residuen verbleiben im Ursprungsmodell als unabhängige Variablen (sog. Orthogonalisierung). Bei mehreren hoch korrelierenden Variablen beeinflusst die Reihenfolge der Orthogonalisierung der einzelnen unabhängigen Variablen jedoch die Ergebnisse der Regression.
+
+Auch kann eine Hauptkomponentenanalyse durchgeführt werden, um die miteinander korrelierenden Variablen durch Hauptkomponenten zu ersetzen und die Regression mit den Hauptkomponenten durchzuführen.
+Gelegentlich ist es auch möglich, die Datenmenge zu erhöhen. Dies kann zu einer Reduktion der Multikollinearität führen.^[Siehe z.B. Poddig et al. (2008), S. 382 ff.]
+
+
+### Übung `r nextExercise()`: Multikollinearität
+
+Untersuchen Sie die Regression `wage ~ exper + educ + sex` auf Kollinearität, indem Sie sowohl die Korrelationmatrix auswerten als auch die Variance Inflation Factors. 
+
+
+## Erwartungswert und Normalverteilung der Residuen
+
+### Erwartungswert der Residuen 
+
+Beträgt der Erwartungswert der Residuen 0, so umfasst das Residuum $u$ nur zufällige Effekte, die negative und positive Abweichungen zwischen den beobachteten und geschätzten Werten für die Zielgröße verursachen. Diese zufälligen Schwankungen gleichen sich dann im Mittel aus.  
+
+Eine Verletzung dieser Annahme ergibt sich beispielsweise dann, wenn die Werte für die abhängige Variable um einen konstanten Term zu hoch oder zu niedrig gemessen werden. In diesem Fall enthält das Residuum einen systematischen Effekt.  
+Wird jedoch ein konstanter Term, der Intercept $\beta_0$, in das Modell mit aufgenommen, so wird dieser systematische Effekt durch die Kleinste-Quadrate-Schätzung in diesem konstanten Term erfasst. In diesem Fall ist der Erwartungswert der Residuen immer 0.   
+Wird jedoch in der Modellierung auf den Intercept verzichtet, so wirkt sich der eben beschriebene systematische Effekt auf die Schätzer der Regressionskoeffizienten aus, die dann verzerrt werden. Daher darf nur in begründeten Ausnahmefällen auf den Intercept verzichtet werden, wenn sicher ist, dass es keinen systematischen konstanten Effekt gibt.^[Siehe z.B. Backhaus et al. (2011), S. 88; Poddig et al. (2008), S. 239f.]
+  
+  + z\. B. bei standardisierten Werten
+
+### Normalverteilung der Residuen
+
+Die Normalverteilungsannahme wird häufig nicht geprüft, da der zentrale Grenzwertsatz gilt und deshalb für nicht zu kleine Stichprobenumfänge eine Normalverteilung der Residuen vorausgesetzt werden kann.  
+
+Soll die Normalverteilungsannahme trotzdem untersucht werden, so bieten sich verschiedene grafische und analytische Methoden an.
+
+Klassische grafische Verfahren sind u. a. das Histogramm sowie der Normal-Probability-Plot (QQ-Plot).^[Siehe z.B. Kutner et al. (2005), S. 110 ff.] Als Testverfahren stehen die gängigen Normalverteilungstests von Shapiro-Wilk, Jarque-Bera, Kolmogoroff-Smirnov u. a. zur Verfügung. 
+
+### Normalverteilung der Residuen 
+
+\footnotesize
+
+**Histogramm**
+
+```{r echo=FALSE, fig.align="center", out.width="70%"}
+# Histogramm ohne Normalverteilungsdichte
+set.seed(123)
+z <- rnorm(100, mean = 0, sd = 1)
+p1 <- gf_histogram(~ z,  binwidth = 0.5, center = 0.25, title = "ohne NV-Dichte", ylab = "absolute Häufigkeit") %>% 
+  gf_lims(x = c(-3, 3))
+
+# Histogramm mit Normalverteilungsdichte
+p2 <- gf_dhistogram(~ z,  binwidth = 0.5, center = 0.25, title = "mit NV-Dichte", ylab = "Dichte") %>% 
+  gf_lims(x = c(-3, 3)) %>% 
+  gf_dist("norm", color = "blue")
+
+grid.arrange(p1, p2, nrow = 1)
+```
+
+*Hinweis*: Dichte im Histogramm ist der Quotient aus relativer Häufigkeit und Klassenbreite.
+
+### Normalverteilung der Residuen
+
+\footnotesize
+
+**QQ-Plot**
+
+```{r echo=FALSE, fig.align="center", out.width="70%"}
+set.seed(123)
+# y1 ist normalverteilt, y2 ist nicht normalverteilt
+y1 <- rnorm(seq(-2,2,length=200),mean=0,sd=1)
+y2 <- rnorm(seq(-2,2,length=200),mean=0,sd=1) + runif(seq(-2,2,length=200),-4, 4)
+# Plots
+p1 <- gf_qqline(~ y1, color = "blue") %>% gf_qq() %>% 
+  gf_labs(x = "unter NV erwartete Residuen", y = "beobachtete Residuen", title = "Normalverteilt")
+p2 <- gf_qqline(~ y2, color = "blue") %>% gf_qq() %>% 
+  gf_labs(x = "unter NV  erwartete Residuen", y = "beobachtete Residuen", title = "Nicht-Normalverteilt")
+grid.arrange(p1, p2, nrow = 1)
+```
+
+### Normalverteilung der Residuen -- Beispiel
+
+Wir greifen auf die Regression von `wage ~ sex + exper + educ` mit dem `bwages` Datensatz zurück (Modell `bW.lm1`). Zunächst der Shapiro-Wilk und der Jarque-Bera Test:
+
+\small
+
+```{r}
+shapiro.test(resid(bW.lm1))
+moments::jarque.test(resid(bW.lm1))
+```
+
+\normalsize
+
+Beiden zeigen, dass die Residuen signifikant nicht normalverteilt sind.
+
+### Normalverteilung der Residuen -- Beispiel 
+
+Auch in den Plots wird die fehlende Normalverteilung deutlich.
+
+\small
+
+
+```{r LinReg_Residuen, eval = FALSE, fig.align="center", out.width="70%"}
+# Histogramm mit Normalverteilungsdichte
+p1 <- gf_dhistogram(~ resid(bW.lm1),  bins = 10) %>% 
+  gf_dist("norm", mean = mean(resid(bW.lm1)), sd = sd(resid(bW.lm1)), 
+          color = "blue") %>% 
+  gf_labs(x = "", y = "Dichte", title = "Histogramm")
+
+# QQ-Plot
+# Hinweis: mit Linie starten, damit die Punkte das oberste Layer sind
+p2 <- gf_qqline(~ resid(bW.lm1), color = "blue") %>%
+  gf_qq() %>% 
+  gf_labs(x = "unter NV erwartete Residuen", 
+          y = "beobachtete Residuen", title = "QQ-Plot")
+
+# Plots anordnen
+grid.arrange(p1, p2, nrow = 1)
+```
+
+
+### Normalverteilung der Residuen -- Beispiel
+
+```{r LinReg_Residuen, echo = FALSE, fig.align="center", out.width="60%"}
+```
+
+
+### Übung `r nextExercise()`: Normalverteilung der Residuen
+
+Untersuchen Sie, ob die Residuen in der `LeslieSalt` Regression `logPrice ~ Elevation + Date + Flood + Distance + County + (County*Elevation)` (Modell `LS.lm2`) normalverteilt sind.
+
+### Verschiedene diagnostische Plots auf einmal
+
+Verschiedene diagnostische Plots können Sie mit dem Befehl `autoplot(lmmodel)`^[`autoplot()` ist eine Funktion aus dem Paket `ggplot2`, die zu verschiedenen Objekten bereits vorgesehene automatische Plots machen kann und entspricht meist der Standardvariante `plot(model)`. In `ggfortify` sind weitere Plots zu  `autoplot()` integriert, so z.B. dieser diagnostische Plot eines lineraren Modells.] ausgegeben. Im Beispiel wieder das Modell `bW.lm1`:
+
+```{r LinReg_Autoplot, eval=FALSE}
+library(ggfortify)
+autoplot(bW.lm1)
+```
+
+Es werden zwei verschiedene Plots der Residuen gegen die fitted values gezeigt, einmal mit der Wurzel aus den standardisierten Residuen. In beiden Plots wird noch die sogenannte LOWESS Linie (*LOcally WEighted Scatterplot Smooting*) in blau eingezeichnet, hiermit lassen Sie Trends und nicht-lineare Zusammenhänge in den  Residuen gut erkennen.^[Die LOWESS Linie können Sie mit `gf_smooth(y ~ x))` in ein Streudiagramm einzeichnen. Details siehe in der Hilfe dazu.]  
+
+Weiterhin werden der QQ-Plot mit den standardisierten Residuen gezeigt, sowie die standardisierten Residuen gegen die Leverage Werte. Im letzteren Plot werden auch noch Linien für die Cook's Distance bei 0.5 und 1.0 eingezeichnet (hier nicht zu sehen).
+
+### Verschiedene diagnostische Plots auf einmal
+
+```{r  LinReg_Autoplot, echo=FALSE, fig.align="center", out.width="70%"}
+```
+
+
+### Übung `r nextExercise()`: Lineare Regression mit Regressionsdiagnostik
+
+Untersuchen Sie den `Boston` Datensatz aus dem Paket `MASS`. Infos zum Datensatz erhalten nach dem Laden mit `?Boston`.
+
+Versuchen Sie den Medianpreis `medv` durch geeignete andere Variablen zu erklären und bewerten in Ihrem Modell die Erfüllung der Anwendungsvoraussetzungen für eine lineare Regression.
+
+
+```{r finish-Oeko-Regressionsdiagnostik, include=FALSE}
+rm(pathToImages)
+finalizePart(partname)
+```
