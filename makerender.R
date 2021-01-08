@@ -5,10 +5,10 @@
 # (C) by N. Markgraf & M. Gehrke in 2019-2020
 #
 # Kleines R-Skript zum erstellen von Dozenten- / Studierenden- und
-# Lösungsskript aus einer R markdown Datei ohne dass mehrfach geknitert 
+# Lösungsskript aus einer R markdown Datei ohne dass mehrfach geknitert
 # werden muss.
 #
-# Idee: Matthias Gehrke 
+# Idee: Matthias Gehrke
 #
 # ------------------------------------------------------------------------
 
@@ -41,10 +41,11 @@ cat(paste0("makerender ", filename,".Rmd\n"))
 # ------------------------------------------------------------------------
 
 overwrite_old <- TRUE   # Sollen bestehende Dateien überschrieben werden?
-use_private <- TRUE     # Die Werte aus "private/private.R" benutzen?
-Semester <- "WiSe 2020/21"  # Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
+use_private <- FALSE     # Die Werte aus "private/private.R" benutzen?
+Semester <- "SoSe 2021"  # Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #Studienort <- "Wuppertal / Gütersloh"  # Studienort(e)
-Studienort <- "Düsseldorf"
+#Studienort <- "Düsseldorf"
+Studienort <- "FOM"
 midfix <- "" # Anhängsel an den Dateinamen, falls benötigt.
 #
 #
@@ -62,7 +63,7 @@ if (filename == "Etwas-R-am-Abend") {
 RENDEREDBYSCRIPT <<- TRUE
 
 # ------------------------------------------------------------------------
-# Die wichtigesten Prelude-Skripte schon einmal laden: 
+# Die wichtigesten Prelude-Skripte schon einmal laden:
 source("prelude/prelude_tools.R")
 source("prelude/prelude_rendertools.R")
 
@@ -84,7 +85,7 @@ if (use_private) {
 }
 
 # ------------------------------------------------------------------------
-# Aus dem angegebenen Dateinamen werden einige abgeleitete 
+# Aus dem angegebenen Dateinamen werden einige abgeleitete
 # Dateinamen erzeugt:
 
 filename_rmd <- paste0(filename, ".Rmd")
@@ -97,7 +98,7 @@ filename_lsg <- paste0(filename, midfix, "-Lsg.pdf")
 # ------------------------------------------------------------------------
 # Lokale Funktion, werche die externen Dateien anpasst:
 
-compileTeXFile <- function(texfile, pdffilesource, pdffiledest, 
+compileTeXFile <- function(texfile, pdffilesource, pdffiledest,
                            msg = "", ovrwrt = TRUE) {
   cat(paste0(msg,"\n"))
   tinytex::latexmk(texfile)
@@ -111,7 +112,7 @@ compileTeXFile <- function(texfile, pdffilesource, pdffiledest,
 # ------------------------------------------------------------------------
 # Dozentenskript erzeugen
 
-makeSkriptOfType("DozentenSkript") 
+makeSkriptOfType("DozentenSkript")
 
 cat("Render and compile dozi file!\n")
 
@@ -127,15 +128,15 @@ file.copy(filename_pdf, filename_dozi, overwrite = overwrite_old)
 # ------------------------------------------------------------------------
 # Studierendenskript erzeugen
 
-makeSkriptOfType("StudierendenSkript") 
-compileTeXFile(filename_tex, filename_pdf, filename_studi, 
+makeSkriptOfType("StudierendenSkript")
+compileTeXFile(filename_tex, filename_pdf, filename_studi,
                "Compile studi file!", overwrite_old)
 
 # ------------------------------------------------------------------------
 # Lösungsskript erzeugen
 
-makeSkriptOfType("LösungsSkript") 
-compileTeXFile(filename_tex, filename_pdf, filename_lsg, 
+makeSkriptOfType("LösungsSkript")
+compileTeXFile(filename_tex, filename_pdf, filename_lsg,
                "Compile lsg file!", overwrite_old)
 
 # ========================================================================
