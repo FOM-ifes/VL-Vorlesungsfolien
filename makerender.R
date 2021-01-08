@@ -46,6 +46,8 @@ Semester <- "SoSe 2021"  # Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #Studienort <- "Wuppertal / Gütersloh"  # Studienort(e)
 #Studienort <- "Düsseldorf"
 Studienort <- "FOM"
+FOMLayout <<- TRUE
+EUFOMLayout <<- !FOMLayout
 midfix <- "" # Anhängsel an den Dateinamen, falls benötigt.
 #
 #
