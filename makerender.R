@@ -41,7 +41,7 @@ cat(paste0("makerender ", filename,".Rmd\n"))
 # ------------------------------------------------------------------------
 
 overwrite_old <- TRUE   # Sollen bestehende Dateien überschrieben werden?
-use_private <- TRUE     # Die Werte aus "private/private.R" benutzen?
+use_private <- FALSE     # Die Werte aus "private/private.R" benutzen?
 Semester <- "WiSe 2020/21"  # Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #Studienort <- "Wuppertal / Gütersloh"  # Studienort(e)
 Studienort <- "Düsseldorf"
