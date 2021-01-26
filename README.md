@@ -1,6 +1,6 @@
 **Wiki zu den Vorlesungsunterlagen:** [https://github.com/luebby/Vorlesungen/wiki/Lehre-als-Sammlung-von-Tricks](https://github.com/luebby/Vorlesungen/wiki/Lehre-als-Sammlung-von-Tricks)
 
-Fehler etc. bitte unter [https://github.com/luebby/Vorlesungen/issues](https://github.com/luebby/Vorlesungen/issues) melden!
+Fehler etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues](https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues) melden!
 
 
 ## Notwendige Software
