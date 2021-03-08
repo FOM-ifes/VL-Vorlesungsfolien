@@ -85,7 +85,7 @@ In der Wissenschaft werden Aussagen kritisch überprüft, auch sind Aussagen imm
 
 Solange nicht versucht wurde, eine Aussage zu widerlegen, kann sie keinesfalls als belegt gelten.
 
-Wir können aber z.B. gucken, welche Unterschiede *zufällig* vorkommen würden, wenn es keinen Unterschied geben würde (Modellannahme).
+Wir können aber z.B. schauen, welche Unterschiede in der Stichprobe *zufällig* vorkommen würden, wenn es in der Population keinen Unterschied geben würde (Modellannahme).
 :::
 
 
@@ -115,11 +115,11 @@ Der Anteil der Simulationen, in denen es zufällig einen Unterschied von mindest
 Was stimmt Ihrer Meinung nach?
 
 A.  Der beobachtete Unterschied von $3$ Wörtern ist eher selten, wenn es gar keinen Unterschied geben würde.
-B.  Es liegt ein Fehler vor: wenn es keinen Unterschied gibt, dürften wir auch keinen beobachten.
+B.  Es liegt ein Fehler vor: wenn es in der Population keinen Unterschied gibt, dürften wir auch in der Stichprobe keinen beobachten.
 
 
 ::: {.notes}
-Auch wenn es keinen Unterschied gibt, kann es zufällig vorkommen, dass wir einen Unterschied sehen. Aber *wenn* es keinen Unterschied geben sollte, dann ist das Ergebnis dieser Stichprobe eher ungewöhnlich (***A***) -- aber natürlich kein Beweis dafür, dass es einen gibt!
+Auch wenn es in der Population keinen Unterschied gibt, kann es zufällig vorkommen, dass wir in der Stichprobe einen Unterschied sehen. Aber *wenn* es keinen Unterschied geben sollte, dann ist das Ergebnis dieser Stichprobe eher ungewöhnlich (***A***) -- aber natürlich kein Beweis dafür, dass es einen gibt!
 
 In dieser Vorlesung lernen Sie, wie Sie Daten erheben können, welche Aussagen damit möglich sind, wie Sie Daten auswerten können und wie Sie Modelle mit und über Daten erstellen können.
 :::
