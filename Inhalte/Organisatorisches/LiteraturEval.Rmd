@@ -1,7 +1,7 @@
 ### Literatur (Auswahl)
 
 - Sebastian Sauer (2019): *Moderne Datenanalyse mit R.* Springer. [https://link.springer.com/book/10.1007/978-3-658-21587-3](https://link.springer.com/book/10.1007/978-3-658-21587-3)
-- David M. Diez, Christopher D. Barr, Mine &Ccedil;etinkaya-Rundel (2014): *Introductory Statistics with Randomization and Simulation*, [https://www.openintro.org/stat/textbook.php?stat_book=isrs](https://www.openintro.org/stat/textbook.php?stat_book=isrs)
+- David M. Diez, Christopher D. Barr, Mine &Ccedil;etinkaya-Rundel (2014): *Introductory Statistics with Randomization and Simulation*, [https://www.openintro.org/book/isrs/](https://www.openintro.org/book/isrs/)
 - Nicola Doering, Jürgen Bortz (2016): *Forschungsmethoden und Evaluation in den Sozial- und Humanwissenschaften*, Springer Verlag Berlin Heidelberg.
 - Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Little Books *A Student's Guide to R*,  [https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf](https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf)
 - Chester Ismay, Albert Y. Kim (2019): *ModernDive -- An Introduction to Statistical and Data Sciences via R*, [http://moderndive.com/](http://moderndive.com/)
