@@ -4,6 +4,7 @@
 # (C) in 2018 by Norman Markgraf (nmarkgraf@hotmail.com)
 #
 
+filterlist <- c("style.py", "typography.py", "include_exclude.py", "MyMoodleFilter.py")
 
 updatePythonFiles <- function(
     master="",  
@@ -31,9 +32,13 @@ updatePythonFiles <- function(
   
   # Erzeuge Dateiliste
   files <- file.path(tmp, paste0(master, "-master"), list.files(file.path(tmp,paste0(master, "-master")), ".py$"))
-  file.copy(files, dest)
+  print(files)
+  file.copy(files, dest, overwrite = TRUE)
+  Sys.chmod(file.path(dest,"*.py"), mode="755")
   unlink(tmp, recursive = TRUE, force = TRUE)  
 }
 
-updatePythonFiles("style.py")
-updatePythonFiles("typography.py")
+for(filter in filterlist) {
+    updatePythonFiles(filter)
+}
+

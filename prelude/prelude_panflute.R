@@ -58,11 +58,11 @@ if (!exists("prelude.panflute")) {
                                              include.dirs = FALSE,
                                              full.name = TRUE, 
                                              recursive = FALSE)
-            mode_uga_exec = "111"  # execution für user, group und all
+            mode_uga_exec <- "111"  # execution für user, group und all
             # Aktueller Mode der Datei lesen
             prelude.panflute.tmp <- file.info(prelude.panflute.f)$mode
-            if (prelude.panflute.tmp != (prelude.panflute.tmp | mode_uga_exec)){
-                # Falls der aktuelle Mode keine "execution" Rechte vorsieht,
+
+            if (any(prelude.panflute.tmp != (prelude.panflute.tmp | rep(as.octmode(mode_uga_exec), length(prelude.panflute.tmp))))) {
                 # dann "excution" Recht hinzufügen!
                 Sys.chmod(prelude.panflute.f, prelude.panflute.tmp | mode_uga_exec)
             }

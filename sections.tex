@@ -38,6 +38,7 @@
 \newlength{\myftboxmaxwidth}
 \setlength{\myftboxmaxwidth}{390pt}
 \def\myftboxscale{1.0}
+\newlength{\mytitlebackgroundimageheight}
 
 % ---------------------------------------------------------------------------
 
@@ -86,7 +87,7 @@
 \newcommand*{\updateNPBTimages}{%
   \pgfdeclareimage[width=1.4\logowidth,height=1.4\logoheight]{npbtlogo}{\logoimage}
   \pgfdeclareimage[width=0.86\paperwidth]{npbtlogoline}{\lineimage}
-  \pgfdeclareimage[width=0.86\paperwidth, height=1.25em]{npbtalternativelogoline}{\titlebackgroundimage}
+  \pgfdeclareimage[width=0.86\paperwidth, height=1.80em]{npbtalternativelogoline}{\titlebackgroundimage}
 }
 
 \updateNPBTimages
@@ -152,6 +153,9 @@
                  \usebeamerfont{title in titlepage} \inserttitle}
                 \par
                 \vspace*{0.7em}
+                {\usebeamercolor[fg]{subtitle in titlepage}%
+                 \usebeamerfont{subtitle in titlepage} \insertsubtitle}
+                 \par
                 {\usebeamercolor[fg]{institute in titlepage}%
                  \usebeamerfont{institute in titlepage} \insertinstitute ~\xspace -- \insertdate}
                 \usebeamerfont{institute in titlepage}\par
@@ -227,9 +231,14 @@
       \ifnpbtexercisemode\usebeamerfont{frametitle in head exercise}\else\usebeamerfont{frametitle in head}\fi%
       \insertframetitle}% end of savebox!
   \ifnpbtexercisemode{%
+    \vskip1pt%
     \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=west, inner sep=0pt, yshift=-\logoheight+5pt] at (current page.north west){%
-            \pgfuseimage{npbtalternativelogoline}
+        \node[
+            anchor=west, 
+            inner sep=0pt, 
+            yshift=-\logoheight+4pt,
+            ] at (current page.north west){%
+                \pgfuseimage{npbtalternativelogoline}
           };%
     \end{tikzpicture}%
     \vskip-43pt%

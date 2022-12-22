@@ -1,26 +1,206 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{beamerthemeNPBT}[2020/02/25 v4.5.0 Main Beamer Theme of NPBT]
+\ProvidesPackage{beamerthemeNPBT}[2022/02/25 v5.0.5 Main Beamer Theme of NPBT]
 % ===========================================================================
 % beamerthemeNPBT.sty
 % ===================---------------------------------------------------------
-% 
-% (C) in 2017-20 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
 %
-% NPBT <-> Norman's Pandoc Beamer Theme -> NPBT 
-% ----     =        =      =      =
+% (C) in 2017-22 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
 %
+% NPBT <-> Norman's Pandoc Beamer Theme -> NPBT
+% ----     =        =      =      =        ====
 %
 % ---------------------------------------------------------------------------
 %
+\message{Starting 'beamerthemeNPBT' ----------------------------------------}
 \mode<presentation>
 % ---------------------------------------------------------------------------
 % Used Packages:
 % ---------------------------------------------------------------------------
-\RequirePackage{ifthen} 
+% The 'ifthen' package’s basic command is \ifthenelse, which can use a wide
+% array of tests. Also provided is a simple loop command \whiledo.
+\RequirePackage{ifthen}
+% ---------------------------------------------------------------------------
 \RequirePackage{multicol} % Für das zweispaltige TOC.
+% ---------------------------------------------------------------------------
+% 'calc' adds infix expressions to perform arithmetic on the arguments of the
+% LaTeX commands \setcounter, \addtocounter, \setlength, and \addtolength.
+% Since many packages start their arithmetic by storing an argument in a
+% register, the package has wide applicability.
 \RequirePackage{calc}
 % ---------------------------------------------------------------------------
+\RequirePackage{ragged2e} % Liefert FlushRight-Umgebung
+% ---------------------------------------------------------------------------
+\RequirePackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+% ---------------------------------------------------------------------------
+\RequirePackage{xspace}
+% ---------------------------------------------------------------------------
+% \RequirePackage{array} % Wird durch das template geladen!
+% ---------------------------------------------------------------------------
+% xstring Paket
+% Wird für \IfString ... etc benutzt.
+%
+% https://ftp.rrzn.uni-hannover.de/pub/mirror/tex-archive/macros/generic/xstring/xstring-en.pdf
+\RequirePackage{xstring}
+% ---------------------------------------------------------------------------
+% 'upgreek' is a package to provide the upright Greek letters from the
+% Euler or Adobe Symbol fonts as additional math symbols
+% (\upalpha, \upbeta, etc.), with proper spacing and scaling in
+% super- and subscripts.
+\RequirePackage{upgreek}
+% ---------------------------------------------------------------------------
+% SETSPACE ist leider inkompatible mit beamer! "footnote<.->" läuft dann nicht!
+% ---------------------------------------------------------------------------
+%\RequirePackage{setspace} % Wunsch von R.B. Drescher ;-)
+%\AfterPackage*{setspace}{%
+%  \makeatletter
+%  \ifthenelse{\isundefined{\@ptsize}}{%
+%    \global\newlength\@ptsize%
+%    \global\@ptsize=12pt%
+%  }{%
+%    \relax%
+%  }%
+%  \renewcommand*{\onehalfspacing}{%
+%    \ifdim \@ptsize =\@ne pt
+%      \setstretch{1.213}%
+%    \else \ifdim \@ptsize =\tw@ pt
+%      \setstretch{1.241}%
+%    \else
+%      \setstretch{1.25}%
+%    \fi\fi
+%  }%
+%  \renewcommand*{\doublespacing}{%
+%    \ifdim \@ptsize =\@ne pt
+%      \setstretch{1.618}%
+%    \else \ifdim \@ptsize =\tw@ pt
+%      \setstretch{1.655}%
+%    \else
+%      \setstretch{1.667}%
+%    \fi\fi
+%  }%
+%  \makeatother
+%
+%}
+% ---------------------------------------------------------------------------
+\RequirePackage{verbatimbox}
+% ---------------------------------------------------------------------------
+% \RequirePackage{booktabs} % wird durch das Template geladen!
+% ---------------------------------------------------------------------------
+\RequirePackage{colortbl}
+% ---------------------------------------------------------------------------
+% This package extends the standard graphicx package by providing the missing
+% \trimbox and \clipbox macros to trim and clip arbitrary TEX material.
+% The macros allow for verbatim content. Equivalent environments are also
+% provided. The package comes with own clipping drivers for all common output
+% formats as well as a pgf fall-back driver
+%
+% Wir nutzen \clipbox  um die Überlänge bei "/" zu reduzieren.
+\ifpdftex{%
+    \RequirePackage{trimclip}%
+}\else{
+    % Aber nicht für XeLaTeX und LuaLaTeX, daher:
+    \newcommand{\clipbox}[2]{#2}%
+}\fi
+% ---------------------------------------------------------------------------
+% TEX’s \let assignment does not work for LATEX macros with optional arguments
+% or for macros that are defined as robust macros by \DeclareRobustCommand.
+% This package defines \LetLtxMacro that also takes care of the involved
+% internal macros.
+%
+% Wird hier genutzt um unsere TOC zu modifizieren. (Z.z. in "header.tex")
+\RequirePackage{letltxmacro}
+% ---------------------------------------------------------------------------
+% This package can disable all hyphenation or enable hyphenation of
+% non-alphabetics or monospaced fonts.
+% The package can also enable hyphenation within ‘words’ that contain
+% non-alphabetic characters (e.g., that include underscores), and hyphenation
+% of text typeset in monospaced (e.g., cmtt) fonts.
+\RequirePackage{hyphenat}  % Kann vielleicht weg???
+% ---------------------------------------------------------------------------
+\RequirePackage{eurosym}
+% ---------------------------------------------------------------------------
 
+%% Für mehr Leerzeichen in den Dateinamen bei includegraphic und Co:
+% http://ftp.fau.de/ctan/macros/latex/contrib/oberdiek/grffile.pdf
+%
+%\usepackage[space]{grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifpdf{% pdflatex
+    \relax%
+}\else{% LuaLaTeX oder XeLaTeX
+    \defaultfontfeatures[\rmfamily]{%
+        Ligatures=TeX,%
+        Scale=0.9%
+    }%
+}\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ---------------------------------------------------------------------------
+% **** DEPRICATED ****
+% Statt \widerfalse/true soll hier die Varible npbt@screenratio benutzt werden
+% Diese kann die Werte 43 oder 169 oder 1610 haben.
+% ---------------------------------------------------------------------------
+\newif\ifwider % 4x3 or 16x9
+\widerfalse
+\message{SET wider or not (base):}
+\ifwider{%
+    \message{SET TO 16x9!}
+}\else{%
+    \message{SET TO 4x3!}
+}\fi
+
+% ---------------------------------------------------------------------------
+%
+% Übungen und offene Übungen haben bei der FOM einen etwas anderen
+% Hintergrund beim Frametitle. Hier wird ein Schalter dazu erzeugt und
+% und auf die normale Darstellung (false) gesetzt.
+%
+\newif\ifnpbtexercisemode
+%\npbtexercisemodefalse
+
+% ---------------------------------------------------------------------------
+%
+% Lösungen zu Übunge haben bei der FOM (DLS) einen etwas anderen
+% Hintergrund beim Frametitle. Hier wird ein Schalter dazu erzeugt und
+% und auf die normale Darstellung (false) gesetzt.
+%
+\newif\ifnpbtsolutionemode
+\npbtsolutionemodefalse
+
+% ---------------------------------------------------------------------------
+% Sind wir gerade in einer Notes Umgebung oder nicht?
+%
+\newif\ifnotesmode
+\notesmodefalse
+
+% ---------------------------------------------------------------------------
+%
+% Digitales Live Studium
+% Ist dieses Skript gesetzt für das Digitale Live Studium?
+%
+\newif\ifDLS
+\DLSfalse
+\DeclareOption{DLS}{\DLStrue}
+\ProcessOptions
+\ifDLS{%
+    \widertrue%
+    \message{SET DLS TO WIDER!}%
+}\else{ %
+    \relax%
+}\fi
+
+% ---------------------------------------------------------------------------
 \def\softness{0.8}
 
 \definecolor{softred}{rgb}{1,\softness,\softness}
@@ -96,23 +276,18 @@
 \setbeamercolor{framenumber in footer}{parent=footer}
 
 % ---------------------------------------------------------------------------
-% 
+%
 \setbeamerfont{block title}{size={}}
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 \setbeamerfont{frametitle}{shape=\upshape,family=\sffamily,series=\mdseries}
 
 % ---------------------------------------------------------------------------
-%
-% FIX ME!!!
-%
-\usetheme{Boadilla}
-
 \useinnertheme{rounded}
-
 %
 % FIX ME!!!
 %
-\setbeamertemplate{items}[triangle]
+\setbeamertemplate{items}[default] % Anpassung für DLS
+\setbeamertemplate{itemize items}[default] % Anpassung für DLS
 \setbeamertemplate{enumerate items}[default]
 \setbeamertemplate{navigation symbols}{}
 
@@ -121,11 +296,11 @@
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 % Mathematische Formeln mit Serifen
 %
-\usefonttheme[onlymath]{serif}
+%%%% \usefonttheme[onlymath]{serif} %%% DLS????
 
 % ---------------------------------------------------------------------------
 %running fraction with slash - requires math mode.
-\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+\newcommand*\rfrac[2]{\ensuremath{{}^{#1}\!/_{#2}}}
 
 % ---------------------------------------------------------------------------
 %
@@ -133,12 +308,9 @@
 % ===========
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\ifxetex\relax% XeLaTeX Fontsetting                                               %
-% . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-\usepackage{xltxtra}
-% Now done via _output.yaml ! 
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - %
-\else%    pdf-LaTeX Fontsetting                                             % 
+\message{** FONTSETTING *************************************************}
+\ifPDFTeX{% pdf-LaTeX Fontsetting                                             %
+\message{beamerthemeNPBT fontsetting is running in PDFLATEX mode!}
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 % # Latin Modern
 % Die LaTeX Standardschrift ist die Latin Modern (lmodern Paket).
@@ -149,9 +321,9 @@
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 %
 % needed for all T1 fonts!
-  \usepackage[T1]{fontenc} 	% sonst wird OT1 coding ausgegeben 
+  \usepackage[T1]{fontenc} 	% sonst wird OT1 coding ausgegeben
 %							% und dann funktioniert Myriad (pmy) nicht mehr
-  \usepackage{textcomp} 		% sonst wird OT1 coding ausgegeben 
+  \usepackage{textcomp} 		% sonst wird OT1 coding ausgegeben
 %							% und dann funktioniert Myriad (pmy) nicht mehr
 
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
@@ -160,7 +332,7 @@
 \usepackage[%
   osf,
   sc
-]{mathpazo} 
+]{mathpazo}
 
 %\renewcommand{\sfdefault}{pplx}
 %\renewcommand{\sfdefault}{pplj}
@@ -168,16 +340,16 @@
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 % # Schrifttype eulervm / Euler Virtual Math
 %
-% URL: 
+% URL:
 % http://ftp.riken.jp/tex-archive/fonts/eulervm/doc/latex/eulervm/eulervm.pdf
-%  Zitat: Do not use the Euler math fonts in conjunction with the default 
+%  Zitat: Do not use the Euler math fonts in conjunction with the default
 %         Computer Modern text fonts – this is ugly!
   \usepackage[                           %% --- EulerVM (MATH)
     small,       %for smaller Fonts
     OT1,
 %   euler-digits % digits in euler fonts style
   ]{eulervm}
-% 
+%
 % . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 % \DeclareSymbolFont{operators}   {OT1}{cmr} {m}{n}
   \DeclareSymbolFont{letters}     {OML}{zplm} {m}{it}
@@ -191,31 +363,60 @@
 %
 %\usepackage[official]{eurosym}
 %
-\usepackage{eurosym}
+    \usepackage{eurosym}
 % Eurosymbol auch in mathematischen Formeln richtig darstellen
 %
-\DeclareRobustCommand{\officialeuro}{%
-  \ifmmode\expandafter\text\fi
-  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+    \DeclareRobustCommand{\officialeuro}{%
+      \ifmmode\expandafter\text\fi
+      {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
 %
 % \euro in UTF-8 als Standard-Eurozeichen definieren
 %
-  \DeclareUnicodeCharacter{20AC}{\euro}
-
+    \DeclareUnicodeCharacter{20AC}{\euro}
 %
-\fi
+}\else{%
+    \message{beamerthemeNPBT fontsetting is running in XeLaTeX or LuaLaTeX mode!}
+    \usepackage{eurosym}
+}\fi
+\message{** END FONTSETTING *************************************************}
 
-% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 %
 % Schauen wir uns mal die Einstellungen von beamer an und ändern das ggf.
 %
 % ---------------------------------------------------------------------------
 %
+% Einstellungen für 16x9:
+\newlength{\myPaperWidthWide}
+\newlength{\myPaperHeightWide}
+\setlength{\myPaperWidthWide}{224mm}
+\setlength{\myPaperHeightWide}{126mm}
+%
+% Einstellungen für 4x3:
+\newlength{\myPaperWidthNormal}
+\newlength{\myPaperHeightNormal}
+\setlength{\myPaperWidthNormal}{160mm}
+\setlength{\myPaperHeightNormal}{120mm}
+%
 \newlength{\myPaperWidth}
 \newlength{\myPaperHeight}
+%
+\let\myPaperWidth\myPaperWidthNormal
+\let\myPaperHeight\myPaperHeightNormal
+%
+\message{SET to \the\myPaperWidth x \the\myPaperHeight (pre)}
+%
+\ifwider{ % 16:9
+    \global\let\myPaperWidth\myPaperWidthWide
+    \global\let\myPaperHeight\myPaperHeightWide
+    \message{SET myPaperWidth TO 16x9!}
+    \message{SET to \the\myPaperWidth x \the\myPaperHeight (inner)}
+}\else{ % 4:3
+    \message{SET myPaperWidth TO 4x3!}
+    \message{SET to \the\myPaperWidth x \the\myPaperHeight (inner)}
+}\fi
 
-\setlength{\myPaperWidth}{160mm}
-\setlength{\myPaperHeight}{120mm}
+\message{SET to \the\myPaperWidth x \the\myPaperHeight (mid)}
 
 \makeatletter
 %\beamer@paperwidth
@@ -226,11 +427,11 @@
     \ifthenelse{\lengthtest{\beamer@paperheight = 10.0cm}}{
         % 16:10
         \setlength{\myPaperHeight}{140mm}
-        \typeout{Set ScreenRatio to 16:10 (224x140)}
+        \message{Set ScreenRatio to 16:10 (224x140)}
     }{%
         % 16:9
         \setlength{\myPaperHeight}{126mm}
-        \typeout{Set ScreenRatio to 16:9 (224x126)}
+        \message{Set ScreenRatio to 16:9 (224x126)}
     }
     \setlength{\beamer@paperwidth}{\myPaperWidth}
     \setlength{\beamer@paperheight}{\myPaperWidth}
@@ -245,63 +446,72 @@
     	    \setlength{\myPaperHeight}{120mm}
     	    \setlength{\beamer@paperwidth}{\myPaperWidth}
     	    \setlength{\beamer@paperheight}{\myPaperWidth}
-    	    \typeout{Set ScreenRatio to 4:3 (160x120)}
+    	    \message{Set ScreenRatio to 4:3 (160x120)}
         }{%
             \relax
         }
     }
-    
+
 }
 \makeatother
+\message{SET to \the\myPaperWidth x \the\myPaperHeight (post)}
+
 \geometry{paperwidth=\myPaperWidth, paperheight=\myPaperHeight}
 
 \newcommand*{\setScreenRatio}[1]{%
-%
-% Default:
-%
-\setlength{\myPaperWidth}{140mm}
-\setlength{\myPaperHeight}{105mm}
+    %
+    % Default:
+    %
+    \setlength{\myPaperWidth}{140mm}
+    \setlength{\myPaperHeight}{105mm}
 
-\ifthenelse{\equal{#1}{4x3}}{%
-%\ifstrequal{#1}{4x3}{%
-	%% 4:3 -> 160 x 120
-	\setlength{\myPaperWidth}{160mm}
-	\setlength{\myPaperHeight}{120mm}
-	\typeout{Set ScreenRatio to 4:3 (160x120)}
-	% Powerpoint-Layout
-	\setlength{\myPaperWidth}{254mm}
-	\setlength{\myPaperHeight}{191mm}
-	\typeout{Set ScreenRatio to 4:3 (254x191)}
-}{
-    \ifthenelse{\equal{#1}{16x9}}{%
-%	\ifstrequal{#1}{16x9}{%
-		%% 16:9 ->  224 x 126
-		\setlength{\myPaperWidth}{224mm}
-		\setlength{\myPaperHeight}{126mm}
-	\typeout{Set ScreenRatio to 16:9 (224x126)}
-	}{%
-		%% Default:
-		\setlength{\myPaperWidth}{140mm}
-		\setlength{\myPaperHeight}{105mm}
-		\typeout{Set ScreenRatio to default (140x105)}
-	}
-}
-\geometry{paperwidth=\myPaperWidth,paperheight=\myPaperHeight}
+    \ifthenelse{\equal{#1}{4x3}}{%
+    %\ifstrequal{#1}{4x3}{%
+    	%% 4:3 -> 160 x 120
+    	\setlength{\myPaperWidth}{160mm}
+    	\setlength{\myPaperHeight}{120mm}
+    	\message{Set ScreenRatio to 4:3 (160x120)}
+    	% Powerpoint-Layout
+    	%\setlength{\myPaperWidth}{254mm}
+    	%\setlength{\myPaperHeight}{191mm}
+    	\message{Set ScreenRatio to 4:3 (254x191)}
+    }{
+        \ifthenelse{\equal{#1}{16x9}}{%
+    %	\ifstrequal{#1}{16x9}{%
+    		%% 16:9 ->  224 x 126
+    		\setlength{\myPaperWidth}{224mm}
+    		\setlength{\myPaperHeight}{126mm}
+    	\message{Set ScreenRatio to 16:9 (224x126)}
+    	}{%
+    		%% Default:
+    		\setlength{\myPaperWidth}{140mm}
+    		\setlength{\myPaperHeight}{105mm}
+    		\message{Set ScreenRatio to default (140x105)}
+    	}
+    }
+    \geometry{paperwidth=\myPaperWidth,paperheight=\myPaperHeight}
 }
 
-%\setScreenRatio{4x3}
+%%%%%%
+%\ifDLS{%
+%    \setScreenRatio{16x9}%
+%}\else{%
+%    \setScreenRatio{4x3}
+%}\fi
+%\setScreenRatio{16x9}
+%%%%%%
 
 \def\footlinesize{\scriptsize} % \tiny\footnotesize\scriptsize
-%
+
+% ===========================================================================
+% Customizing geometry.
+% ---------------------
+% Sollte es eine Datei "customize_geom.tex" geben, so wird diese an dieser
+% Stelle geladen um die \geometry-Anweisungen ggf. zu überschreiben.
+% ---------------------------------------------------------------------------
 \InputIfFileExists{customize_geom.tex}{\relax}{\relax}
 %
-% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-%
-% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-% was: section.tex
-% =================----------------------------------------------------------
-%
-% (C) in 2017/18 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+% ===========================================================================
 %
 % ---------------------------------------------------------------------------
 %
@@ -309,6 +519,13 @@
 
 \def\npbtBackground{background}
 \def\npbtLogo{logo}
+\ifwider{ % 16:9
+    \global\def\npbtBackground{background-169}
+    \message{We are in wider mode, so add '-169' to background.}
+}\else{
+    \global\def\npbtBackground{background}
+    \message{We are not in wieder mode.}
+}\fi
 
 \newcommand{\updateNPBTimagespaths}{%
 	\def\backgroundimage{\imagepath\npbtBackground}
@@ -340,41 +557,20 @@
 \setlength{\myftboxmaxwidth}{390pt}
 \def\myftboxscale{1.0}
 
-% ---------------------------------------------------------------------------
-\usepackage{ragged2e} % Liefert FlushRight-Umgebung
-% ---------------------------------------------------------------------------
-\usepackage{ifthen}
-\usepackage{tikz}
-\usetikzlibrary{positioning}
-\usetikzlibrary{calc}
-\usetikzlibrary{backgrounds}
-\usepackage{pgfplots}
-%\pgfplotsset{compat=1.3} 
-% Minimum, besser 1.15 oder 1.16. Daher konsequent:
-\pgfplotsset{compat=newest} 
-\usepackage{xspace}
-\usepackage{array}
-\usepackage{xstring}
-\usepackage{bm}
-\usepackage{upgreek}
 
-
-% ---------------------------------------------------------------------------
-%
-% Übungen und offene Übungen haben bei der FOM einen etwas anderen 
-% Hintergrund beim Frametitle. Hier wird ein Schalter dazu erzeugt und
-% und auf die normale Darstellun (false) gesetzt.
-%
-\newif\ifnpbtexercisemode
-\npbtexercisemodefalse
-%  \npbtexercisemodetrue
-
-
-% ---------------------------------------------------------------------------
-% Sind wir gerade in einer Notes Umgebung oder nicht?
-%
-\newif\ifnotesmode
-\notesmodefalse
+\makeatletter
+\long\def\beamer@@frametitle[#1]#2{%
+  \global\npbtexercisemodefalse%\message{SET exercisemode to FALSE}%
+  \beamer@ifempty{#2}{}{%
+    \expandarg%
+    \IfSubStr*{#2}{bung}{\global\npbtexercisemodetrue}{}%  *****
+    \IfBeginWith*{#2}{Offene}{\global\npbtexercisemodetrue}{}%
+    \gdef\beamer@frametitle{#2}%
+    \gdef\insertframetitle{{\beamer@frametitle\ifnum\beamer@autobreakcount>0\relax{}\space\usebeamertemplate*{frametitle continuation}\fi}}%
+    \gdef\beamer@shortframetitle{#1}%
+  }%
+}
+\makeatother
 
 % ---------------------------------------------------------------------------
 %
@@ -390,13 +586,22 @@
 \setlength{\logowidthheight}{1.0cm}
 
 \newcommand*{\updateNPBTimages}{%
-  \setlength{\logowidthheight}{1.0cm}
-  \pgfdeclareimage[%
-        width=\logowidthheight,
-        height=\logowidthheight
-    ]{npbtlogo}{\logoimage}
+  \message{Trying to load logoimage '\logoimage'}
+  \ifDLS{%
+    \relax%
+  }\else{%
+      \IfFileExists{\logoimage}{%
+          \setlength{\logowidthheight}{1.0cm}
+          \pgfdeclareimage[%
+              width=\logowidthheight,
+              height=\logowidthheight
+          ]{npbtlogo}{\logoimage}
+      }{%
+        \message{File not found logoimage '\logoimage'}
+        \relax
+      }
+  }\fi
 }
-
 \updateNPBTimagespaths{}
 \updateNPBTimages{}
 
@@ -406,15 +611,23 @@
 %
 
 \newcommand{\showLogoRightSide}{%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node[%
-    shift={(\logoxshift,\logoyshift)},
-    inner sep=0pt
-    ] at (current page.north east){%
-        \ifxetex\includegraphics[width=\logowidthheight, height=\logowidthheight]{\logoimage}
-        \else\pgfuseimage{npbtlogo}\fi
-    };%
-  \end{tikzpicture}
+  \ifDLS{\relax}\else{%
+      \begin{tikzpicture}[remember picture, overlay]%
+        \node[%
+        shift={(\logoxshift,\logoyshift)},
+        inner sep=0pt
+        ] at (current page.north east){%
+            \ifpdftex{%
+                \pgfuseimage{npbtlogo}%
+            }\else{%
+                \includegraphics[%
+                    width=\logowidthheight,%
+                    height=\logowidthheight%
+                ]{\logoimage}%
+            }\fi%
+        };%
+      \end{tikzpicture}%
+    }\fi%
 }
 
 % ---------------------------------------------------------------------------
@@ -427,10 +640,10 @@
   \par
   \insertsubtitle
   \par\par
-  
+
   \insertinstitute ~\xspace -- \insertdate
   \par
-  
+
   \insertauthor
   \par
 }
@@ -439,7 +652,10 @@
 {
   \begin{tikzpicture}[remember picture, overlay]
     \node[inner sep=0pt] at (current page.center){%
-        \includegraphics[width=\myPaperWidth, height=\myPaperHeight]{\backgroundimage}%
+        \includegraphics[%
+            width=\myPaperWidth, %
+            height=\myPaperHeight %
+        ]{\backgroundimage}%
       };%
     \node[%
       anchor=south east,
@@ -447,7 +663,7 @@
       yshift=3.65cm
     ] at (current page.south east){%
         \begin{minipage}[b]{0.8\textwidth}%{\titleboxwidth}
-            \addtolength{\baselineskip}{1.5ex} 
+            \addtolength{\baselineskip}{1.5ex}
             \begin{flushright} % XXXX
                 {\usebeamercolor[fg]{title in titlepage}%
                  \usebeamerfont{title in titlepage} \inserttitle}
@@ -456,27 +672,86 @@
                  \usebeamerfont{subtitle in titlepage} \insertsubtitle}
                  \par
                 \vspace*{0.7em}
-                {\usebeamercolor[fg]{institute in titlepage}%
-                 \usebeamerfont{institute in titlepage} \insertinstitute ~\xspace -- \insertdate}
-                \usebeamerfont{institute in titlepage}\par
+                \ifDLS{\relax}\else{ % Keine Institutsangaben beim DLS
+                    {\usebeamercolor[fg]{institute in titlepage}%
+                     \usebeamerfont{institute in titlepage} \insertinstitute ~\xspace -- \insertdate}
+                    \usebeamerfont{institute in titlepage}\par
+                    }%
+                \fi%
                 {\usebeamercolor[fg]{author in titlepage}%
                  \usebeamerfont{author in titlepage} \insertauthor}
             \end{flushright} % XXXX
-        \end{minipage}    
+        \end{minipage}
     };%
   \end{tikzpicture}%
   \showLogoRightSide%
 }
 
+\defbeamertemplate{title page}{normalDLS}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[inner sep=0pt] at (current page.center){%
+        \includegraphics[%
+            width=\myPaperWidth, %
+            height=\myPaperHeight %
+        ]{\backgroundimage}%
+      };%
+    \node[%
+      anchor=south east,
+      xshift=-1.95cm,
+      yshift=3.65cm
+    ] at (current page.south east){%
+        \begin{minipage}[b]{0.8\textwidth}%{\titleboxwidth}
+            \addtolength{\baselineskip}{1.5ex}
+            \begin{flushright} % XXXX
+                {\usebeamercolor[fg]{title in titlepage}%
+                 \usebeamerfont{title in titlepage} \inserttitle}
+                \par
+                {\usebeamercolor[fg]{subtitle in titlepage}%
+                 \usebeamerfont{subtitle in titlepage} \insertsubtitle}
+                 \par
+                \vspace*{0.7em}
+                {\usebeamercolor[fg]{author in titlepage}%
+                 \usebeamerfont{author in titlepage} \insertauthor}
+            \end{flushright} % XXXX
+        \end{minipage}
+    };%
+  \end{tikzpicture}%
+  \showLogoRightSide%
+}
+
+
 % ---------------------------------------------------------------------------
 %
 % Frame title template:
 %
+
+\defbeamertemplate{headline}{sectioninhead-new}{%
+  \hbox{%
+    \begin{beamercolorbox}[%
+            % wd=\paperwidth,
+            ht=14pt, % war: 6.0ex,
+            dp=2pt, % war: 1ex,
+            sep=0.1pt, %
+            leftskip=\myleftskip, %
+            rightskip=\myrightskip, %
+        ]{headline}%
+        {%
+              \usebeamercolor[fg]{section in head}%
+              \usebeamerfont{section in head}%
+              \ifthenelse{\equal{\thesection}{0}}{}{%
+                    \thesection.~\NoHyper\insertsection\endNoHyper%\phantom{X}%
+              }%
+        }%
+    \end{beamercolorbox}%
+  }%
+}
+
 \defbeamertemplate{headline}{sectioninhead}{%
   \nointerlineskip%
   \begin{beamercolorbox}[%
-      ht=6.0ex,
-      dp=1ex,
+      ht=14pt, % war: 6.0ex,
+      dp=3pt, % war: 1ex,
       sep=0.1pt, %
       leftskip=\myleftskip, %
       rightskip=\myrightskip, %
@@ -485,27 +760,35 @@
       \usebeamercolor[fg]{section in head}%
       \usebeamerfont{section in head}%
       \ifthenelse{\equal{\thesection}{0}}{}{%
-      \thesection.~\NoHyper\insertsection\endNoHyper\phantom{X}%
-      }
+      \thesection.~\NoHyper\insertsection\endNoHyper%
+      }%
     }%
   \end{beamercolorbox}%
   \nointerlineskip%
-% Hier gehört die Kapitelbezeichnung rein!
 }
 
 \defbeamertemplate{headline}{nosectioninhead}{%
   \nointerlineskip%
   \begin{beamercolorbox}[%
-      ht=6.0ex,
-      dp=1ex,
+      ht=14pt, % war: 6.0ex,
+      dp=3pt, % war: 1ex,
       sep=0.1pt, %
       leftskip=\myleftskip, %
       rightskip=\myrightskip, %
   ]{headline}
-  \phantom{X}%
+
   \end{beamercolorbox}%
   \nointerlineskip%
 }
+
+\defbeamertemplate{headline}{nosectioninheadDLS}{%
+\relax%
+}
+
+\defbeamertemplate{headline}{sectioninheadDLS}{%
+\relax%
+}
+
 
 \defbeamertemplate{headline}{minimal}{
 \relax%
@@ -522,74 +805,114 @@
 
 \newlength{\mytitleboxlength}
 \newlength{\npbttitleboxheight}
+\newlength{\npbttitleboxwidth}
+\newlength{\npbttitleboxheightPDF}
+\newlength{\npbttitleboxheightXelatex}
 
 \defbeamertemplate{frametitle}{normal}{%
     \setlength{\mytitleboxlength}{\textwidth}%
     \addtolength{\mytitleboxlength}{-1.4cm}%
-    \npbtexercisemodefalse%
-    \makeatletter%
-    \expandarg%
-    \let\tmp\insertframetitle%
-    \IfSubStr*{\tmp}{bung}{\npbtexercisemodetrue}{}%
-    \IfBeginWith*{\tmp}{Offene}{\npbtexercisemodetrue}{}%
-    \makeatother%
-    \savebox{\myftbox}{%
+    \sbox{\myftbox}{%
         \ifnpbtexercisemode{%
             \usebeamercolor[fg]{frametitle in head exercise}%
             \usebeamerfont{frametitle in head exercise}%
-            \insertframetitle\phantom{Üj}%
+            \insertframetitle%
         }\else{%
             \usebeamercolor[fg]{frametitle in head}%
             \usebeamerfont{frametitle in head}%
-            \insertframetitle\phantom{Üj}%
+            \insertframetitle%
         }\fi%
      }% end of savebox!
     \savebox{\maxheightbox}{%
         \ifnpbtexercisemode{%
-            \usebeamercolor{frametitle in head exercise}%
+            \usebeamercolor[fg]{frametitle in head exercise}%
             \usebeamerfont{frametitle in head exercise}%
         }\else{%
-            \usebeamercolor{frametitle in head}%
+            \usebeamercolor[fg]{frametitle in head}%
             \usebeamerfont{frametitle in head}%
         }\fi%
-        XÜygfÄÖß!qpjJ%
     }% end of savebox!
-    \usebeamercolor{frametitle in head exercise}%
-    \settoheight{\npbttitleboxheight}{\maxheightbox}%
-    \vskip-3pt%
+    \usebeamercolor[fg]{frametitle in head exercise}%
+    \settoheight{\npbttitleboxheightPDF}{\usebox{\maxheightbox}}% Für PDF-LaTeX
+    \message{the npbttitleboxheightPDF=\the\npbttitleboxheightPDF}
+    \setlength{\npbttitleboxheightXelatex}{4mm}% Für XeLaTeX
+    %\message{the npbttitleboxheightXelatex=\the\npbttitleboxheightXelatex}
+    \setlength{\npbttitleboxheight}{%
+        \expandafter\ifpdftex{\expandafter\npbttitleboxheightPDF}\else{\expandafter\npbttitleboxheightXelatex}\fi%
+    }%
+    %\message{the npbttitleboxheight=\the\npbttitleboxheight}%
+    %\ifxetex{\vskip-0.75mm}\else{\vskip-1.06mm}\fi%\vskip4.5pt%
+    \ifpdftex{\vskip-1.06mm}\else{\vskip-0.77mm}\fi%\vskip4.5pt%
     \ifnpbtexercisemode{%
-        \vskip-3pt%
-        \addtolength{\npbttitleboxheight}{6pt}%
+        \vskip-1.06mm%
+        \addtolength{\npbttitleboxheight}{1.06mm}%
         {\usebeamerfont{frametitle in head exercise}%
-        \usebeamercolor{frametitle in head exercise}%
-        \colorbox{bg}{\makebox[\mytitleboxlength][l]{\parbox[b][\npbttitleboxheight][c]{0pt}{}}}}%
-        \vskip3pt%
-    }\else{
+        \usebeamercolor[fg]{frametitle in head exercise}%
+        \colorbox{bg}{\makebox[\mytitleboxlength][l]{\parbox[b][\npbttitleboxheight][c]{0mm}{}}}}%
+        \vskip1.004mm%
+    }\else{%
         {\usebeamerfont{frametitle in head}%
-        \usebeamercolor{frametitle in head}%
-        \addtolength{\mytitleboxlength}{4pt}%
-        \parbox[b][\npbttitleboxheight][c]{0pt}{}\hspace{-4pt}{\textcolor{fg}{\rule{\mytitleboxlength}{1pt}}}}%
+        \usebeamercolor[fg]{frametitle in head}%
+        \addtolength{\mytitleboxlength}{1.34mm}%
+        \parbox[b][\npbttitleboxheight][c]{0pt}{}\hspace{-1.34mm}{\textcolor{fg}{\rule{\mytitleboxlength}{1pt}}}}%
     }\fi% end of ifnpbtexercisemode
     \vskip-\npbttitleboxheight%
-    \vskip-4pt%
-    \settowidth{\myftboxwidth}{\usebox{\myftbox}}%
+    %\vskip-4pt%
+    \settowidth{\myftboxwidth}{\phantom{\usebox{\myftbox}}}%
+    %\message{Breite: \the\myftboxwidth \usebox{\myftbox}}%
     \ifnpbtexercisemode{%
         \usebeamercolor[fg]{frametitle in head exercise}%
         \usebeamerfont{frametitle in head exercise}%
-        \vskip2pt%
+        \vskip0.62mm%
     }\else{%
         \usebeamercolor[fg]{frametitle in head}%
         \usebeamerfont{frametitle in head}%
     }\fi%  end of ifnpbtexercisemode
-    \vskip-1em%\vskip4.5pt%
+    \ifpdftex{\vskip-1em}\else{\vskip-6mm}\fi%\vskip4.5pt%
     \ifdim\myftboxwidth>\mytitleboxlength{%
         \resizebox{\mytitleboxlength}{!}{\usebox{\myftbox}}\\[-0.85em]
-    }\else{ %
+    }\else{%
         \usebox{\myftbox}\\[-0.85em]
     }\fi% end of ifdem
     \showLogoRightSide%
-    \vskip0pt%
+    %\ifxetex{\vskip5mm}\else{\vskip0pt}\fi%
+    %\ifxetex{\vskip-5mm}\else{\vskip0pt}\fi%
 }
+
+\newlength{\npbtmaxframetitlewidth}
+\defbeamertemplate{frametitle}{normalDLS}{%
+    %\message{frametitle start}%
+    \setlength{\npbtmaxframetitlewidth}{480pt}% Im PPTX Orginal 26 cm
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[yshift=-0.75cm] at (current page.north){%
+            \ifnpbtexercisemode{%
+                %\message{exercisemode is TRUE in frametitle}%
+                \includegraphics[width=\myPaperWidth]{images/NPBT-FOM-DLS-frametitle-exercise.png}%
+            }\else{%
+                %\message{exercisemode is FALSE in frametitle}%
+                \includegraphics[width=\myPaperWidth]{images/NPBT-FOM-DLS-frametitle-default.png}%
+            }\fi%
+          };%
+    \end{tikzpicture}%
+    \vskip-0.30cm%\vskip-0.9cm%
+    \savebox{\myftbox}{%
+        \usebeamercolor[fg]{frametitle in head}%
+        \usebeamerfont{frametitle in head}%
+        \insertframetitle%
+    }% end of savebox!
+    \settowidth{\myftboxwidth}{\usebox{\myftbox}}%
+    \ifnpbtexercisemode{%
+        % Korrektur für Icon am Anfang der Zeile (ca. 2.3 em)
+        \addtolength{\npbtmaxframetitlewidth}{-2.3em}\hspace*{2.3em}%
+    }\else\relax\fi%
+    \ifdim\myftboxwidth>\npbtmaxframetitlewidth{%
+        \resizebox{\npbtmaxframetitlewidth}{!}{\usebox{\myftbox}}%
+    }\else{ %
+        \usebox{\myftbox}%
+    }\fi% end of ifdem
+    %\message{frametitle end}%
+}
+
 
 % ---------------------------------------------------------------------------
 %
@@ -597,6 +920,34 @@
 %
 \defbeamertemplate{footline}{nofootline}{%
   \relax%
+}
+
+\defbeamertemplate{footline}{normalDLS}{%
+    %\message{footline start}%
+    \ifthenelse{\equal{\insertframenumber}{1}}{%
+    }{\begin{tikzpicture}[remember picture, overlay]
+        \node[yshift=0.7cm, xshift=-0.6cm] at (current page.south east){%
+                \ifnpbtexercisemode{%
+                    %\message{exercisemode is TRUE in footline}%
+                    \raggedleft{%
+                        \usebeamercolor[fg]{number in footline exercise}%
+                        \usebeamerfont{number in footline exercise}%
+                        \insertframenumber%
+                    }%
+                }\else{%
+                    %\message{exercisemode is FALSE in footline}%
+                    \raggedleft{%
+                        \usebeamercolor[fg]{number in footline}%
+                        \usebeamerfont{number in footline}%
+                        \insertframenumber%
+                    }%
+                }\fi%
+
+        };%
+    \end{tikzpicture}%
+    \vspace*{1.5em}
+    }
+    %\message{footline end}%
 }
 
 \defbeamertemplate{footline}{normal}{% Skip first frame == Title frame !!!
@@ -616,7 +967,7 @@
             {\textcolor{fg}{\rule{\mytitleboxlength}{1pt}}}%
       \end{beamercolorbox}%
       \begin{beamercolorbox}[%
-          ht=1.25ex, 
+          ht=1.25ex,
           %dp=2.25ex,
           dp=1.35ex,
           leftskip=\myleftskip,
@@ -698,6 +1049,60 @@
   \end{tikzpicture}
 }
 
+\defbeamertemplate{section page}{normalDLS-old}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[%
+        rectangle,
+        anchor = south east,
+        xshift = -1cm,
+        yshift = 1.5cm] at (current page.south east){%
+        \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
+          % \sectionpageheight x \sectionpagewidth
+          \begin{FlushRight}
+              \usebeamercolor{sectionnumber title}%
+              \usebeamerfont{sectionnumber title}\insertsectionnumber %
+              \usebeamercolor{section title}%
+              \usebeamerfont{section title}\insertsectionhead\par
+          \end{FlushRight}
+        \end{minipage}
+    };%
+  \end{tikzpicture}
+}
+\defbeamertemplate{section page}{normalDLS}
+{
+  \begin{tikzpicture}[remember picture, overlay]
+    % Sectionnumber
+    \node[%
+        rectangle,
+        anchor = south east,
+        xshift = -1cm,
+        yshift = 1.5cm] at (current page.south east){%
+        \begin{minipage}[3cm][t]{4,7cm}
+            \centering XXXX
+            \usebeamercolor{sectionnumber title}%
+            \usebeamerfont{sectionnumber title}\insertsectionnumber
+        \end{minipage}
+    }%
+    % Sectiontitle
+    \node[%
+        rectangle,
+        anchor = south east,
+        xshift = -1cm,
+        yshift = 1.5cm] at (current page.south east){%
+        \begin{minipage}[b][3cm][t]{25.23cm}
+          % \sectionpageheight x \sectionpagewidth
+          \begin{FlushRight}
+             YYYY
+              \usebeamercolor{section title}%
+              \usebeamerfont{section title}\insertsectionhead\par
+          \end{FlushRight}
+        \end{minipage}
+    };%
+  \end{tikzpicture}
+}
+
+
 % ---------------------------------------------------------------------------
 %
 % Subsection page template
@@ -708,22 +1113,42 @@
 }
 
 \defbeamertemplate{subsection page}{normal}
-{
-  \begin{tikzpicture}[remember picture, overlay]
-    \node[anchor=south east,xshift=-3cm,yshift=3.5cm] at (current page.south east){%
-        \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
+{ %%% HOTFIX !!!! %%%
+  \ifwider{
+   %\message{USE WIDER SUBSECTION!}
+   \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south east,xshift=17cm,yshift=3.5cm] at (current page.south east){%
+            \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
 
-          \sectionpageheight x \sectionpagewidth
+              %\sectionpageheight x \sectionpagewidth
 
-          \begin{FlushRight}
-              \usebeamercolor{sectionnumber title}%
-              \usebeamerfont{sectionnumber title}\insertsubsectionnumber %
-              \usebeamercolor{section title}%
-              \usebeamerfont{section title}\insertsubsectionhead\par
-          \end{FlushRight}
-        \end{minipage}
-    };%
-  \end{tikzpicture}
+              \begin{FlushRight}
+                  \usebeamercolor{sectionnumber title}%
+                  \usebeamerfont{sectionnumber title}\insertsubsectionnumber %
+                  \usebeamercolor{section title}%
+                  \usebeamerfont{section title}\insertsubsectionhead\par
+              \end{FlushRight}
+            \end{minipage}
+        };%
+      \end{tikzpicture}
+  } \else { %
+      %\message{DONOT USE WIDER SUBSECTION!}
+      \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=south east,xshift=-3cm,yshift=3.5cm] at (current page.south east){%
+            \begin{minipage}[b][\sectionpageheight][t]{\sectionpagewidth}
+
+              %\sectionpageheight x \sectionpagewidth
+
+              \begin{FlushRight}
+                  \usebeamercolor{sectionnumber title}%
+                  \usebeamerfont{sectionnumber title}\insertsubsectionnumber %
+                  \usebeamercolor{section title}%
+                  \usebeamerfont{section title}\insertsubsectionhead\par
+              \end{FlushRight}
+            \end{minipage}
+        };%
+      \end{tikzpicture}
+    }\fi
 }
 
 % ---------------------------------------------------------------------------
@@ -742,7 +1167,10 @@
       \nointerlineskip%
     }%
     \vbox{%
-      \hspace*{.6875\paperwidth}\insertslideintonotes{0.25}%
+      % ORiGNAL:
+      %\hspace*{.6875\paperwidth}\insertslideintonotes{0.25}%
+      %\vskip-0.25\paperheight%
+      \hspace*{.66\paperwidth}\insertslideintonotes{0.25}%
       \vskip-0.25\paperheight%
       \nointerlineskip
       \begin{pgfpicture}{0cm}{0cm}{0cm}{0cm}
@@ -781,10 +1209,11 @@
   \nointerlineskip
   %
   %\textwidth=10.8cm%
-  \textwidth=13.8cm%
+  \ifDLS{\textwidth=10.8cm}\else{\textwidth=13.8cm}\fi%
   \hsize=\textwidth%
   %
-  \insertnote\notesmodefalse
+  \insertnote
+  \notesmodefalse
 }
 
 %
@@ -813,11 +1242,22 @@
     \setbeamertemplate{frametitle}[normal]%
     \setbeamertemplate{section page}[normal]%
 }
-\setNPBTminimal{}
+%
+% ---------------------------------------------------------------------------
+% Normal Setup
+%
+\newcommand*{\setNPBTnormalDLS}{%
+    \setbeamertemplate{subsection page}[normal]%
+    \setbeamertemplate{note page}[mydefault]%
+    \setbeamertemplate{title page}[normal]%
+    \setbeamertemplate{headline}[nosectioninheadDLS]%
+    \setbeamertemplate{footline}[normalDLS]%
+    \setbeamertemplate{frametitle}[normalDLS]%
+    \setbeamertemplate{section page}[normal]%
+}
+%\setNPBTminimal{}
 \setNPBTnormal{}
 %\setNPBTminimal{}
-%\setbeamertemplate{frametitle}[normal]%
-%
 \InputIfFileExists{customize_theme.tex}{\relax}{\relax}
 
 \newcommand*{\cemph}{\it}
@@ -825,7 +1265,7 @@
 
 \usecolortheme{NPBT-SC}
 
-% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 % ---------------------------------------------------------------------------
 % Exercise Counter
@@ -834,9 +1274,8 @@
 \newcommand{\nextExercise}{\ifnotesmode{\relax}\else{\stepcounter{exerciseCounter}}\fi\theexerciseCounter}
 \newcommand{\thisExercise}{\theexerciseCounter}
 
-
-
 \mode<all>
+\message{Ending 'beamerthemeNPBT' -------------------------------------------}
 %
 % ===========================================================================
 %

@@ -19,8 +19,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 # Inferenz -- Beispiele
 
-
-### Lernziele {exclude-only=NOlernziele}
+### Lernziele {exclude=NOlernziele,MasterNeu}
 
 
 Die Studierenden ...
@@ -29,13 +28,27 @@ Die Studierenden ...
 - können Anwendungsbeispiele für die Inferenz zum Vergleich zweier Gruppen bzw. zum Zusammenhang zweier Variablen nennen, erläutern und in R berechen -- sowohl für nominale als auch metrische Variablen.
 - können Anwendungsbeispiele für die Inferenz zum Vergleich von mehr als zwei Gruppen nennen, erläutern und in R berechen -- sowohl für nominale als auch metrische Variablen.
 
+## Wiederholung Inferenzstatistik {include-only=MasterNeu}
 
+### Wiederholung: Deskriptive Statistik vs. Inferenzstatistik {include-only=MasterNeu}
+
+- Die *deskriptive Statistik* fasst Daten einer Stichprobe zusammen.
+
+- Die *Inferenzstatistik* schließt von einer Stichprobe auf eine Grundgesamtheit.^[Induktion]
+
+\vspace{1cm}
+
+
+
+```{r fig-desk-vs.inf-2, out.width="60%", echo = FALSE}
+include_graphics(file.path(pathToImages,"desk-vs-inf-v2.pdf"))
+```
 
 
 ### Wiederholung: Inferenz
 
 [Idee:]{.cemph} Schluss von einer (zufälligen/ randomisierten) Stichprobe auf eine Population:
-
+  
 - Punktschätzung
 - Konfidenzintervall
 - Hypothesentest
@@ -43,20 +56,21 @@ Die Studierenden ...
 [Ziel:]{.cemph} Aussagen treffen, die über die Stichprobe hinausgehen -- und dabei berücksichtigen, dass Variation allgegenwärtig ist und Schlussfolgerungen unsicher.^[Vgl. Moore, D. (2007) The Basic Practice of Statistics, 4th edn. New York: Freeman, S. xxviii.]
 
 
-### Wiederholung: Ablauf Hypothesenprüfung
+### Wiederholung: Ablauf Hypothesenprüfung {exlude-only=MasterNeu}
 
 1.  Inhaltliche Hypothese operationalisieren.
 2.  Nullhypothese $H_0$ (und Alternativhypothese $H_A$, Forschungsvermutung) festlegen. Dazu passende Teststatistik bestimmen: 
-    - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
-    - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
-    - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
+  - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
+  - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
+  - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
 3.  Verteilung der Teststatistik unter $H_0$ bestimmen.
 4.  Prüfung über p-Wert: ist der beobachtete Wert der Teststatistik der Stichprobe unter $H_0$ (sehr) selten?
-    - Nein: $H_0$ kann nicht verworfen werden. Abweichung *nicht signifikant*.
-    - Ja: $H_0$ wird verworfen. Abweichung *signifikant*.
+  - Nein: $H_0$ kann nicht verworfen werden. Abweichung *nicht signifikant*.
+- Ja: $H_0$ wird verworfen. Abweichung *signifikant*.
 
 
-### Wiederholung: Grundlagen Inferenz
+
+### Wiederholung: Grundlagen Inferenz {exlude-only=MasterNeu}
 
 - [Vorraussetzung:]{.cemph} Unabhängig, identisch verteilte Daten, z.B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
 - `Y ~ 1` (d.h. ohne unabhängige Variable): Modellierte Verteilung (z.B. Binomial- oder Normalverteilung) von $Y$ hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
@@ -64,13 +78,155 @@ Die Studierenden ...
 - Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.
 
 
+### Wiederholung: Grundlagen Inferenz {include-only=MasterNeu}
+
+- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
+- `Y ~ 1` (d. h. ohne unabhängige Variable): Modellierte Verteilung von $Y$ (z. B. Binomial- oder Normalverteilung) hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
+- `Y ~ X`: Die Modellierung der Verteilung von $Y$ hängt evtl. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
+- Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.
+
+**Verfahrensübersicht** (Mindmap): [https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference](https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference)
+
+
+### Wiederholung: Punktschätzung {include-only=MasterNeu}
+
+Der Wert der Stichprobe wird häufig als **Punktschätzer** (engl.: (point) estimate) für den interessierenden Wert der Population verwendet, z. B.:
+  
+  - Anteil (kategoriale Daten): Population $\pi$, Stichprobe $p$, Punktschätzer $\hat{\pi}=p$.
+
+- Arithmetischer Mittelwert (numerische Daten): Population $\mu$, Stichprobe $\bar{x}$, Punktschätzer $\hat{\mu}=\bar{x}$.
+
+- Korrelationskoeffizent (numerische Daten): Population $\rho$, Stichprobe $r$, Punktschätzer $\hat{\rho}=r$.
+
+Das Symbol *Dach* ($\hat{}$) zeigt, dass der *unbekannte, wahre* Wert *geschätzt* wurde. Punktschätzer sind Funktionen der Stichprobe.
+
+### Wiederholung: Standardfehler {include-only=MasterNeu}
+
+- Punktschätzer variieren mit der Stichprobe. Der **Standardfehler** (engl.: standard error, $se$) beschreibt die Streuung (Standardabweichung) eines Schätzwertes, z.B. für den arithmetischen Mittelwert $\bar{x}$: $se=\frac{sd}{\sqrt{n}}$, d. h., $se$ sinkt (unter sonst gleichen Umständen; ceteris paribus -- c. p.) mit steigendem $n$.^[Die *Anzahl Freiheitsgrade* (engl.: degrees of freedom, $df$) gibt an, wie viele Beobachtungen dabei *frei* sind: Ist der Mittelwert von $n$ Beobachtungen bekannt, so ist $df=n-1$: $x_n=n\cdot\bar{x}-\sum_{i=1}^{n-1} x_i$.]
+
+- Aufgrund der Variation des Punktschätzers mit der Stichprobe und der damit verbundenen Unsicherheit gibt es die Bereichs- oder Intervallschätzer.
+
+### Wiederholung: Konfidenzintervall {include-only=MasterNeu}
+
+- Ein **Konfidenzintervall** gibt einen Bereich an, der den wahren, unbekannten Wert der Population mit einer gegebenen Sicherheit (z. B. $95\,\%=1-\alpha=100\,\%-5\,\%$) überdeckt^[Oft gilt die \%-Aussage nur approximativ.], d. h., den Anteil der so konstruierten Konfidenzintervalle, die den Wert enthalten.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Call It Maybe](https://www.causeweb.org/cause/resources/fun/songs/call-it-maybe)]
+
+- Häufig bei $n>30$: $95\,\%$-KI $\approx \delta^* \pm 2 \cdot se$.^[Vgl. auch die $68$-$95$-$99.7\,\%$-Regel im Abschnitt Normalverteilung des Kapitels Wahrscheinlichkeitsverteilungen.]  
+So ergibt sich z.B. für den Mittelwert: $95\,\%$-KI für $\mu$: $\approx \bar{x} \pm 2 \cdot se = \bar{x} \pm 2 \cdot \frac{sd}{\sqrt{n}}.$
+  
+  - Je größer der Stichprobenumfang, desto schmäler ist das Konfidenzintervall (unter sonst gleichen Umständen): Der Standardfehler $se$ fällt mit $n$.
+
+- Je größer die Sicherheit (z. B. $99\,\%$ statt $95\,\%$), desto breiter ist das Intervall. 
+
+### Wiederholung: Nullhypothese {include-only=MasterNeu}
+
+- Wir gehen vorläufig davon aus, dass es *keinen* Unterschied, *keinen* Zusammenhang usw. gibt.
+
+- Diese inhaltliche Hypothese wird operationalisiert: z.B. $H_0:\beta=0$.
+
+- Die Hypothese bezieht sich auf einen Wert der Population (daher griechische Buchstaben ohne Dach ($\hat{}$), z.B. $\beta, \mu, \pi, \rho$).
+
+- Unter der Annahme der Nullhypothese können wir Daten simulieren.^[Video: Lady Tasting Tea [https://youtu.be/lgs7d5saFFc](https://youtu.be/lgs7d5saFFc)]
+
+### Wiederholung: Teststatistik und p-Wert {include-only=MasterNeu}
+
+- Anhand einer geeigneten **Teststatistik** $\delta$ werden die Stichprobendaten zusammengefasst. Ist die Wahrscheinlichkeit einer mindestens so großen Abweichung unter $H_0$ (sehr) klein, wird diese verworfen, andernfalls nicht.^[Song: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; P-Value is Low](https://www.causeweb.org/cause/resources/library/r12618)]
+
+- Der **p-Wert** ($p$) gibt den Anteil der Stichproben an, die ein mindestens so extremes Ergebnis wie die beobachtete Stichprobe haben, wenn $H_0$ gilt.
+
+- Damit ist der p-Wert die Wahrscheinlichkeit eines solchen oder extremeren Wertes der Teststatistik unter den Annahmen von $H_0$.
+
+- Der p-Wert wird bestimmt, *nachdem* die Daten vorliegen.
+
+### Wiederholung: Nutzen und Grenzen des p-Werts {include-only=MasterNeu}
+
+- Der p-Wert bietet eine datenbasierte Möglichkeit zu überprüfen, ob die vorliegenden Daten durch ein zu überprüfendes Modell ($H_0$) plausibel erklärt werden können, d. h., bei wiederholten Stichproben relativ häufig vorkommen.
+
+- Der p-Wert ist definiert als Wahrscheinlichkeit des beobachteten Wertes der Teststatistik (oder noch extremerer Werte) unter der Annahme, dass die $H_0$ gilt ($p(\delta^*\,|\,H_0)$).
+
+- **Achtung**: Der p-Wert sagt nicht aus, wie wahrscheinlich die $H_0$ bei den vorliegenden Daten (Teststatistik) ist ($p(H_0\,|\,\delta^*)$). 
+
+- Der p-Wert sagt nicht, wie relevant ein Ergebnis ist (wie groß ein Effekt ist).
+
+- **Keine** Entscheidung sollte rein auf Basis des p-Wertes getroffen werden.
+
+- *Vor* der Testentscheidung **immer** eine explorative Datenanalyse durchführen.
+
+### Wiederholung: Alternativhypothese und Signifikanz {include-only=MasterNeu}
+
+::: {.small}
+
+- Die **Alternativhypothese** $H_A, H_1$ ist das Gegenteil der Nullhypothese. Die Rollen von $H_0$ und $H_A$ können *nicht* vertauscht werden.
+
+- Alternativen können *einseitig*, *gerichtet* (z.B. $\pi>\pi_0$ bzw. $\pi<\pi_0$) oder *zweiseitig*, *ungerichtet* (z. B. $\pi \neq \pi_0$) sein.
+
+- Bei einseitigen Alternativhypothesen erfolgt ggf. eine Anpassung der $H_0$, da Werte, die in die andere Richtung als die $H_A$ gehen, dem Bereich der $H_0$ zugerechnet werden (z.B. $H_A: \pi>\pi_0$ vs. $H_0:  \pi\leq\pi_0$).
+
+- Das *vorab* festgelegte **Signifikanzniveau** $\alpha$^[üblich: $\alpha=1\%, 5\%, 10\%$] eines Tests gibt die maximal zugebilligte Irrtumswahrscheinlichkeit dafür an, $H_0$ zu verwerfen, obwohl $H_0$ gilt.
+
+- Damit können *vorab* kritische Werte der Verteilung unter $H_0$ bestimmt werden: Liegt der Wert der Teststatistik der Stichprobe außerhalb, wird $H_0$ verworfen, sonst nicht.
+
+- Auf Grundlage der Alternative kann eine geeignete Teststatistik und der nötige Stichprobenumfang bestimmt werden.
+
+- Ist der p-Wert $< \alpha$, so wird $H_0$ verworfen, ansonsten nicht.
+
+- Wird die $H_0$ verworfen, so nennt man das Ergebnis (statistisch) *signifikant* zum Niveau $\alpha$.
+
+:::
+
+### Wiederholung: Fehlerarten {include-only=MasterNeu}
+  
+|   | Testentscheidung $H_0$ nicht verwerfen| Testentscheidung $H_0$ verwerfen  |
+|:---|:---:|:---:|
+| Realität: $H_0$  | Ok | **Fehler 1. Art**^[Auch $\alpha$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers wird durch das Signifikanzniveau nach oben beschränkt.] |
+| Realität: $H_A$  | **Fehler 2. Art**^[Auch $\beta$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers ist schwieriger zu bestimmen, aber siehe z. B. Paket [pwr](https://cran.r-project.org/package=pwr). Bei guten Tests sinkt sie mit größerem Stichprobenumfang $n$.]  | Ok  |
+  
+  
+### Wiederholung: Ablauf Hypothesenprüfung {include-only=MasterNeu}
+  
+1.  Inhaltliche Hypothese operationalisieren.
+2.  Nullhypothese $H_0$ und Alternativhypothese $H_A$, die der Forschungsvermutung entspricht, festlegen. Dazu passende Teststatistik bestimmen: 
+  - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
+  - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
+  - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
+3.  Verteilung der Teststatistik unter $H_0$ bestimmen.
+4.  Prüfung über p-Wert: Ist der beobachtete Wert der Teststatistik der Stichprobe unter $H_0$ (sehr) selten?
+  - Nein: $H_0$ kann nicht verworfen werden. Abweichung wird *nicht signifikant* genannt.
+  - Ja: $H_0$ wird verworfen. Abweichung wird *signifikant* genannt.
+
+
+### Wiederholung: Simulationsbasierte Inferenz {include-only=MasterNeu}
+
+Simulationsbasierte Inferenz bietet *ein* Verfahren für viele Fragen der Inferenzstatistik.
+
+- **Einfache Simulation** zur Überprüfung eines Anteils. 
+- [Beispiel:]{.cemph} Wie hoch ist der Anteil der Flieger aus dickem Papiers (in der Population)? 
+  - [Vorgehen:]{.cemph} Simuliere wiederholt Münzwurf ($H_0$) und schaue, wie wahrscheinlich der beobachtete Anteil an dickem Papier ist.
+
+- **Permutationstest** zur Überprüfung eines Unterschieds zweier Verteilungen. 
+- [Beispiel:]{.cemph} Unterscheidet sich der Mittelwert der Flugzeit (in der Population) zwischen Fliegern aus dünnem und dickem Papier?
+  - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Zuordnung und schaue, wie wahrscheinlich die beobachtete Differenz der Mittelwerte ist.
+
+- **Bootstrap** zur Berechnung eines Konfidenzintervalls des Mittelwertes.
+
+- [Beispiel:]{.cemph} Was sind plausible Mittelwerte der Flugzeit beim Re-Sampling?
+  - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Stichprobe durch Ziehen mit Zurücklegen und berechne jeweils den Mittelwert.
+
+
+### Alternative: Inferenz basierend auf Verteilungsnannahmen {include-only=MasterNeu}
+
+Test mit theoretischen Verteilungsannahmen unter $H_0$.^[Häufig approximativ oder asymptotisch, z. B. $t$-, $\chi^2$-, $F$-Verteilungen.]
+
+- Solche *klassischen* Tests basieren auf jeweils unterschiedlichen Methoden und Annahmen.
+
+- Nicht für jede Fragestellung sind die theoretischen Verteilungen bekannt.
+
 ### Praxistransfer: `Y` kategorial
 
 - Analyse des Anteils der Studierenden, die die Vorlesung nachbereiten -- ggf. je nach Geschlecht oder Studiengang.
 - Untersuchung des Anteils der Mitarbeiter\*innen, die während der Arbeit SocialMedia nutzen -- ggf. je nach Geschlecht.
 - Analyse des Anteils der betrügerischen Versicherungsvorgänge -- ggf. je nach Vertragsart.
 - Vergleich des Anteils der dividendenzahlenden Unternehmen je Index.
-- Anteil von "Blockbuster-Movies" pro Film-Genre (s. Datensatz [ggplot2movies](https://cran.r-project.org/package=ggplot2movies)).
+- Anteil von "Blockbuster-Movies" pro Film-Genre (s. Datentabelle [ggplot2movies](https://cran.r-project.org/package=ggplot2movies)).
 
 
 ### Praxistransfer: `Y` numerisch
@@ -95,21 +251,21 @@ Die Studierenden ...
 
 
 ### Übung `r nextExercise()`: Statistik der Essenszeit {.exercise type=A-B answer=A}
-
+  
 Durch welche Statistik kann die Verteilung der Variable Essenzeit (Lunch/ Dinner) sinnvoll beschrieben werden?
-
+  
 A.  Anteil.
 B.  Arithmetischer Mittelwert.
 
 ::: {.notes}
 Für kategoriale Daten ist der Anteil (***A***) eine geeignete Zusammenfassung.
 :::
-
-
+  
+  
 ### Übung `r nextExercise()`: Visualisierung der Essenszeit {.exercise type=A-B-C answer=A}
-
+  
 Durch welche Grafik kann die Verteilung der Variable Essenzeit (Lunch/ Dinner) sinnvoll dargestellt werden?
-
+  
 A.  Säulendiagramm.
 B.  Histogramm.
 C.  Boxplot.
@@ -120,9 +276,9 @@ Für kategoriale, nominale Daten ist das Säulendiagramm (***A***) eine geeignet
 
 
 ### Übung `r nextExercise()`: Gültigkeit Inferenz {.exercise type=A-B-C-D-E answer=B}
-
+  
 Wann ist aufgrund einer quantitativen Datenanalyse eine Aussage über die Population gerechtfertigt?
-
+  
 A.  Nie.
 B.  Bei einer zufälligen Stichprobe.
 C.  Bei einer randomisierten Zuordnung innerhalb eines Experimentes.
@@ -133,9 +289,8 @@ E.  Immer.
 Zum Schluss von einer Stichprobe auf die Population wird eine zufällige Stichprobe (***B***) benötigt -- andernfalls könnte diese verzerrt sein. Ein hoher Stichprobenumfang $n$ ist generell zu bevorzugen: Er verkleinert den Standardfehler und damit das Konfidenzintervall sowie sinkt bei guten Tests die Wahrscheinlichkeit für einen Fehler 2. Art.
 :::
 
-
 ### Einlesen der Daten
-
+  
 Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing]-Daten:
 ```{r, eval =FALSE, message = FALSE}
 # Herunterladen 
@@ -154,7 +309,7 @@ library(mosaic) # Paket mosaic laden
 ### Frauenanteil der Rechnungszahler\*innen: Deskriptive Analyse 
 
 Tabelle:
-
+  
 ::::::::: {.columns}
 ::: {.column width="49%"}
 ```{r tips-sex-prop-tab, eval=FALSE, echo=TRUE}
@@ -168,9 +323,9 @@ tally( ~ sex,
 ```
 :::
 :::::::::
-
+  
 Säulendiagramm:
-
+  
 ::::::::: {.columns}
 ::: {.column width="49%"}
 ```{r tips-sex-prop-perc, eval=FALSE, echo=TRUE}
@@ -183,11 +338,10 @@ gf_percents( ~ sex, data = tips)
 :::
 :::::::::
 
-
 ### Übung `r nextExercise()`: Frauenanteil der Rechnungszahler\*innen: Testverfahren {.exercise type=A-B answer=A}
-
+  
 Welches ist das richtige Testverfahren, um die Forschungsthese zu untersuchen, dass der Anteil der Rechnungszahlerinnen, d. h. `sex=="Female"`, *in der Population* nicht bei 50\% liegt?
-
+  
 A.  Test eines Anteilswertes.
 B.  Test eines Mittelwertes.
 
@@ -196,11 +350,11 @@ Da es um den Anteil eines Merkmals geht, ist ***A*** richtig. Für *B* benötigt
 
 Beachte: Es geht hier um den Anteil der insgesamt von Frauen bezahlten Rechnungen, nicht darum, ob z. B. bei einem Pärchen der Mann oder die Frau zahlt.
 :::
-
-
+  
+  
 ### Wiederholung: Schema Hypothesentest
-
-
+  
+  
 ```{r echo=FALSE, out.width = "70%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages,"OneTest.png"), error=FALSE)
 ```
@@ -213,23 +367,23 @@ knitr::include_graphics(file.path(pathToImages,"OneTest.png"), error=FALSE)
 ### Übung `r nextExercise()`: Frauenanteil der Rechnungszahler\*innen: Hypothese {.exercise type=A-B answer=A}
 
 Wie lautet die korrekte Nullhypothese für die Forschungsfrage, ob der Anteil der Frauen unter den Rechnungszahlenden nicht bei $50\,\%$ liegt?
-
+  
 A.  $H_0: \pi=0.5$
 B.  $H_0: \pi \neq 0.5$
-
-
+  
+  
 ::: {.notes}
 ***A***: die Nullhypothese ist die *Gleichheit*, unter der die Verteilung simuliert oder berechnet wird.
 :::
-
-
+  
+  
 ### Simulation der Frauenanteils unter $H_0$
-
+  
 ```
 Lege die Zufallszahlen fest.
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
-    - Wirf n = 244 faire zweiseitige Münzen.
+  - Wirf n = 244 faire zweiseitige Münzen.
 ```
 
 ```{r}
@@ -243,7 +397,7 @@ Nullvtlg <- do(10000) *  # 10000 Wiederholungen
 ### Simulierte Stichproben des Frauenanteils
 
 Visualisierung der Verteilung des Frauenanteils, wenn das Modell $H_0: \pi=0.5$ stimmt: 
-
+  
 ```{r,  fig.align="center", out.width="60%"}
 gf_histogram( ~ prop, data = Nullvtlg)
 ```
@@ -252,18 +406,17 @@ gf_histogram( ~ prop, data = Nullvtlg)
 ### Ist der beobachtete Wert selten unter der $H_0$?
 
 Beobachteter Frauenanteil $\hat{\pi}=p$:
-
+  
 ```{r}
 propdach <- prop( ~ sex, data = tips, 
-                   success = "Female")
+                  success = "Female")
 propdach
 ```
 
 Quantile für extreme Werte in der Verteilung unter $H_0: \pi=0.5$ ($\alpha=5\%$):
-
+  
 ```{r}
-quantile( ~ prop, data = Nullvtlg, 
-          probs=c(0.025, 0.975))
+qdata( ~ prop, data = Nullvtlg, p = c(0.025, 0.975))
 ```
 
 
@@ -275,21 +428,21 @@ gf_histogram( ~ prop, data = Nullvtlg) %>%
 ```
 
 Welche der folgenden Aussagen stimmt?
-
+  
 A.  Ein Frauenanteil von `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` in der Stichprobe ist unter der Annahme, der Anteil in der Population liegt bei $0.5$, ein üblicher Wert.
 B.  Ein Frauenanteil von `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` in der Stichprobe ist unter der Annahme, der Anteil in der Population liegt bei $0.5$, kein üblicher Wert, sondern selten.
 
 ::: {.notes}
-***B***, da in $95\,\%$ der Simulationen Werte zwischen `r round(quantile( ~ prop, data = Nullvtlg,probs=c(0.025)),2)` und `r round(quantile( ~ prop, data = Nullvtlg,probs=c(0.975)),2)` auftreten.  `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` liegt nicht darin.
+***B***, da in $95\,\%$ der Simulationen Werte zwischen `r round(qdata( ~ prop, data = Nullvtlg, p = c(0.025)),2)` und `r round(qdata( ~ prop, data = Nullvtlg, p = c(0.975)),2)` auftreten.  `r round(tally( ~ sex, data = tips, format = "proportion")[1], 2)` liegt nicht darin.
 
 Diese Werte werden auch **kritische Werte** genannt: Sollte der beobachtete Anteil $p$ außerhalb dieser kritischen Werte liegen, wird $H_0$ zum Niveau $\alpha=5\%$ verworfen.
 :::
-
-
+  
+  
 ### p-Wert des Frauenanteils
-
+  
 Berechne unter der Annahme der $H_0$, dass der Frauenanteil $\pi=1/2$ beträgt, die Wahrscheinlichkeit eines Wertes wie der beobachteten Teststatistik $p$ (oder noch extremerer Werte):
-
+  
 ```{r}
 # Absolute Abweichung zu p_0=0.5 in der Stichprobe
 abw.stipro <- abs(propdach - 0.5)
@@ -309,43 +462,43 @@ Der p-Wert ist sehr klein ($p<0.0001$): In keiner der $10000$ Simulationen wurde
 ### Klassischer Test eines Anteilswertes {include-only=deprecated}
 
 Berechnung des p-Wertes und des Konfidenzintervalls unter Verwendung theoretischer Verteilungsannahmen:
-
+  
 ```{r, eval = FALSE}
 binom.test( ~ sex, # Variable, die gestestet wird
-           p = 0.5, # hypothetischer Wert p_0
-           success = "Female", # Auf was soll getestet werden?
-           alternative = "two.sided", # Alternativhypothese
-           data = tips) # Datensatz
+            p = 0.5, # hypothetischer Wert p_0
+            success = "Female", # Auf was soll getestet werden?
+            alternative = "two.sided", # Alternativhypothese
+            data = tips) # Datentabelle
 ```
 
 <!-- Bug? -->
-
+  
 ### Ergebnis Test des Anteilswertes {include-only=deprecated}
-
+  
 ```{r, echo = FALSE}
 binom.test( ~ sex, # Variable die gestestet wird
-           p = 0.5, # hypothetischer Wert p_0
-           success = "Female", # Auf was soll getestet werden?
-           alternative = "two.sided", # Alternativhypothese
-           data = tips) # Datensatz
+            p = 0.5, # hypothetischer Wert p_0
+            success = "Female", # Auf was soll getestet werden?
+            alternative = "two.sided", # Alternativhypothese
+            data = tips) # Datentabelle
 ```
 
 <!-- Bug? -->
 
 ### Übung `r nextExercise()`: Statistik der Rechnungshöhe {.exercise type=A-B answer=B}
-
+  
 Durch welche Statistik kann die zentrale Tendenz der Variable Rechnungshöhe sinnvoll beschrieben werden?
-
+  
 A.  Anteil.
 B.  Arithmetischer Mittelwert.
 
 ::: {.notes}
 Ein Lagemaß für numerische Daten ist der Mittelwert (***B***). Alternative Kennzahl wäre u.a. der Median. 
 :::
-
-
+  
+  
 ### Deskriptive Analyse der Rechnungshöhe
-
+  
 ```{r, fig.align="center", out.width="33%"}
 gf_histogram( ~ total_bill, data = tips)
 favstats( ~ total_bill, data = tips)
@@ -359,7 +512,7 @@ gf_histogram( ~ total_bill, data = tips)
 ```
 
 Welche der folgenden Aussagen stimmt?
-
+  
 A.  Die Rechnungshöhe ist gleichverteilt.
 B.  Die Rechnungshöhe ist multimodal.
 C.  Die Rechnungshöhe ist normalverteilt.
@@ -369,22 +522,31 @@ E.  Die Rechnungshöhe ist rechtsschief.
 ::: {.notes}
 ***E***: Linkssteil, rechtsschief -- wie häufig bei Umsätzen etc.: Viele machen wenig Umsatz, wenige viel.
 :::
-
-
+  
+  
 ### Wiederholung: Ablauf Bootstrap
-
+  
 [Vorraussetzungen:]{.cemph}
 
 - Zufällige Stichprobe oder zufällige Zuordnung. 
 - Nicht zu kleine Stichprobe.^[$n\geq 35$]
 
 [Beispiel:]{.cemph} Bootstrap-Perzentil-Intervall^[Es gibt weitere, teilweise exaktere Bootstrap-Methoden.] für eine Stichprobe:
-
+  
 - Wiederhole z.B. $10000 \times$
-    - Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
-    - Berechne geeignete Statistik, z.B. Mittelwert der Bootstrap-Stichprobe. Analog für andere Statistiken, z. B. Anteil.
+- Ziehe mit Zurücklegen eine Stichprobe vom Umfang $n$ aus der Originalstichprobe.
+- Berechne geeignete Statistik, z.B. Mittelwert der Bootstrap-Stichprobe. Analog für andere Statistiken, z. B. Anteil.
 - Zeichne ein Histogramm der Bootstrap-Verteilung der Statistik.
 - Das $95\,\%$-Bootstrap-Perzentil-Intervall sind die mittleren $95\,\%$ der Bootstrap-Verteilung.
+
+
+### Wiederholung: Schema Bootstrap
+
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "bootstrap.png"), error=FALSE)
+```
+
+[Abbildung: Quelle: Lock, Robin, Patti Frazer Lock, Kari Lock Morgan, Eric F. Lock, and Dennis F. Lock (2012): Statistics: UnLOCKing the Power of Data. Wiley.]{.small}
 
 
 ### Bootstrap: mittlere Rechnungshöhe
@@ -393,8 +555,8 @@ E.  Die Rechnungshöhe ist rechtsschief.
 Lege die Zufallszahlen fest.
 Bootvtlg soll sein:
   Wiederhole 10000-mal:
-    - Berechne den Mittelwert der Rechnungshöhe,
-    - Der Datensatz "tips" soll dabei jedes Mal resampelt werden.
+  - Berechne den Mittelwert der Rechnungshöhe,
+- Die Datentabelle "tips" soll dabei jedes Mal resampelt werden.
 ```
 
 ```{r}
@@ -419,7 +581,7 @@ gf_histogram( ~ mean, data = Bootvtlg)
 ```
 
 Welche der folgenden Aussagen stimmt?
-
+  
 A.  Der Mittelwert der Rechnungshöhe ist gleichverteilt.
 B.  Der Mittelwert der Rechnungshöhe ist multimodal.
 C.  Der Mittelwert der Rechnungshöhe ist normalverteilt.
@@ -429,37 +591,58 @@ E.  Der Mittelwert der Rechnungshöhe ist rechtsschief.
 ::: {.notes}
 Der *Zentrale Grenzwertsatz* sagt, dass Mittelwerte von unabhängigen Zufallsstichroben i. d. R. gegen eine Normalverteilung konvergieren. Dies sieht man hier: ***C***.
 :::
-
-
+  
+  
 ### Übung  `r nextExercise()`: Konfidenzintervall {.exercise type=yesno answer=no}
-
+  
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
-confi <- quantile( ~ mean, probs = c(0.025, 0.975), data = Bootvtlg)
+confi <- qdata( ~ mean, p = c(0.025, 0.975), data = Bootvtlg)
 gf_histogram( ~ mean , data = Bootvtlg) %>%
   gf_vline(xintercept = ~confi, data = NA)
 ```
 
 ```{r}
-quantile( ~ mean, probs = c(0.025, 0.975), data = Bootvtlg)
+qdata( ~ mean, p = c(0.025, 0.975), data = Bootvtlg)
 ```
 
 
 Stimmt die Aussage: Mit $95\,\%$iger Sicherheit überdeckt der Bereich `r floor(confi[1]*100)/100`\$ bis `r ceiling(confi[2]*100)/100`\$ eine zufällig ausgewählte Beobachtung?
-
+  
 - Ja.
 - Nein.
 
 ::: {.notes}
 Konfidenzintervalle beziehen sich immer auf Populationswerte, daher ***Nein***. Auf lange Sicht erwarten wir, dass $95\%$ der auf diese Art und Weise konstruierten Intervalle den wahren, unbekannten, festen Wert $\mu$ enthalten. Bei Normalverteilung liegen ca. $95\%$ der Beobachtungen im Bereich $\bar{x} \pm 2\cdot \text{sd}$, das $95\%$-Konfidenzintervall hingegen liegt ca. im Bereich $\bar{x} \pm 2\cdot se$. 
 :::
+  
+  
+### Übung  `r nextExercise()`: Hypothesenprüfung und Konfidenzintervall {.exercise type=yesno answer=yes include-only=MasterNeu}
+  
+Würde eine $H_0:\mu=\mu_0=15$ auf Basis des Konfidenzintervalls [`r floor(confi[1]*100)/100`, `r ceiling(confi[2]*100)/100`] verworfen werden?
+  
+- Ja.
+- Nein.
+
+::: {.notes}
+***Ja***, da der Wert der $H_0$, also $\mu_0=15$ nicht im Konfidenzintervall liegt.
+:::
+  
+  
+### Hypothesenprüfung und Konfidenzintervall {include-only=MasterNeu}
+  
+- Das Konfidenzintervall gibt auf Basis der Stichprobe einen Wertebereich für den Wert ($\delta$) an: $1-\alpha$ der Werte aus den Resampling-Stichproben liegen darin.
+
+- Anhand der Verteilung unter dem Modell der Nullhypothese ($\delta=\delta_0$) können wir einen Wertebereich für Werte der Stichprobe ($\delta^*$) bestimmen, wenn dieses Modell gilt: $1-\alpha$ der unter $H_0$ simulierten Werte liegen darin.
+
+- Häufig^[Hängt u.a. vom Verfahren ab. Es ist aber *theoretisch* möglich, äquivalente Bereiche zu konstruieren.] entspricht der Bereich des Konfidenzintervalls dem Bereich für $\delta$, für den $H_0: \delta=\delta_0$ *nicht* verworfen wird.
 
 
 ### Klassischer Lagetest: t-Test
 
 - Einstichproben-t-Test: eine Stichprobe, ein Merkmal: $H_0: \mu=\mu_0$ 
-\[
-t=\frac{\bar{x}-\mu_0}{\sqrt{\frac{\text{sd}^2}{n}}}=\frac{\bar{x}-\mu_0}{se}
-\]
+  \[
+    t=\frac{\bar{x}-\mu_0}{\sqrt{\frac{\text{sd}^2}{n}}}=\frac{\bar{x}-\mu_0}{se}
+    \]
 
 - t-Test für abhängige Stichproben, gepaarter t-Test: eine Stichprobe, zwei Merkmale; es wird die Differenz je Beobachtung analysiert: $H_0: \mu_{x_1-x_2} = \delta_0$
 - Große Werte von $|t|$^[im zweiseitigen Fall] sind unter der Nullhypothese unwahrscheinlich.
@@ -468,42 +651,56 @@ t=\frac{\bar{x}-\mu_0}{\sqrt{\frac{\text{sd}^2}{n}}}=\frac{\bar{x}-\mu_0}{se}
 
 ### Einstichproben-t-Test
 
-```{r}
+Hypothesen hier im Beispiel: $H_0:\mu\leq\mu_0=15$ vs. $H_A:\mu>\mu_0=15$, also einseitig bzw. gerichtet.
+
+```{r eval = FALSE}
 t.test( ~ total_bill, # Variable, die analysiert wird
         mu = 15, # Wert für mu0
         alternative = "greater", # ein- oder zweiseitiger Test
-        data = tips) # Datensatz
+        data = tips) # Datentabelle
 ```
 
+::: {.footnotesize}
+```{r echo = FALSE}
+out <- t.test( ~ total_bill, # Variable, die analysiert wird
+               mu = 15, # Wert für mu0
+               alternative = "greater", # ein- oder zweiseitiger Test
+               data = tips) # Datentabelle
+out
+```
 
+**Hinweis:** Das hier angegebene Konfidenzintervall (`95 percent confidence intervall`) ist kein klassisches Konfidenzintervall für den Punktschätzer der Stichprobe, sondern ein einseitiges 95%-Intervall im Sinne der $H_A:\mu>\mu_0=15$. Es geht von `r out$conf.int[[1]] |> round(2)` bis `r out$conf.int[[2]] |> round(2)` (`Inf`) .
+:::
+  
+  
 ### Übung `r nextExercise()`: Testergebnis: Rechnungshöhe {.exercise type=yesno answer=no}
-
+  
 Tritt ein Wert wie der in der Stichprobe beobachtete Mittelwert unter $H_0: \mu \leq 15$ häufig auf?
-
+  
 - Ja.
 - Nein.
 
 ::: {.notes}
 `p-value = 1.909e-15` $=1.909\cdot 10^{-15}=0.000000000000001909<0.05$, also ***Nein***.
 :::
-
-
+  
+  
 ### Übung  `r nextExercise()`: Fehlerart t-Test {.exercise type=A-B answer=A}
-
+  
 Angenommen, in Wirklichkeit gilt $\mu \leq 15$. Welcher Fehler wurde begangen?
-
+  
 A.  Fehler 1. Art, $\alpha$-Fehler.
 B.  Fehler 2. Art, $\beta$-Fehler.
 
 ::: {.notes}
 Wenn in Wirklichkeit $H_0$ gilt, die Testentscheidung aber lautet, dass $H_0$ verworfen wird, so spricht man vom Fehler 1. Art (***A***). Die Häufigkeit, dass das Verfahren einen solchen Fehler begeht, wird durch das Signifikanzniveau $\alpha$ kontrolliert.
 :::
-
-
+  
+  
 ### Übung  `r nextExercise()`: p-Wert {.exercise type=A-B-C answer=B}
-
+  
 Was würde passieren, wenn die vorher festgelegte Hypothese^[Hypothesen dürfen **nicht** nach der Analyse angepasst werden!] nicht $H_0: \mu \leq 15$ gegen $H_A: \mu > 15$, sondern $H_0: \mu \leq 19.5$ gegen $H_A: \mu > 19.5$ lauten würde?
-
+  
 A.  Der p-Wert wird kleiner.
 B.  Der p-Wert wird größer.
 C.  Der p-Wert ändert sich nicht.
@@ -514,41 +711,65 @@ Da die Abweichung von $\bar{x}$ zu $\mu_0$ kleiner wird, steigt der p-Wert (***B
 \vspace{0.5cm}
 
 
-`t.test( ~ total_bill, mu=19.5, alternative="greater", data=tips)`
+`t.test( ~ total_bill, mu = 19.5, alternative = "greater", data = tips)`
 
 \vspace{0.5cm}
 
 ```{r echo=FALSE}
- out <- t.test( ~ total_bill, mu=19.5, alternative="greater", data=tips);
+out <- t.test( ~ total_bill, mu = 19.5, alternative = "greater", data = tips);
 ```
 
 
 p-Wert: `r round(out$p.value, 4)`
 
 :::
-
-
+  
+  
 ### Übung  `r nextExercise()`: t-Test {.exercise type=A-B-C answer=B}
-
+  
 Bei einem gerichteten Einstichproben-t-Test für 
 $$H_0: \mu \leq 42 \quad vs. \quad H_A: \mu>42$$
 komme als Schätzwert der Stichprobe $\hat{\mu}=\bar{x}=40$ raus.
 
 Wird der t-Test die Nullhypothese verwerfen?
-
-A.  Ja.
+  
+  A.  Ja.
 B.  Nein.
 C.  Vielleicht. Hängt von $\text{se}=\frac{\text{sd}}{\sqrt{n}}$ ab.
 
 ::: {.notes}
 Nein (***B***), da $\bar{x}=40$ Teil der Nullhypothese ist. Falls $\bar{x}>42$ wäre, wäre *C* richtig.
 :::
+  
+  
+### t-Test in der Regression {include-only=MasterNeu}
+  
+In der Modellzusammenfassung werden die Ergebnisse eines zweiseitigen t-Tests ausgegeben:
 
+```{r echo = FALSE}
+erglm3 <- lm(tip ~ total_bill + smoker, data = tips)
+```
+
+::: {.small}
+
+```{r echo = TRUE, eval = FALSE}
+summary(erglm3)
+```
+
+```{r eval = TRUE, echo = FALSE}
+cat("...")
+getSumLines(erglm3, "Coefficients", "---")
+cat("...")
+```
+
+:::
+  
+In der Spalte `Std. Error` stehen der Standardfehler, in der Spalte `t value` die z-transformierten Koeffizienten ($t = \frac{\hat\beta_i-0}{\hat{se}}$). Die Spalte `Pr > |t|` zeigt die p-Werte der zweiseitigen t-Tests mit den Hypothesen $H_0: \beta_i=0, H_A: \beta_i\neq0$.
 
 ### t-Test der Differenz zweier Merkmale
 
 Liefern die Daten Indizien, dass die mittlere relative Trinkgeldhöhe über $10\%$ liegt? Betrachte dazu je Beobachtung die Differenz $x_d = x_\text{tip} - 0.1 \cdot x_\text{total\_bill}$:
-
+  
 Differenz bilden:
 ```{r, echo=TRUE}
 tips <- tips %>% mutate(t_diff = tip - 0.1*total_bill)
@@ -563,10 +784,11 @@ t.test( ~ t_diff, data=tips, alternative="greater")
 ```
 :::
 
+
 ### Übung  `r nextExercise()`: Gepaarter t-Test {.exercise type=A-B-C answer=C}
-
+  
 Was sagt der `p-value < 2.2e-16` aus?
-
+  
 A.  Die Wahrscheinlichkeit, dass die Nullhypothese stimmt, ist kleiner als $2.2 \cdot 10^{-16}$.
 B.  Die Wahrscheinlichkeit, dass die Alternativhypothese stimmt, ist kleiner als $2.2 \cdot 10^{-16}$.
 C.  Weder A noch B.
@@ -576,34 +798,21 @@ C.  Weder A noch B.
 
 I. d. R. gilt $P(\delta^*|H_0) \neq P(H_0|\delta^*)$: $P(\text{Papst}|\text{Mann}) \neq P(\text{Mann}|\text{Papst})$.
 :::
-
-
+  
+  
 ## Zwei-Gruppen-Vergleich: `Y ~ X`
-
+  
 ### A/B-Tests
-
+  
 - Anhand einer Variable `X` können die Daten in zwei Gruppen (Stichproben) unterteilt werden: A, B.
 - Unter $H_0$: Kein Unterschied in der Verteilung zweier Stichproben (Gruppen) in der **Population**, z. B.
-  - `Y` numerisch: $\mu_A=\mu_B$
-  - `Y` kategorial: $\pi_A=\pi_B$ 
-
+- `Y` numerisch: $\mu_A=\mu_B$
+- `Y` kategorial: $\pi_A=\pi_B$ 
+  
 Beispielfragestellungen:
-
+  
 - Ist die durchschnittliche Rechnungshöhe bei Rauchern so hoch wie bei Nichtrauchern?
 - Ist der Frauenanteil beim Lunch so hoch wie beim Dinner?^[Video: Using Randomization to Analyze a Gender Discrimination Study [https://youtu.be/2pHhjx9hyM4](https://youtu.be/2pHhjx9hyM4)]
-
-
-### Ablauf des Permutationstest
-
-[Vorraussetzung:]{.cemph} Zufällige Stichprobe (Permutation) oder zufällige Zuordnung (Randomisation).
-
-
-- Wiederhole oft (z. B.  $10000 \times$):
-    - Mische die $n_A+n_B$ Beobachtungen.
-    - Ordne zufällig $n_A$ Beobachtungen der ersten Stichprobe zu, die restlichen der zweiten.
-    - Berechne die Differenz der Mittelwerte. Analoges gilt für andere Teststatistiken, z. B. Anteilsdifferenzen.
-- Zeichne ein Histogramm für die 10000 Mittelwertsdifferenzen.
-- Der p-Wert ist der Anteil der simulierten Teststatistiken, die mindestens so groß sind wie der beobachtete Wert.^[Bei symmetrischen zweiseitigen Tests im Absolutbetrag.] 
 
 
 ### Sebastians Kaffeemühle {include-only=sesmill}
@@ -619,35 +828,35 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 
 ### Übung `r nextExercise()`: Testverfahren: Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher {.exercise type=A-B answer=B}
 
-Welches ist ein geeignetes Verfahren, um zu prüfen, ob die Verteilung in der Population bei Rauchern und Nichtrauchern gleich ist, d. h. die Forschungsthese lautet: Es gibt einen Unterschied in der Verteilung der Population?
-
+Welches ist ein geeignetes Verfahren, um zu prüfen, ob die Verteilung der Rechnungshöhe in der Population bei Rauchern und Nichtrauchern gleich ist, d. h., die Forschungsthese lautet: Es gibt einen Unterschied in der Verteilung der Population?
+  
 A.  Anteilswertvergleich
 B.  Mittelwertvergleich
 
 ::: {.notes}
 Ein numerisches Merkmal (`Y`: Rechnungshöhe), zwei (unabhängige) Stichproben (`X`: Raucher- bzw. Nichtrauchertische), also ***B***.
 :::
-
-
+  
+  
 ### Übung `r nextExercise()`: Hypothese: Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher {.exercise type=A-B-C-D-E answer=B}
-
+  
 Wie lautet das richtige Hypothesenpaar?
-
+  
 A.  $H_0: \mu_{\text{Smoker Yes}} \neq \mu_{\text{Smoker No}}$ vs. $H_A: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$
 B.  $H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$ vs. $H_A: \mu_{\text{Smoker Yes}} \neq \mu_{\text{Smoker No}}$ 
 C.  $H_0: \bar{x}_{\text{Smoker Yes}} \neq \bar{x}_{\text{Smoker No}}$ vs. $H_A: \bar{x}_{\text{Smoker Yes}} = \bar{x}_{\text{Smoker No}}$
 D.  $H_0: \bar{x}_{\text{Smoker Yes}} = \bar{x}_{\text{Smoker No}}$ vs. $H_A: \bar{x}_{\text{Smoker Yes}} \neq \bar{x}_{\text{Smoker No}}$
 E.  $H_0: \pi_{\text{Smoker Yes}} \neq \pi_{\text{Smoker No}}$ vs. $H_A: \pi_{\text{Smoker Yes}} = \pi_{\text{Smoker No}}$
-
+  
 ::: {.notes}
 Hypothesen beziehen sich immer auf die Population, damit sind *C* und *D* falsch. Hier geht es um einen Mittelwert und nicht um einen Anteil, damit ist *E* falsch. Die Nullhypothese lautet *kein Unterschied*, also ist *A* auch falsch. Richtig ist ***B***.
 :::
 
 
 ### Boxplot: Rechnungshöhe Raucher/ Nichtraucher
-
+  
 Analyse des Unterschieds der Rechnungshöhe zwischen Rauchern und Nichtrauchern:
-
+  
 ```{r, fig.align="center", out.width="66%"}
 gf_boxplot(total_bill ~ smoker, data = tips)
 ```
@@ -657,7 +866,7 @@ gf_boxplot(total_bill ~ smoker, data = tips)
 
 Ein **Violin-Plot** ist eine Mischung aus *Dichteplot* und *Boxplot*.
 Hier wird der Mittelwert eingezeichnet:
-
+  
 ```{r, fig.align="center", out.width="50%"}
 gf_violin(total_bill ~ smoker, data = tips) %>%
   gf_point(total_bill ~ smoker, data = tips, 
@@ -668,7 +877,7 @@ gf_violin(total_bill ~ smoker, data = tips) %>%
 ### Differenz: mittlere Rechnungshöhe Raucher/ Nichtraucher 
 
 In der Stichprobe wurden folgende (Mittel-)Werte beobachtet:
-
+  
 ```{r}
 # Mittelwert Stichprobe
 mean(total_bill ~ smoker, data = tips)
@@ -678,6 +887,19 @@ diffmean(total_bill ~ smoker, data = tips)
 ```
 
 $\hat{\mu}_{\text{Smoker Yes}}-\hat{\mu}_{\text{Smoker No}}=`r round(diffmean(total_bill ~ smoker, data = tips), 2)`$
+  
+  
+### Ablauf des Permutationstest
+  
+[Vorraussetzung:]{.cemph} Zufällige Stichprobe (Permutation) oder zufällige Zuordnung (Randomisation).
+
+
+- Wiederhole oft (z. B.  $10000 \times$):
+- Mische die $n_A+n_B$ Beobachtungen.
+- Ordne zufällig $n_A$ Beobachtungen der ersten Stichprobe zu, die restlichen der zweiten.
+- Berechne die Differenz der Mittelwerte. Analoges gilt für andere Teststatistiken, z. B. Anteilsdifferenzen.
+- Zeichne ein Histogramm für die 10000 Mittelwertsdifferenzen.
+- Der p-Wert ist der Anteil der simulierten Teststatistiken, die mindestens so groß sind wie der beobachtete Wert.^[Bei symmetrischen zweiseitigen Tests im Absolutbetrag.] 
 
 
 ### Permutationstest: Differenz mittlere Rechnungshöhe Raucher/ Nichtraucher
@@ -685,9 +907,9 @@ $\hat{\mu}_{\text{Smoker Yes}}-\hat{\mu}_{\text{Smoker No}}=`r round(diffmean(to
 ```
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
-    - Berechne den Unterschied im Mittelwert der Rechnungshöhe 
-      (Raucher vs. Nichtraucher).
-    - Dabei soll das Merkmal *Raucher* jeweils permutiert werden.
+  - Berechne den Unterschied im Mittelwert der Rechnungshöhe 
+(Raucher vs. Nichtraucher).
+- Dabei soll das Merkmal *Raucher* jeweils permutiert werden.
 ```
 
 ```{r}
@@ -713,28 +935,44 @@ gf_histogram( ~ diffmean, data = Nullvtlg) %>%
 ```
 
 Ist die beobachtete Differenz der Mittelwerte (sehr) unplausibel unter der Annahme, dass es keinen Unterschied in der Verteilung gibt?
-
+  
 - Ja.
 - Nein.
 
 ::: {.notes}
 ***Nein***: Die beobachtete Differenz ist *nicht* am Rand der Verteilung unter $H_0$.
 :::
+  
+  
+### FOMshiny: Permutation {include=shiny,MasterNeu}
+  
+Entwicklung der Verteilung im Modell der Nullhypothese.
+
+[https://fomshinyapps.shinyapps.io/Permutation/](https://fomshinyapps.shinyapps.io/Permutation/)
 
 
 ### Klassische Alternative: Zweistichproben-t-Test
 
 Alternativ kann der t-Test eingesetzt werden:
-
-```{r}
+  
+```{r eval = FALSE}
 t.test(total_bill ~ # Abhängige Variable
-            smoker, # Unabhängige Variable
-         data = tips) # Datensatz
+         smoker, # Unabhängige Variable
+       data = tips) # Datentabelle
 ```
 
+::: {.scriptsize}
 
+```{r echo = FALSE}
+t.test(total_bill ~ # Abhängige Variable
+         smoker, # Unabhängige Variable
+       data = tips) # Datentabelle
+```
+
+:::
+  
 ### Offene Übung `r nextExercise()`: Rechnungshöhe Raucher/ Nichtraucher {.exercise type=essay}
-
+  
 Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Hypothesen und die Antwort auf die Forschungsfrage.
 
 1. [Think:]{.cemph} Überlegen Sie für sich.
@@ -744,10 +982,10 @@ Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage,
 
 ::: {.notes}
 Die Forschungsfrage lautete: Unterscheidet sich die mittlere Rechnungshöhe zwischen Tischen, an denen geraucht wird, und denen, an denen nicht geraucht wird? 
-
+  
 $H_0: \mu_{\text{Smoker Yes}} = \mu_{\text{Smoker No}}$
-
-
+  
+  
 In der Stichprobe unterscheiden sich die Mittelwerte: $\hat{\mu}_{\text{Smoker Yes}}=`r round(mean(total_bill ~ smoker, data = tips), 2)[2]`$ bzw. $\hat{\mu}_{\text{Smoker No}}=`r round(mean(total_bill ~ smoker, data = tips), 2)[1]`$. 
 
 Mit einem p-Wert von `r round(pval(t.test(total_bill ~ smoker, data = tips)),2)` wird die Nullhypothese nicht verworfen, die beobachteten Werte sind unter $H_0$ nicht ungewöhnlich.
@@ -757,7 +995,7 @@ Beachte: Es wurden keine weiteren Kovariablen berücksichtigt.
 
 
 ### Zusammenhang von Geschlecht und Tageszeit
-
+  
 Analyse des Zusammenhangs des Frauenanteil (der Rechungszahler\*innen) und der Tageszeit (mittags vs. abends).
 
 ```{r}
@@ -767,17 +1005,17 @@ diff.stipro
 ```
 
 Anteilsunterschied in der Stichprobe:
-
+  
 $$\hat{\pi}_{\text{Lunch}}-\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[2]`-`r round(prop(sex ~ time, success = "Female", data = tips), 2)[1]`=`r round(diffprop(sex ~ time, success = "Female", data = tips), 2)`$$
-
-
-### Permutationstest Geschlecht je Tageszeit
-
+  
+  
+### Permutationstest Geschlecht je Tageszeit {exclude=MasterNeu}
+  
 ```
 Nullvtlg soll sein:
   Wiederhole 10000-mal:
-    - Berechne den Unterschied im Frauenanteil (mittags vs. abends).
-    - Dabei soll das Merkmal *Zeit* jeweils permutiert werden.
+- Berechne den Unterschied im Frauenanteil (mittags vs. abends).
+- Dabei soll das Merkmal *Zeit* jeweils permutiert werden.
 ```
 
 ```{r}
@@ -788,20 +1026,20 @@ Nullvtlg <- do(10000) * diffprop(sex ~ shuffle(time),
 ```
 
 
-### Verteilung unter $H_0$
+### Verteilung unter $H_0$ {exclude=MasterNeu}
 
 Simulierte Verteilung des Anteilsunterschieds unter der Annahme der Gleichheit ($H_0$):
-
+  
 ```{r, fig.align="center", out.width="60%"}
 gf_histogram( ~ diffprop, data = Nullvtlg) %>%
   gf_vline(xintercept = ~diff.stipro)
 ```
 
 
-### Übung `r nextExercise()`: Bestimmung p-Wert {.exercise type=A-B answer=B}
+### Übung `r nextExercise()`: Bestimmung p-Wert {.exercise type=A-B answer=B exclude=MasterNeu}
 
 Für welche Hypothese erhalten Sie den p-Wert über:
-
+  
 ```{r}
 prop( ~ abs(diffprop) >= abs(diff.stipro), data = Nullvtlg)
 ```
@@ -812,9 +1050,14 @@ B.  Für $H_0: \pi_{\text{Lunch}}-\pi_{\text{Dinner}}=0$.
 ::: {.notes}
 Hypothesentests schließen immer von der Stichprobe auf die Population, also ***B***.
 :::
+  
+### Klassischer Test für Anteilsvergleich: `prop.test` {include-only=MasterNeu}
+  
+```{r}
+prop.test(sex ~ time, success = "Female", data = tips)
+```
 
-
-### Offene Übung `r nextExercise()`: Geschlecht je Tageszeit {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Geschlecht je Tageszeit {.exercise type=essay exclude=MasterNeu}
 
 Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Hypothesen und die Antwort auf die Forschungsfrage.
 
@@ -824,7 +1067,29 @@ Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage,
 
 ::: {.notes}
 Die Forschungsfrage lautete: Ist der Frauenanteil unter den Rechnungszahler\*innen beim Lunch genau so hoch wie beim Dinner oder unterscheidet er sich?
+  
+Mit $\pi$: Frauenanteil unter den Rechnungszahler\*innen: $H_0: \pi_{\text{Lunch}}=\pi_{\text{Dinner}}$.
 
+In der Stichprobe unterscheidet sich der Anteil: $\hat{\pi}_{\text{Lunch}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[2]`$ bzw. $\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[1]`$. 
+
+Mit einem p-Wert von `r prop.test(sex ~ time, success = "Female", data = tips) %>% pval()` wird die Nullhypothese zum Niveau $\alpha=0.05$ verworfen (und es wird auf einen signifikanten Unterschied im Frauenanteil unter den Rechnungszahler\*innen geschlossen).
+
+
+Beachte: Es wurden keine weiteren Kovariablen berücksichtigt.
+:::
+  
+  
+### Offene Übung `r nextExercise()`: Geschlecht je Tageszeit {.exercise type=essay include-only=MasterNeu}
+  
+Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Hypothesen und die Antwort auf die Forschungsfrage.
+
+1. [Think:]{.cemph} Überlegen Sie für sich.
+2. [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit dem Nachbarn/ der Nachbarin.
+3. [Share:]{.cemph} Stellen Sie Ihr Ergebnis im Plenum vor.
+
+::: {.notes}
+Die Forschungsfrage lautete: Ist der Frauenanteil unter den Rechnungszahler\*innen beim Lunch genau so hoch wie beim Dinner oder unterscheidet er sich?
+  
 Mit $\pi$: Frauenanteil unter den Rechnungszahler\*innen: $H_0: \pi_{\text{Lunch}}=\pi_{\text{Dinner}}$.
 
 In der Stichprobe unterscheidet sich der Anteil: $\hat{\pi}_{\text{Lunch}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[2]`$ bzw. $\hat{\pi}_{\text{Dinner}}=`r round(prop(sex ~ time, success = "Female", data = tips), 2)[1]`$. 
@@ -834,12 +1099,12 @@ Mit einem p-Wert von `r prop( ~ abs(diffprop) >= abs(diff.stipro), data = Nullvt
 
 Beachte: Es wurden keine weiteren Kovariablen berücksichtigt.
 :::
-
-
+  
+  
 ### Übung `r nextExercise()`: Gültigkeit Inferenz {.exercise type=A-B-C-D-E answer=C}
-
+  
 Wann ist aufgrund einer quantitativen Datenanalyse eine Kausalaussage  gerechtfertigt?
-
+  
 A.  Nie.
 B.  Bei einer zufälligen Stichprobe.
 C.  Bei einer randomisierten Zuordnung innerhalb eines Experimentes.
@@ -849,58 +1114,56 @@ E.  Immer.
 ::: {.notes}
 Um Einflüsse durch Kovariablen möglichst zu vermeiden, ist für einen Kausalschluss eine zufällige Zuordnung zu den Experimentalkonditionen nötig (***C***). Ein hoher Stichprobenumfang $n$ ist generell zu bevorzugen: Er verkleinert den Standardfehler und damit das Konfidenzintervall; bei guten Tests sinkt die Wahrscheinlichkeit für einen Fehler 2. Art.
 :::
-
-
+  
+  
 ## Zwei- oder Mehr-Gruppen-Vergleich: `Y ~ X`
-
+  
 ### Einführung
-
+  
 - Wenn `X` die Daten in mehr als 2 Gruppen (A, B) teilt, sind einfache Differenzen (`diffprop(); diffmean()`) nicht mehr einfach möglich. Die Teststatistiken müssen entsprechend angepasst werden:
-  - $\chi^2$ für kategoriale `Y`.
-  - $F$ für numerische `Y`.
+- $\chi^2$ für kategoriale `Y`.
+- $F$ für numerische `Y`.
 - Die Nullhypothese lautet: Alle Anteile (kategorial) bzw. Mittelwerte (numerisch) in der Population sind gleich.
 - Die Alternativhypothese lautet: Mindestens ein Anteil bzw. Mittelwert in der Population unterscheidet sich^[Nicht: ~~alle sind ungleich~~].
 
 
-Beispielfragestellungen:
-
+Beispielfragestellungen (als $H_0$ formuliert):
+  
 - Ist der Anteil der Raucher\*innen je Wochentag gleich?
 - Ist der Mittelwert des Trinkgeldes je Wochentag gleich?
 
-
 ### Die Tage richtig sortieren
-
+  
 Leider ist die lexikographische Ordnung nicht die für uns logische Ordnung.
 
 ```{r}
-levels(tips$day)
+as.factor(tips$day) %>% levels()
 ```
 
 Mit dem folgendem Befehl ändern wir die Reihenfolge:
-
+  
 ```{r}
 tips <- tips %>%
   mutate(day = factor(tips$day, c("Thur", "Fri", "Sat", "Sun")))
 ```
 
 Nun ist alles so, wie wir uns das denken:
-
+  
 ```{r}
 levels(tips$day)
 ```
 
-
 ### Anteil der Raucher\*innen je Wochentag
 
 Unterscheidet sich die Raucherquote je nach Wochentag? Anders gefragt: Gibt es einen Zusammenhang der Merkmale *smoker* und *day*?
-
+  
 ```{r}
 tally(smoker ~ day, format = "proportion", data = tips)
 ```
 
 
 Anteil insgesamt, d.h. unabhängig vom Wochentag:
-
+  
 ```{r}
 tally(smoker ~ 1, format = "proportion", data = tips)
 ```
@@ -910,7 +1173,7 @@ tally(smoker ~ 1, format = "proportion", data = tips)
 - Der $\chi^2$-Unahängigkeitstest testet u. a. den Zusammenhang zweier kategorialer (nominaler) Variablen.^[Es gibt weitere Varianten des $\chi^2$-Tests.]
 
 - Dabei werden die **beobachteten** Häufigkeiten $O$ (*observed*) der Merkmalsausprägungskombinationen mit den **unter Unabhängigkeit erwarteten** Werten $E$ (*expected*) verglichen: $$\chi^2=\sum_i^{\text{Zeilen}}\sum_j^{\text{Spalten}} \frac{(O_{ij}-E_{ij})^2}{E_{ij}}$$
-
+  
 - [Nullhypothese:]{.cemph}  Die beiden nominalen Variablen sind unabhängig voneinander, d.h., die Verteilung der einen Variable hängt nicht vom Wert der anderen Variable ab. Große Werte von $\chi^2$ sind unter $H_0$ unwahrscheinlich.^[Song [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser &copy; Chi-Square For Us](https://www.causeweb.org/cause/resources/fun/songs/chi-square-us)]
 
 
@@ -919,7 +1182,7 @@ tally(smoker ~ 1, format = "proportion", data = tips)
 Eine Forscherin stellt innerhalb einer Untersuchung eine Abweichung zwischen beobachtet $O$ und erwartet $E$ von $42$ fest.
 
 Welche Aussage stimmt?
-
+  
 A.  Die Abweichung ist groß.
 B.  Die Abweichung ist klein.
 C.  Weiß nicht.
@@ -927,11 +1190,11 @@ C.  Weiß nicht.
 ::: {.notes}
 Eine Abweichung von $E-O=42$ kann groß oder klein sein, je nachdem wie viel man erwartet: Eine Abweichung von $42$ ist bei einer unter Unabhängigkeit erwarteten Häufigkeit von $50$ viel, bei $5.000.000$ wenig. Daher wird in der Teststatistik durch $E$ relativiert, also ***C***. Mit Hilfe einer $\chi^2$-Verteilung oder Permutationsmethoden kann dann für alle Zellen zusammen entschieden werden, wie wahrscheinlich eine solche Abweichung unter $H_0$ ist.
 :::
-
-
+  
+  
 ### Chi-Quadrat-Test
-
-::: {.scriptsize}
+  
+::: {.footnotesize}
 
 ```{r}
 xchisq.test(smoker ~ day, data = tips)
@@ -941,9 +1204,9 @@ xchisq.test(smoker ~ day, data = tips)
 
 
 ### Übung `r nextExercise()`: Testergebnis: Testentscheidung {.exercise type=yesno answer=no}
-
+  
 Bestätigen die Daten die Nullhypothese?
-
+  
 - Ja.
 - Nein.
 
@@ -952,10 +1215,10 @@ Bestätigen die Daten die Nullhypothese?
 
 Hier ist der p-Wert mit `p-value = 1.057e-05` $=1.057\cdot 10^{-05}$ sehr klein. Ein Wert der Teststatistik wie der der Stichprobe, `X-squared = 25.787`, ist unter der Nullhypothese der Unabhängigkeit in der Population also unwahrscheinlich.
 :::
-
-
+  
+  
 ### Zusammenhang Trinkgeld und Wochentag
-
+  
 Analyse des Trinkgeldes je Wochentag:^[Video: [https://www.causeweb.org](https://www.causeweb.org): [Crawford S &copy; Use ANOVA](https://www.causeweb.org/cause/resources/library/r2222/)] 
 
 
@@ -975,8 +1238,8 @@ gf_violin(tip ~ day, draw_quantiles=c(0.25,0.5,0.75), data = tips) %>%
 - [Nullhypothese:]{.cemph} Lagemaß $\mu_i$ für alle Gruppen gleich.
 
 - Die **Gesamtstreuung** ($SST$) wird zerlegt in die **Streuung zwischen den Stichproben**/Gruppen ($SSG$) und die **Streuung innerhalb der Stichproben**/Gruppen ($SSE$): 
-$$\underbrace{\sum_{i=i}^n(x_i-\bar{x})^2}_{SST}=\underbrace{\sum_{j=1}^K n_j(\bar{x}_j-\bar{x})^2}_{SSG}+\underbrace{\sum_{j=1}^K \sum_{i=1}^{n_j}(x_{i,j}-\bar{x}_j)^2}_{SSE}$$
-
+  $$\underbrace{\sum_{i=i}^n(x_i-\bar{x})^2}_{SST}=\underbrace{\sum_{j=1}^K n_j(\bar{x}_j-\bar{x})^2}_{SSG}+\underbrace{\sum_{j=1}^K \sum_{i=1}^{n_j}(x_{i,j}-\bar{x}_j)^2}_{SSE}$$
+  
 - Ist das Verhältnis der Streuung zwischen den Gruppen im Verhältnis zur Streuung innerhalb der Gruppen groß (Teststatistik $F=\frac{MSG}{MSE}$)^[Dabei ist $MSG = SSG/(K-1)$ und $MSE=SSE/(n-K)$. ], so ist dies unter der Nullhypothese unwahrscheinlich.
 
 
@@ -986,7 +1249,7 @@ $$\underbrace{\sum_{i=i}^n(x_i-\bar{x})^2}_{SST}=\underbrace{\sum_{j=1}^K n_j(\b
 # Speichere Ergebnis der Varianzanalyse aov() in "ergaov"
 ergaov <- aov(tip ~ # Abhängige Variable
                 day, # Unabhängige Variable
-              data = tips) # Datensatz
+              data = tips) # Datentabelle
 
 # Zeige Zusammenfassung von "ergaov"
 summary(ergaov)
@@ -996,7 +1259,7 @@ summary(ergaov)
 ### Übung  `r nextExercise()`: Testentscheidung: ANOVA {.exercise type=A-B-C answer=B}
 
 Sind Werte wie die beobachteten Unterschiede der Mittelwerte unter $H_0: \mu_{\text{Thu}}=\mu_{\text{Fri}}=\mu_{\text{Sat}}=\mu_{\text{Sun}}$ (sehr) unwahrscheinlich?
-
+  
 ```{r}
 mean(tip ~ day, data=tips)
 ```
@@ -1008,79 +1271,167 @@ C.  Weiß nicht.
 ::: {.notes}
 ***B***: Der p-Wert (`Pr(>F)`) liegt bei $`r round(summary(ergaov)[[1]]$'Pr(>F)'[1], 3)`>0.05$, also kann $H_0$ z.B. zum üblichen Signifikanzniveau von $\alpha=0.05$ nicht verworfen werden.
 :::
-
-
+  
+  
 ### Multiples Testen
-
+  
 - Wenn man statt einer ANOVA alle $\binom 42=\frac{4\cdot (4-1)}{2}=6$ Kombinationen (d. h. Donnerstag und Freitag, Donnerstag und Samstag usw.) ausprobiert hätte, hätte sich der $\alpha$-Fehler kumuliert^[Hier: $\alpha=0.05$]:
-$$P(\text{Fehler 1. Art})=1-(1-0.05)^6= 0.265$$
-Das globale Signifikanzniveau $\alpha=0.05$ wäre nicht eingehalten!^[Adjustierung z. B. über Funktion `p.adjust()`.]
+  $$P(\text{Fehler 1. Art})=1-(1-0.05)^6= 0.265$$
+  Das globale Signifikanzniveau $\alpha=0.05$ wäre nicht eingehalten!^[Adjustierung z. B. über Funktion `p.adjust()`.]
 
 - **p-Hacking**: Wenn viele Hypothesen getestet werden, werden auch zufällig welche *signifikant* sein.
 
 - Falls die Nullhypothese verworfen wird, kann man mit *Post-Hoc-Tests* berechnet werden, zwischen welchen einzelnen Gruppen der Unterschied liegt.
 
 
+### ANOVA (F-Test) in der Regression
+
+In der Modellzusammenfassung werden die Ergebnisse einer ANOVA gezeigt:
+  
+::: {.small}
+
+```{r echo = TRUE, eval = FALSE}
+summary(erglm3)
+```
+
+```{r eval = TRUE, echo = FALSE}
+cat("...")
+getSumLines(erglm3, "Residual ", "F-statistic")
+```
+
+:::
+  
+Die Zeile `F-statistic: ...` zeigt die Ergebnisse einer ANOVA mit der $H_0:\beta_1=\beta_2=\ldots=0$. `p-value` ist der dazugehörige p-Wert.
+
+### Cartoon: Statistik
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_09-2018.jpg", "cartoon0918.jpg", pathToImages)
+```
+"Am Anfang ein bisschen schwer zu verdauen, aber sehr nahrhaft und voll mit Vitaminen $\alpha, \hat{\pi}, \bar{x}$ und besonders $\mu$ und $\sigma$."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/september/2018/results) &copy; J.B. Landers, Bildunterschrift G. Baugher]
+
+
+
 ## Zusammenfassung
 
+### Überblick zu den Simulationstechniken {include-only=MasterNeu}
 
-### Wiederholung: Monte Carlo in R
+- **Einfache Simulation** zur Überprüfung eines Anteils.
+- [Beispiel:]{.cemph} Wie hoch ist der Anteil der Flieger aus dickem Papiers (in der Population)?
+  - [Vorgehen:]{.cemph} Simuliere wiederholt Münzwurf ($H_0$) und schaue, wie wahrscheinlich der beobachtete Anteil an dickem Papier ist.
+- [In R:]{.cemph} `do(oft) * rflip(n = ..., prob = ...)`
+
+- **Permutationstest** zur Überprüfung eines Unterschieds zweier Verteilungen.
+- [Beispiel:]{.cemph} Unterscheidet sich der Mittelwert der Flugzeit (in der Population) zwischen Fliegern aus dünnem und dickem Papier?
+  - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Zuordnung und schaue, wie wahrscheinlich die beobachtete Differenz der Mittelwerte ist.
+- [In R:]{.cemph} `do(oft) * statistik(y ~ shuffle(x), data = Daten)`
+
+- **Bootstrap** zur Berechnung eines Konfidenzintervalls des Mittelwertes.
+- [Beispiel:]{.cemph} Was sind plausible Mittelwerte der Flugzeit beim Re-Sampling?
+  - [Vorgehen:]{.cemph} Simuliere wiederholt zufällige Stichprobe durch Ziehen mit Zurücklegen und berechne jeweils den Mittelwert.
+- [In R:]{.cemph} `do(oft) * statistik(y ~ x, data = resample(Daten))`
+
+
+### Monte Carlo in R {exclude=MasterNeu}
 
 - **Permutationstest**, hier: simuliere zufällige Zuordnung^[D. h. ohne Zurücklegen]. Simuliere Verteilung einer Statistik unter der Annahme, dass kein Unterschied vorliegt (Modell $H_0$), u. a. zur Bestimmung von p-Werten.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, include = FALSE}
 do(oft) * statistik(y ~ shuffle(x), data = Daten)
 ```
 
 - **Bootstrap**, hier: simuliere zufälliges Ziehen einer Stichprobe^[D. h. mit Zurücklegen]. Schätze Verteilung einer Statistik der Stichprobe, u. a. zur Bestimmung von Konfidenzintervallen oder Standardfehlern.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, include = FALSE}
 do(oft) * statistik(y ~ x, data = resample(Daten))
 ```
 
+### Übersicht Teststatistiken (Auswahl)
 
-### Wiederholung: Übersicht Teststatistiken (Auswahl)
++---------------------+---------------------+----------------------------------------------+
+| **Y**               | **X**               | **Teststatistik**                            |
++=====================+=====================+==============================================+
+| kategorial - binär  |                     | Anteil $p$                                   |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          |                     | Verhältnisvergleich                          |
+|                     |                     |*beobachtet* und *erwartet*: $\chi^2$         |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           |                     | Mittelwert $\bar{x}$                         |
++---------------------+---------------------+----------------------------------------------+
+| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$                  |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | kategorial - binär  | Differenz Mittelwerte                        | 
+|                     |                     |                 $\bar{x}_B-\bar{x}_A$        |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          | kategorial          | Verhältnisvergleich                          |
+|                     |                     | *beobachtet* und *erwartet*: $\chi^2$        |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen*        |
+|                     |                     |          und *innerhalb Gruppen*: $F$        |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | numerisch           | Korrelationskoefizient $r$ oder              |
+|                     |                     | Steigung $\hat{\beta}$ -- lineare Regression |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          | numerisch           | Steigung $\hat{\beta}$ -- logistische        |
+|                     |                     |         oder multinomiale Regression         |
++---------------------+---------------------+----------------------------------------------+
 
-+---------------------+---------------------+-------------------------------------+
-| **Y**               | **X**               | **Teststatistik**                   |
-+=====================+=====================+=====================================+
-| kategorial - binär  |                     | Anteil $p$                          | 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          |                     | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$ | 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           |                     | Mittelwert $\bar{x}$                |
-+---------------------+---------------------+-------------------------------------+
-| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$         | 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | kategorial - binär  | Differenz Mittelwerte $\bar{x}_B-\bar{x}_A$| 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          | kategorial          | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$| 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen* und *innerhalb Gruppen*: $F$| 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | numerisch           | Korrelationskoefizient $r$ oder Steigung $\hat{\beta}$ -- lineare Regression | 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          | numerisch           | Steigung $\hat{\beta}$ -- logistische oder multinomiale Regression | 
-+---------------------+---------------------+-------------------------------------+
-
-
-### Alternativen zur simulationsbasierten Inferenz: kategorial
-
-- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils der `binom.test()` bzw. `prop.test()`, die auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen aufbaut.
+### Alternativen zur simulationsbasierten Inferenz: kategorial {exclude=MasterNeu}
   
+- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils der `binom.test()` bzw. `prop.test()`, die auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen aufbaut.
+
 - Der $\chi^2$-Test (`xchisq.test()`) testet u. a. den Zusammenhang zweier nominaler Variablen auch mit mehr als jeweils zwei Ausprägungen; er basiert auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen. Darüberhinaus gibt es als nicht-parametrische Alternative den Fisher-Test (`fisher.test()`).
 
 
-### Alternativen zur simulationsbasierten Inferenz: numerisch
+### Alternativen zur simulationsbasierten Inferenz: numerisch {exclude=MasterNeu}
 
-- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils der `t.test()`, der auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen aufbaut. 
-  
+- Eine Alternative zu den Methoden der simulationsbasierten Inferenz dieses Kapitels ist jeweils der `t.test()`, der auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen aufbaut.
+
 - Die Varianzanalyse `aov()` testet den Unterschied von zwei oder mehr Gruppen hinsichtlich eines Mittelwertes; sie basiert auf theoretischen bzw. asymptotisch approximativen Verteilungsannahmen.
 
-- Überprüfung der Annahmen z. B. über Shapiro-Wilk-Test (Normalverteilung, `shapiro.test()`) und Bartlett’s Test (gleiche Varianzen, `bartlett.test()`). 
+- Überprüfung der Annahmen z. B. über Shapiro-Wilk-Test (Normalverteilung, `shapiro.test()`) und Bartlett’s Test (gleiche Varianzen, `bartlett.test()`).
 
-- Darüberhinaus gibt es weitere nicht-parametrische Testverfahren: Wilcoxon-Test (`wilcox.test()`) bzw. Kruskal-Wallis-Test (`kruskal.test()`). 
+- Darüberhinaus gibt es weitere nicht-parametrische Testverfahren: Wilcoxon-Test (`wilcox.test()`) bzw. Kruskal-Wallis-Test (`kruskal.test()`).
 
+
+### Übersicht Inferenzverfahren R mosaic (Auswahl) {include-only=MasterNeu}
+
+::: {.scriptsize}
+
++---------------------+---------------------+--------------------------+--------------------------+
+| **Y**               | **X**               | **Simulationsbasiert**   | **Parametrisch**         |
++=====================+=====================+==========================+==========================+
+| kategorial - binär  |                     | `prop()`                 | `binom.test()`           |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial          |                     | `xchisq.test()`          | `xchisq.test()`          |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           |                     | `mean()`                 | `t.test()`               |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial - binär  | kategorial - binär  | `diffprop()`             | `prop.test()`            |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | kategorial - binär  | `diffmean()`             | `t.test()`               |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial          | kategorial          | `xchisq.test()`          | `xchisq.test()`          |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | kategorial          | `aov()`                  | `aov()`                  |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | numerisch           | `cor()`, `lm()`          | `cor.test()`, `lm()`     |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial  - binär | numerisch           | `glm(family = binomial)` | `glm(family = binomial)` |
++---------------------+---------------------+--------------------------+--------------------------+
+
+- [Permutationstest:]{.cemph} `do(oft) * statistik(y ~ shuffle(x), data = Daten)`: Kritische Werte, p-Werte.
+- [Bootstrap:]{.cemph} `do(oft) * statistik(y ~ x, data = resample(Daten))`: Konfidenzintervall, Standardfehler.
+
+- [Parametrisch]{.cemph} bedeutet, es werden theoretische bzw. asymptotisch approximative Verteilungannahmen voraussgesetzt, Überprüfung bei numerischen Daten z.B. mit Shapiro-Wilk-Test (Normalverteilung,
+                                                                                                                                                                                           `shapiro.test()`) und Bartlett’s Test (gleiche Varianzen, `bartlett.test()`).
+- Nicht-parametrische Alternativen sind: für $\chi^2$-Test Fisher-Test (`fisher.test()`), für t-Test Wilcoxon-Test
+(`wilcox.test()`) und für ANOVA Kruskal-Wallis-Test (`kruskal.test()`).
+
+:::
+  
+  <!--- bug ??? -->
 
 ```{r finish-Inferenz-Beispiele, include=FALSE}
 rm(pathToImages)

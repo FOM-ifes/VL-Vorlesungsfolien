@@ -2,7 +2,7 @@
 title: "Quantitative Methoden und Evaluationsforschung"
 tag:
     - bachelor
-    - sesmill
+    # - sesmill
     - shiny
 ---
 
@@ -24,17 +24,27 @@ initPrelude(
 # 'eval=FALSE' einstellen!
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- TRUE
-
 if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-createPrivateYaml("Dozent*in", "SoSe 2020", "Studienort")
+assign("abschluss", TRUE, envir = .GlobalEnv)
 
-UseCache <<- FALSE
+my.options$set(
+  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = TRUE,   # Zeige Vorlesungstermine -> In der Datei QMEval-default.Rmd anpassen
+  showuseR = TRUE,             # Folien mit useR-Umfragen anzeigen oder ausschließen
+  Corona = FALSE
+)
+
+assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default", envir = .GlobalEnv)
+
+
+# Standardeinstellung ("Dozent", "Semester", "FOM Standort")
+# muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
+createPrivateYaml("FOM-Dozent*in", "SoSe 2023", "FOM")
+
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
 makeSkriptOfType("DozentenSkript") 
 ```
@@ -47,59 +57,37 @@ theme_set(
   theme.fom  
 )
 ```
-```{r setup_data, include=FALSE}
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
-# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
-
-# ---------------------------------------------------------------------------
+```{r setUpChildren, eval=TRUE, include=FALSE}
+ChildList <- c(
+    {if_else(my.options$get("Corona"),
+             'QMEval-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+             'QMEval-Organisatorisches.Rmd')},
+    {if_else(my.options$get("privateVorstellung"),
+             'private-Vorstellung.Rmd', NULL)},
+    'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd', 
+    'Fragebogen.Rmd',
+    'Einfuehrung-R.Rmd',
+    'EDA.Rmd',
+    #'Normalverteilung.Rmd',
+    'Regression_qmeval.Rmd',
+    #'Inferenz.Rmd',
+    #'Inferenz-Beispiele.Rmd',  # -> Anhang!
+    'Evaluation.Rmd',
+    #'Datenhandling.Rmd',  # -> Anhang!
+    'Abschluss.Rmd'
+)
+if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
+  ChildList <- c(
+    "Grundlagen-Wissenschaft", 
+    "Abschluss"
+  )
+}
+IncludeChildList <- file.path('Inhalte', na.omit(ChildList))
 ```
 
-```{r child = './Inhalte/QMEval-Organisatorisches.Rmd'}
-```
-
-```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
-```
-
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'}
-```
-
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd'}
-```
-
-```{r child = './Inhalte/Fragebogen.Rmd'}
-```
-
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-R.Rmd'}
-```
-
-```{r child = './Inhalte/EDA.Rmd'}
-```
-
-```{r child = './Inhalte/Normalverteilung.Rmd'}
-```
-
-```{r child = './Inhalte/Regression.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz-Beispiele.Rmd'}
-```
-
-```{r child = './Inhalte/Evaluation.Rmd'}
-```
-
-```{r child = './Inhalte/Datenhandling.Rmd', eval=FALSE}
-```
-
-```{r child = './Inhalte/Abschluss.Rmd'}
+```{r child = IncludeChildList}
 ```
 
 ```{r finalize, include=FALSE}

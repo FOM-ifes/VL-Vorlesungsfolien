@@ -2,7 +2,6 @@
 title: "Wissenschaftliche Methoden -- Quantitative Datenanalyse"
 tag:
     - bachelor
-    - sesmill
     - shiny
     - wmqd
 ---
@@ -27,17 +26,27 @@ if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- FALSE
-UseCache <<- TRUE  # Achtung: Immer mal wieder Cache löschen/auf FALSE setzen
+assign("abschluss", FALSE, envir = .GlobalEnv)
+# assign("WDH", "Wiederholung: ", envir = .GlobalEnv)
 
-Vorlesungstermine <<- ""
+my.options$set(
+  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
+  showuseR = TRUE,             # Folien mit useR-Umfragen anzeigen oder ausschließen
+  Corona = FALSE
+)
 
-createPrivateYaml("FOM", "WiSe 2020", "")
+assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default", envir = .GlobalEnv)
+
+# Standardeinstellung ("Dozent", "Semester", "FOM Standort")
+# muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
+createPrivateYaml("Dozent*in", "SoSe 2023", "FOM") 
 
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
-makeSkriptOfType("LösungsSkript")
+makeSkriptOfType("DozentenSkript")
+#makeSkriptOfType("StudierendenSkript")
+#makeSkriptOfType("LösungsSkript")
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
 library(ggplot2)
@@ -52,78 +61,53 @@ theme_set(
 )
 ```
 ```{r setUpChildren, eval=TRUE, include=FALSE}
-childrenToInclude <- c(
-    "WMQD-Organisatorisches", "Grundlagen-Wissenschaft", "Grundlagen-QuantDat", "Einfuehrung-R",
-    "EDA", "Normalverteilung", "Regression", "Inferenz", "Kausalanalyse", "Inferenz-Beispiele", "Abschluss"
+ChildList <- c(
+    {if_else(my.options$get("Corona"),
+             'WMQD-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+             'WMQD-Organisatorisches.Rmd')},
+    {if_else(my.options$get("privateVorstellung"),
+             'private/private-Vorstellung.Rmd', 
+             'KeinInhalt.Rmd')},
+    'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd',
+    'Einfuehrung-R.Rmd',
+    'EDA.Rmd',
+    'Normalverteilung.Rmd',
+    'Regression.Rmd',
+    'Inferenz.Rmd',
+    #'Inferenz-Beispiele.Rmd', # -> Anhang!
+    # 'Datenhandling.Rmd',     # -> Anhang!
+    'Abschluss.Rmd'
 )
-
-## Test! (TRUE oder FALSE ändern!)
-if (FALSE) {
-  childrenToInclude <- c(
-    "Datenhandling"
+if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
+  ChildList <- c(
+#    'Organisatorisches/Hinweise.Rmd' 
+#    'Grundlagen-Wissenschaft.Rmd' 
+    'Grundlagen-QuantDat.Rmd' 
+#    'Einfuehrung-R.Rmd'
+#    'EDA.Rmd'
+#    'Normalverteilung.Rmd'
+#    'Regression.Rmd'
+#    'Inferenz.Rmd'
+#    'Kausalanalyse.Rmd'
+#    'Inferenz-Beispiele.Rmd' # -> Anhang!
+    # 'Datenhandling.Rmd',    # -> Anhang!
+#    'Abschluss.Rmd'
   )
-  privateVorstellung <<- FALSE
-  }
-##
-
-includeChild <- function(name, children=childrenToInclude, all=FALSE) {
-    all | ifelse(name %in% children, TRUE, FALSE)
 }
+IncludeChildList <- file.path('Inhalte', na.omit(ChildList))
 ```
-
 ```{r setup_data, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
 # Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
-
 # ---------------------------------------------------------------------------
-
-child=DEPRECATED <<-FALSE
-
 ```
 
-```{r child = './Inhalte/WMQD-Organisatorisches.Rmd', eval=includeChild("WMQD-Organisatorisches")}
-```
-
-```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
-```
-
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd', eval=includeChild("Hinweise")}
-```
-
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd', eval=includeChild("Grundlagen-Wissenschaft")}
-```
-
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd', eval=includeChild("Grundlagen-QuantDat")}
-```
-
-```{r child = './Inhalte/Einfuehrung-R.Rmd', eval=includeChild("Einfuehrung-R")}
-```
-
-```{r child = './Inhalte/EDA.Rmd', eval=includeChild("EDA")}
-```
-
-```{r child = './Inhalte/Normalverteilung.Rmd', eval=includeChild("Normalverteilung")}
-```
-
-```{r child = './Inhalte/Regression.Rmd', eval=includeChild("Regression")}
-```
-
-```{r child = './Inhalte/Inferenz.Rmd', eval=includeChild("Inferenz")}
-```
-
-```{r child = './Inhalte/Kausalanalyse.Rmd', eval=includeChild("Kausalanalyse")}
-```
-
-```{r child = './Inhalte/Inferenz-Beispiele.Rmd', eval=includeChild("Inferenz-Beispiele")}
-```
-
-```{r child = './Inhalte/Datenhandling.Rmd', eval=FALSE}
-```
-
-```{r child = './Inhalte/Abschluss.Rmd', eval=includeChild("Abschluss")}
+```{r child = IncludeChildList}
 ```
 
 ```{r finalize, include=FALSE}

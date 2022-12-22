@@ -5,7 +5,7 @@ RmdTimetable <- FALSE
 if (existsRmdTimetable(Vorlesungstermine)) {
     rmd <- filenameRmdTimetable(Vorlesungstermine)
     chunks <- paste0("```{r child = '", rmd, "'}\n```\n")
-    cat(chunks, sep = '\n', file="temp.Rmd")
+    cat(chunks, sep = '\n', file = "temp.Rmd")
     RmdTimetable <- TRUE
 }
 ```

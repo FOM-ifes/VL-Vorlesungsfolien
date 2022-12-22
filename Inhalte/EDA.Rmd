@@ -20,13 +20,22 @@ library(latex2exp)
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 ```
 
+# Explorative Datenanalyse 
 
-# Explorative Datenanalyse
+### Lernziele {exclude=NOlernziele, include-only=MasterNeu}
+
+Die Studierenden ...
+
+- können Gründe für den Einsatz von R nennen.
+- können die Unterschiede zwischen R, RStudio und mosaic erläutern.
+- können R in Grundzügen anwenden (wie Datensätze laden und einfache Befehle eingeben).
+- können den Aufbau des CSV-Formats erklären und CSV-Daten in RStudio importieren.
+- kennen zentrale Statistiken und Visualisierungen für nominal skalierte Variablen und können diese anwenden.
+- kennen zentrale Statistiken und Visualisierungen für numerisch skalierte Variablen und können diese anwenden.
+- kennen zentrale Statistiken und Visualisierungen zum Zusammenhang zweier metrischer Variablen und können diese anwenden.
 
 
-
-### Lernziele {exclude-only=NOlernziele}
-
+### Lernziele {exclude=NOlernziele,MasterNeu}
 
 Die Studierenden ...
 
@@ -36,7 +45,173 @@ Die Studierenden ...
 - kennen zentrale Statistiken und Visualisierungen zum Zusammenhang zweier metrischer Variablen und können diese anwenden.
 
 
+## Einführung in R {include-only=MasterNeu}
 
+
+### Cartoon: Computereinsatz in der Statistik {include-only=MasterNeu}
+
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+# Lizenzworkaround: 
+extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
+```
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+
+
+### Warum R? {include-only=MasterNeu}
+
+> [...] she was also following a wider trend: for many academics [...] R is the data-analysis tool of choice.^[Tippmann, S.. Programming tools (2015): Adventures with R. A guide to the popular, free statistics and visualization software that gives scientists control of their own data analysis. Nature, 517, S. 109--110. [https://doi.org/10.1038%2F517109a](https://doi.org/10.1038%2F517109a)]
+
+Verbreitung z.B.: [http://r4stats.com/articles/popularity/](http://r4stats.com/articles/popularity/)
+
+**R ist eine weit verbreitete Eintrittskarte in das globale Datenzeitalter!**
+
+
+### Vorteile R {include-only=MasterNeu}
+
+- Methoden- und Anwendungsvielfalt (Finance, Marketing, HR, Psychologie, ...)^[Siehe z.B. [https://cran.r-project.org/web/views/](https://cran.r-project.org/web/views/)]
+
+- Neue Methoden der Datenanalyse werden häufig in R entwickelt (auch Big Data, KI,  etc. ).
+
+- frei und offen; kostenlos
+
+- Schnittstellen zu sehr vielen Datenquellen/ -banken (auch SocialMedia etc.)
+
+- Erweiterungen u.a. für Microsoft, Oracle, SAP-Produkte, aber auch SPSS, SAS
+
+- unzählige Nutzer*innen weltweit in Unternehmen und Wissenschaft
+
+- Möglichkeiten für Reporting, Apps, etc.
+
+- numerische Stabilität/ Genauigkeit
+
+- große Entwickler*innen-Gemeinde mit langer Geschichte (seit 1993); R Konsortium, u.a. IBM, Microsoft, TIPCO, Google, ...
+
+
+### Übung `r nextExercise()`: R in der Wissenschaft {.exercise type=A-B answer=B include-only=MasterNeu}
+
+Welchen Vorteil hat R in Bezug auf die Gütekriterien für Forschung?
+
+A.  kostenlos
+B.  offen
+
+::: {.notes}
+Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offenheit ermöglicht, also ***B***.
+:::
+
+
+
+
+### Statistik, R, Rstudio und mosaic {include-only=MasterNeu}
+
+- *Statistik*  ist das *Auto*, mit dem der Weg von der Forschungsfrage zur vorläufigen Antwort bestritten werden kann.
+
+- *R* ist ein *Motor*, der das Auto antreiben kann.
+
+- *RStudio Desktop* ist das Cockpit, mit dem der Motor gesteuert werden kann.
+
+- *mosaic* ist eine *Zusatzausstattung*, um die Motorsteuerung zu vereinfachen.
+
+
+### R und Co. {include-only=MasterNeu}
+
+- **R** [https://www.r-project.org/](https://www.r-project.org/): ist das Basisprogramm
+
+- **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z.B. Dokumentenerstellung etc.
+
+Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+
+Alternative zur Installation von R: Clouddienst [https://rstudio.cloud/](https://rstudio.cloud/)
+
+
+### Installation Zusatzpakete {include-only=MasterNeu}
+
+- **mosaic** [https://cran.r-project.org/web/packages/mosaic/](https://cran.r-project.org/web/packages/mosaic/): ist ein Zusatzpaket, welches u.a. eine vereinheitlichte R Syntax bietet
+
+
+**Installation:**
+
+Pakete werden **einmalig** über `install.packages()` **installiert**, im Falle von mosaic: 
+```{r, eval=FALSE}
+install.packages("mosaic")
+```
+
+Bei **jeder** neuen Sitzung müssen sie erneut geladen werden.^[[https://twitter.com/visnut/status/1248087845589274624](https://twitter.com/visnut/status/1248087845589274624)]
+
+
+<!-- ```{r echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE, fig.cap="Quelle: Dianne Cook - https://twitter.com/visnut/status/1248087845589274624"} -->
+<!-- knitr::include_graphics("images/Einfuehrung/install-use-R-packages.jpg", error=FALSE) -->
+<!-- ``` -->
+
+### Vorteile Code {include-only=MasterNeu} 
+
+- Dokumentation des Vorgehens
+- (Einfache) Nachvollziehbarkeit, Wiederholung
+- Möglichkeit zur Automatisierung und Übertragung
+- "Direkte" Kommunikation mit dem Programm/ Computer
+- Speziell R: unzählige Literatur und Hilfe/ Tutorials im Internet
+
+
+### Code: mosaic {include-only=MasterNeu}
+
+```{r, eval = FALSE}
+analysiere( y  # ggfs. abhängige Variable
+            ~  x # unabhängige Variable(n)
+            | z, # ggfs. bedingende (gruppierende) Variable(n)
+            Optionen, # ggfs. weitere Optionen
+            data = meine_daten ) # Datentabelle 
+```
+
+`analysiere()`: Was soll R tun?^[Befehlsübersicht [hier](https://www.fom.de/fileadmin/fom/forschung/ifes/Cheatsheet-DA-R.pdf); Tilde `~` unter macOS: `alt+n`, vertikaler Strich `|`: `alt+7`]
+
+
+
+Zentrale Fragen:
+
+1. Was soll der Computer für mich tun?
+2. Was muss der Computer dafür wissen?
+
+
+### Kochen mit RStudio^[Idee und in Anlehnung an [Jessica Ward.](https://twitter.com/RLadiesNCL/status/1138812826917724160)] {include-only=MasterNeu}
+```{r echo=FALSE, out.width = "100%", fig.align="center", cache=FALSE}
+knitr::include_graphics("images/Einfuehrung/Kochen_mit_RStudio.png", error=FALSE)
+```
+
+
+### `mosaic` nutzen {include-only=MasterNeu}
+
+Paket `mosaic` in jeder Sitzung laden:
+
+```{r, message=TRUE}
+library(mosaic)
+```
+
+<!-- **************************************************** -->
+<!-- TODO: Gelegentlich überprüfen und ggf. aktualisieren -->
+<!-- **************************************************** -->
+
+Die dabei angezeigten folgenden Meldungen^[`mosaic` Version 1.8] sind nur Hinweise, [keine]{.cemph} Fehler:
+
+
+:::{.tiny}
+
+```
+The 'mosaic' package masks several functions from core packages in order to add 
+additional features.  The original behavior of these functions should not be affected by this.
+
+Attache Paket: ‘mosaic’
+
+The following objects are masked from ‘package:dplyr’:
+
+[...]
+
+
+The following objects are masked from ‘package:base’:
+
+    max, mean, min, prod, range, sample, sum
+
+```
+
+:::
 
 
 ### Sebastians Kaffeemühle {include-only=sesmill}
@@ -53,7 +228,7 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 
 ## Daten einlesen
 
-### Trinkgeld-Datensatz
+### Trinkgeld-Datentabelle
 
 Einlesen der *Tipping*^[Bryant, P. G. and Smith, M (1995) Practical Data Analysis: Case Studies in Business Statistics. Homewood, IL: Richard D. Irwin Publishing] -Daten:^[Falls Sie aktuell noch kein lauffähiges R haben: [https://fomshinyapps.shinyapps.io/micRo-tips/](https://fomshinyapps.shinyapps.io/micRo-tips/)]
 ```{r, message = FALSE, eval = FALSE}
@@ -99,7 +274,7 @@ Siehe z.B. `?read.table` oder die Pakete
 [readxl](http://readxl.tidyverse.org).
 
 
-### Variablen Trinkgeld-Datensatz
+### Variablen Trinkgeld-Datentabelle {exclude=MasterNeu}
 
 Ein Kellner sammelte über mehrere Monate Daten über sein Trinkgeld:
 
@@ -112,7 +287,7 @@ Ein Kellner sammelte über mehrere Monate Daten über sein Trinkgeld:
 - `size`: Anzahl Personen am Tisch
 
 
-`str()` gibt Informationen zur Struktur des Datensatzes:
+`str()` gibt Informationen zur Struktur der Datentabelle:
 
 ```{r str-tips, eval=FALSE}
 str(tips)
@@ -125,7 +300,40 @@ str(tips)
 :::
 
 
-### mosaic
+### Variablen Trinkgeld-Datentabelle {include-only=MasterNeu}
+
+Ein Kellner sammelte über mehrere Monate Daten über sein Trinkgeld:
+
+- `total_bill`: Rechnungshöhe in Dollar
+- `tip`: Trinkgeld in Dollar
+- `sex`: Geschlecht des Rechnungszahlenden
+- `smoker`: Gab es Raucher\*innen am Tisch?
+- `day`: Wochentag 
+- `time`: Tageszeit/ Mahlzeit
+- `size`: Anzahl Personen am Tisch
+
+
+### Variablentypen in R {include-only=MasterNeu}
+
+`str()` gibt Informationen zur Struktur der Datentabelle:
+
+```{r str2-tips, eval=FALSE}
+str(tips)
+```
+::: {.scriptsize}
+
+```{r str2-tips, echo=FALSE}
+```
+:::
+
+Eine Datentabelle (`data.frame`) kann aus mehreren Variablen (Spalten) mit gleicher Anzahl Beobachtungen (Zeilen) bestehen. Für Variablen gibt es verschiedene Typen, u.a.:
+
+- Zeichenketten (`character`) und Faktoren (`factor`)^[Faktoren sind Zeichenketten, die eine definierte Menge an Werten (Ausprägungen, `levels`) annehmen können.].
+- Gleitkommazahlen (`numeric` bzw. `double`) und ganze Zahlen (`integer`).
+
+<!-- -->
+
+### mosaic {exclude=MasterNeu}
 
 ```{r mosaic, message=FALSE}
 # Ggfs. einmalig vorab installieren
@@ -137,8 +345,9 @@ library(mosaic)
 
 ```
 
+<!-- -->
 
-### Übung `r nextExercise()`: Aufbau Datensatz {.exercise type=A-B-C-D-E answer=C}
+### Übung `r nextExercise()`: Aufbau Datentabelle {.exercise type=A-B-C-D-E answer=C}
 
 Wie viele kategoriale Variablen liegen vor?
 
@@ -179,7 +388,7 @@ Bei einer zufälligen Stichprobe kann auf die Population geschlossen werden.
 
 ### Übersicht
 
-**Graphiken**
+**Grafiken**
 
 - *Säulendiagramm / Balkendiagramm*: Häufigkeit von Merkmalsausprägungen (nominal, ordinal, metrisch diskret).
   - vertikale Ausrichtung: Säulendiagramm
@@ -199,8 +408,10 @@ Visualisiert die absoluten oder relativen Häufigkeiten von Beobachtungen von
 kategorialen (oder metrisch diskreten) Variablen durch die Höhe der Säulen.
 
 ```{r echo = FALSE, out.width = "70%", fig.asp = 0.5, fig.align = "center"}
-plot1 <- gf_bar(~ sex, data = tips, xlab = "Kategoriale Variable: sex")   # kategoriale Variable
-plot2 <- gf_bar(~ size, data = tips, xlab = "Metrisch diskrete Variable: size")  # metrisch diskrete Variable
+plot1 <- gf_bar(~ sex, data = tips, xlab = "Kategoriale Variable: sex") %>%   # kategoriale Variable
+  gf_theme(axis.title.x = element_text(size = 20))
+plot2 <- gf_bar(~ size, data = tips, xlab = "Metrisch diskrete Variable: size") %>%  # metrisch diskrete Variable
+    gf_theme(axis.title.x = element_text(size = 20))
 # Gebe die Plots nebeneinander aus
 grid.arrange(plot1, plot2, nrow = 1)
 ```
@@ -212,7 +423,7 @@ Analysiere über Säulendiagramm:
 
 ```{r EDA_bargraph, fig.align="center", out.width="50%"}
 gf_bar( ~ sex, # (unabhängige) Variable, die analysiert wird
-          data = tips) # Datensatz
+          data = tips) # Datentabelle
 ```
 
 
@@ -229,7 +440,7 @@ B.  Bei einer Mehrheit der Stichprobe zahlt ein Mann.
 C.  Weiß nicht.
 
 ::: {.notes}
-***B*** ist korrekt, da die Säule für `Male` höher als der für `Female` ist. 
+***B*** ist korrekt, da die Säule für `Male` höher als die für `Female` ist. 
 :::
 
 
@@ -239,7 +450,7 @@ Analysiere über Anteil $p$:
 
 ```{r}
 prop( ~ sex,  # (unabhängige) Variable, die analysiert wird
-      data = tips) # Datensatz
+      data = tips) # Datentabelle
 ```
 
 [*Hinweis*:]{.cemph} Über die zusätzliche *Option* `success` kann festgelegt 
@@ -248,7 +459,7 @@ werden, wovon der Anteil bestimmt werden soll.
 ```{r}
 prop( ~ sex,  # (unabhängige) Variable, die analysiert wird
       success = "Female", # wovon den Anteil bestimmen
-      data = tips) # Datensatz
+      data = tips) # Datentabelle
 ```
 
 
@@ -260,7 +471,7 @@ Absolute Häufigkeit $h_i$:
 
 ```{r tally-beispiel1}
 tally( ~ sex, # Variable, die analysiert wird
-       data = tips) # Datensatz
+       data = tips) # Datentabelle
 ```
 
 Relative Häufigkeit $f_i=\frac{h_i}{n}$ (Option `format = "proportion"`):
@@ -268,7 +479,7 @@ Relative Häufigkeit $f_i=\frac{h_i}{n}$ (Option `format = "proportion"`):
 ```{r tally-beispiel2}
 tally( ~ sex, # Variable, die analysiert wird
        format = "proportion", # Option: Anteile
-       data = tips) # Datensatz
+       data = tips) # Datentabelle
 ```
 
 
@@ -293,7 +504,7 @@ Hier ist vieles möglich -- im folgenden versuchen wir es mit der Tageszeit
 ```{r EDA_bargraph-group, fig.align="center", out.width="60%"}
 gf_bar( ~ sex # Variable, die analysiert wird
         | time,  # Variable, nach der bedingt wird
-        data = tips) # Datensatz
+        data = tips) # Datentabelle
 ```
 
 
@@ -322,7 +533,7 @@ Absolute Häufigkeit je Mahlzeit:
 ```{r tally_group, echo=TRUE}
 tally( ~ sex # Variable, die analysiert wird
        | time,  # Variable, nach der bedingt wird
-       data = tips) # Datensatz
+       data = tips) # Datentabelle
 
 ```
 
@@ -332,7 +543,7 @@ Relative Häufigkeit je Mahlzeit:
 tally( ~ sex # Variable, die analysiert wird
        | time,  # Variable, nach der bedingt wird
        format = "proportion", # Option: Anteile
-       data = tips) # Datensatz
+       data = tips) # Datentabelle
 ```
 :::
 
@@ -452,7 +663,7 @@ So können Sie einen solchen Plot erzeugen.^[Hinweis: Bei `mosaicplot()` sollten
 mosaicplot(day ~ smoker, data = tips)
 ```
 ```{r evaL=TRUE, echo=FALSE,fig.align='center', out.width="60%"}
-mosaicplot(day ~ smoker, data = tips, color = viridis(2, alpha = 0.6))
+mosaicplot(day ~ smoker, data = tips, color = viridis(2, alpha = 0.6), cex = 1.5)
 ```
 
 
@@ -562,7 +773,7 @@ Analysiere über Histogramm:
 ```{r histogram, fig.align="center", out.width="60%"}
 gf_histogram( ~ total_bill, # Variable, die analysiert wird
               binwidth = 5, # Breite einer Säule entspricht 5$ 
-              data = tips)  # Datensatz
+              data = tips)  # Datentabelle
 ```
 
 
@@ -599,7 +810,7 @@ Für numerische Variablen:
   im oberen. 
 
 - Bei **symmetrischen** Verteilungen verteilen sich die Daten symmetrisch um 
-  eine zentrale Lage.
+  eine zentrale Lage (unimodal).
 
 - Bei **mehrgipfligen** Verteilungen gibt es mehr als nur ein Zentrum, um das 
   die Werte streuen.
@@ -720,7 +931,7 @@ Ggfs. können Variablen durch Transformationen (z.B. $\sqrt{()}, \ln(), \ldots$)
 ```{r histogramlog, fig.align="center", out.width="50%"}
 gf_histogram( ~ sqrt(total_bill), # Quadratwurzel der Variable
               bins = 9,           # Anzahl Säulen
-              data = tips)        # Datensatz
+              data = tips)        # Datentabelle
 ```
 
 <!-- --->
@@ -742,11 +953,11 @@ autoplot(co2)
 
 ### Verteilungsfunktion
 
-Die **empirische Verteilungsfunktion**^[Neben der *empirischen* Verteilungsfunktion gibt es auch eine *theoretische* Verteilungsfunktion $F(x)$.] $F_n(x)$ gibt an, wie viele der $n$ Beobachtungen kleiner oder gleich $x$ sind:
+Die **empirische Verteilungsfunktion**^[Neben der *empirischen* Verteilungsfunktion gibt es auch eine *theoretische* Verteilungsfunktion $F(x)$.] $F_n(x)$ gibt an, wie hoch der Anteil unter den $n$ Beobachtungen ist, die kleiner oder gleich $x$ sind:
 
 \[F_n(x)=\frac{\text{Anzahl Beobachtungen }\leq x}{n}\]
 
-```{r echo=FALSE, echh=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
+```{r echo=FALSE, out.width = "50%", fig.align="center", cache=FALSE}
 x <- -5:55
 y <- pdata(~total_bill, q=x, data=tips)
 gf_line(y ~ x) %>%
@@ -774,12 +985,12 @@ A.  Die relative Häufigkeit einer Rechnungshöhe von $10\,\$$ liegt bei
 B.  Die relative Häufigkeit einer Rechnungshöhe von mindestens $10\,\$$ 
     liegt bei $`r round(pdata( ~total_bill, q=10, data = tips),2)`$.
 C.  Die relative Häufigkeit einer Rechnungshöhe von höchstens $10\,\$$ liegt 
-    bei liegt bei $`r round(pdata( ~total_bill, q=10, data = tips),2)`$.
+    bei $`r round(pdata( ~total_bill, q=10, data = tips),2)`$.
 
 ::: {.notes}
 Die (empirische) Verteilungsfunktion sagt aus, wie groß der Anteil der 
 Beobachtungen ist, die $\leq x$ sind, also ***C***.
-Damit liegt dir relative Häufigkeit einer Rechnungshöhe *über* $10\,\$$ bei 
+Damit liegt die relative Häufigkeit einer Rechnungshöhe *über* $10\,\$$ bei 
 $1 - F_n(10)=`r 1-round(pdata( ~total_bill, q=10, data = tips),2)`$.
 :::
 
@@ -797,11 +1008,11 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 Lagemaße sollen u.a. die zentrale Tendenz der Daten beschreiben:
 
-- **Minimum** bzw. **Maximum**: kleinste bzw. größte Merkmalsausprägung;
-- **Modus**/ Modalwert: häufigste Merkmalsausprägung;
+- **Minimum** bzw. **Maximum**: kleinste bzw. größte Merkmalsausprägung.
+- **Modus**/ Modalwert: häufigste Merkmalsausprägung.
 - **Median**/ Zentralwert: Merkmalsausprägung, die bei (aufsteigend) sortierten 
-  Beobachtungen in der Mitte liegt;
-- **Arithmetischer Mittelwert** (engl. mean)^[Darüberhinaus gibt es noch den geometrischen und den harmonischen Mittelwert.]: Summe aller Beobachtungswerte $x_i$ geteilt durch die Anzahl Beobachtungen $n$: $\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i$;
+  Beobachtungen in der Mitte liegt.
+- **Arithmetischer Mittelwert** (engl. mean)^[Darüber hinaus gibt es noch den geometrischen und den harmonischen Mittelwert.]: Summe aller Beobachtungswerte $x_i$ geteilt durch die Anzahl Beobachtungen $n$: $\bar{x}=\frac{1}{n}\sum_{i=1}^n x_i$.
 - **Quantil**: Das p-Quantil ist der Wert, für den gilt, dass er von p Prozent 
   der Beobachtungen nicht überschritten wird.
 - **Quartile**: Q1 = 25%-Quantil, Q2 = 50%-Quantil, Q3 = 75%-Quantil.
@@ -818,7 +1029,7 @@ nominalen Merkmalen *nicht* sinnvoll?
 ::: {.notes}
 ***Ja***, da Sie mit nominalskalierten Daten *nicht* rechnen können. 
 
-Die gilt auch wenn nominale Daten numerisch, d.h. als Zahlen kodiert werden. 
+Dies gilt auch wenn nominale Daten numerisch, d.h. als Zahlen kodiert werden. 
 Was soll z.B. eine durchschnittliche Telefonnummer sein?
 :::
 
@@ -840,6 +1051,8 @@ Für die Dozentin gilt:
 $$\bar{x}=\frac{4\cdot15+1\cdot90}{4+1}=\frac{150}{5}=30,$$
 
 also ***B***.
+
+Die Dozentin blickt von *oben* auf die 5 Kurse, sie sieht die kleinen Kurse und den großen Kurs gleich.
 :::
 
 ### Übung `r nextExercise()`: Lagemaße Kursgröße Studierende {.exercise type=type=A-B-C-D answer=C}
@@ -847,7 +1060,7 @@ also ***B***.
 Eine Dozentin unterrichtet $4$ kleine Kurse mit je $15$ Studierenden und einen 
 großen Kurs mit $90$ Studierenden.
 
-Wie groß ist der arithmetische Mittelwert der Kursgröße für die *Studierenden*?
+Mit wie vielen Kommiliton\*innen sitzt jede(r) Studierende(r) (einschließlich sich selbst) durchschnittlich in einem Kurs?
 
 A.  15
 B.  30
@@ -859,6 +1072,8 @@ Für die Studierenden gilt:
 
 $$\bar{x}=\frac{4\cdot 15 \cdot 15 +1\cdot 90 \cdot90}{4\cdot 15+1 \cdot 90}=\frac{9000}{150}=60,$$
 also ***C***.
+
+Von den 150 Studierenden erleben 90 den großen Kurs und 60 die kleinen Kurse.
 
 Bei Mittelwerten, Anteilen usw. immer überlegen: der Anteil *wovon*, 
 d.h., was ist die Beobachtungseinheit.
@@ -872,7 +1087,7 @@ Anregung: [https://askgoodquestions.blog/2019/08/05/5-below-average-joke/](https
 Daten: $20;18;24;40;24;22;21;23;20;28$ ($n=10$)
 
 - Minimum, Maximum, Modus: $x_{min}=18,x_{max}=40, \quad x_{mod}=\{20;24\}$
-- Median: $18; 20; 20; 21; \underbrace{22; 23}_{x_{0,5}=\frac{22+23}{2}=22,5}; 24; 24; 28; 40$
+- Median: $18; 20; 20; 21; \underbrace{22; 23}_{x_{0,5}=\frac{22+23}{2}=22.5}; 24; 24; 28; 40$
 - Arithmetischer Mittelwert: $\bar{x}=\frac{1}{10}(20+18+24+\cdots+28)=\frac{240}{10}=24$
 - $25\,\%$-Quantil:^[Hier sind verschiedene Berechnungen möglich. R gibt z.B. $20.25$ aus.] $x_{0,25}=20$
 
@@ -911,7 +1126,7 @@ Stimmt die Aussage: Es gilt immer $F_n(\bar{x})=0.5$?
 - Nein.
 
 ::: {.notes}
-***Nein***, während für den Median nach Definition gilt $F_n(x_{0,5})=0.5$ gilt 
+***Nein***, während für den Median nach Definition gilt $F_n(x_{0,5})=0.5$, gilt 
 dies für den Mittelwert beispielsweise bei symmetrischen Verteilungen, aber 
 nicht z.B. bei schiefen Verteilungen.
 ::: 
@@ -957,7 +1172,7 @@ C.  Abbildung C.
 
 
 :::::: {.notes} 
-Der Mittelwert ist i. d. R. in Richtung "des langen Endes" einer Verteilung 
+Der Mittelwert ist i.d.R. in Richtung "des langen Endes" einer Verteilung 
 verschoben, daher ***C***. 
 Häufig, aber nicht immer:
 
@@ -973,7 +1188,7 @@ Bei (sehr) schiefen Daten beschreibt der Median (blau, gestrichelt) den
 Schwerpunkt der Beobachtungen besser als der arithmetische Mittelwert (rot).
 
 
-```{r echo=FALSE, out.width = "45%", fig.align="center"}
+```{r echo=FALSE, out.width = "40%", fig.align="center"}
 hls <- gf_histogram( ~ xls, 
                      xlab = NULL, 
                      title = "A", 
@@ -1022,8 +1237,8 @@ rm(xrs)
 
 ### Beispiel: Value at Risk {include-only=deprecated}
 
-- Der Value-at-Risk (VaR) ist ein Risikomaß im Finanzsektor (z. B. Basel, Solvency II): 
-  Der Value-at-Risk zum Niveau $\alpha$ ist das $\alpha$ Quantil der Vermögensänderung^[Eine praktische Herausforderung ist u. a. das Bestimmen dieser Quantile. In der Regel wird der Verlust mit positiven Vorzeichen oder prozentualer Veränderung angegeben.], d. h., mit einer Wahrscheinlichkeit von $1-\alpha$ ist der *Verlust* nicht größer.^[Für eine Diskussion siehe z. B.  Ziggel, D., Berens, T. (2014): Risikomessung mit dem Expected Shortfall, Risiko Manager 1/2014, S. 27--30.] 
+- Der Value-at-Risk (VaR) ist ein Risikomaß im Finanzsektor (z.B. Basel, Solvency II): 
+  Der Value-at-Risk zum Niveau $\alpha$ ist das $\alpha$ Quantil der Vermögensänderung^[Eine praktische Herausforderung ist u.a. das Bestimmen dieser Quantile. In der Regel wird der Verlust mit positiven Vorzeichen oder prozentualer Veränderung angegeben.], d.h., mit einer Wahrscheinlichkeit von $1-\alpha$ ist der *Verlust* nicht größer.^[Für eine Diskussion siehe z.B.  Ziggel, D., Berens, T. (2014): Risikomessung mit dem Expected Shortfall, Risiko Manager 1/2014, S. 27--30.] 
 
 - $VaR_{5\%}=(-)5000000\oureuro$: Mit einer Wahrscheinlichkeit von $1-5\%=95\%$ ist 
   der Verlust nicht größer als $5000000\oureuro$ -- er könnte aber in maximal $5\,\%$ 
@@ -1050,38 +1265,35 @@ mean( ~ total_bill, data = tips)
 - Der "Rest" $x_i-\bar{x}$ beschreibt die Abweichung^[Zur Einschätzung, ob die Abweichung groß oder klein ist, wird die Streuung (s.u.) der Daten herangezogen.] der Beobachtung zum Mittelwert $\bar{x}$ (hier: "Modell").
 
 
-### Mittelwert als "Modell" -- Was heißt das konkret? {include-only=norman-only}
+### Mittelwert als "Modell" -- Was heißt das konkret? {exclude-only=exclude-crazy-norman}
 
 ```{r setup_mean_model, echo=FALSE, }
 my.model.mean.f <- mean( ~ total_bill, data = tips)
-my.model.mean.sumofsq <- nrow(tips) * var( ~ total_bill, data = tips)
+my.model.mean.sumofsq <- (nrow(tips)-1) * var( ~ total_bill, data = tips)
 ```
 
-::: {.scriptsize}
 
 *Was haben wir nun?* -- **Ein erstes Modell!**
 
 Im Allgemeinen suchen wir (mathematisch gesprochen) nach einer Funktion $f$, 
 welche eine Beziehung zwischen den Daten $x$ und $y$, bis auf einen 
-Fehlerterm $\varepsilon$, darstellt:
+Fehlerterm $\varepsilon$, darstellt: 
 
-$$y = f(x) + \varepsilon$$
+$y = f(x) + \varepsilon$
 
 Unsere aktuelle Schätzung für $f$ ist der Mittelwert der $y_i$ und lautet daher:
-
-$$\hat{f}(x)=`r my.model.mean.f`$$
+$\hat{f}(x)=`r my.model.mean.f`$
 
 Damit können wir auch für jedes $x$ eine Schätzung für $y$ abgeben:
+$\hat{y} = \hat{f}(x) = `r my.model.mean.f`$
 
-$$\hat{y} = \hat{f}(x) = `r my.model.mean.f`$$
 Für alle bekannten Datenpunktpaare ($x_i$, $y_i$) können wir jeweils auch den 
 *Rest* als Fehlerterm bestimmen:
-
-$$e_i = y_i - \hat{y}_i =  y_i - \hat{f}(x_i) = y_i - `r my.model.mean.f`$$
+$e_i = y_i - \hat{y}_i =  y_i - \hat{f}(x_i) = y_i - `r my.model.mean.f`$
 
 Daher können wir den gesamten "Rest" wie folgt beziffern:
-$$\sum_{i=1}^{n} e_i^2 = `r sprintf("%.2f", my.model.mean.sumofsq)`$$
-:::
+$\sum_{i=1}^{n} e_i^2 = `r sprintf("%.2f", my.model.mean.sumofsq)`$
+
 <!-- -->
 
 ### Sebastians Kaffeemühle {include-only=deprecated}
@@ -1098,7 +1310,7 @@ Der Kaffee ist der Mittelwert plus irgendein Rest: Zufall?^[Skizze: Sebastian Sa
 
 - Der arithmetische Mittelwert minimiert die Summe der quadratischen Abweichungen der Beobachtungen von einer Zahl $c$: $\bar{x}=\underset{c}{\arg \min} \sum_i^n(x_i-c)^2$. Er ist der Durchschnitt in dem Sinne, dass alle Merkmalsträger den gleichen Anteil an der Merkmalssumme haben.
 
-- Der Median minimiert die Summe der absoluten Abweichungen der Beobachtungen von einer Zahl $c$: $x_{0,5}=\underset{c}{\arg \min} \sum_i^n|x_i-c|$. Er ist die Merkmalsausprägung eines (im Sinne des Merkmals) typischen, d. h. mittleren Merkmalsträgers. 
+- Der Median minimiert die Summe der absoluten Abweichungen der Beobachtungen von einer Zahl $c$: $x_{0,5}=\underset{c}{\arg \min} \sum_i^n|x_i-c|$. Er ist die Merkmalsausprägung eines (im Sinne des Merkmals) typischen, d.h. mittleren Merkmalsträgers. 
 
 - Der Median ist robust gegen Ausreißer, der arithmetische Mittelwert nicht. D.h.,  $\bar{x}$ kann stark durch einzelne extreme Werte verändert werden, $x_{0,5}$ nicht.^[[https://twitter.com/annaegalite/status/1166446645204213760](https://twitter.com/annaegalite/status/1166446645204213760)]
 
@@ -1126,13 +1338,14 @@ d <- d %>%
          delta_sq = delta^2)
 
 
+dmn <- mean(d$note)
 
 d %>%
   ggplot(aes(x = id, 
              y = note)) +
-  geom_hline(yintercept = mean(d$note), 
+  geom_hline(yintercept = dmn, 
              linetype = "dashed") +
-  geom_segment(aes(y = mean(d$note),
+  geom_segment(aes(y = dmn,
                    yend = note,
                    x = id,
                    xend = id,
@@ -1145,8 +1358,8 @@ d %>%
   annotate(geom = "label",
            x = 0,
            hjust = 0,
-           y = mean(d$note), 
-           label = paste0("MW = ", round(mean(d$note), 2))) +
+           y = dmn, 
+           label = paste0("MW = ", round(dmn, 2))) +
   scale_y_continuous(limits = c(1, 4)) +
   labs(x = "",
        y = "") +
@@ -1156,6 +1369,51 @@ p_mean_deltas
 ```
 
 $$\sum_{i=1}^n (x_i-\bar{x})=\sum_{i=1}^n x_i - \sum_{i=1}^n \bar{x} = n\cdot \bar{x} - n\cdot \bar{x}=0$$
+
+### Übung `r nextExercise()`: Variation {.exercise type=type=A-B-C answer=A}
+
+
+```{r, out.width="55%", echo = FALSE, fig.align='center'}
+set.seed(1896)
+x <- scale(rnorm(10))
+
+daten <- data.frame(
+  x = c(x*1/4, x),
+  y = rep(0,2*10),
+  sit = c(rep("A", 10),
+          rep("B", 10))
+)
+
+mwplot <- ggplot(
+  daten, aes(x, y)) +
+  geom_point(size = 1.5) +
+  geom_vline(xintercept = 0) +
+  facet_wrap(vars(sit)) + theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank()) +
+  labs(x="", y="") +
+  xlim(-3,3)
+
+mwplot
+```
+
+In welcher Situation beschreibt der arithmetische Mittelwert (vertikale Linie) die Beobachtungen (Punkte) *besser*?
+
+
+A.  Situation A.
+B.  Situation B.
+C.  In beiden Situationen gleich.
+
+::: {.notes}
+
+***A***: Der *Rest*, die Abweichung  $(x_i-\bar{x})$ zwischen *Modell* ($\bar{x}$) und den *Daten* bzw. Beobachtungen $x_i$ ist in *A* insgesamt kleiner als in *B*. Die $i=1,\ldots,n$ Beobachtungen streuen in *A* weniger um den Mittelwert als in *B*. 
+
+
+*Hinweis*: In beiden Abbildungen wurde die gleiche Skalierung der Achse verwendet. 
+:::
+
+
 
 
 ### Streuungsmaße
@@ -1227,10 +1485,12 @@ Daten: $20;18;24;40;24;22;21;23;20;28, \quad n=10, \quad \bar{x}=24$
 
 ```{r delta-plot, echo = FALSE, fig.width = 9, out.width = "7cm", fig.asp = 0.8}
 
+dmn <- mean(d$note)
+
 d %>%   
   ggplot(aes(x = id, y = note)) +
-  geom_hline(yintercept = mean(d$note), linetype = "dashed") +
-  geom_segment(aes(y = mean(d$note),
+  geom_hline(yintercept = dmn, linetype = "dashed") +
+  geom_segment(aes(y = dmn,
                    yend = note,
                    x = id,
                    xend = id,
@@ -1238,15 +1498,15 @@ d %>%
     annotate(geom = "label",
            x = 0,
            hjust = 0,
-           y = mean(d$note), 
-           label = paste0("MW = ", round(mean(d$note), 2))) +
+           y = dmn, 
+           label = paste0("MW = ", round(dmn, 2))) +
   geom_rect(aes(ymin = note_avg2,
                 ymax = note2,
                 xmin = id,
                 xmax = id+delta_abs),
             fill = viridis(1, alpha = 0.6),
             alpha = .5) +
-  geom_text(aes(label=round(d$delta_sq,3)),
+  geom_text(aes(label=round(delta_sq,3)),
             hjust = "left", 
             nudge_x = 0.05,
             vjust = ifelse(d$pos == "positiv", "top", "bottom"),
@@ -1300,7 +1560,7 @@ rm(kaufdaten)
 ```
 
 Beide waren seit 30 Tagen nicht mehr einkaufen: Aufgrund der größeren Streuung 
-der Kaufintervalle ist dies bei Gabi *üblicher* als bei Klaus.^[Vgl. z. B. Papenhoff, H., Lübke, K. (2017): Churn Management – Herausforderungen für den Handel, in: Helmke, S. et al. (Hg.) Effektives Customer Relationship Management, S. 161--170.]
+der Kaufintervalle ist dies bei Gabi *üblicher* als bei Klaus.^[Vgl. z.B. Papenhoff, H., Lübke, K. (2017): Churn Management – Herausforderungen für den Handel, in: Helmke, S. et al. (Hg.) Effektives Customer Relationship Management, S. 161--170.]
 
 
 ### Übung `r nextExercise()`: z-Wert {.exercise type=A-B-C answer=B}
@@ -1375,7 +1635,9 @@ hs3 <- gf_histogram( ~ xs3,
                      title = "C", 
                      fill = viridis(1, alpha = 0.6), 
                      color = "darkgrey") %>% 
-       gf_lims(x=c(-6,6))
+       gf_lims(x=c(-6,6)) +
+       scale_y_continuous(breaks=c(20, 40), labels = c("  20", "  40"))
+
 
 grid.arrange(hs1, hs2, hs3, nrow = 3)
 
@@ -1447,9 +1709,9 @@ Welche Lage- und Streuungsmaße sind zulässig?
 :::
 
 
-### Trinkgeld-Datensatz {.shrink}
+### Trinkgeld-Datentabelle {.shrink}
 
-`inspect()` *inspiziert* den Datensatz und gibt eine Übersicht über 
+`inspect()` *inspiziert* die Datentabelle und gibt eine Übersicht über 
 wesentliche Kennzahlen.
 
 ```{r Trinkgelddaten_inspect_command, eval=FALSE}
@@ -1457,7 +1719,9 @@ inspect(tips)
 ```
 
 ::: {.scriptsize}
-```{r  Trinkgelddaten_inspect_output, echo=FALSE, R.options=list(width=90)}
+```{r  Trinkgelddaten_inspect_output, echo=FALSE}
+options(width = 150)
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small")
 (insp <- mosaic::inspect(tips))
 ```
 :::
@@ -1489,7 +1753,7 @@ Analysiere über Kennzahlen:
 
 ```{r favstats}
 favstats( ~ total_bill, # Variable, die analysiert wird
-          data = tips)  # Datensatz
+          data = tips)  # Datentabelle
 ```
 
 
@@ -1498,7 +1762,7 @@ favstats( ~ total_bill, # Variable, die analysiert wird
 ```{r favstats}
 ```
 
-Im welchen Bereich liegen $50\,\%$ der Beobachtungen der Rechnungshöhe?
+In welchem Bereich liegen $50\,\%$ der Beobachtungen der Rechnungshöhe?
 
 ::: {.notes}
 Die mittleren $50\,\%$ liegen im Bereich `Q1` bis `Q3`. 
@@ -1526,9 +1790,9 @@ gf_boxplot(tip ~ 1, data = tips)
 
 - Die obere Linie der Box ist das obere Quartil ($75\,\%$-Quantil, Q3).
 
-- Der Linie in der Box (gelegentlich auch Punkt) ist der Median.
+- Die Linie in der Box (gelegentlich auch Punkt) ist der Median.
 
-- Sollten Punkte außerhalb der Antennen sein, sind dies mögliche Ausreißer. Maximale Reichweite der Antennen: Bis zu der Beobachtung, die maximal $1{,}5 \cdot IQR$ vom oberen bzw. unteren Quartil entfernt liegt. Sollte das Maximum der Daten kleiner bzw. das Minimum größer sein, wird dieses genommen.^[Definition nicht immer einheitlich.]
+- Sollten Punkte außerhalb der Antennen sein, sind dies mögliche Ausreißer. Maximale Reichweite der Antennen: Bis zu der Beobachtung, die maximal $1.5 \cdot IQR$ vom oberen bzw. unteren Quartil entfernt liegt. Sollte das Maximum der Daten kleiner bzw. das Minimum größer sein, wird dieses genommen.^[Definition nicht immer einheitlich.]
 
 <!-- -->
 
@@ -1540,7 +1804,7 @@ Verbinde Abbildung und Kennzahlen. Ab wann ist eine Beobachtung ein potentieller
 ```{r, echo=FALSE, out.width = "60%", fig.align="center", fig.asp=0.6}
 set.seed(1896)
 chi <- data.frame(x = rchisq(100, 3))
-gf_boxploth(1 ~ x, data = chi, 
+gf_boxplot(1 ~ x, data = chi, 
             ylab = element_blank()) %>% 
   gf_theme(axis.ticks.y = element_blank(), 
            axis.text.y = element_blank())
@@ -1549,7 +1813,7 @@ gf_boxploth(1 ~ x, data = chi,
 ```
 
 ::: {.notes}
-Es ist $IQR = `r stats$Q3`-`r stats$Q1`=`r stats$Q3-stats$Q1`$ und $1{,}5 \cdot IQR = `r (IQR15 <- round((stats$Q3-stats$Q1)*1.5,2))`$. Die obere Antenne liegt daher bei $`r stats$Q3` + `r IQR15` = `r (upwsk <- stats$Q3+IQR15)`$. Also können Werte als Ausreißer nach oben gelten, wenn sie größer als $`r upwsk`$ sind.
+Es ist $IQR = `r stats$Q3`-`r stats$Q1`=`r stats$Q3-stats$Q1`$ und $1.5 \cdot IQR = `r (IQR15 <- round((stats$Q3-stats$Q1)*1.5,2))`$. Die obere Antenne liegt daher bei $`r stats$Q3` + `r IQR15` = `r (upwsk <- stats$Q3+IQR15)`$. Also können Werte als Ausreißer nach oben gelten, wenn sie größer als $`r upwsk`$ sind.
 :::
 
 <!-- -->
@@ -1575,7 +1839,7 @@ Histogramm gruppiert nach Geschlecht:
  gf_histogram( ~ total_bill # Variable, die analysiert wird
                | sex,       # Variable, nach der gruppiert wird
                bins = 9,    # Anzahl Säulen
-               data = tips) # Datensatz
+               data = tips) # Datentabelle
 ```
 
 <!-- -->
@@ -1615,7 +1879,7 @@ Analysiere über Boxplot:
 ```{r boxplot-group, fig.align="center", out.width="50%"}
 gf_boxplot(total_bill ~ # abhängige Variable
           sex, # unabhängige Variable 
-          data = tips) # Datensatz
+          data = tips) # Datentabelle
 ```
 
 <!-- -->
@@ -1643,7 +1907,7 @@ $20\,\$$, somit ist Antwort ***C*** korrekt.
 
 ### Kennzahlen/ Diagramme gruppiert nach Geschlecht
 
-Zusammenfassende Kennzahlen der Rechnungshöhe je Geschlecht:^[Alternative: `favstats( ~ total_bill | sex, data=tips)`] 
+Zusammenfassende Kennzahlen der Rechnungshöhe je Geschlecht:^[Alternative: `favstats( ~ total_bill | sex, data = tips)`] 
 
 ```{r}
 favstats(total_bill ~ sex, data = tips) 
@@ -1674,7 +1938,7 @@ Kaffee raus?^[Skizze: Sebastian Sauer]
 $$\text{Daten } = \text{ Modell } + \text{ Rest}$$
 
 [Modell:]{.cemph} Gesamtmittelwert $\bar{x}$, d.h. keine die Rechnungshöhe 
-modellierende Variable^[Dies kann in `mosaic` auch durch `y~1` geschrieben werden]:
+modellierende Variable^[Dies kann in `mosaic` auch durch `y ~ 1` geschrieben werden]:
 
 
 ```{r}
@@ -1712,7 +1976,7 @@ In den einzelnen Gruppen sind weniger Beobachtungen:
 weniger *Freiheitsgrade* (engl: degrees of freedom, df).
 
 
-### Gruppenmittelwerte als "Modell" -- Was heißt das konkret? {include-only=norman-only}
+### Gruppenmittelwerte als "Modell" -- Was heißt das konkret? {exclude-only=exclude-crazy-norman}
 
 ```{r setup_groupmean_model, echo=FALSE, }
 my.model.groupmean.f <- mean(total_bill ~ size, data = tips)
@@ -1758,7 +2022,7 @@ $$\sum_{i=1}^{n} e_i^2 = \sum_{j=1}^{K} (n_j-1) \cdot s_j^2 = \sum_{j=1}^{6} (n_
 
 ### Abbildung Modellierung
 
-Visualisierung für den reduzierten Datensatz mit nur 1 oder 6 Personen am 
+Visualisierung für die reduzierten Datentabelle mit nur 1 oder 6 Personen am 
 Tisch (`size`).^[Quelle: [https://data-se.netlify.com/2019/03/26/reducing-residual-variance-in-modeling/](https://data-se.netlify.com/2019/03/26/reducing-residual-variance-in-modeling/)]
 
 ```{r out.width = "65%", fig.align="center", fig.asp=0.5, echo=FALSE}
@@ -1861,11 +2125,11 @@ Korrelation heißt nicht zwangsläufig kein Zusammenhang oder keine Kausalität.
 
 ### Kovarianz als mittleres Abweichungsrechteck
 
-```{r rho-delta-rect, echo = FALSE, out.width="60%"}
+```{r rho-delta-rect, fig.asp = 0.8, echo = FALSE, out.width="80%"}
 # Zeichengröße für die Rechteckflächen
-cov.value.font.size <- 2.5
-# Datensatz auf die Tischgrößen 1 und 5 reduzieren. 
-tips %>% filter(size==1 | size == 5) -> df
+cov.value.font.size <- 5
+# Datentabelle auf die Tischgrößen 1 und 5 reduzieren. 
+tips %>% filter(size == 1 | size == 5) -> df
 
 # Mittelwerte berechnen und speichern
 y.mean <- mean(~ tip, data = df)
@@ -1875,6 +2139,14 @@ x.mean <- mean(~ total_bill, data = df)
 cov.value <- round(c((df$tip - y.mean) * (df$total_bill - x.mean)), 2)
 cov.value.pos.x <- c((df$total_bill + x.mean)/2)
 cov.value.pos.y <- c((df$tip + y.mean)/2)
+# ist eh händisch programmiert (siehe bei rep), daher Positionen händisch geändert
+cov.value.pos.y[2] <- cov.value.pos.y[2] - 0.07
+cov.value.pos.y[7] <- cov.value.pos.y[7] + 0.07
+cov.value.pos.y[1] <- cov.value.pos.y[1] - 0.2
+cov.value.pos.x[1] <- cov.value.pos.x[1] - 0.4
+cov.value.pos.y[3] <- cov.value.pos.y[3] - 0.2
+cov.value.pos.x[3] <- cov.value.pos.x[3] + 0.4
+
 gf_point(tip ~ total_bill, data = df) %>%
     gf_rect(tip + y.mean ~ total_bill + x.mean, 
             fill = c(rep("green", 6), "red", rep("green",2)), 
@@ -1905,6 +2177,7 @@ cov(tip ~ total_bill, data = df)
 
 
 ### Beispielrechnung Kovarianz und Korrelation
+::: {.small}
 
 | $i$ | $x_i$ | $y_i$ | $x_i-\bar{x}$ |  $y_i-\bar{y}$ | $(x_i-\bar{x})^2$ |  $(y_i-\bar{y})^2$ | $(x_i-\bar{x}) (y_i-\bar{y})$ |
 |:---:|:---:|:---:|:-------:|:------:|:------:|:-------:|:--------------:|
@@ -1915,6 +2188,7 @@ cov(tip ~ total_bill, data = df)
 |5|21|5|-3|-2|9|4|6|    
 |$\sum$|**120**|**35**|**0**|**0**|**62**|**14**|**28**|
 
+:::
 
 - Lagemaße: $\bar{x}=\frac{120}{5}=24; \bar{y}=\frac{35}{5}=7$
 - Streuungsmaße: $\quad s_x^2=\frac{62}{4}=15{,}5; s_y^2=\frac{14}{4}=3{,}5; \quad s_x=\sqrt{15{,}5}=3{,}94; s_y=\sqrt{3{,}5}=1{,}87$
@@ -1924,7 +2198,7 @@ cov(tip ~ total_bill, data = df)
 
 ### Korrelationskoeffizienten
 
-```{r Visualisierung_Korrelation, fig.align="center", echo=FALSE, out.width="80%"}
+```{r Visualisierung_Korrelation, fig.align="center", echo=FALSE, fig.width = 14, fig.asp = 25/40, out.width="60%"}
 #### Quelle http://moderndive.com/scripts/06-regression.R
 ## Leichte Anpassungen durch N. Markgraf
 # library(mosaic)
@@ -1983,7 +2257,7 @@ ggplot(data = values, mapping = aes(V1, V2)) +
     # geom_lm(level=0.999) +
     facet_wrap(~ correlation, ncol = 3)  +
     labs(x = "", y = "") + 
-    # coord_fixed(ratio=25/40) + # (30-5)/(60-20)
+    coord_fixed(ratio=25/40) + # (30-5)/(60-20)
     theme(
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -2070,8 +2344,8 @@ Stimmt die Aussage: Der Korrelationskoeffizient ist robust gegen Ausreißer?
 
 ::: {.notes}
 
-***Nein***, wie Sie auch an der Graphik erkennen können. 
-Z.B. gibt es in der Graphik 4 des Anscombe-Quartett eigentlich gar keinen 
+***Nein***, wie Sie auch an der Grafik erkennen können. 
+Z.B. gibt es in der Grafik 4 des Anscombe-Quartett eigentlich gar keinen 
 linearen Zusammenhang, dieser wird nur durch den einen Ausreißer vorgetäuscht. 
 Die Kovarianz (auf der der Korrelationskoeffizient beruht) ist wie die Varianz 
 empfindlich gegen Ausreißer.
@@ -2089,7 +2363,7 @@ Analysiere über Streudiagramm:
 ```{r xyplot, fig.align="center", out.width="60%"}
 gf_point( tip # Variable auf y-Achse
         ~ total_bill, # Variable auf x-Achse
-          data = tips) # Datensatz
+          data = tips) # Datentabelle
 ```
 
 
@@ -2117,7 +2391,7 @@ Analysiere über Korrelationskoeffizienten nach Bravais-Pearson:^[Alternative: R
 
 ```{r cor,}
 cor(tip ~ total_bill, # Variablen
-     data = tips)  # Datensatz
+     data = tips)  # Datentabelle
 ```
 
 <!-- --->
@@ -2231,16 +2505,16 @@ ist als auch am Korrelationskoeffizienten.
 
 <!-- -->
 
-## Daten: Rückblick und Ausblick
+## Daten: Rückblick und Ausblick {exclude=MasterNeu}
 
-### Tanjas Mindmap
+### Tanjas Mindmap {exclude=MasterNeu}
 
 ```{r echo=FALSE, out.height = "85%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "EDAwayto.jpg"), error = FALSE)
 ```
 
 
-### Hypothesen und Datengenerierender Prozess
+### Hypothesen und Datengenerierender Prozess {exclude=MasterNeu}
 
 > Stelle Fragen zu den generierten Daten.
 
@@ -2251,7 +2525,7 @@ knitr::include_graphics(file.path(pathToImages, "EDAwayto.jpg"), error = FALSE)
 - Eine solche Aussage geht über die unmittelbar vorliegenden Daten hinaus.
 
 
-### Sarah
+### Sarah {exclude=MasterNeu}
 
 Sind Schimpansen in der Lage, Probleme zu lösen?^[[Premack, D., & Woodruff, G. (1978). Does the chimpanzee have a theory of mind?. Behavioral and brain sciences, 1(4), 515-526.](https://doi.org/10.1017/S0140525X00076512)]
 
@@ -2282,7 +2556,7 @@ Sarah lag bei allen 8 Problemen richtig!
 Was bedeutet dieses Ergebnis? Wie erklären Sie dieses Ergebnis?
 
 
-### Zwei Möglichkeiten
+### Zwei Möglichkeiten {exclude=MasterNeu}
 
 :::::: {.columns}
 ::: {.column width="48%"}
@@ -2306,7 +2580,7 @@ $\quad$
 Was meinen Sie? Warum? Wie können Sie überzeugend argumentieren?
 
 
-### Offene Übung `r nextExercise()`: Was wäre wenn ... {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Was wäre wenn ... {exclude=MasterNeu}
 
 - Wenn das erste Modell für die Datengenerierung (*Zufall*) stimmen würde, können wir gemäß dieses Modells durch Münzwurf Daten *simulieren*.
 
@@ -2330,7 +2604,7 @@ gf_dist("binom", size = 8, prob = 0.5) %>%
 
 :::
 
-### Übung `r nextExercise()`: Vergleich Daten und Modell {.exercise type=yesno answer=no}
+### Übung `r nextExercise()`: Vergleich Daten und Modell {exclude=MasterNeu}
 
 
 Sind die Daten (8 von 8 richtig) gut durch das Modell (*Raten*, $\pi=0.5$) erklärbar?^[Wenn Sie mehr Daten simulieren wollen: [https://fomshinyapps.shinyapps.io/Muenze/](https://fomshinyapps.shinyapps.io/Muenze/)]
@@ -2341,17 +2615,17 @@ Sind die Daten (8 von 8 richtig) gut durch das Modell (*Raten*, $\pi=0.5$) erkl�
 ::: {.notes}
 ***Nein***, *theoretisch* liegt die Wahrscheinlichkeit, zufällig 
 8 von 8 richtig zu haben, wenn man zwischen zwei Alternativen rät, 
-bei `r round(dbinom(8,8, prob=0.5),4)`.
+bei $0.5^8=`r round(dbinom(8,8, prob=0.5),4)`$.
 
 Im Modell sind manche Daten wahrscheinlicher als andere.
 :::
 
-### Simulation mit R
+### Simulation mit R {exclude=MasterNeu}
 
 ```
 - Bändige den Zufall; setze den Zufallszahlengenerator
-- Der Datensatz Sarah_Raet soll sein:
-  - Wiederhole 1000 mal: Wirf 8 mal eine (faire) Münze
+- Die Datentabelle Sarah_Raet soll sein:
+- Wiederhole 1000 mal: Wirf 8 mal eine (faire) Münze
 - Gib den Anteil von 8 mal Kopf aus
 ```
 
@@ -2365,6 +2639,13 @@ prop( ~ heads, success = 8, data = Sarah_Raet)
 
 
 ## Zusammenfassung
+
+### Tanjas Mindmap {include-only=MasterNeu}
+
+```{r echo=FALSE, out.height = "85%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "EDAwayto.jpg"), error = FALSE)
+```
+
 
 ### Visualisierung (Tipps)
 
@@ -2390,15 +2671,14 @@ prop( ~ heads, success = 8, data = Sarah_Raet)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_08-2016.jpg", "cartoon0816.jpg", pathToImages)
 ```
-"Ich weiß, dass Datenvisualisierung ein heißes Thema ist, aber gehst Du hier 
-nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2016/results) &copy; J.B. Landers, Überschrift B. Osyk]
+"Ich weiß, dass Datenvisualisierung ein heißes Thema ist, aber gehst Du hier nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2016/results) &copy; J.B. Landers, Überschrift B. Osyk]
 
 <!-- -->
 
 
 ### Grafische Verfahren der Datenanalyse
 
-- *Säulendiagramm / Balkendiagramm*: Häufigkeit von Merkmalsausprägungen (nominal, ordinal, metrisch diskret) -- `gf_bar()`, `gf_barh()`.
+- *Säulendiagramm / Balkendiagramm*: Häufigkeit von Merkmalsausprägungen (nominal, ordinal, metrisch diskret) -- `gf_bar()`.
 
 - *Histogramm*: Häufigkeit von gruppierten Merkmalsausprägungen (metrisch) -- `gf_histogram()`.
 
@@ -2431,6 +2711,10 @@ nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/
 
 
 ```{r finish-Einfuehrung-EDA, include=FALSE}
+rm("nor", "schiefe", "bimod", "multimod", "gleich", "dat", "gh2", 
+     "Sarah_Raet", "x", "y", "st", "gh10", "gh25", "gh50", "plot1", "plot2", 
+     "xn", "xl", "xr", "xmm", "co2", "x1", "x2", "x3", "xg", 
+     "hls", "hrs", "hsym")
 rm(pathToImages)
 finalizePart()
 ```

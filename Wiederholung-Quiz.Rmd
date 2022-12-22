@@ -9,7 +9,7 @@ title: "Wiederholung"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 source("prelude.R")
 initPrelude(
-    "NGI-",        # Prefix für Terminlisten etc.
+    "WMQD-",        # Prefix für Terminlisten etc.
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
 
@@ -29,15 +29,25 @@ initPrelude(
 # 'eval=FALSE' einstellen!
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- FALSE
+assign("abschluss", FALSE, envir = .GlobalEnv)
+
+my.options$set(
+  privateVorstellung = FALSE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = FALSE,  # Zeige den Vorlesungsplan
+  showuseR = FALSE,
+  Corona = TRUE
+)
+
+assign("UseCache", TRUE)  # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default")
 
 if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-createPrivateYaml("FOM", "SoSe 2020")
+createPrivateYaml("FOM", "SoSe 2023", "WMQD")
+
+options(scipen = 10, digits = 2) # scipen = 100 ist zu viel, dann werden die p-Werte mit x Nachkommastellen angezeigt
 
 UseCache <<- FALSE
 makeDozi()        # Erzeuge Dozentenskript

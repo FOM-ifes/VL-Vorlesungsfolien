@@ -19,19 +19,31 @@ initPrelude(
 # 'eval=FALSE' einstellen!
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- FALSE
-
 if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-createPrivateYaml("FOM", "WiSe 2020", "")
+assign("abschluss", FALSE, envir = .GlobalEnv)
 
-UseCache <<- TRUE
+my.options$set(
+  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
+  Corona = FALSE,
+  UseCache = TRUE,
+  eufom = FALSE
+)
+
+createPrivateYaml("FOM-Dozent*in", "SoSe 2023", "FOM")
+#if_else(my.options$get("eufom"),
+#        createPrivateYaml("FOM-Dozent*in", "SoSe 2021", "FOM"),
+#        createPrivateYaml("eufom-Dozent*in", "SoSe 2021", "eufom"))
+
+
+assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default", envir = .GlobalEnv)
+
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
-makeSkriptOfType("StudierendenSkript") 
+makeSkriptOfType("DozentenSkript") 
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
 library(ggplot2)
@@ -42,6 +54,35 @@ theme_set(
   theme.fom  
 )
 ```
+```{r setUpChildren, eval=TRUE, include=FALSE}
+ChildList <- c(
+    {paste0("QFM-Organisatorisches",
+            if_else(my.options$get("layouttype") == "eufom", "-eufom",""),
+            if_else(my.options$get("Corona"),"-CORONA", ""),  # 60-min Klausur-Fassung
+            '.Rmd')},
+    {if_else(my.options$get("privateVorstellung"),
+             'private/private-Vorstellung.Rmd', NULL)},
+    # 'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd', 
+    'Einfuehrung-R.Rmd',
+    'EDA.Rmd',
+    'Regression.Rmd',
+    'Normalverteilung.Rmd',
+    'Inferenz.Rmd',
+    # 'Inferenz-Beispiele.Rmd',  # -> Anhang!
+    # 'Datenhandling.Rmd',  # -> Anhang!
+    'Abschluss.Rmd'
+)
+if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
+  ChildList <- c(
+    "Grundlagen-Wissenschaft", 
+    "Abschluss"
+  )
+}
+IncludeChildList <- file.path('Inhalte', na.omit(ChildList))
+```
+
 ```{r setup_data, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
@@ -52,52 +93,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # ---------------------------------------------------------------------------
 ```
 
-
-
-<!-- ```{r child = './Inhalte/QFM-Organisatorisches.Rmd'} -->
-<!-- ``` -->
-
-<!-- ```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung} -->
-<!-- ``` -->
-
-<!-- ```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd'} -->
-<!-- ``` -->
-
-
-
-
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd'}
-```
-
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd'}
-```
-
-```{r child = './Inhalte/Einfuehrung-R.Rmd'}
-```
-
-```{r child = './Inhalte/EDA.Rmd'}
-```
-
-```{r child = './Inhalte/Regression.Rmd'}
-```
-
-```{r child = './Inhalte/Normalverteilung.Rmd'}
-```
-
-```{r child = './Inhalte/Inferenz.Rmd'}
-```
-
-<!-- ```{r child = './Inhalte/Inferenz-Beispiele.Rmd'} -->
-<!-- ``` -->
-
-
-<!-- ```{r child = './Inhalte/Datenhandling.Rmd'} -->
-<!-- ``` -->
-
-<!-- ```{r child = './Inhalte/QFM-Organisatorisches.Rmd'} -->
-<!-- ``` -->
-
-```{r child = './Inhalte/Abschluss.Rmd'}
+```{r child = IncludeChildList}
 ```
 
 ```{r finalize, include=FALSE}

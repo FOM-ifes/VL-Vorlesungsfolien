@@ -1,0 +1,39 @@
+```{r setup_private_r, echo=FALSE}
+source("private.R")
+```
+
+### Kurzvorstellung
+
+
+::::::: {.columns} 
+::: {.column width="49%" .small} 
+
+`r paste(DozInfo$PreTitel, " ", DozInfo$Vorname, DozInfo$Nachname, " ", DozInfo$PostTitel)`
+
+
+- Kontakt: [`r paste(DozInfo$Email)`](<`r paste0("mailto:",DozInfo$Email)`>)
+- Homepage: [`r paste(DozInfo$WebURL)`](`r paste(DozInfo$WebURL)`)
+
+:::
+::: {.column width="49%" .footnotesize} 
+
+[Akademische Ausbildung:]{.cstrong}
+
+- hat studiert
+- und ggfs. auch promoviert
+- vielleicht sogar habiliert
+    
+[Beruflicher Werdegang:]{.cstrong}
+
+- xxxx bis xxx: Spannender Job 1
+- xxxx bis xxx: Spannender Job 2
+- Seit yyyy: Neue Herausforderung an der FOM
+
+[Forschungsinteressen:]{.cstrong}
+- General Abstract Nonsense 1
+- General Abstract Nonsense 2
+
+:::
+:::::::
+
+

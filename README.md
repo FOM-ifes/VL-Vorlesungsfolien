@@ -1,42 +1,82 @@
-**Wiki zu den Vorlesungsunterlagen:** [https://github.com/luebby/Vorlesungen/wiki/Lehre-als-Sammlung-von-Tricks](https://github.com/luebby/Vorlesungen/wiki/Lehre-als-Sammlung-von-Tricks)
+## Interne Links
 
-Fehler etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues](https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues) melden!
+**Wiki zu den Vorlesungsunterlagen:** [https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/Lehre-als-Sammlung-von-Tricks](https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/Lehre-als-Sammlung-von-Tricks)
+
+Fehler etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/issues](https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/issues) melden!
 
 
 ## Notwendige Software
 
 - möglichst aktuelles R, RStudio, LaTeX
 - LaTeX u. a. Paket `beamer`, `cm-super`, `ulem`
-- pandoc in der aktuellen Version (2.0.3) -- RStudio liefert gegenwärtig nur 1.19.2.1 mit: [https://github.com/jgm/pandoc/releases/tag/2.0.3](https://github.com/jgm/pandoc/releases/tag/2.0.3). 
-- rmarkdown in der aktuellen Version (1.8 oder später).
-- Python3 mit panflute: [https://www.python.org/downloads/](https://www.python.org/downloads/). Nach der Installation über die Windows Eingabeaufforderung (Terminal) panflute installieren: `pip3 install panflute`.
-- **Wichtig für Windows 10+ Nutzer:** Python muss richtig installiert werden: [https://www.howtogeek.com/197947/how-to-install-python-on-windows/](https://www.howtogeek.com/197947/how-to-install-python-on-windows/) Hierbei immer über der den Installer gehen (s. Installationsanleitung) und "Add Python 3.6 to PATH" beim ersten Installationsheinweis anklicken. Dann Computer neu starten und den Befehl (pip3 install panflute) in die Kommandozeile (unter dem Reiter "Terminal") eingeben.
+- pandoc in einer aktuellen Version (2.14.1) -- RStudio 1.4 liefert gegenwärtig nur 2.11. mit: [https://github.com/jgm/pandoc/releases/tag/2.14.1](https://github.com/jgm/pandoc/releases/tag/2.14.1). 
+- rmarkdown in der aktuellen Version (2.7 oder später).
+- Python3 mit panflute: [https://www.python.org/downloads/](https://www.python.org/downloads/). Nach der Installation über die Windows Eingabeaufforderung (Terminal) panflute installieren: `python3 -m pip install panflute`. Python 2.\* wird **nicht unterstützt**!!
+
+
+### Wichtige zusätzliche Hinweise
+
+- **Wichtig für macOs Nutzer\*innen:** macOS hat noch ein eigenes Python 2.7.2 installiert, welches nicht zu löschen ist. Daher bitte immer das aktuelle Python von python.org (nicht ein eigen gebrewtes!) nutzen und mit `pyhton3`oder `pip3`arbeiten!
+
+
+- **Wichtig für macOs Nutzer\*innen:** Es kann sehr sinnvoll sein zu Beginn einer R Session "reticulate::py_config()" in der Console auszuführen, damit die richtigen Python Versionen benutzt werden!
+
+- **Wichtig für Windows 10+ Nutzer\*innen:** Python muss richtig installiert werden: [https://www.howtogeek.com/197947/how-to-install-python-on-windows/](https://www.howtogeek.com/197947/how-to-install-python-on-windows/) Hierbei immer über der den Installer gehen (s. Installationsanleitung) und "Add Python 3.6 to PATH" beim ersten Installationsheinweis anklicken. Dann Computer neu starten und den Befehl (pip3 install panflute) in die Kommandozeile (unter dem Reiter "Terminal") eingeben.
+
+- **Wichtig für Dozent\*innen mit Adobe Reader 9.0:** Leider funktioniert die Darstellung der PDF Dokumente nicht einwandfrei mit alten Adobe Readern (explizit der Adobe Reader 9.0). Bitte nutzen Sie dann Adobe Reader DC, damit klappt es in der Regel ohne Probleme.
+
+- **Wichtig für Dozent\*innen mit Adobe Reader DC in der Version 2015.006.30503:** Leider funktioniert die Darstellung der PDF Dokumente nicht einwandfrei mit alten Adobe Readern (explizit dieser Version von DC). Bitte nutzen Sie dann aktuelle Fassungen von Adobe Reader DC, damit klappt es in der Regel ohne Probleme.
+
+## Hinweise für den Umgang mit GitHub, RStudio, R und R Markdown
 
 Hinweise zur Benutzung von GitHub: [http://happygitwithr.com/](http://happygitwithr.com/)
 
 Hinweise zu RStudio, R und R Markdown: [https://ismayc.github.io/rbasics-book/](https://ismayc.github.io/rbasics-book/)
 
+Weitere Hinweise zu R Markdown: [https://www.bookdown.org/yihui/rmarkdown-cookbook/](https://www.bookdown.org/yihui/rmarkdown-cookbook/)
+
+## Aller erste Schritte
+
+- Wenn Sie absolut neu sind, sollten Sie als erstes das Skript "RunMeFirst.R" im Hauptverzeichnis dieses Repositories ausführen. Hier werden eine Vielzahl an Paketen nachgeladen.
+
+- Installieren Sie ImageMagick, falls Sie im Terminal auf die Eingabe "convert --version" keine Ausgabe der Form
+```
+Version: ImageMagick 7.1.0-2 Q16 x86_64 2021-06-25 https://imagemagick.org
+Copyright: (C) 1999-2021 ImageMagick Studio LLC
+License: https://imagemagick.org/script/license.php
+Features: Cipher DPC HDRI Modules OpenMP(4.5) 
+Delegates (built-in): bzlib fontconfig freetype gslib heic jng jp2 jpeg lcms lqr ltdl lzma openexr png ps tiff webp xml zlib
+```
+
+sondern eine Fehlermeldung erhalten!
+  - MacOS User installieren zunächst HomeBrew (https:/brew.sh) VOLLSTÄNDIG und danach ImageMagick mit dem Befehl `brew install imagemagick`
+  - Windows und Linux Nutzer:innen finden auf der Seite "https://www.imagemagick.org" Hilfe zur Installation.
+
+- Als MacOS User können Sie ein passendes Python mit Hilfe von `brew install python3`installieren!
+  
+
 ## Erste Schritte
 
 
-Um eine Rohfassung der Skripte zu erzeugen, die entsprechnde Rmd Datei mit dem jeweiligen Vorlesungsnamen in RStudio öffnen und knitrn.
-Besser ist aber, sie passen erst die Daten im Verzeichnis `private/` an und nutzen das Skript `MakeMySemester.R` zum erzeugen.
+- Um eine Rohfassung der Skripte zu erzeugen, die entsprechende Rmd Datei mit dem jeweiligen Vorlesungsnamen in RStudio öffnen und knitrn.
+- Sie können auch die Datei *makerender.R* anpassen und mit `source("makerender.R")` starten. So werden ggf. gleich alle drei Ausgaben (Dozentenfassung, Studierendenfassung und Lösungsskript) erstellt.
+- ebenfalls können die Skriptversionen über die batch- oder sh-Datei *makerender.bat* / *makerender.sh* erstellt werden. Eine Beschreibung über das Vorgehen findet sich weiter unten.
 
 *Tipps*: 
 
-- Evt. muss zweimal geknittet werden, damit die Übungsnummerierung passt.
+- Evtl. muss zweimal geknittet werden, damit die Übungsnummerierung passt.
 - Gelegentlich den Knitr Cache leeren.
 - Vorsicht bei Netzlaufwerken (OneDrive etc.): hier kann es zu Schreib-/Leseproblemen kommen 
 
 ## Wo muss/kann ich etwas anpassen?
 
-**Kontrollieren Sie die Prüfungsleistungen!** Diese sind in der Datei `Inhalte/Orga-xxx.Rmd`, wobei `xxx` für die Vorlesungen (*DES*, *QuantFor*, *WissMeth*, *WM-Quant* , *PraDa*) steht.
+**Kontrollieren Sie die Prüfungsleistungen!** Diese sind in der Datei `Inhalte/xxx-Organisatorisches.Rmd`, wobei `xxx` für die Vorlesungen (*DES*, *QFM*, *WM*, *WMQD*) steht.
 
-Es gibt zwei Stellen, an denen Sie vor dem (ersten) Erstellen der Skripte Hand anlegen sollten:
+Es gibt eine Stelle, an denen Sie vor dem (ersten) Erstellen der Skripte Hand anlegen sollten:
 
-1. Erstellen einer `private/private.R` Datei
+**Erstellen einer privaten Vorstellung**
 
-Als Vorlage können Sie die Datei `private/private_default.R` nutzen. Kopieren Sie dazu die Datei `private/private_default.R` 
+Passen Sie die Datei `Inhalte/private/privatet.R` mit Ihren Daten an. 
 
 ```
 # ===========================================================================
@@ -47,151 +87,87 @@ Als Vorlage können Sie die Datei `private/private_default.R` nutzen. Kopieren S
 
 # DozentInnen Information
 DozInfo <- list(
-  Titel = "Dipl.-Math.",       # "Prof. Dr.", "Dr.", ""
+  PreTitel = "Dipl.-Math.",    # "Prof. Dr.", "Dr.", ""
+  PostTitel = "",              # "(MBA)", "(LL.B.)", "(M.Sci)"
   Vorname = "Norman",          # "Karla Antonia Sybilla"
-  Nachname = "Markgraf" ,      # "Säuereich-Weinnie"
+  Nachname = "Markgraf" ,      # "Säuerreich-Weinenie"
   Geschlecht = "m",            # "m" männlich, "w" weiblich und "d" drittes Geschlecht
   Email = "nmarkgraf@hotmail.com", 
-  WebURL = "http://www.sefiroth.de",
+  WebURL = "http://www.sefiroth.net",
   Avatar = NULL,
   Telegram = "",
   WhatsApp = "",
   Skype = ""
 )
 
-# Soll eine Seite mit ihren Datein (private-Vorstellung.Rmd) in das Skript?
-privateVorstellung <<- TRUE
-
-# ===========================================================================
-```
-einfach in Ihre Datei `private/private.R` und passen Sie die entsprechenden Felder an. 
-Z.B.:
-
-```
-# ===========================================================================
-# private.R
-# =========
-#
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-# DozentInnen Information
-DozInfo <- list(
-  Titel = "Prof. Dr.",       # "Prof. Dr.", "Dr.", ""
-  Vorname = "Bianca",          # "Karla Antonia Sybilla"
-  Nachname = "Krol" ,      # "Säuereich-Weinnie"
-  Geschlecht = "w",            # "m" männlich, "w" weiblich und "d" drittes Geschlecht
-  Email = "bianca.krol@fom.de", 
-  WebURL = "http://www.fom.de",
-  Avatar = NULL,
-  Telegram = "",
-  WhatsApp = "",
-  Skype = ""
-)
-
-# Soll eine Seite mit ihren Datein (private-Vorstellung.Rmd) in das Skript?
-privateVorstellung <<- TRUE
-
 # ===========================================================================
 ```
 
-Falls Sie zwar eine personalisierte Fassung erzeugen wollen, aber keine Vorstellungsseite, dann ändern Sie bitte die Zeile `privateVorstellung` in
+**Vorlesungszeitplan einfügen**
+
+Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter showVorlesungsplan auf TRUE und passen die Datei xx-default.Rmd im Ordner Vorlesungstermine mit Ihren Daten und Inhalten an.
+
+
+**Batch-Datei verwenden**
+
+Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen mittels `makerender.bat`.
+
+Hierzu muss in der `makerender.bat` in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre R-Version angepasst werden und, falls R unter eineme anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z.B. `C:\Benutzer\Programme` o.ä.) entsprechend angepasst werden.
+
+Folgende Parameter können hierbei mit angegeben werden:
+
+-v, --verbose
+      Erweiterte Ausgabe von Laufzeitinformationen
+
+-c, --clean
+      Zu Beginn alle temporären Dateien löschen
+      
+-d, --dls
+      Erzeugen eines DLS Skripts
+      
+-s SEMESTER, --semester=SEMESTER
+      Semesteranagabe einstellen
+      
+-o STUDIENORT, --studienort=STUDIENORT
+      Studienort einstellen
+      
+-l LECTURER, --lecturer=LECTURER
+      Vortragende:n einstellen
+      
+-a AUTHOR, --author=AUTHOR
+      Vortragende:n einstellen
+      
+-e LATEX-ENGINE, --lates-engine=LATEX-ENGINE
+      LaTeX engine [xelatex/pdflatex/lualatex]
+      
+--layout=LAYOUT
+      Layout [FOM/eufom]
+      
+-m MIDFIX, --midfix=MIDFIX
+      Wird zwischen dem Dateinamen und der Endung eingefügt
+      
+--nostudi
+      Studierendenskript nicht erstellen
+      
+--nolsg
+      Lösungsskript nicht erstellen
+      
+      
+Die Parameter können Sie sich auch in der Eingabeaufforderung  mittels `makerender --help` auflisten lassen.
+
+Wenn Sie also z.B. eine Dozierendenversion der Wissenschaftlichen Methodik (Angabe des Namens der entsprechenden Rmd-Datei) erstellen wollen, mit privater Vorstellung und der Angabe von Semester und Studienort, können Sie dies über folgenden Befehl in der Kommandozeile abschicken:
 
 ```
-
-# Soll eine Seite mit ihren Datein (private-Vorstellung.Rmd) in das Skript?
-privateVorstellung <<- FALSE
-
+makerender.bat -s "SoSe 2023" -o "Essen" Wissenschaftliche-Methodik
 ```
 
-ab. Möchten Sie keine personalisierte Fassung erstellen, sondern eine *Modulfassung*, so können Sie das mit
+oder analog:
 
 ```
-# ===========================================================================
-# private.R
-# =========
-#
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-# DozentInnen Information
-DozInfo <- NULL
-
-# Soll eine Seite mit ihren Datein (private-Vorstellung.Rmd) in das Skript?
-privateVorstellung <<- FALSE
-
-# ===========================================================================
+makerender.bat --semester="SoSe 2023" -studienort="Essen" Wissenschaftliche-Methodik
 ```
 
-erreichen.
-
-2. Erstellen einer `private/private-Semesterdaten.R` Datei
-
-In der Datei `private/private-Semesterdaten.R` können die Vorlesungen festlegen, die sie aktuell erstellen möchten.
-
-Dazu kopieren Sie einfach die Vorlage `private/private-Semesterdaten_dafault.R` in die Datei `private/private-Semesterdaten.R` un passen diese an Ihre Bedürfnisse an:
-
-```
-# ===========================================================================
-# private-Semsterdaten.R
-# ======================
-#
-# In dieser Datei können Sie Ihre persönlichen Semsterdaten an.
-# Vorlesungen, Orte und ob Sie eine Dozentenversion und/oder 
-# Studierendenversion haben wollen.
-#
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-semesterdaten <- tribble(
-#   -------------------------------------!-------------------!-----------------!----------------------!----------
-    ~Vorlesung,                           ~Ort,               ~Dozentenversion, ~Studierendenversion,  ~Zeitplan,
-#   -------------------------------------!-------------------!-----------------!----------------------!----------
-    "Wissenschaftliche-Methodik",         "Düsseldorf",       TRUE,             TRUE,                  TRUE,
-    "Datenerhebung-Statistik",            "Düsseldorf",       TRUE,             TRUE,                  TRUE,
-    "Datenerhebung-Statistik",            "Wuppertal",        TRUE,             TRUE,                  TRUE,
-    "QM-Wirtschaftsinformatik",           "Münster",          TRUE,             TRUE,                  FALSE
-#   -------------------------------------!-------------------!-----------------!----------------------!----------
-)
-
-#
-# Bezeichner für das aktuelle Semester
-#
-semesterbezeichner <- "WiSe 2018/19"
-
-# ===========================================================================
-```
-Unter *Vorlesung* tragen Sie bitte den Dateinamen der entsprechenden Vorlesung **ohne** die Endung ".Rmd" ein. 
-Aus dem Ort wird (unter Umwandlung der Umlaute in "ae", "oe", "ue") später die Terminvorschläge erzeugt.
-
-Dozentenversionen enthalten die Musterlösungen, Studierendenversionen enthalten diese nicht.
-
-
-3. Termine eintragen
-
-Tragen Sie für Ihre Veranstaltung (*DES*, *QFM*, *WMQD*, *WM* , *PraDA*, *WMWinf*, *QMEval-*) und Ihren Standort Ihre Termine ein (Ordner: `Vorlesungstermine`. Z. B. für Wissenschaftliche Methodik in Dortmund: `WM-Dortmund.csv`.) 
-
-*Achtung:* die csv Datei ist kommagetrennt. Evt. auf Encoding (Umlaute) beachten.
-
-Eine solche Datei würde dann wie folgt aussehen: (Hier als Beispiel die Datei `DES-Muenchen.csv`)
-
-```
-"Tag", "Datum", "Uhrzeit", "Inhalt"
-"1","01.01.1980","","Ein weiterer Vorlesungstermin folgt"
-"2","12.03.2018","","Organisatorisches & Wissenschaftliche Grundlagen"
-"3","20.03.2018","","Einfuehrung in R"
-"4","26.03.2018","","Explorative Datenanalyse"
-"5","26.03.2018","","Einfuehrung Inferenz"
-"6","09.04.2018","","Inferenz kategorialer Daten"
-"7","17.04.2018","","Inferenz numerischer Daten"
-"8","24.04.2018","","Wiederholung der Inferenzstatistik"
-"9","08.05.2018","","Lineare Regression"
-"10","15.05.2018","","Datenhandling"
-"11","22.05.2018","","Fallstudie zur praktischen Datenanalyse"
-"12","28.05.2018","","Fachartikel lesen"
-"13","29.05.2018","","Coaching zur Datenanalyse"
-"14","04.06.2018","","Wiederholung"
-"15","11.06.2018","","Klausur"
-```
-
-Möchten Sie unter `Uhrzeit` noch die genauen Uhrzeiten eintragen, so können Sie das machen.
+Die Parameter zur Personalisierung (private Vorstellung oder den Zeitplan der Vorlesung) werden -- bei Bedarf -- zuvor in der `makerender.R` Datei gesetzt.
 
 
 ## Literatur

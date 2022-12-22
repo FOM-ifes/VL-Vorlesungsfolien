@@ -2,7 +2,9 @@
 title: "Wissenschaftliche Methodik"
 tag:
     - master
+    - MasterNeu
     # - sesmill
+    # - exclude-crazy-norman
     - shiny
 ---
 
@@ -17,7 +19,7 @@ initPrelude(
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
 ```
-```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+```{r localKnitrButtonSetup, eval=!get("RENDEREDBYSCRIPT" ), echo=FALSE, include=FALSE}
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
 # 'eval=FALSE' einstellen!
@@ -27,17 +29,27 @@ if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- TRUE
-UseCache <<- TRUE  # immer mal wieder auf FALSE setzen
+assign("abschluss", FALSE, envir = .GlobalEnv)
 
-Vorlesungstermine <<- ""
+my.options$set(
+  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WM-default.Rmd anpassen
+  showuseR  = TRUE,            # Folien mit useR-Umfragen anzeigen oder ausschließen
+  Corona    = FALSE,
+  MasterNeu = TRUE             # Überarbeitung Master mg, kl
+)
 
-createPrivateYaml("FOM", "WiSe 2020", "")
+assign("UseCache", TRUE)       # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default")
 
-# Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
-makeSkriptOfType("LösungsSkript")
+# Standardeinstellung ("Dozent", "Semester", "FOM Standort")
+# muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
+createPrivateYaml("Dozent*in", "SoSe 2023", "FOM") 
+
+# Erzeuge Skript , "StudierendenSkript" oder "LösungsSkript": 
+makeSkriptOfType("DozentenSkript")
+#makeSkriptOfType("StudierendenSkript")
+#makeSkriptOfType("LösungsSkript")
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
 library(ggplot2)
@@ -58,70 +70,51 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 # ---------------------------------------------------------------------------
 ```
-
 ```{r setUpChildren, eval=TRUE, include=FALSE}
-childrenToInclude <- c(
-    "Organisatorisches", "Hinweise",
-    "Grundlagen-Wissenschaft", "Grundlagen-QuantDat", "Einfuehrung-R", "EDA",
-    "Regression", "LogistischeRegression", "Inferenz", "Inferenz-Beispiele", "Kausalanalyse", 
-    "Abschluss"
+ChildList <- c(
+    {if_else(my.options$get("Corona"),
+             'WM-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+             'WM-Organisatorisches.Rmd')},
+    {if_else(my.options$get("privateVorstellung"),
+             'private/private-Vorstellung.Rmd', NULL)},
+    'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd',
+    {if_else(my.options$get("MasterNeu"),
+            'KeinInhalt.Rmd', 'Einfuehrung-R.Rmd')},
+    'EDA.Rmd',
+    # 'Normalverteilung.Rmd', # --> Optional
+    'Regression.Rmd',
+    {if_else(my.options$get("MasterNeu"),  
+              'KeinInhalt.Rmd', 'Inferenz.Rmd')},
+    {if_else(my.options$get("MasterNeu"),  
+              'Kausalanalyse.Rmd', 
+              'Inferenz-Beispiele.Rmd')},
+    # 'Datenhandling.Rmd',  # -> Anhang!
+    'Abschluss.Rmd'
 )
-
-## Test! (TRUE oder FALSE ändern!)
-if (FALSE) {
-  childrenToInclude <- c(
-    "Datenhandling"
+if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
+  ChildList <- c(
+#    'Organisatorisches/Hinweise.Rmd'
+#    'Grundlagen-Wissenschaft.Rmd'
+#    'Grundlagen-QuantDat.Rmd'
+#    'Einfuehrung-R.Rmd'
+#    'EDA.Rmd'
+#    # 'Normalverteilung.Rmd', # --> Optional
+    'Regression.Rmd'
+#    'LogistischeRegression.Rmd'
+#    # 'Inferenz.Rmd'        # gestrichen in MasterNeu
+#    # 'Datenhandling.Rmd',  # -> Anhang!
+#    'Kausalanalyse.Rmd'
+#    'Inferenz-Beispiele.Rmd'
+#    'Abschluss.Rmd'
   )
-  privateVorstellung <<- FALSE
-  }
-##
-
-includeChild <- function(name, children=childrenToInclude, all=FALSE) {
-    ifelse(all, TRUE, ifelse(name %in% children, TRUE, FALSE))
 }
-```
-
-```{r child = './Inhalte/WM-Organisatorisches.Rmd', eval=includeChild("Organisatorisches")}
-```
-
-```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
-```
-
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd', eval=includeChild("Hinweise")}
-```
-
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd', eval=includeChild("Grundlagen-Wissenschaft")}
-```
-
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd', eval=includeChild("Grundlagen-QuantDat")}
-```
-
-```{r child = './Inhalte/Einfuehrung-R.Rmd', eval=includeChild("Einfuehrung-R")}
-```
-
-```{r child = './Inhalte/EDA.Rmd', eval=includeChild("EDA")}
-```
-
-```{r child = './Inhalte/Regression.Rmd', eval=includeChild("Regression")}
-```
-
-```{r child = './Inhalte/LogistischeRegression.Rmd', eval=includeChild("LogistischeRegression")}
-```
-
-```{r child = './Inhalte/Inferenz.Rmd', eval=includeChild("Inferenz")}
+IncludeChildList <- file.path('Inhalte', na.omit(ChildList))
 ```
 
 
-```{r child = './Inhalte/Inferenz-Beispiele.Rmd', eval=includeChild("Inferenz-Beispiele")}
-```
-
-```{r child = './Inhalte/Kausalanalyse.Rmd', eval=includeChild("Kausalanalyse")}
-```
-
-```{r child = './Inhalte/Datenhandling.Rmd', eval=FALSE}
-```
-
-```{r child = './Inhalte/Abschluss.Rmd', eval=includeChild("Abschluss")}
+```{r child = IncludeChildList}
 ```
 
 

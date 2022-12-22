@@ -1,15 +1,17 @@
-\ProvidesPackage{beamercolorthemeNPBT-FOM}[2019/05/30 v4.3.0 Color Theme FOM]
+\ProvidesPackage{beamercolorthemeNPBT-FOM}%
+[2022/02/10 v4.3.1 Color Theme FOM]
 % ===========================================================================
 % beamercolorthemeNPBT-FOM.sty
 % ============================-----------------------------------------------
 % 
-% (C) in 2011-2019 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+% (C) in 2011-2022 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
 %
 % Starting with rel. 3.1 this is also the Base Color Scheme for 
 % ALL FOM_* colorthemes! 
 %
 % ---------------------------------------------------------------------------
 %
+\message{Starting 'beamercolorthemeNPBT-FOM' --------------------------------}
 \mode<presentation>
 % ---------------------------------------------------------------------------
 
@@ -47,6 +49,9 @@
 \definecolor{FOMSectionTitelColor}{HTML}{128977}% sollte eigentlich sein: {00998A}
 \definecolor{FOMSectionNumberColor}{HTML}{262927}% oder: {32373D}
 \definecolor{FOMNearBlack}{HTML}{102030}
+\definecolor{FOMTOCSectionNumberColor}{HTML}{EEEEEE}
+\definecolor{FOMTOCSectionTitleColor}{HTML}{EEEEEE}
+\definecolor{FOMTOCBackgroundColor}{rgb}{0.58,0.77,0.75} % fomgreen
 
 % ---------------------------------------------------------------------------
 \setbeamercolor*{structure}{fg=fomgreen, bg=softgreen}
@@ -173,6 +178,20 @@
 \setbeamerfont{note date}{family=\ttfamily, series=\mdseries}
 \setbeamerfont{note title}{parent=note}
 
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: itemize item
+% ---------------------------------------------------------------------------
+\setbeamerfont{itemize item}{size=\tiny}
+\setbeamerfont{itemize subitem}{size=\tiny}
+\setbeamerfont{itemize subsubitem}{size=\tiny}
+
+% ---------------------------------------------------------------------------
+% Colors & Font setting for: block
+% ---------------------------------------------------------------------------
+\setbeamercolor{block title}{bg=FOMFrametitelColor!90,fg=white}
+\setbeamercolor{block body}{bg=FOMFrametitelColor!10,fg=black}
+
 % ---------------------------------------------------------------------------
 % Colors & Font setting for: cemph and cstrong
 % ---------------------------------------------------------------------------
@@ -192,6 +211,7 @@
 
 % ---------------------------------------------------------------------------
 \mode<all>
+\message{Ending 'beamercolorthemeNPBT-FOM' ----------------------------------}
 %
 % ===========================================================================
 %

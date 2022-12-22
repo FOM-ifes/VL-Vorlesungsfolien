@@ -64,11 +64,12 @@ In dieser Vorlesung lernen Sie den **Prozess** kennen, der von der Forschungsfra
 Die Daten der Studie von Mednick et al. (2008)^[Datenquelle: [https://github.com/rpruim/Lock5withR](https://github.com/rpruim/Lock5withR)] sind wie folgt:
 
 ```{r echo=FALSE, out.width = "30%", fig.align="center"}
-behandlung <- factor(rep(c("Schlaf", "Koffein"), each=12))
+#  Basiert auf der Datentabelle load("SleepCaffeine.rda") (nachgebaut...)
+behandlung <- factor(rep(c("Schlaf", "Koffein"), each = 12))
 woerter <- c(14,18,11,13,18,17,21,9,16,17,14,15,12,12,14,13,6,18,14,16,10,7,15,10)
-SchlafKoffein <- data.frame(behandlung=behandlung, woerer=woerter)
-gf_jitter(woerter~behandlung, data = SchlafKoffein, width=0.1, hight=0.1, size=5) %>%
-  gf_labs(x="Behandlung", y="Erinnerte Wörter")
+SchlafKoffein <- data.frame(behandlung = behandlung, woerer = woerter)
+gf_jitter(woerter ~ behandlung, data = SchlafKoffein, width = 0.1, hight = 0.1, size = 5) %>%
+  gf_labs(x = "Behandlung", y = "Erinnerte Wörter")
 ```
 
 Im Mittelwert konnten diejenigen mit der Koffeintablette `r mean(woerter~behandlung, data = SchlafKoffein)[1]` Wörter erinnern, die mit dem Schlaf `r mean(woerter~behandlung, data = SchlafKoffein)[2]`, d.h., im Mittelwert konnte die Schlafgruppe `r diffmean(woerter~behandlung, data = SchlafKoffein)` Wörter mehr erinnern.
@@ -110,12 +111,13 @@ gf_histogram( ~ diffmean, data = Nullvtlg, center=0, binwidth = 0.8571428, fill=
 
 ### Übung `r nextExercise()`: Daten und Modell {.exercise type=A-B answer=A}
 
-Der Anteil der Simulationen, in denen es zufällig einen Unterschied von mindestes drei erinnerten Wörtern im Mittelwert gibt, liegt bei `r prop( ~ abs(diffmean)>=3, data = Nullvtlg)`. 
+Der Anteil der Simulationen, in denen es zufällig einen Unterschied von mindestens drei erinnerten Wörtern im Mittelwert gibt, liegt bei $`r prop( ~ abs(diffmean)>=3, data = Nullvtlg)`=`r prop( ~ abs(diffmean)>=3, data = Nullvtlg)*100`\%$. 
 
 Was stimmt Ihrer Meinung nach?
 
 A.  Der beobachtete Unterschied von $3$ Wörtern ist eher selten, wenn es gar keinen Unterschied geben würde.
-B.  Es liegt ein Fehler vor: wenn es in der Population keinen Unterschied gibt, dürften wir auch in der Stichprobe keinen beobachten.
+B.  Es liegt ein Fehler vor: Wenn es in der Population keinen Unterschied gibt, dürften wir auch in der Stichprobe keinen beobachten.
+
 
 
 ::: {.notes}
@@ -244,7 +246,7 @@ Eine Hypothese ist eine aus der Theorie oder Beobachtung abgeleitete Aussage.
 
 - Sie ist eine allgemeingültige über den Einzelfall hinausgehende Behauptung.
 
-- Häufig: Formalstruktur eines Konditionalsatzes, Implikation: wenn $x$ (Antezedens), dann $y$ (Konsequenz). 
+- Häufig: $x$ hat einen Einfluss auf $y$.
 
  
 ### Modelle
@@ -269,14 +271,16 @@ Modelle sind ganz allgemein vereinfachte Darstellungen relevanter Teile der Real
 
 Generalisierung von in der Realität beobachteten Regelmäßigkeiten zu einer allgemeineren Vermutung. 
 
-::: {.spaceing top="2em"}
+::: {.spaceing top="10pt"}
 **Häufig:** *Hypothesenbildung*.
 :::
 
-::: {.spaceing top="2em"}
+::: {.spaceing top="10pt" bottom="4pt"}
 **Beispiele:** Pawlow, Freud
 :::
 
+:::::::
+::::::: {.column width="2%"}
 :::::::
 ::::::: {.column width="32%"}
 #### Deduktion
@@ -285,11 +289,13 @@ Ableitung von Aussagen aus anderen (allgemeineren) Aussagen mit Hilfe logischer 
 
 
 
-::::: {.spaceing top=2em  bottom="2em"}
+::::: {.spaceing top="10pt"  bottom="40pt"}
 **Häufig:** *Hypothesenprüfung.*
 :::::
 
 
+:::::::
+::::::: {.column width="2%"}
 :::::::
 ::::::: {.column width="32%"}
 #### Abduktion
@@ -299,7 +305,7 @@ Verknüpfung von Einzelbeobachtungen und Erkennen (Vermuten) von Regeln.
 
 
 
-::::: {.spaceing top=2em  bottom="3em"}
+::::: {.spaceing top="23pt" bottom="41pt"}
 **Häufig:** *Hypothesenbildung*.
 :::
 
@@ -316,12 +322,11 @@ Verknüpfung von Einzelbeobachtungen und Erkennen (Vermuten) von Regeln.
 
 - *Deduktion*: Ich habe die Bohnen in den Sack gefüllt. Sie waren alle weiß. Jetzt nehme ich eine Bohne aus dem Sack: Sie ist weiß!
 
-- *Abduktion*: Vor mir steht ein Sack; ich sehe, dass Bohnen darin sind. Ich finde eine weiße Bohne irgendwo im Raum auf dem Boden. Daraus schließe ich: Die Bohne muss aus dem Sack sein!
+- *Abduktion*: Vor mir steht ein Sack; ich sehe, dass weiße Bohnen darin sind. Ich finde eine weiße Bohne irgendwo im Raum auf dem Boden. Daraus schließe ich: Die Bohne muss aus dem Sack sein!
 
 
 :::{.tiny}
-Quelle: Walach, H. (2013): *Psychologie: Wissenschaftstheorie, philosophische Grundlagen und Geschichte; ein Lehrbuch*.
-Stuttgart: Kohlhammer.
+Quelle: Peirce, C.S. (1931), *Collected Papers, Ed. Ch. Hartshorne & P. Weiss: Bd. 1-6; Ed. A. Burks: Bd. 7-8.* Cambridge: Harvard University Press, Bd. 7, S. 218.
 :::
 
   
@@ -409,7 +414,7 @@ Gütekriterien für Forschung:
 knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 ```
 
-- Wie die Kaffemaschine *wirklich* funktioniert, wissen wir nicht, dafür verwenden wir Hypothesen und Modelle.^[Literatur!]
+- Wie die Kaffeemaschine *wirklich* funktioniert, wissen wir nicht, dafür verwenden wir Hypothesen und Modelle.^[Literatur!]
 - Wenn wir uns sicher sind, den Mechanismus in der Maschine gefunden zu haben, haben wir eine hohe interne Validität.
 - Wenn die Maschine auch woanders genauso funktioniert, haben wir eine hohe externe Validität.^[Skizze: Sebastian Sauer]
 

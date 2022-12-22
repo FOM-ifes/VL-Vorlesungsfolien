@@ -1,10 +1,11 @@
 #
 # clean-up.R
 #
+library(here)
 
 propper <- FALSE
 
-basedir <- file.path(".")
+basedir <- here(file.path("."))
 
 suffixes <- c(
     ".tex",
@@ -40,6 +41,7 @@ scripts <- c(
     "BlubberZisch",
     "Datenerhebung-Statistik",
     "Etwas-R-am-Abend",
+    "Etwas-R-am-Nachmittag",
     "Masterskript",
     "MathGrundlDWInfo",
     "OperationsResearch",
@@ -49,7 +51,18 @@ scripts <- c(
     "Marketing-Controlling",
     "WissMethoden-QuantitativeDatenanalyse",
     "QM-MathematikStatistik-Statistik",
-    "Unternehmenskommunikation"
+    "Unternehmenskommunikation",
+    "eufom-Quantitative-Methodenlehre",
+    "Wiederholung-Quiz",
+    "Quantitative-Forschungsmethoden",
+    "Quantitative-Forschungsmethoden-Anhang",
+    "QM-Anhang",
+    "Grundlagen-empirischeForschung",
+    "Empirisches Forschungsprojekt",
+    "Anhang-Datenhandling",
+    "BDA-Selbstlernmaterial",
+    "BigDataAnalytics",
+    "DES-Anhang"
 )
 
 
@@ -59,15 +72,17 @@ filenames <- c(
     "style",
     "typography",
     "missfont",
-    "watermark"
+    "watermark",
+    dir(basedir, "tmp-pdfcrop-*")
 )
+
 
 if (propper) {
     suffixes <- c(suffixes, suffixes.propper)
 }
 
-for(filename in filenames) {
-    for (suffix in suffixes){
+for (filename in filenames) {
+    for (suffix in suffixes) {
         cur.file <- paste0(filename, suffix)
         if (file.exists(cur.file)) {
             file.remove(cur.file)
@@ -75,7 +90,7 @@ for(filename in filenames) {
     }
 }
 
-for(filename in scripts) {
+for (filename in scripts) {
     for (suffix in suffixes.dir) {
         cur.dir <- paste0(filename, suffix)
         if (dir.exists(cur.dir)) {

@@ -1,14 +1,16 @@
 # ===========================================================================
-# prelude_tools.R (Release 0.1.1)
+# prelude_tools.R (Release 0.1.2)
 # ===============------------------------------------------------------------
-# (W) by Norman Markgraf, Karsten Lübke & Sebastian Sauer in 2017/18
+# (W) by Norman Markgraf, Karsten Lübke & Sebastian Sauer in 2017-2022
 #
 # 23. Feb. 2018  (nm)  Erstes Schritte. Extraktion aus der prelude.R
 #                      (0.1.0)
 # 18. Mär. 2018  (nm)  Dokumentation angepasst.
 #                      (0.1.1)
+# 19. Feb. 2022  (nm)  Kleinligkeiten.
+#                      (0.1.2)
 #
-#   (C)opyleft Norman Markgraf, Karsten Lübke & Sebastian Sauer in 2017/18
+#   (C)opyleft Norman Markgraf, Karsten Lübke & Sebastian Sauer in 2017-2022
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -107,7 +109,7 @@ if (!exists("prelude.tools")) {
   
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   searchFileInPath <- function(filename, path=c(".", ".."), stopOnFail=TRUE) {
-      for(pth in path) {
+      for (pth in path) {
           fn <- file.path(pth,filename)
           flog.debug(paste0("Probing `", fn, "`!"))
           if (file.exists(fn)) {
@@ -125,25 +127,35 @@ if (!exists("prelude.tools")) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   loadSomething <- function(filename, path, stopOnFail=TRUE) {
-      pfn <- searchFileInPath(filename, path=path, stopOnFail)
+      pfn <- searchFileInPath(filename, path = path, stopOnFail)
       if (!is.null(pfn)) {
           flog.debug(paste0("Loading `",pfn,"`!"))
           source(pfn)  
       } else {
-          warning("SHIT!!!")
+          warning(paste("SHIT!!! Not loadging",pfn,"!!!"))
           flog.debug(paste0("Not loading `", pfn, "`!!!"))
       }
   }
   
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   loadPrelude <- function(preludeFilename, stopOnFail=TRUE) {
-    loadSomething(preludeFilename, path=c(".", "prelude", file.path("..","prelude")), stopOnFail)
+    loadSomething(
+        preludeFilename, 
+        path = c(".", "prelude", file.path("..", "prelude")), 
+        stopOnFail
+    )
   }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   loadPrivate <- function(privateFilename, stopOnFail=TRUE) {
-      loadSomething(privateFilename, path=c("private", file.path("..", "private")), stopOnFail)
+    loadSomething(
+        privateFilename,
+        path = c("private", file.path("..", "private"), "."),
+        stopOnFail
+    )
   }
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  
 }
 
 # ===========================================================================

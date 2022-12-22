@@ -1,0 +1,263 @@
+---
+title: "Übungsaufgaben"
+subtitle: "zur Klausurvorbereitung (DES)"
+documentclass: scrartcl
+fontsize: 12pt
+lang: de-DE
+papersize: a4
+header-includes:
+  - "\\usepackage{graphicx}"
+output: 
+    pdf_document:
+        latex_engine: pdflatex
+        template: NULL
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(mosaic)
+set.seed(2009)
+a <- 0
+p <- 0
+```
+
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Alle Schwäne die ich bisher gesehen habe waren weiß. 
+Ich schließe daraus: alle Schwäne sind weiß.
+
+Um welche Schlussart handelt es sich (max. 1 Antwort richtig)?
+
+1.  Induktion
+
+2.  Deduktion
+
+3.  Abduktion
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Welche Form der Datenerhebung ermöglicht Kausalaussagen (max. 1 Antwort richtig)?
+
+1.  Beobachtungsstudie
+
+2.  Randomisiertes Experiment
+
+3.  Zufällige Stichprobe
+
+4.  Eine große Stichprobe
+
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Welches Skalenniveau hat das Merkmal Postleitzahl (max. 1 Antwort richtig)?
+
+1.  Numerisch diskret
+
+2.  Numerisch stetig
+
+3.  Kategorial ordinal
+
+4.  Kategorial nominal
+
+## Aufgabe `r a<-a+1;a`: (`r x<-5;p<-p+x; x`  Punkte) 
+
+Benennen Sie die fünf Punkte des quantitativen Forschungsprozesses (PPDAC).
+
+\newpage
+
+## Aufgabe `r a<-a+1;a`: (1+3=`r x<-4;p<-p+x; x`  Punkte) 
+
+```{r, include=FALSE}
+data(CPS85, package = "mosaicData")
+einkommen <- CPS85[, c("wage", "educ", "sex", "age", "union")]
+colnames(einkommen) <- c("Stundenlohn", "Ausbildungsjahre","Geschlecht", "Alter", "Gewerkschaft")
+levels(einkommen$Geschlecht) <- c("weiblich", "männlich")
+levels(einkommen$Gewerkschaft) <- c("kein Mitglied", "Mitglied")
+```
+
+Es liegen folgende Daten einer zufälligen Bevölkerungssstichprobe aus dem 
+Jahre 1985 vor (USA).
+
+```{r}
+inspect(einkommen)
+```
+
+1. Wie groß ist der Stichprobenumfang $n$?
+
+2. Welche numerischen Merkmale liegen vor? 
+   Sind diese Verhältnis- oder Intervallskaliert?
+
+\newpage
+
+## Aufgabe `r a<-a+1;a`: (`r x<-5;p<-p+x; x`  Punkte) 
+
+Was können Sie der folgenden Abbildung entnehmen?
+
+```{r, out.width="60%", fig.align="center"}
+gf_boxplot(Alter ~ Gewerkschaft, data = einkommen)
+```
+
+\newpage
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Mit welchen Diagrammtyp könnte die Verteilung des Merkmals `Stundenlohn` 
+sinnvoll visualisiert werden (max. 2 Antworten richtig)?
+
+1.  Histogramm
+
+2.  Boxplot
+
+3.  Liniendiagramm
+
+4.  Streudiagramm/ Scatterplot
+
+5.  Säulendiagramm
+
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+
+Was gilt in der Regel für linksschiefe Verteilungen (max. 1 Antwort richtig)
+
+1.  Der Mittelwert ist gleich dem Median
+
+2.  Der Mittelwert ist kleiner als der Median
+
+3.  Der Mittelwert ist größer als der Median
+
+4.  keine Aussage möglich
+
+## Aufgabe `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+Ausgehend von der "Gleichung": `Daten = Modell +  Rest`: 
+Was verstehen Sie unter Modellierung?
+
+\newpage
+
+## Aufgabe `r a<-a+1;a`: (`r x<-3;p<-p+x; x`  Punkte) 
+
+Die Punktzahl eines Tests sei normalverteilt mit $\mu=80$ und $\sigma=10$. 
+Eine Kandidatin erreicht $x=90$ Punkte.
+
+Was können Sie der Ausgabe entnehmen?
+```{r, out.width="60%", fig.align="center"}
+xpnorm(90, mean=80, sd=10)
+```
+
+\newpage
+
+
+## Aufgabe `r a<-a+1;a`: (2+4=`r x<-6;p<-p+x; x`  Punkte) 
+
+Der Anteil der Personen in der Stichprobe, die Gewerkschaftsmitglied sind,
+```{r}
+prop( ~ Gewerkschaft, success="Mitglied", data = einkommen)
+```
+liegt bei $\approx `r round(mean(einkommen$Gewerkschaft=="Mitglied")*100)`\%$.
+
+```{r, out.width="60%", fig.align="center"}
+gewerkschaftsim <- do(10000) * prop( ~ Gewerkschaft, success="Mitglied", 
+                                     data = resample(einkommen))
+gf_histogram( ~ prop_Mitglied, data = gewerkschaftsim)
+quantile( ~ prop_Mitglied, data = gewerkschaftsim, probs = c(0.025, 0.975))
+```
+
+1.  Formulieren Sie die formalen Hypothesen, für die Forschungsthese, dass 
+    der Anteil der Gewerkschaftsmitglieder in der Population (Bevölkerung) 
+    nicht $20\%$ beträgt.
+    
+2.  Können Sie anhand des Bootstrap Konfidenzintervalls den Hypothesentest 
+    entscheiden? Warum? Und wie lautet ggfs. die Testentscheidung?
+
+\newpage
+
+## Aufgabe `r a<-a+1;a`: (`r x<-3;p<-p+x; x`  Punkte) 
+
+Welche der folgenden Aussagen über den p-Wert stimmt (max. 1 Antwort richtig)?
+
+1.  Der p-Wert weist auf die ökonomische Relevanz der Ergebnisse hin.
+
+2.  Der p-Wert weist auf die wissenschaftliche Relevanz der Ergebnisse hin.
+
+3.  Der p-Wert gibt die Wahrscheinlichkeit an, dass die Nullhypothese stimmt.
+
+4.  Der p-Wert gibt die Wahrscheinlichkeit an, dass die Alternativhypothese stimmt.
+
+5.  1.) und 3.) stimmen.
+
+6.  2.) und 4.) stimmen.
+
+7.  Keine der genannten Antworten stimmt.
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Ein Test für $H_0: \mu \leq 100$ gegen $H_A: \mu > 100$ ergibt die 
+Teststatistik $\bar{x}=95$. 
+Was können Sie über das Testergebnis aussagen? 
+Begründen Sie kurz.
+
+## Aufgabe `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkte) 
+
+Welches der genannten ist das richtige Testverfahren um einen Zusammenhang 
+zwischen `Gewerkschaft` und `Alter` zu analysieren (max. 1 Antwort richtig)?
+
+1.  Vergleich zweier Anteilswerte.
+
+2.  Vergleich zweier Mittelwerte.
+
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+
+Was reduziert die Wahrscheinlichkeit einen Fehler 2. Art zu begehen (max. 2 Antworten richtig)?
+
+1.  Ein geringerer Stichprobenumfang.
+
+2.  Ein geringeres Signifikanzniveau.
+
+3.  Ein höherer Stichprobenumfang.
+
+4.  Ein höheres Signifikanzniveau.
+
+
+\newpage
+
+
+## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) 
+
+Ein t-Test der Ausbildungsjahre je Geschlecht ergibt folgendes Ergebnis:
+
+```{r}
+t.test( Ausbildungsjahre ~ Geschlecht, data = einkommen)
+```
+
+Fassen Sie kurz Forschungsfrage, Hypothese und Ergebnis zusammen.
+
+\newpage
+
+
+## Aufgabe `r a<-a+1;a`: (`r x<-9;p<-p+x; x`  Punkte) 
+
+Eine lineare Regression des Stundenlohns auf die anderen Variablen ergibt 
+folgendes Ergebnis:
+```{r}
+lm(Stundenlohn ~ Ausbildungsjahre + Geschlecht + Alter + Gewerkschaft, 
+           data = einkommen) %>%
+  summary()
+```
+
+Beschreiben und diskutieren Sie das Ergebnis.
+
+\newpage
+
+### Übersicht
+
+```{r results="asis", echo=FALSE}
+cat(paste("Aufgaben:", a,"\n\n"))
+cat(paste("Punkte:", p,"\n\n"))
+```
+
+
+
+
+

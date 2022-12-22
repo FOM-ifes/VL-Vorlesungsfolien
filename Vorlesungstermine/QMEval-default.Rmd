@@ -1,0 +1,13 @@
+| Tag | Datum      | Inhalte                                           |
+|:---:|:----------:|:--------------------------------------------------|
+| Di  | 14.03.2023 | Organisatorisches, Wissenschaftliche Grundlagen   |
+| Di  | 21.03.2023 | Grundlagen Quantitative Datenanalyse              |
+| Mo  | 27.03.2023 | Grundlagen wissenschaftlicher Fragebögen          |
+| Mo  | 03.04.2023 | Grundlagen wissenschaftlicher Fragebögen (Forts.) |
+| Di  | 28.04.2023 | Einführung in R                                   |
+| Mi  | 05.04.2023 | Explorative Datenanalyse                          |
+| Mo  | 10.04.2023 | Explorative Datenanalyse, Fallstudie              |
+| Mi  | 19.04.2023 | Lineare Regression                                |
+| Mi  | 26.04.2023 | Lineare Regression, Fallstudie                    |
+| Di  | 09.05.2023 | Evaluationsforschung                              |
+| Mo  | 17.07.2023 | Wiederholung                                      |

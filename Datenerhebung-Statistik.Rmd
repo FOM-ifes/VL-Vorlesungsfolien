@@ -4,6 +4,7 @@ tag:
     - bachelor
     - shiny
     - des
+    # - exclude-crazy-norman
 ---
 ```{r setup, include=FALSE}
 # ---------------------------------------------------------------------------
@@ -25,15 +26,19 @@ if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-privateVorstellung <<- FALSE   # Zeige die Private Vorstellung
-showVorlesungsplan <<- FALSE  # Zeige den Vorlesungsplan
-showuseR <<- FALSE
-UseCache <<- FALSE
-Vorlesungstermine <<- ""
+assign("abschluss", FALSE, envir = .GlobalEnv)
+
+my.options$set(
+  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
+  Corona = FALSE
+)
+
+createPrivateYaml("FOM-Dozent*in", "SoSe 2023", "FOM")
 
 
-
-createPrivateYaml("FOM-Dozent*in", "WiSe 2020/21", "FOM")
+assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
+assign("Vorlesungstermine", "default", envir = .GlobalEnv)
 
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
 makeSkriptOfType("DozentenSkript") 
@@ -51,21 +56,31 @@ theme_set(
 ```
 
 ```{r setUpChildren, eval=TRUE, include=FALSE}
-childrenToInclude <- c(
-    "DES-Organisatorisches", "Hinweise", "Grundlagen-Wissenschaft", "Grundlagen-QuantDat", 
-    "Einfuehrung-R", "EDA", "Regression", "Normalverteilung", "Inferenz", "Abschluss"
+ChildList <- c(
+    {if_else(my.options$get("Corona"),
+             'DES-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+             'DES-Organisatorisches.Rmd')},
+    {if_else(my.options$get("privateVorstellung"),
+             'private/private-Vorstellung.Rmd', NULL)},
+    'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd', 
+    'Einfuehrung-R.Rmd',
+    'EDA.Rmd',
+    'Regression.Rmd',
+    'Normalverteilung.Rmd',
+    'Inferenz.Rmd',
+    # 'Inferenz-Beispiele.Rmd',  # -> Anhang!
+    # 'Datenhandling.Rmd',  # -> Anhang!
+    'Abschluss.Rmd'
 )
 if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
-  childrenToInclude <- c(
-    "Grundlagen-Wissenschaft", "Abschluss"
+  ChildList <- c(
+    "Grundlagen-Wissenschaft", 
+    "Abschluss"
   )
 }
-includeChild <- function(name, children=childrenToInclude, all=FALSE) {
-    ifelse(all, TRUE, ifelse(name %in% children, TRUE, FALSE))
-}
-```
-
-```{r child = './Inhalte/Wiederholung-R.Rmd', eval=includeChild("Wiederholung-R")}
+IncludeChildList <- file.path('Inhalte', na.omit(ChildList))
 ```
 
 
@@ -79,41 +94,8 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # ---------------------------------------------------------------------------
 ```
 
-
-
-```{r child = './Inhalte/DES-Organisatorisches.Rmd', eval=includeChild("DES-Organisatorisches")}
-``` 
-
-```{r child = './private/private-Vorstellung.Rmd', eval = privateVorstellung}
+```{r child = IncludeChildList}
 ```
-
-```{r child = './Inhalte/Organisatorisches/Hinweise.Rmd', eval=includeChild("Hinweise")}
-```
-
-```{r child = './Inhalte/Grundlagen-Wissenschaft.Rmd', eval=includeChild("Grundlagen-Wissenschaft")}
-```
-
-```{r child = './Inhalte/Grundlagen-QuantDat.Rmd', eval=includeChild("Grundlagen-QuantDat")}
-```
-
-```{r child = './Inhalte/Einfuehrung-R.Rmd', eval=includeChild("Einfuehrung-R")}
-```
-
-```{r child = './Inhalte/EDA.Rmd', eval=includeChild("EDA")}
-```
-
-```{r child = './Inhalte/Regression.Rmd', eval=includeChild("Regression")}
-```
-
-```{r child = './Inhalte/Normalverteilung.Rmd', eval=includeChild("Normalverteilung")}
-```
-
-```{r child = './Inhalte/Inferenz.Rmd', eval=includeChild("Inferenz")}
-```
-
-```{r child = './Inhalte/Abschluss.Rmd', eval=includeChild("Abschluss")}
-```
-
 
 ```{r finalize, include=FALSE}
 # ---------------------------------------------------------------------------

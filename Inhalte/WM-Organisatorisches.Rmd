@@ -15,7 +15,7 @@ pathToImages <- getPathToImages()
 ```
 
 
-# `r if(abschluss) WDH` Organisatorisches
+# `r if(get("abschluss")) get("WDH")` Organisatorisches
 
 ```{r child = './Organisatorisches/Literatur.Rmd'}
 ```
@@ -43,7 +43,7 @@ Die Studierenden können nach erfolgreichem Abschluss des Moduls:
 
 Prüfung:
 
-- $25\%$ **Sonstige Beteiligung**: **Postersession** zur Qualitativen Forschungsmethodik am letzten Vorlesungstermin. *Nähere Informationen folgen*.
+- $25\%$ **Sonstige Beteiligung**: *Nähere Informationen folgen*.
 - $75\%$ **Klausur** 90 Minuten. Zur Vergabe von Credit Points muss die Klausur mit einer mindestens ausreichenden Leistung bestanden werden.
 
 **Beachten Sie die im OC hinterlegten Fristen!**
@@ -59,10 +59,10 @@ Workload:
 ```{r child = './Organisatorisches/VorbereitungMS.Rmd'}
 ```
 
-```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
 ```
 
 ```{r, include=FALSE}
-abschluss <<- TRUE
+assign("abschluss", TRUE, envir = .GlobalEnv)
 rm(pathToImages)
 ```

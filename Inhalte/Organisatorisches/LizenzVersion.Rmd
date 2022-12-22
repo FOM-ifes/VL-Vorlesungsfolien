@@ -11,4 +11,4 @@ Der verwendete Code sowie das Beamer-Template aus dem [NPBT-Projekt](http://gith
 Bitte melden Sie Fehler und Verbesserungsvorschläge: [karsten.luebke@fom.de](<mailto:karsten.luebke@fom.de>)
 
 - Autor\*innen: Karsten Lübke, Oliver Gansser, Matthias Gehrke, Bianca Krol, Norman Markgraf, Sebastian Sauer, Tanja Kistler, Tabea Griesenbeck
-- Hinweise u.a. von Thomas Christiaans, Jörg Horst, Ute Twisselmann, Martin Vogt, Daniel Ziggel. Vielen Dank!
+- Hinweise u.a. von Thomas Christiaans, Rolf B. Drescher, Karina Hoekstra, Jörg Horst, Ute Twisselmann, Martin Vogt, Daniel Ziggel. Vielen Dank!

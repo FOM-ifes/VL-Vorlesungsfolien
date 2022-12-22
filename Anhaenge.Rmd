@@ -1,0 +1,91 @@
+---
+title: "Anhang -- Datenhandling"
+tag:
+    - master
+    - MasterNeu
+#   - bachelor
+#   - sesmill
+    - shiny
+#    - wmqd
+---
+
+```{r setup, include=FALSE}
+# ---------------------------------------------------------------------------
+# Einige Funktionen und Variabeln sind in die Datei 'prelude.R' ausgelagert.
+# Diese werden hier nachgeladen und angepasst.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source("prelude.R")
+initPrelude(
+    "Datenhandling-",       # Prefix für Terminlisten etc.
+    TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
+)
+```
+```{r localKnitrButtonSetup, eval=!RENDEREDBYSCRIPT, echo=FALSE, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Einstellungen für den Fall, dass man den knitr-Button nutzt. Sonst bitte
+# 'eval=FALSE' einstellen!
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+my.options$set(
+  privateVorstellung = FALSE,
+  showVorlesungsplan = FALSE,
+  showuseR = FALSE,
+  Corona = TRUE
+)
+
+if (!exists("prelude.rendertools")) {
+    loadPrelude("prelude_rendertools.R")
+}
+
+# Standardeinstellung ("Dozent", "Semester", "FOM Standort")
+# muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
+createPrivateYaml("Dozent*in", "SoSe 2023", "FOM") 
+
+UseCache <<- FALSE
+makeDozi()        # Erzeuge Dozierendenskript
+#makeStudi()       # Erzeuge Studierendenkript
+#makeLsgSkript()   # Erzeuge Lösungsskript
+```
+
+
+```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggplot2)
+# ggformula, also ggplot2 muss noch etwas konfiguriert werden.
+theme.fom <- theme_classic(22*1.02)
+theme.fom <- theme.fom + theme(
+    # plot.background = element_rect(fill = "#CDEBE0"),
+    # panel.background = element_rect(fill = "#CDEBE0", colour = "#009981")
+  )
+theme_set(
+  theme.fom  
+)
+```
+```{r setup_data, include=FALSE}
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Sichert zu, dass die entsprechenden Daten auch vorhanden sind. 
+# Ggf. werden sie von dem übergebenden Link geladen und lokal gespeichert.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
+
+# ---------------------------------------------------------------------------
+
+# child=DEPRECATED <<-FALSE
+
+```
+
+```{r child = './Inhalte/Datenhandling.Rmd', eval=TRUE}
+```
+
+```{r child = './Inhalte/Inferenz.Rmd', eval=FALSE}
+```
+
+```{r child = './Inhalte/Inferenz-Beispiele.Rmd', eval=FALSE}
+```
+
+
+
+```{r finalize, include=FALSE}
+# ---------------------------------------------------------------------------
+# Setzt einige Parameter zurück
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+finalizePrelude()
+```

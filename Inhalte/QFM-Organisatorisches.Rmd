@@ -15,7 +15,7 @@ pathToImages <- getPathToImages()
 ```
 
 
-# `r if(abschluss) WDH` Organisatorisches
+# `r if(get("abschluss")) WDH` Organisatorisches
 
 
 ```{r child = './Organisatorisches/Literatur.Rmd'}
@@ -59,10 +59,10 @@ Workload:
 ```{r child = './Organisatorisches/VorbereitungMS.Rmd'}
 ```
 
-```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
 ```
 
 ```{r, include=FALSE}
-abschluss <<- TRUE
+assign("abschluss", TRUE, envir = .GlobalEnv)
 rm(pathToImages)
 ```

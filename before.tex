@@ -6,7 +6,11 @@
 % New section, not section in headline
 %
 \mode<beamer>
-  \setbeamertemplate{headline}[nosectioninhead]
+  \ifDLS{%
+    \setbeamertemplate{headline}[nosectioninheadDLS]%
+  }\else{%
+    \setbeamertemplate{headline}[sectioninhead]%
+  }\fi%
 \mode<all>
 \begin{frame}
   \frametitle{\contentsname}
@@ -18,7 +22,12 @@
   \end{multicols}
 \end{frame}
 \mode<beamer>
-  \setbeamertemplate{headline}[sectioninhead]
+  \ifDLS{%
+    \setbeamertemplate{headline}[sectioninheadDLS]%
+  }\else{%
+    \setbeamertemplate{headline}[sectioninhead]%
+  }\fi%
 \mode<all>
+
 
 % ===========================================================================

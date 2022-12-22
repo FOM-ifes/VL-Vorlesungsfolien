@@ -26,7 +26,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 - Die Studierenden können Gründe für den Einsatz von R nennen.
 - Die Studierenden können die Unterschiede zwischen R, RStudio und mosaic erläutern.
-- Die Studierenden können R in Grundzügen anwenden (wie Datensätze laden und einfache Befehle eingeben).
+- Die Studierenden können R in Grundzügen anwenden (wie Datentabellen laden und einfache Befehle eingeben).
 
 
 
@@ -166,7 +166,7 @@ analysiere( y  # ggfs. abhängige Variable
             ~  x # unabhängige Variable(n)
             | z, # ggfs. bedingende (gruppierende) Variable(n)
             Optionen, # ggfs. weitere Optionen
-            data = meine_daten ) # Datensatz 
+            data = meine_daten ) # Datentabelle 
 ```
 
 `analysiere()`: Was soll R tun?^[Befehlsübersicht [hier](https://www.fom.de/fileadmin/fom/forschung/ifes/Cheatsheet-DA-R.pdf); Tilde `~` unter macOS: `alt+n`, vertikaler Strich `|`: `alt+7`]
@@ -225,13 +225,13 @@ The following objects are masked from ‘package:base’:
 
 ### Beispiel `Births78`
 
-Internen Datensatz `Births78` laden:^[Falls Sie aktuell noch kein lauffähiges R haben: Für die heutige Vorlesung geht auch [https://fomshinyapps.shinyapps.io/micRo-Births78/](https://fomshinyapps.shinyapps.io/micRo-Births78/)]
+Interner Datentabelle `Births78` laden:^[Falls Sie aktuell noch kein lauffähiges R haben: Für die heutige Vorlesung geht auch [https://fomshinyapps.shinyapps.io/micRo-Births78/](https://fomshinyapps.shinyapps.io/micRo-Births78/)]
 
 ```{r}
 data(Births78)
 ```
 
-Datensatzbeschreibung (Hilfe zu den Daten):
+Datentabellebeschreibung (Hilfe zu den Daten):
 
 ```{r, eval=FALSE}
 ?Births78
@@ -369,7 +369,7 @@ Z.B. für den 26. Mai: `Births78 %>% filter(date == "1978-05-26")`:
 
 `r Births78 %>% filter(date == "1978-05-26") %>% select(births)`
 
-Wie können Sie gucken, ob das *viele* oder *wenige* Geburten waren?
+Wie können Sie überprüfen, ob das *viele* oder *wenige* Geburten waren?
 :::
 
 
@@ -415,7 +415,7 @@ mean(births ~ 1, data = Births78)
 
 ### Variablentypen in R
 
-Struktur des Datensatzes `Births78`:
+Struktur der Datentabelle `Births78`:
 
 ```{r str-birth78, eval=FALSE}
 str(Births78)
@@ -428,10 +428,10 @@ str(Births78)
 :::
 
 
-Ein Datensatz (`data.frame`) kann aus mehreren Variablen (Spalten) mit gleicher Anzahl Beobachtungen (Zeilen) bestehen. Für Variablen gibt es verschiedene Typen, u.a.:
+Eine Datentabelle (`data.frame`) kann aus mehreren Variablen (Spalten) mit gleicher Anzahl Beobachtungen (Zeilen) bestehen. Für Variablen gibt es verschiedene Typen, u.a.:
 
 - Zeichenketten (`character`) und Faktoren (`factor`)^[Faktoren sind Zeichenketten, die eine definierte Menge an Werten (Ausprägungen, `levels`) annehmen können.].
-- Gleitkommazahlen (`numeric` bzw. `double`) und Ganze Zahlen (`integer`).
+- Gleitkommazahlen (`numeric` bzw. `double`) und ganze Zahlen (`integer`).
 
 
 ### Übung `r nextExercise()`: Variablentyp {.exercise type=A-B-C answer=A}
@@ -517,7 +517,7 @@ knitr::include_graphics(file.path(pathToImages, "Forschungsprozess-3.png"), erro
 :::
 
 
-```{r child = './useR/useR-pre.Rmd', eval = showuseR}
+```{r child = './useR/useR-pre.Rmd', eval = my.options$get("showuseR")}
 ```
 
 

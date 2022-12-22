@@ -1,0 +1,26 @@
+---
+# DLS:
+#mainfont: Verdana
+#mainfontoptions:
+#    - BoldFont=Verdana Bold
+#    - ItalicFont=Verdana Italic
+#    - BoldItalicFont=Verdana Bold Italic
+# Nicht-DLS:
+mainfont: Arial
+mainfontoptions:
+    - BoldFont=Arial Bold
+    - ItalicFont=Arial Italic
+    - BoldItalicFont=Arial Bold Italic
+sansfont: Arial
+sansfontoptions:
+    - BoldFont=Arial Bold
+    - ItalicFont=Arial Italic
+    - BoldItalicFont=Arial Bold Italic
+mathspec: Yes
+mathfont: "Cambria Math"  # Scale 1.05
+#mathfont: "Euclid"  # Scale 1.1
+#mathfont: "STIX Two Math"  # Scale 1.1
+mathfontoptions:
+    - StylisticSet=1
+    - Scale=1.05
+---

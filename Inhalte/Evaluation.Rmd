@@ -22,11 +22,11 @@ pathToImages <- getPathToImages()
 
 Die Studierenden ...
 
-- den Begriff Evaluationsforschung definiern und abgrenzen.
+- den Begriff Evaluationsforschung definieren und abgrenzen.
 - kennen die Einsatzgebiete der Evaluationsforschung.
 - kennen zentrale Begriffe und können diese aktiv nutzen und definieren.
 - kennen den Ablauf und die Standards der Evaluationsforschung.
-- kennen die Evalutationsphasen.
+- kennen die Evaluationsphasen.
 - sind in der Lage die Evaluation an (eigenen) Forschungsprojekten in groben Zügen zu planen.
 
 
@@ -45,7 +45,7 @@ Nach ***Westermann (2002)*** muss eine Evaluation – eine Bewertung – systema
 **Definition 2:**
 
 Nach ***Spiel (2003)*** untersucht die Evaluationsforschung wissenschaftsgestützt unter Berücksichtigung geltender Standards die Effektivität und Effizienz von Gegenständen.^[Spiel, C. (2003). Wissenschaftliche Evaluation. Eine Maßnahme der Qualitätssicherung. Erziehung und Unterricht, 153(7-8).]  
-*(Effektivität: Ausmaß der Zielerreichung – ist die Maßnahme geeignet, Effizienz = Verhältnis von Aufwand und Nutzen)*
+*(Effektivität: Ausmaß der Zielerreichung – ist die Maßnahme geeignet, Effizienz: Verhältnis von Aufwand und Nutzen)*
 
 
 ### Definition der Evaluationsforschung II
@@ -92,8 +92,7 @@ Somit stellt die Auftragsforschung häufig eine Diskrepanz zwischen methodisch-w
 
 *Unterschied zur Evaluation*:
 QM und Monitoring (auch Controlling) sind kontinuierliche, datenbasierte Verfahren um Maßnahmen/Organisationen zu bewerten und optimieren. 
-Die wissenschaftliche Evaluation ist dagegen eher punktuell ausgeführt. ^[Spiel, C. et al. (2010). Grundlagen der Evaluationsforschung. In H. Holling H. & B. Schmitz (Hrsg.), Handbuch Statistik, Methoden und Evaluation (S. 223-232). Göttingen: Hogrefe.]^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.]
-^[Westermann, R. (2002). Merkmale und Varianten von Evaluationen: Überblick und Klassifikation. Zeitschrift für Psychologie, 210 (1), 4-26. ]  
+Die wissenschaftliche Evaluation ist dagegen eher punktuell ausgeführt.^[Spiel, C. et al. (2010). Grundlagen der Evaluationsforschung. In H. Holling H. & B. Schmitz (Hrsg.), Handbuch Statistik, Methoden und Evaluation (S. 223-232). Göttingen: Hogrefe.]^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.]^[Westermann, R. (2002). Merkmale und Varianten von Evaluationen: Überblick und Klassifikation. Zeitschrift für Psychologie, 210 (1), 4-26. ]  
 
 
 ### Was, wer, wie wird evaluiert
@@ -186,10 +185,10 @@ Qualitätsstandards der Gesellschaft für Evaluation (**DeGEval**)^[[https://www
 
 3. [Fairness]{.cstrong}: "Die Fairnessstandards sollen sicherstellen, dass in einer Evaluation respektvoll und fair mit allen beteiligten und betroffenen Personen und Gruppen umgegangen wird"
 
-4. [Genauigkeit]{.cstrong}: "Die Genauigkeitsstandards sollen sicherstellen, dass eine Evaluation gültige, nachvollziehbare Informationen und Ergebnisse zum jeweiligen Evaluationsgegenstand und Evaluationsfragestellungen hervorbringt und vermittelt. Hier kommen wissenschaftlichen Gütekriterien eine besondere Bedeutung zu." siehe hierzu auch: DeGeVal ^[https://www.degeval.org/degeval-standards/kurzfassung/]
+4. [Genauigkeit]{.cstrong}: "Die Genauigkeitsstandards sollen sicherstellen, dass eine Evaluation gültige, nachvollziehbare Informationen und Ergebnisse zum jeweiligen Evaluationsgegenstand und Evaluationsfragestellungen hervorbringt und vermittelt. Hier kommen wissenschaftlichen Gütekriterien eine besondere Bedeutung zu." siehe hierzu auch: DeGEVal ^[https://www.degeval.org/degeval-standards/kurzfassung/]
 
 
-## Phasen einer Evalutaionsstudie
+## Phasen einer Evaluationsstudie
 ### Phasen einer Evaluationsstudie
 
 **Fünf-Phasen-Modell** ^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer.] 

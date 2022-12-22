@@ -143,20 +143,20 @@ Wie *entsteht* eigentlich eine Normalverteilung?
 
 Angenommen, unter $45$ Punkten, d.h. mit $44{,}5$ Punkten oder weniger, fällt 
 mensch leider durch, dann liegt die Durchfallwahrscheinlichkeit bei 
-`r round(pnorm(44.5, mean=55, sd=15),2)`:
+`r round(pnorm(44.5, mean = 55, sd = 15),2)`:
 
 $$p=F(x)=P(X\leq x)$$
 
 ```{r, fig.align="center", out.width="35%"}
 library(mosaic)
-xpnorm(44.5, mean=55, sd=15)
+xpnorm(44.5, mean = 55, sd = 15)
 ```
 
 
 ### Übung `r nextExercise()`: Eigenschaften Verteilungsfunktion I {.exercise type=yesno answer=yes}
 
 *Stimmt die Aussage:* 
-Die Verteilungsfunktion ist monoton steigend^[alt.: monoton wachsend], d. h., mit größerem $x$ wird 
+Die Verteilungsfunktion ist monoton steigend^[alt.: monoton wachsend], d.h., mit größerem $x$ wird 
 $F(x)$ zumindest nicht kleiner?
 
 - Ja.
@@ -266,7 +266,13 @@ Ist dann $x=150$ ein üblicher Wert?
 
 ::: {.notes}
 ***Nein***: $z=\frac{150-100}{15}>3$. Ein solcher Wert kommt also in weniger 
-als $0{,}3\,\%$ der Fälle vor.
+als $\frac{0{,}3}{2}\,\%$ der Fälle vor.
+
+Genau:
+
+
+`1 - pnorm(150, mean = 100, sd = 15)`
+
 :::
 
 
@@ -334,7 +340,7 @@ Mit einer kleineren Wahrscheinlichkeit werden kleinere Werte nicht
 
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 pp<-seq(0,1, length=5000)
-qq<-qnorm(pp, mean=55, sd=15)
+qq<-qnorm(pp, mean = 55, sd = 15)
 p1 <- gf_dist("norm", mean = 55, sd=15, kind = "cdf") %>% 
   gf_labs(title = "Verteilungsfunktion", x="q", y="p") %>%
   gf_refine(theme(aspect.ratio = 1))
@@ -350,7 +356,7 @@ rm(qq)
 
 ### Übung `r nextExercise()`: Quantil berechnen {.exercise type=A-B answer=B}
 
-Mit bis zu wie vielen Punkten zählt man zu dem oberen Drittel der Klausur?
+Mit mindestens wie vielen Punkten zählt man zu dem oberen Drittel der Klausur?
 
 A.  `xqnorm(1/3, mean = 55, sd = 15)`: `r round(qnorm(1/3, mean = 55, sd = 15))` Punkte.
 B.  `xqnorm(2/3, mean = 55, sd = 15)`: `r round(qnorm(2/3, mean = 55, sd = 15))` Punkte.
@@ -400,7 +406,7 @@ rm(qxc)
 
 Erinnern wir uns an die Rechnungshöhe `total_bill` bei den `tips`-Daten.
 
-Wir können auch mit einem QQ-Plot prüfen, in wie weit diese normalverteilt sind:
+Wir können auch mit einem QQ-Plot prüfen, inwieweit diese normalverteilt sind:
 
 :::::: {.columns}
 ::: {.column width="45%"}
@@ -436,8 +442,8 @@ C.  Beide gleich gut.
 ::: {.notes}
 Gabi hat einen z-Wert von 1.5, Klaus einen von 1, also hat Gabi (***A***) 
 besser abgeschnitten.  
-Siehe auch für Gabi: `xpnorm(75, mean=60, sd=10)`, 
-für Klaus: `xpnorm(275, mean=250, sd=25)`
+Siehe auch für Gabi: `xpnorm(75, mean = 60, sd = 10)`, 
+für Klaus: `xpnorm(275, mean = 250, sd = 25)`
 :::
 
 ```{r finish-Normalverteilung, include=FALSE}

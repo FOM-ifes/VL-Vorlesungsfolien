@@ -15,20 +15,23 @@ pathToImages <- getPathToImages()
 
 ### Klausur
 
-- Prüfungsrelevant ist der gesamte Stoff der Vorlesung. Für die Wiederholungsprüfung gelten die gleichen Rahmendbedingungen wie für den regulären Prüfungstermin.
+- Prüfungsrelevant ist der gesamte Stoff der Vorlesung. Für die Wiederholungsprüfung gelten die gleichen Rahmenbedingungen wie für den regulären Prüfungstermin.
 - Lesen Sie sich erst die ganze Klausur in Ruhe durch und fangen Sie mit den Aufgaben an, die Sie sicher können.
 - Halten Sie sich nicht zu lange mit Aufgaben auf, die wenig Punkte bringen.
 
-::: {.center .Large}
+::: {.center}
+::::: {.Large}
 Viel Erfolg!
+:::::
 :::
+
 
 ### Des Lehrenden letzte Worte
 
 Song [https://www.causeweb.org](https://www.causeweb.org): [Lawrence Mark Lesser &copy; Doin' Statistics](https://www.causeweb.org/cause/resources/fun/songs/doin-statistics)
 
 
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
+```{r echo=FALSE, out.width = "75%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "Zusammenhang-Lernen-Noten.pdf"), error=FALSE)
 ```
 

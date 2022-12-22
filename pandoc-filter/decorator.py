@@ -4,7 +4,7 @@
 """
   Quick-Typographie-Filter-Decorator-Class: decorator.py
 
-  (C)opyleft in 2018-2020 by Norman Markgraf (nmarkgraf@hotmail.com)
+  (C)opyleft in 2018-2022 by Norman Markgraf (nmarkgraf@hotmail.com)
 
   Release:
   ========
@@ -56,6 +56,7 @@ class Decorator:
     FONTFAMILYCLASSES = (
         "normalfont", "romanfont", "sansserif", "teletype",
         "italic", "smallcaps", "slanted", "upright")
+        
 
     def __init__(self):
         self.pre = ""
@@ -196,14 +197,14 @@ class LaTeXDecorator(Decorator):
             if width == "fill":
                 self.add_pre("\n\\vfill\n")
             else:
-                self.add_pre("\n\\vspace*{"+width+"}\n")
+                self.add_pre(f"\n\\vspace*{{{width}}}\n")
 
         if 'bottom' in attrib:
             width = attrib["bottom"]
             if width == "fill":
                 self.add_pre("\n\\vfill\n")
             else:
-                self.add_post("\n\\vspace*{"+width+"}\n")
+                self.add_post(f"\n\\vspace*{{{width}}}\n")
 
     def handle_div(self, elem):
         """Handle DIV Blocks in LaTeX Context.
@@ -253,6 +254,10 @@ class LaTeXDecorator(Decorator):
             self.add_pre("\n\\begin{columns}[T]\n\t\\begin{column}[t]{0.74\\textwidth}")
             self.add_post("\n\t\\end{column}\n\t\\begin{column}[t]{0.24\\textwidth}\n\\personDB{" + elem.attributes[
                 "person"] + "}\n\t\\end{column}\n\\end{columns}")
+                
+        if 'streching' in elem.attributes:
+            self.add_pre(r"{\setstretch{"+elem.attributes['streching']+"}")
+            self.add_post(r"}")
 
 
 class HTMLDecorator(Decorator):

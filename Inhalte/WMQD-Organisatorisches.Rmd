@@ -15,9 +15,9 @@ pathToImages <- getPathToImages()
 ```
 
 
-# `r if(abschluss) WDH` Organisatorisches
+# `r if(get("abschluss")) WDH` Organisatorisches
 
-```{r child = './Organisatorisches/Literatur.Rmd'}
+```{r child = './Organisatorisches/LiteraturNEU.Rmd'}
 ```
 
 ```{r child = './Organisatorisches/LizenzVersion.Rmd'}
@@ -42,10 +42,10 @@ Die Studierenden können nach erfolgreichem Abschluss des Moduls:
 
 ### Prüfungsleistung
 
-- Seminararbeit (ca. 1500 Wörter)
+- Hausarbeit (ca. 1500 Wörter)
 - Klausur 60 Minuten
 
-Seminararbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
+Hausarbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
 
 Workload:
 
@@ -57,11 +57,10 @@ Workload:
 
 **Beachten Sie die im OC hinterlegten Fristen!**
 
-
-```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
 ```
 
 ```{r, include=FALSE}
-abschluss <<- TRUE
+assign("abschluss", TRUE, envir = .GlobalEnv)
 rm(pathToImages)
 ```

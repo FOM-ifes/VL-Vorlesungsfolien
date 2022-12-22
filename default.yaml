@@ -1,10 +1,10 @@
 ---
-toc-title: "Inhaltsverzeichnis"
 lang: de-DE
 header-includes: 
     - "\\InputIfFileExists{header.tex}{\\relax}{\\relax}"
     - "\\definecolor{shadecolor}{RGB}{230,230,230}" 
-    #- "\\usepackage{csquotes}"
+    - "\\setmoderntoc"
+#   - "\\usepackage{csquotes}"
 output:
     beamer_presentation:
         slide_level: 3

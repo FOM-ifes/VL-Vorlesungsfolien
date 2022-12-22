@@ -1,0 +1,14 @@
+| Tag | Datum      | Inhalte                                         |
+|:---:|:----------:|:------------------------------------------------|
+| Di  | 14.03.2023 | Organisatorisches, Wissenschaftliche Grundlagen |
+| Di  | 21.03.2023 | Grundlagen Quantitative Datenanalyse            |
+| Mo  | 27.03.2023 | Einführung in R                                 |
+| Mo  | 03.04.2023 | Explorative Datenanalyse                        |
+| Di  | 28.04.2023 | Explorative Datenanalyse (Forts.)               |
+| Mo  | 10.04.2023 | Normalverteilung 	                             |
+| Mi  | 19.04.2023 | Lineare Regression                              |
+| Mi  | 26.04.2023 | Lineare Regression (Forts.)                     |
+| Mo  | 22.05.2023 | Inferenz                                        |
+| Mo  | 12.06.2023 | Inferenz (Forts.)                               |
+| Mo  | 03.07.2023 | Fallstudien                                     |
+| Mo  | 17.07.2023 | Wiederholung                                    |

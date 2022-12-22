@@ -1,4 +1,3 @@
-
 ```{r setup-Inferenzstatistik, echo=FALSE}
 # ---------------------------------------------------------------------------
 #% maintainer:
@@ -17,6 +16,7 @@ library(mosaic)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
+library(ggsci)
 ```
 
 
@@ -35,9 +35,9 @@ Die Studierenden ...
 - kennen die Namen klassischer, verteilungsbasierter Inferenztests und die jeweils getestete Statistik (z.B. t-Test für unabhängige Stichproben -- Mittelwertsdifferenz).
 
 
-## Einführendes Beispiel
+## Einführendes Beispiel {include-only=deprecated}
 
-### Offene Übung `r nextExercise()`: Lächeln und Nachsichtigkeit {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Lächeln und Nachsichtigkeit {.exercise type=essay include-only=deprecated}
 
 Im Artikel LaFrance, M., & Hecht, M. A. (1995). *Why smiles generate leniency*. Personality and Social Psychology Bulletin, 21(3), 207-214, [https://doi.org/10.1177%2F0146167295213002](https://doi.org/10.1177%2F0146167295213002) wird die Frage analysisiert, inwieweit ein Lächeln Personen nachsichtiger stimmt.
 
@@ -59,20 +59,23 @@ Zusatzfrage: Wie können Sie *Nachsichtigkeit* messen?
 
 :::
 
+<!-- -->
 
-### Lächeln und Nachsichtigkeit
+### Lächeln und Nachsichtigkeit {include-only=deprecated}
 
 ```{r smile, echo=FALSE, fig.align="center", fig.width = 12, out.width="12cm"}
 set.seed(1896)
 # LaFrance, M., & Hecht, M. A., "Why smiles generate leniency", Personality and Social Psychology Bulletin, 21, 1995, 207-214.
 
-nachsichtigkeit <- c(7, 3, 6, 4.5, 3.5, 4, 3, 3, 3.5, 4.5, 7, 5, 5, 7.5, 2.5, 5, 5.5, 5.5, 
-                     5, 4, 5, 6.5, 6.5, 7, 3.5, 5, 3.5, 9, 2.5, 8.5, 3.5, 4.5, 3.5, 4.5, 
-                     2, 4, 4, 3, 6, 4.5, 2, 6, 3, 3, 4.5, 8, 4, 5, 3.5, 4.5, 6.5, 3.5, 
-                     4.5, 4.5, 2.5, 2.5, 4.5, 2.5, 6, 6, 2, 4, 5.5, 4, 2.5, 2.5, 3, 6.5)
-gesicht <- factor(rep(c("lächeln", "neutral"), each =34), levels = c("neutral", "lächeln"))
-Laecheln <- data.frame(gesicht, nachsichtigkeit)
+nachsichtigkeit <- c(
+  7, 3, 6, 4.5, 3.5, 4, 3, 3, 3.5, 4.5, 7, 5, 5, 7.5, 2.5, 5, 5.5, 5.5, 
+  5, 4, 5, 6.5, 6.5, 7, 3.5, 5, 3.5, 9, 2.5, 8.5, 3.5, 4.5, 3.5, 4.5, 
+  2, 4, 4, 3, 6, 4.5, 2, 6, 3, 3, 4.5, 8, 4, 5, 3.5, 4.5, 6.5, 3.5, 
+  4.5, 4.5, 2.5, 2.5, 4.5, 2.5, 6, 6, 2, 4, 5.5, 4, 2.5, 2.5, 3, 6.5
+)
 
+gesicht <- factor(rep(c("lächeln", "neutral"), each = 34), levels = c("neutral", "lächeln"))
+Laecheln <- data.frame(gesicht, nachsichtigkeit)
 
 Laecheln.shuffle <- do(12) * Laecheln
 Laecheln.shuffle <- Laecheln.shuffle %>%
@@ -84,29 +87,50 @@ Laecheln.shuffle <- Laecheln.shuffle %>%
 Laecheln.org  <- Laecheln  %>%
   mutate(.index = 3)
 
-Laecheln.shuffle[Laecheln.shuffle$.index==3, ] <- Laecheln.org
+Laecheln.shuffle %>%
+  filter(".index" != 3) %>%
+  bind_rows(Laecheln.shuffle, Laecheln.org)
+
+#Laecheln.shuffle[Laecheln.shuffle$.index == 3, ] <- Laecheln.org
 
 
-gf_jitter(nachsichtigkeit ~ gesicht, 
-          color = ~ gesicht, data = Laecheln.shuffle, width=0.1, height = 0.05, alpha = 0.5) %>%
-  gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
-           group = ~ gesicht, stat="summary", size = 4) +
-  facet_wrap(~ .index, ncol = 4) +
-  scale_color_viridis_d()
-  #ggthemes::scale_color_colorblind()
+#ggformula::gf_jitter(nachsichtigkeit ~ gesicht, 
+#          color = ~ gesicht, data = Laecheln.shuffle, width = 0.1, height = 0.05, alpha = 0.5) %>%
+#  ggformula::gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
+#           group = ~ gesicht, stat = "summary", size = 4) +
+#  facet_wrap(~ .index, ncol = 4) +
+#  scale_color_viridis_d()
+#  #ggthemes::scale_color_colorblind()
+ggformula::gf_jitter(
+    nachsichtigkeit ~ gesicht, 
+    color = ~ gesicht, 
+    width = 0.1, 
+    height = 0.05, 
+    alpha = 0.5, 
+    data = Laecheln.shuffle) %>%
+  ggformula::gf_summary(
+      color = ~ gesicht, 
+      group = ~ gesicht, 
+      fun = mean, 
+      size = 4) %>%
+    ggformula::gf_refine( 
+        facet_wrap( ~ .index, ncol = 4),
+        scale_color_npg() 
+)
+
 ```
 
 
+<!-- -->
 
 
-
-### Offene Übung `r nextExercise()`: Modell und Daten {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Modell und Daten {.exercise type=essay include-only=deprecated}
 
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
 gf_jitter(nachsichtigkeit ~ gesicht, 
-          color = ~ gesicht, data = Laecheln.shuffle, width=0.1, height = 0.05, alpha = 0.5) %>%
+          color = ~ gesicht, data = Laecheln.shuffle, width = 0.1, height = 0.05, alpha = 0.5) %>%
   gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
-           group = ~ gesicht, stat="summary", size = 4) +
+           group = ~ gesicht, stat = "summary", size = 4) +
   facet_wrap(~ .index, ncol = 4) +
   ggthemes::scale_color_colorblind()
 ```
@@ -121,9 +145,9 @@ Die echten Daten finden Sie in Abbildung $3$.
 Für die echten Daten gilt: $\bar{x}_{\text{lächeln}}=`r round(mean(nachsichtigkeit ~ gesicht , data = Laecheln)[2],1)`$ und $\bar{x}_{\text{neutral}}=`r round(mean(nachsichtigkeit ~ gesicht , data = Laecheln)[1],1)`$ und damit $\bar{x}_{\text{lächeln}}-\bar{x}_{\text{neutral}}=`r round(diffmean(nachsichtigkeit ~ gesicht , data = Laecheln),1)`>0$. Aber auch wenn $\mu_{\text{lächeln}}-\mu_{\text{neutral}}=0$ gelten würde (alle anderen Abbildungen), gibt es zufällige Unterschiede. 
 :::
 
+<!-- -->
 
-
-### Offene Übung `r nextExercise()`: Ergebnisinterpretation {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Ergebnisinterpretation {.exercise type=essay include-only=deprecated}
 
 
 ```{r smiledot, echo=FALSE, fig.align="right", out.width="40%"}
@@ -131,8 +155,8 @@ set.seed(1896)
 Nullvtlg <- do(100)*diffmean(nachsichtigkeit ~ shuffle(gesicht), data = Laecheln)
 gf_dotplot( ~ diffmean, data = Nullvtlg, binwidth = 0.05) %>%
   gf_vline(xintercept = ~diffmean(nachsichtigkeit ~ gesicht , data = Laecheln)) %>%
-  gf_lims(x=c(-1.2,1.2)) %>%
-  gf_labs(y="Simulationen", x="Differenz Mittelwerte")
+  gf_lims(x = c(-1.2,1.2)) %>%
+  gf_labs(y = "Simulationen", x = "Differenz Mittelwerte")
 ```
 
 $100$ Simulationen des Modells *kein Unterschied* ergeben, dass `r tally( ~ diffmean>=diffmean(nachsichtigkeit ~ gesicht , data = Laecheln), data = Nullvtlg)[1]` Mal zufällig der Unterschied in der mittleren Nachsichtigkeit zwischen Lächeln und neutralem Gesicht mindestens so groß war wie der beobachtete.
@@ -143,6 +167,7 @@ Wie würden Sie dieses Ergebnis einordnen?
 Vielleicht: Wenn wir *theoretisch* annehmen, es gibt keinen Unterschied (und uns gemäß diesem Modell, d.h. gemäß dieser Annahme, Daten simulieren), dann ist das *praktisch* beobachtete Ergebnis möglich, aber eher unwahrscheinlich. Daher gibt es berechtigte Zweifel an der Gültikeit der Annahme und somit liegen hier Indizien für einen positiven Effekt des Lächelns vor.
 :::
 
+<!-- -->
 
 ### Einführung: Ist die Münze gezinkt? {include-only=deprecated}
 
@@ -158,6 +183,7 @@ Zählen Sie dann aus, ob das Ereignis *(mind.) 8 von 10 Kopf* selten ist oder h�
 
 Falls das Ereignis selten ist, so sprechen die Daten *gegen* die *Unschuldsvermutung*, dass die Münze im Glücksspiel fair war.
 
+<!-- -->
 
 ### Die Verteilung der Stichproben aus dem Münzversuch {include-only=deprecated}
 
@@ -177,12 +203,13 @@ gf_props(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8
 
 Das ist die *Verteilung* der Statistik (hier: Anteil $p$), wie sie sich gemäß eines hypothetischen Modells (hier: "Die Münze ist fair" $\Longleftrightarrow$ $\pi=0.5$) ergibt.
 
+<!-- -->
 
 ### Übung `r nextExercise()`: Was ist ein häufiges Ereignis im Münzversuch? {.exercise type=A-B-C-D answer=B include-only=deprecated}
 
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
 gf_bar(~heads, data = muenzverteilung, title = "9 der 100 Stichproben hatten 8-mal oder mehr Kopf") %>%
-  gf_refine(scale_x_discrete(drop=FALSE))
+  gf_refine(scale_x_discrete(drop = FALSE))
 ```
 
 Welche der Aussagen stimmt?
@@ -197,6 +224,7 @@ D.  Wirft man 100-mal 10 faire Münzen, so ist jede Anzahl an Treffern gleich h�
 Antwort ***B*** ist korrekt. Wenn die Wahrscheinlichkeit *Kopf* bei einer Münze $\pi=1/2$ ist, so sollte bei sehr vielen Würfen die Anzahl der Treffer auch bei etwa $1/2$ sein. Wirft man die Münze nicht so häufig, kann die Anzahl der Treffer auch mal deutlich von $p=1/2$ abweichen.
 :::
 
+<!-- -->
 
 ### Was ist eine Computersimulation? {include-only=deprecated}
 
@@ -212,7 +240,7 @@ Wiederhole das Folgende 100 Mal:
   - zähle jedes Mal die Anzahl 
     der Treffer (Kopf).
 Ach ja, speichere das Ergebnis 
-  in einem neuen Datensatz.
+  in einer neuen Datentabelle.
 Jetzt mal los.
 ```
 :::
@@ -227,11 +255,12 @@ library(mosaic)
 set.seed(1896) # Reproduzierbarkeit
 muenzverteilung <- do(100) * 
                    rflip(n = 10)
-``````
+```
 
 :::
 :::::::
 
+<!-- -->
 
 ### Cartoon: Simulation {include-only=deprecated}
 
@@ -239,8 +268,9 @@ muenzverteilung <- do(100) *
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_10-2018.jpg", "cartoon1018.jpg", pathToImages)
 ```
-"Bevor es Computer gab, musste man Zufallszahlen per Hand erzeugen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2018/results) &copy; J.B. Landers, Überschrift A. Bonifonte]
+"Bevor es Computer gab, musste man Zufallszahlen per Hand erzeugen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2018/results) &copy; J.B. Landers, Bildunterschrift A. Bonifonte]
 
+<!-- -->
 
 ## Modellierung und Simulation
 
@@ -252,7 +282,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
     - Variation allgegenwärtig ist,
     
-    - es neben dem Signal Rauschen gibt^[Daten = Modell + Rest],
+    - es neben dem Signal Rauschen gibt,
     
     - Schlüsse unsicher sind.
 
@@ -261,8 +291,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
     
 - Die *deskriptive Statistik* fasst Daten einer Stichprobe zusammen.
 
-- Die *Inferenzstatistik* schließt von einer Stichprobe auf eine Grundgesamtheit.^[Induktion]
-
+- Die *Inferenzstatistik* schließt von einer Stichprobe auf eine Grundgesamtheit.
 \vspace{1cm}
 
 ```{r fig-desk-vs.inf, out.width="70%", echo = FALSE}
@@ -287,9 +316,16 @@ knitr::include_graphics(file.path(pathToImages,"desk-vs-inf-v2.pdf"), error=FALS
 - Der/ die Kandidat*in muss herausfinden, welche Probe anders ist.^[vgl. ISO 4120 [https://www.iso.org/standard/33495.html](https://www.iso.org/standard/33495.html). Vgl. auch Single-Choice Klausur: 3 Antwortalternativen, 1 richtig.]
 
 ```{r, echo=FALSE, fig.align="center", out.width="30%"}
-plot(c(1,2,3), y=c(1,sqrt(5),1), 
-     col=c("darkgreen", "red", "red"), 
-     pch=c(3,4,4), cex=8, lwd=8, ann=FALSE, axes=FALSE, xlim = c(0,4), ylim = c(0,3), asp = 1)
+plot(c(1,2,3), y = c(1,sqrt(5),1), 
+     col = c("darkgreen", "red", "red"), 
+     pch = c(3,4,4), 
+     cex = 8, 
+     lwd = 8, 
+     ann = FALSE, 
+     axes = FALSE, 
+     xlim = c(0,4), 
+     ylim = c(0,3), 
+     asp = 1)
 ```
 
 
@@ -329,6 +365,20 @@ Anhand dieses Beispiels werden die Themen Punktschätzung, Bereichsschätzung un
 - Der Anteil derjenigen, die allgemein (d.h. in der Population) auf die richtige Probe tippen, wird mit $\pi$ bezeichnet, der Anteil derjenigen der Stichprobe mit $p$.
 
 - Da $\pi$ (in der Population) in der Regel unbekannt ist, muss es auf Basis der Stichprobe **geschätzt** werden: $\hat{\pi}$.
+
+### Wiederholung: Statistik und Parameter
+
+Der Wert der Statistik und der Wert des Parameters stimmen häufig **nicht** überein:^[[Bueno de Mesquita und Fowler (2021)](https://press.princeton.edu/books/paperback/9780691214351/thinking-clearly-with-data): Estimate = Estimand + Bias + Noise]
+
+$$Statistik = Parameter + Verzerrung + Rauschen$$ 
+
+- Wert Statistik: Z.B. $p$.
+
+- Wert Parameter: Z.B. $\pi$.
+
+- Verzerrung: Systematische Abweichung.
+
+- Rauschen: Zufällige Abweichung und Schwankungen der Stichprobe.
 
 
 
@@ -408,7 +458,7 @@ Ausgehend von der Population: Wie entwickelt sich die *Verteilung* einer Kennzah
 *Angenommen* unsere Stichprobe stammt aus einer Population mit $N=340000=220000+120000$ für die gilt $\pi=\frac{12}{34}=`r 12/34`$, d. h., $220000$ liegen falsch (`f`), $120000$ liegen richtig (`r`):
 
 ```{r}
-population <- rep(factor(c("f","r")), c(220000, 120000))
+population <- rep(c("f","r"), c(220000, 120000))
 prop( ~ population, success = "r")
 ```
 
@@ -486,11 +536,11 @@ In der Regel kennen wir die Population nicht^[Genau genommen haben wir sie hier 
 ::: {.small}
 
 ```{r, eval=FALSE}
-stipro <- rep(factor(c("f","r")), c(22, 12))
+stipro <- rep(c("f","r"), c(22, 12))
 stipro
 ```
 ```{r, echo=FALSE}
-stipro <- rep(factor(c("f","r")), c(22, 12))
+stipro <- rep(c("f","r"), c(22, 12))
 names(stipro) <- 1:length(stipro)
 stipro
 ```
@@ -569,12 +619,12 @@ Setze Zufallszahlengenerator
 Bootvtlg soll sein:
   Wiederhole 10000 Mal:
     - Berechne den Anteil "r",
-    - der Datensatz "stipro" soll dabei jedes Mal resampelt werden.
+    - die Datentabelle "stipro" soll dabei jedes Mal resampelt werden.
 ```
 
 ```{r}
 set.seed(1896)
-Bootvtlg <- do(10000)* prop( ~ resample(stipro), 
+Bootvtlg <- do(10000)* prop( ~ resample(stipro),
                              success = "r")
 ```
 
@@ -616,14 +666,14 @@ gridExtra::grid.arrange(gridExtra::grid.arrange(p1,p2, ncol=2))
 - Das geschätzte $95\,\%$-Konfidenzintervall ist der Bereich in dem $95\,\%$ unserer wiederholten Stichprobenkennzahlen liegen:
 
 ```{r}
-quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+qdata( ~ prop_r, data = Bootvtlg, p = c(0.025, 0.975))
 ```
 
 
 ### Übung `r nextExercise()`: Plausibler Wert {.exercise type=yesno answer=no}
 
 ```{r}
-quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+qdata( ~ prop_r, data = Bootvtlg, p = c(0.025, 0.975))
 ```
 
 Bei der Stichprobe: Erscheint Ihnen ein Anteil von $\frac{1}{3}$ *unplausibel*?
@@ -656,7 +706,7 @@ Während wir bei der Punktschätzung aus den möglichen Populationswerten einen 
 
 - Häufig bei $n>30$: $95\,\%$-KI $\approx \delta^* \pm (2 \cdot se)$, d.h., z.B. für den Mittelwert: $95\,\%$-KI für $\mu$: $\approx \bar{x} \pm 2 \cdot se = \bar{x} \pm 2 \cdot \frac{sd}{\sqrt{n}}.$
 
-- Je größer der Stichprobenumfang, desto kleiner das Konfidenzintervall (unter sonst gleichen Umständen): der Standardfehler $se$ fällt mit $n$.
+- Je größer der Stichprobenumfang, desto schmäler ist das Konfidenzintervall (unter sonst gleichen Umständen): Der Standardfehler $se$ fällt mit $n$.
 
 - Je größer die Sicherheit (z. B. $99\,\%$ statt $95\,\%$), desto breiter ist das Intervall. 
 
@@ -690,7 +740,7 @@ CIsim(n=10, samples=100)
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 :::
@@ -830,7 +880,7 @@ Wenn $x=20$ das Ergebnis Ihrer Stichprobe wäre, würde dieses nicht gut zum Mod
 
 - Anhand einer geeigneten **Teststatistik** $\delta$ werden die Stichprobendaten zusammengefasst. Ist die Wahrscheinlichkeit einer mindestens so großen Abweichung unter $H_0$ (sehr) klein, wird diese verworfen, andernfalls nicht.^[Song: [https://www.causeweb.org](https://www.causeweb.org): [McLellan M &copy; P-Value is Low](https://www.causeweb.org/cause/resources/library/r12618)]
 
-- Der **p-Wert** ($p$) gibt an, wie viele Stichproben ein mindestens so extremes Ergebnis wie die beobachtete Stichprobe haben, wenn $H_0$ gilt.
+- Der **p-Wert** ($p$) gibt den Anteil der Stichproben an, die ein mindestens so extremes Ergebnis wie die beobachtete Stichprobe haben, wenn $H_0$ gilt.
 
 - Anders gesagt: Der p-Wert berechnet sich als die Wahrscheinlichkeit eines solchen oder extremeren Wertes der Teststatistik unter den Annahmen von $H_0$.
 
@@ -851,7 +901,7 @@ knitr::include_graphics(file.path(pathToImages,"OneTest.png"), error=FALSE)
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 :::
@@ -873,7 +923,7 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_11-2016.jpg", "cartoon1116.jpg", pathToImages)
 ```
-"Dr. Frankenstein akzeptierte die Nullhypothese zum letzten Mal."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2016/results) &copy; J.B. Landers, Überschrift A. Boito]
+"Dr. Frankenstein akzeptierte die Nullhypothese zum letzten Mal."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2016/results) &copy; J.B. Landers, Bildunterschrift A. Boito]
 
 
 ### p-Wert
@@ -885,7 +935,8 @@ Wie oft kommt in den gemäß der Nullhypothese ($H_0: \pi=\frac{1}{3}$) simulier
 
 ```{r eval = FALSE, echo = TRUE}
 gf_bar( ~ heads, 
-        data = Nullvtlg)
+        data = Nullvtlg,
+        fill = ~ heads >= 12)
 ```
 :::
 ::: {.column width="50%"}
@@ -895,7 +946,9 @@ gf_bar( ~ heads,
         data = Nullvtlg, 
         fill = ~ ordered(heads >= 12)) %>% 
   gf_labs(fill = "Mind. 12 Treffer") %>% 
-  gf_theme(legend.position = c(0.95,0.95), legend.justification = c(1,1))
+  gf_theme(legend.position = c(0.95,0.95), legend.justification = c(1,1)) %>% 
+  gf_refine(scale_fill_npg(alpha = 0.6),
+            scale_color_npg(alpha = 0.6))
 ```
 :::
 :::::::::
@@ -947,10 +1000,13 @@ Liefern die Daten (starke) Indizien dafür, dass die Nullhypothese *nicht* gilt?
 
 ```{r, echo=FALSE, out.width = "60%", fig.align="center"}
 set.seed(1896)
-pNull <- do(10000)*binom.test(~sample(population, 34), success = "r", p=1/3, alternative = "greater") %>% pval()
-gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
-  gf_labs(x="p-Werte", y="Anzahl Stichproben", title="p-Wert Dreieckstest", subtitle=" mit simulierten Stichproben") %>%
-  gf_refine(theme(axis.text.x = element_text(angle=45, hjust=1)))
+pNull <- do(10000) * binom.test(~sample(population, 34), success = "r", p = 1/3, alternative = "greater") %>% pval()
+gf_bar(~cut(pNull$p.value, seq(0,1, by = 0.05))) %>%
+  gf_labs( x = "p-Werte", 
+           y = "Anzahl Stichproben", 
+           title = "p-Wert Dreieckstest", 
+           subtitle = " mit simulierten Stichproben") %>%
+  gf_refine(theme(axis.text.x = element_text(angle = 45, hjust = 1)))
 ```
 
 
@@ -971,9 +1027,13 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
 
 ### Alternativhypothese und Signifikanz
 
+::: {.small}
+
 - Die **Alternativhypothese** $H_A, H_1$ ist das Gegenteil der Nullhypothese. Die Rollen von $H_0$ und $H_A$ können *nicht* vertauscht werden.
 
 - Alternativen können *einseitig*, *gerichtet* (z.B. $\pi>\pi_0$ bzw. $\pi<\pi_0$) oder *zweiseitig*, *ungerichtet* (z. B. $\pi \neq \pi_0$) sein.
+
+- Bei einseitigen Alternativhypothesen erfolgt ggf. eine Anpassung der $H_0$, da Werte, die in die andere Richtung als die $H_A$ gehen, dem Bereich der $H_0$ zugerechnet werden (z.B. $H_A: \pi>\pi_0$ vs. $H_0:  \pi\leq\pi_0$).
 
 - Das *vorab* festgelegte **Signifikanzniveau** $\alpha$^[üblich: $\alpha=1\%, 5\%, 10\%$] eines Tests gibt die maximal zugebilligte Irrtumswahrscheinlichkeit dafür an, $H_0$ zu verwerfen, obwohl $H_0$ gilt.
 
@@ -985,6 +1045,7 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
  
 - Wird die $H_0$ verworfen, so nennt man das Ergebnis (statistisch) *signifikant* zum Niveau $\alpha$.
 
+:::
 
 ### Cartoon: Signifikanzniveau
 
@@ -993,7 +1054,7 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_02-2017.jpg", "cartoon0217.jpg", pathToImages)
 ```
 
-"Paläontologen haben schließlich doch den Ursprung des 5\% Signifikanzniveaus herausgefunden."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/february/2017/results) &copy; J.B. Landers, Überschrift M. Dunlap]
+"Paläontologen haben schließlich doch den Ursprung des 5\% Signifikanzniveaus herausgefunden."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/february/2017/results) &copy; J.B. Landers, Bildunterschrift M. Dunlap]
 
 
 ### Übung `r nextExercise()`: Alternativhypothese {.exercise type=A-B-C answer=B}
@@ -1016,36 +1077,36 @@ Wenn ein Geschmacksunterschied vorliegt, sollte $\pi>\frac{1}{3}$ sein, also ***
 | Realität: $H_0$  | Ok | **Fehler 1. Art**^[Auch $\alpha$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers wird durch das Signifikanzniveau nach oben beschränkt.] |
 | Realität: $H_A$  | **Fehler 2. Art**^[Auch $\beta$-Fehler genannt.  Die Wahrscheinlichkeit dieses Fehlers ist schwieriger zu bestimmen, aber siehe z. B. Paket [pwr](https://cran.r-project.org/package=pwr). Bei guten Tests sinkt sie mit größerem Stichprobenumfang $n$.]  | Ok  |
 
-Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Hypothesis on Trial](https://www.causeweb.org/cause/resources/fun/songs/hypothesis-trial)
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Dousa &copy; Hypothesis on Trial](https://www.causeweb.org/cause/resources/fun/songs/hypothesis-trial)
 
 
 ### Fehlerarten
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
-p1 <- gf_dist("norm", mean=0, geom = "area", fill= ~(x>qnorm(0.95)), alpha = 0.5, 
-        title=expression(paste("Fehler 1. Art: Verteilung falls ", mu==0)),
-        subtitle=expression(H[0]:mu<=0 )) %>%
-  gf_refine(guides(fill=guide_legend(title=expression(paste(alpha,"-Fehler"))))) %>%
+p1 <- gf_dist("norm", mean = 0, geom = "area", fill = ~(x > qnorm(0.95)), alpha = 0.5, 
+        title = expression(paste("Fehler 1. Art: Verteilung falls ", mu == 0)),
+        subtitle = expression(H[0]:mu <= 0 )) %>%
+  gf_refine(guides(fill = guide_legend(title = expression(paste(alpha,"-Fehler"))))) %>%
   gf_vline(xintercept = ~qnorm(0.95)) %>%
-  gf_labs(x=expression(bar(x))) %>%
-  gf_dist("norm", mean=2, alpha = 0.5) %>% 
-  gf_refine(scale_fill_viridis_d()) %>%
- gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
+  gf_labs(x = expression(bar(x))) %>%
+  gf_dist("norm", mean = 2, alpha = 0.5) %>% 
+  gf_refine(scale_fill_npg()) %>%
+ gf_refine(annotate("label",x = 1.65, y = 0.45, label="Kritischer Wert"),
             scale_y_continuous(limits = c(0, 0.5))) 
 
 
-p2 <- gf_dist("norm", mean=2, geom = "area", fill= ~(x<qnorm(0.95)), alpha = 0.5, 
-        title=expression(paste("Fehler 2. Art: Verteilung falls ", mu==2)),
-        subtitle=expression(H[0]:mu<=0 )) %>%
-  gf_refine(guides(fill=guide_legend(title=expression(paste(beta,"-Fehler"))))) %>%
+p2 <- gf_dist("norm", mean = 2, geom = "area", fill = ~(x < qnorm(0.95)), alpha = 0.5, 
+        title = expression(paste("Fehler 2. Art: Verteilung falls ", mu == 2)),
+        subtitle = expression(H[0]:mu <= 0 )) %>%
+  gf_refine(guides(fill = guide_legend(title = expression(paste(beta, "-Fehler"))))) %>%
   gf_vline(xintercept = ~qnorm(0.95)) %>%
-  gf_labs(x=expression(bar(x))) %>%
-  gf_dist("norm", mean=0, alpha = 0.5) %>% 
-  gf_refine(scale_fill_viridis_d()) %>%
-  gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
+  gf_labs(x = expression(bar(x))) %>%
+  gf_dist("norm", mean = 0, alpha = 0.5) %>% 
+  gf_refine(scale_fill_npg()) %>%
+  gf_refine(annotate("label",x = 1.65, y = 0.45, label = "Kritischer Wert"),
             scale_y_continuous(limits = c(0, 0.5))) 
 
-gridExtra::grid.arrange(p1,p2, nrow=2)
+gridExtra::grid.arrange(p1,p2, nrow = 2)
 ```
 
 
@@ -1061,7 +1122,7 @@ Zusammenhang des Stichprobenumfangs mit den Fehlerarten.
 ::: {.flush align=top-right}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 :::
@@ -1076,7 +1137,7 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
 
 ### Übung `r nextExercise()`: Fehlerart {.exercise type=A-B-C answer=B}
 
-Mit einem p-Wert von `r round(prop( ~ heads >=12, data = Nullvtlg), 2)` kann die Nullhypothese $H_0: \pi=\frac{1}{3}$ zum Signifikanzniveau $\alpha=0.05$ nicht verworfen werden. Angenommen, es gelte die Alternativhypothese $H_A: \pi>\frac{1}{3}$. Welche Aussage stimmt?
+Mit einem p-Wert von `r round(prop( ~ heads >=12, data = Nullvtlg), 2)` kann die Nullhypothese $H_0: \pi\leq\pi_0=\frac{1}{3}$ zum Signifikanzniveau $\alpha=0.05$ nicht verworfen werden. Angenommen, es gelte die Alternativhypothese $H_A: \pi>\frac{1}{3}$. Welche Aussage stimmt?
 
 A.  Es liegt ein Fehler 1. Art vor.
 B.  Es liegt ein Fehler 2. Art vor.
@@ -1098,7 +1159,7 @@ C.  Es liegt kein Fehler vor.
 
 [P]{.cemph} 
 : (Plan)
-: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
+: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl, Operationalisierung der Hypothesen, Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
 
 [D]{.cemph} 
 : (Data)
@@ -1110,13 +1171,13 @@ C.  Es liegt kein Fehler vor.
 
 [C]{.cemph} 
 : (Conclusion)
-: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+: Schlussfolgerungen, Interpretation, Limitationen, neue Ideen, Kommunikation.
 
 :::
 ::: {.column width="20%"}
 
 ```{r forschungsprozess-image2, echo=FALSE, out.width = "95%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error = FALSE)
 ```
 
 :::
@@ -1127,7 +1188,7 @@ knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error=FALSE)
 ### Ablauf: Hypothesenprüfung
 
 1.  Inhaltliche Hypothese operationalisieren.
-2.  Nullhypothese $H_0$ (und Alternativhypothese $H_A$, Forschungsvermutung) festlegen. Dazu passende Teststatistik bestimmen: 
+2.  Nullhypothese $H_0$ und Alternativhypothese $H_A$, die der Forschungsvermutung entspricht, festlegen. Dazu passende Teststatistik bestimmen: 
     - Sprechen hohe Werte der Teststatistik für die Forschungsthese?
     - Sprechen niedrige Werte der Teststatistik für die Forschungsthese?
     - Sprechen sowohl hohe als auch niedrige Werte für die Forschungsthese?^[Dann kann bei symmetrischen Verteilungen z. B. der Betrag der Teststatistik verwendet werden. Ansonsten einseitigen p-Wert verdoppeln.]
@@ -1231,7 +1292,7 @@ $$H_0: \pi_{\text{Quiz}} \leq  \pi_{\text{kein Quiz}} \quad vs. \quad  H_A: \pi_
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_04-2018.jpg", "cartoon0418.jpg", pathToImages)
 ```
-"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Überschrift D. Nandy]
+"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Bildunterschrift D. Nandy]
 
 <!-- Bug? -->
 
@@ -1250,16 +1311,16 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 Das simulierte Konfidenzintervall überdeckt folgenden Bereich:
 ```{r}
-quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025, 0.975))
+qdata( ~ prop_r, data = Bootvtlg, p = c(0.025, 0.975))
 ```
 
-Würde $H_0: \pi=\frac{2}{3}$ (vermutlich)^[Da wir nicht *exakt* gerechnet, sondern auf Basis einer kleinen Stichprobe simuliert haben.] verworfen werden (Signifikanzniveau $\alpha=5\%$)?^[Hypothesen werden aus der Theorie hergeleitet. Hier z. B. $50\%$ schmecken den Unterschied, die anderen raten.]
+Würde $H_0: \pi=\frac{2}{3}$ (vermutlich)^[Da wir nicht *exakt* gerechnet, sondern auf Basis einer kleinen Stichprobe simuliert haben.] verworfen werden (Signifikanzniveau $\alpha=5\%$)?^[Hypothesen werden aus der Theorie hergeleitet. Hier z. B. $50\%$ schmecken den Unterschied, die anderen raten ($\frac{1}{2}+\frac{1}{2}\cdot\frac{1}{3}=\frac{2}{3}$).]
 
 - Ja.
 - Nein.
 
 ::: {.notes}
-***Ja***, da $\pi=\frac{2}{3}$ *nicht* im Konfidenzintervall von `r floor(quantile( ~ prop_r, data = Bootvtlg, probs = c(0.025))*100)/100` bis `r ceiling(quantile( ~ prop_r, data = Bootvtlg, probs = c(0.975))*100)/100` liegt.
+***Ja***, da $\pi=\frac{2}{3}$ *nicht* im Konfidenzintervall von `r floor(qdata( ~ prop_r, data = Bootvtlg, p = c(0.025))*100)/100` bis `r ceiling(qdata( ~ prop_r, data = Bootvtlg, p = c(0.975))*100)/100` liegt.
 
 [Achtung:]{.cstrong} hier nur kleines $n$ und damit diskrete Schätzwerte.
 :::
@@ -1313,17 +1374,17 @@ cohensD(total_bill ~ smoker, data=tips)
 set.seed(1896)
 n <- 1000
 x <- scale(rnorm(n))
-x02 <- x+0.2
-x05 <- x+0.5
-x08 <- x+0.8
-x11 <- x+1.1
+x02 <- x + 0.2
+x05 <- x + 0.5
+x08 <- x + 0.8
+x11 <- x + 1.1
 
-cohendata <- data.frame(x=c(x, x02, x, x05, x, x08, x, x11), 
-                   Gruppe=rep(c(rep(c("A","B"), each=n)), 4),
-                   d=c(rep("d=0.2", 2*n), rep("d=0.5", 2*n), rep("d=0.8", 2*n) , rep("d=1.1", 2*n)))
+cohendata <- data.frame(x = c(x, x02, x, x05, x, x08, x, x11), 
+                   Gruppe = rep(c(rep(c("A","B"), each = n)), 4),
+                   d = c(rep("d=0.2", 2*n), rep("d=0.5", 2*n), rep("d=0.8", 2*n) , rep("d=1.1", 2*n)))
 
-gf_fitdistr(gformula=~x|d, color=~ordered(Gruppe), data=cohendata, size = 2) %>%
-    gf_labs(y="f(x)", x="x", color = "Gruppe")
+gf_fitdistr(gformula = ~x|d, color = ~ordered(Gruppe), data = cohendata, size = 2) %>%
+    gf_labs(y = "f(x)", x = "x", color = "Gruppe")
 
 rm(n,x,x02,x05,x08,x11,cohendata)
 ```
@@ -1343,29 +1404,29 @@ Einflussgrößen beim Vergleich von Mittelwerten:
 set.seed(1896)
 n <- c(30, 100)
 d <- c(0, 0.2, 0.5, 0.8)
-pvalue <- matrix(nrow=10000*8, ncol = 4)
+pvalue <- matrix(nrow = 10000*8, ncol = 4)
 zaehler <- 1
-for(i in 1:10000)
-  for(j in n)
-    for(k in d)
+for (i in 1:10000)
+  for (j in n)
+    for (k in d)
     {
       x0 <- rnorm(j)
-      x1 <- rnorm(j, mean=k)
+      x1 <- rnorm(j, mean = k)
       pvalue[zaehler,1] <- j
       pvalue[zaehler,2] <- k
       pvalue[zaehler,3] <- t.test(x0,x1)$p.value
-      zaehler <- zaehler+1
+      zaehler <- zaehler + 1
     }
-pvalsim <- data.frame(n=paste0("n=",pvalue[,1]), d=paste0("d=",pvalue[,2]), pvalue=pvalue[,3])
+pvalsim <- data.frame(n = paste0("n=",pvalue[,1]), d = paste0("d=",pvalue[,2]), pvalue = pvalue[,3])
 
-gf_histogram(~pvalue, data = pvalsim, bins=20, 
-             breaks=seq(0, 1, by=0.025), fill=~ordered(pvalue<0.05)) %>%
+gf_histogram(~pvalue, data = pvalsim, bins = 20, 
+             breaks = seq(0, 1, by = 0.025), fill = ~ordered(pvalue < 0.05)) %>%
   gf_refine(scale_y_log10()) %>%
   gf_vline(xintercept = ~0.05) %>%
   gf_facet_grid(n~d) %>%
-  gf_theme(legend.position="bottom") %>%
-  gf_labs(title="Ergebnis der Simulation mit logarithmischer y-Achse",
-          fill = "p-Wert < 0.05") %>% 
+  gf_theme(legend.position = "bottom") %>%
+  gf_labs(title = "Ergebnis der Simulation mit logarithmischer y-Achse",
+          fill  = "p-Wert < 0.05") %>% 
   gf_refine(scale_x_continuous(name = "p-Wert", breaks = c(0, .5, 1)))
 
 
@@ -1403,7 +1464,7 @@ Je größer in der Population der Effekt ist ($H_A$), desto eher wird $H_0$ verw
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2017/Caption-Contest_10-2017.jpg", "cartoon1017.jpg", pathToImages)
 ```
-"Da Joe der einzige war, der vorab eine Power-Analyse durchgeführt hatte, hatte er als einziger die nötige Größe, um den gewünschten Effekt zu erzielen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2017/results) &copy; J.B. Landers, Überschrift G. Snow]
+"Da Joe der einzige war, der vorab eine Power-Analyse durchgeführt hatte, hatte er als einziger die nötige Größe, um den gewünschten Effekt zu erzielen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/october/2017/results) &copy; J.B. Landers, Bildunterschrift G. Snow]
 
 <!-- Bug? -->
 
@@ -1416,7 +1477,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_09-2018.jpg", "cartoon0918.jpg", pathToImages)
 ```
-"Am Anfang ein bisschen schwer zu verdauen, aber sehr nahrhaft und voll mit Vitaminen $\alpha, \hat{\pi}, \bar{x}$ und besonders $\mu$ und $\sigma$."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/september/2018/results) &copy; J.B. Landers, Überschrift G. Baugher]
+"Am Anfang ein bisschen schwer zu verdauen, aber sehr nahrhaft und voll mit Vitaminen $\alpha, \hat{\pi}, \bar{x}$ und besonders $\mu$ und $\sigma$."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/september/2018/results) &copy; J.B. Landers, Bildunterschrift G. Baugher]
 
 
 ### Verteilungen {.shrink}
@@ -1530,29 +1591,35 @@ do(oft) * statistik(y ~ x, data = resample(Daten))
 ```
 
 
-### Übersicht Teststatistiken (Auswahl)
+### Übersicht und Ausblick Teststatistiken (Auswahl)
 
-+---------------------+---------------------+-------------------------------------+
-| **Y**               | **X**               | **Teststatistik**                   |
-+=====================+=====================+=====================================+
-| kategorial - binär  |                     | Anteil $p$                          | 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          |                     | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$ | 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           |                     | Mittelwert $\bar{x}$                |
-+---------------------+---------------------+-------------------------------------+
-| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$         | 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | kategorial - binär  | Differenz Mittelwerte $\bar{x}_B-\bar{x}_A$| 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          | kategorial          | Verhältnisvergleich *beobachtet* und *erwartet*: $\chi^2$| 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen* und *innerhalb Gruppen*: $F$| 
-+---------------------+---------------------+-------------------------------------+
-| numerisch           | numerisch           | Korrelationskoefizient $r$ oder Steigung $\hat{\beta}$ lineare Regression | 
-+---------------------+---------------------+-------------------------------------+
-| kategorial          | numerisch           | Steigung $\hat{\beta}$ logistische oder multinomiale Regression | 
-+---------------------+---------------------+-------------------------------------+
++---------------------+---------------------+----------------------------------------------+
+| **Y**               | **X**               | **Teststatistik**                            |
++=====================+=====================+==============================================+
+| kategorial - binär  |                     | Anteil $p$                                   |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          |                     | Verhältnisvergleich                          |
+|                     |                     |*beobachtet* und *erwartet*: $\chi^2$         |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           |                     | Mittelwert $\bar{x}$                         |
++---------------------+---------------------+----------------------------------------------+
+| kategorial - binär  | kategorial - binär  | Differenz Anteile $p_B-p_A$                  |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | kategorial - binär  | Differenz Mittelwerte                        | 
+|                     |                     |                 $\bar{x}_B-\bar{x}_A$        |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          | kategorial          | Verhältnisvergleich                          |
+|                     |                     | *beobachtet* und *erwartet*: $\chi^2$        |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | kategorial          | Streuungsvergleich *zwischen Gruppen*        |
+|                     |                     |          und *innerhalb Gruppen*: $F$        |
++---------------------+---------------------+----------------------------------------------+
+| numerisch           | numerisch           | Korrelationskoefizient $r$ oder              |
+|                     |                     | Steigung $\hat{\beta}$ -- lineare Regression |
++---------------------+---------------------+----------------------------------------------+
+| kategorial          | numerisch           | Steigung $\hat{\beta}$ -- logistische        |
+|                     |                     |         oder multinomiale Regression         |
++---------------------+---------------------+----------------------------------------------+
 
 ::: {.scriptsize}
 Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
@@ -1561,7 +1628,7 @@ Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
 
 ### Grundlagen Inferenz
 
-- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
+- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte^[Abkürzung u.i.v., auf englisch *independent, identically distributed*, iid] Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
 - `Y ~ 1` (d. h. ohne unabhängige Variable): Modellierte Verteilung von $Y$ (z. B. Binomial- oder Normalverteilung) hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
 - `Y ~ X`: Die Modellierung der Verteilung von $Y$ hängt evtl. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
 - Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.
@@ -1569,31 +1636,31 @@ Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
 **Verfahrensübersicht** (Mindmap): [https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference](https://coggle.it/diagram/Vxlydu1akQFeqo6-/t/inference)
 
 
-### Übersicht Inferenzverfahren R mosaic (Auswahl)
+### Übersicht und Ausblick Inferenzverfahren R mosaic (Auswahl)
 
 ::: {.scriptsize}
 
-+---------------------+---------------------+------------------------+-------------------+
-| **Y**               | **X**               | **Simulationsbasiert** | **Parametrisch** [^note1] |
-+=====================+=====================+========================+===================+
-| kategorial - binär  |                     | `prop()`               | `binom.test()`    | 
-+---------------------+---------------------+------------------------+-------------------+
-| kategorial          |                     | `xchisq.test()`        | `xchisq.test()`   |
-+---------------------+---------------------+------------------------+-------------------+
-| numerisch           |                     | `mean()`               | `t.test()`        |
-+---------------------+---------------------+------------------------+-------------------+
-| kategorial - binär  | kategorial - binär  | `diffprop()`           | `prop.test()`     | 
-+---------------------+---------------------+------------------------+-------------------+
-| numerisch           | kategorial - binär  | `diffmean()`           | `t.test()`        | 
-+---------------------+---------------------+------------------------+-------------------+
-| kategorial          | kategorial          | `xchisq.test()`        | `xchisq.test()`   |
-+---------------------+---------------------+------------------------+-------------------+
-| numerisch           | kategorial          | `aov()`                | `aov()`           |
-+---------------------+---------------------+------------------------+-------------------+
-| numerisch           | numerisch           | `cor()`, `lm()`        | `cor.test()`, `lm()` |
-+---------------------+---------------------+------------------------+-------------------+
++---------------------+---------------------+--------------------------+--------------------------+
+| **Y**               | **X**               | **Simulationsbasiert**   | **Parametrisch**         |
++=====================+=====================+==========================+==========================+
+| kategorial - binär  |                     | `prop()`                 | `binom.test()`           |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial          |                     | `xchisq.test()`          | `xchisq.test()`          |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           |                     | `mean()`                 | `t.test()`               |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial - binär  | kategorial - binär  | `diffprop()`             | `prop.test()`            |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | kategorial - binär  | `diffmean()`             | `t.test()`               |
++---------------------+---------------------+--------------------------+--------------------------+
+| kategorial          | kategorial          | `xchisq.test()`          | `xchisq.test()`          |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | kategorial          | `aov()`                  | `aov()`                  |
++---------------------+---------------------+--------------------------+--------------------------+
+| numerisch           | numerisch           | `cor()`, `lm()`          | `cor.test()`, `lm()`     |
++---------------------+---------------------+--------------------------+--------------------------+
 | kategorial  - binär | numerisch           | `glm(family = binomial)` | `glm(family = binomial)` |
-+---------------------+---------------------+------------------------+-------------------+
++---------------------+---------------------+--------------------------+--------------------------+
 
 - [Permutationstest:]{.cemph} `do(oft) * statistik(y ~ shuffle(x), data = Daten)`: Kritische Werte, p-Werte.
 - [Bootstrap:]{.cemph} `do(oft) * statistik(y ~ x, data = resample(Daten))`: Konfidenzintervall, Standardfehler.
@@ -1604,6 +1671,7 @@ Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
 
 
 ```{r finish-Inferenzstatistik, include=FALSE}
+rm(population, Nullvtlg_c, Nullvtlg, df, pNull, types, values)
 rm(pathToImages)
 finalizePart(partname)
 ```

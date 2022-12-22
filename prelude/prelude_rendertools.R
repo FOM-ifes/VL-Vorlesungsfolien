@@ -150,7 +150,7 @@ if (!exists("prelude.rendertools")) {
   makeDozi <- function() {
     createDoziNotes()
     doCopyAndLog(inc.notes.dozi, inc.notes)
-    if (UseCache) {
+    if (my.options$get("UseCache")) {
         doCopyAndLog(file.path(defaults.dir, "cachecontrol-Dozi.R"), "cachecontrol.R")
     } else {
         doCopyAndLog(file.path(defaults.dir, "cachecontrol-NoCache.R"), "cachecontrol.R")
@@ -162,7 +162,7 @@ if (!exists("prelude.rendertools")) {
   makeStudi <- function() {
     createStudiNotes()
     doCopyAndLog(inc.notes.studi, inc.notes)
-    if (UseCache) {
+    if (my.options$get("UseCache")) {
         doCopyAndLog(file.path(defaults.dir, "cachecontrol-Studi.R"), "cachecontrol.R")
     } else {
         doCopyAndLog(file.path(defaults.dir, "cachecontrol-NoCache.R"), "cachecontrol.R")
@@ -174,7 +174,7 @@ if (!exists("prelude.rendertools")) {
   makeLsgSkript <- function() {
       createLsgSkriptNotes()
       doCopyAndLog(inc.notes.lsgskript, inc.notes)
-      if (UseCache) {
+      if (my.options$get("UseCache")) {
           doCopyAndLog(file.path(defaults.dir, "cachecontrol-LsgSkript.R"), "cachecontrol.R")
       } else {
           doCopyAndLog(file.path(defaults.dir, "cachecontrol-NoCache.R"), "cachecontrol.R")

@@ -23,43 +23,43 @@ library(ggdag)
 set.seed(1896)
 
 # Immo
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("C", "X", "Y")) 
 DAG_Immo <- dagify(C ~ X,
                    Y ~ X,
                    Y ~ C,
                    coords = co,
-                   labels = c("C"="Räume",
-                              "X"="Fläche",
-                              "Y"="Preis")) %>%
+                   labels = c("C" = "Räume",
+                              "X" = "Fläche",
+                              "Y" = "Preis")) %>%
   ggdag(text = FALSE, use_labels = "label", text_size = 15, node_size = 15) + theme_dag_blank() +
   geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))
 
 
 # Straße
-co <- data.frame(x=c(0,1,1,2,4), y=c(0.5,0,1,0.5,0.5), name=c("X1", "X2", "X3","X4","X5")) 
+co <- data.frame(x = c(0,1,1,2,4), y = c(0.5,0,1,0.5,0.5), name = c("X1", "X2", "X3","X4","X5")) 
 DAG_str <- dagify(X3 ~ X1,
                   X2 ~ X1,
                   X4 ~ X2,
                   X4 ~ X3,
                   X5 ~ X4,
                   coords = co,
-                  labels = c("X1"="Jahreszeit",
-                             "X2"="Regen",
-                             "X3"="Wassersprenger",
-                             "X4"="Nass",
-                             "X5"="Rutschig")) %>%
+                  labels = c("X1" = "Jahreszeit",
+                             "X2" = "Regen",
+                             "X3" = "Wassersprenger",
+                             "X4" = "Nass",
+                             "X5" = "Rutschig")) %>%
   ggdag(text = FALSE, use_labels = "label", text_size = 9) + theme_dag_blank() +
   geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))
 
 # Beispiel1
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("A", "B", "C")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("A", "B", "C")) 
 DAG_bsp1 <- dagify(C ~ A,
                    C ~ B,  coords = co) %>% 
   ggdag(node_size = 18, text_size = 7) + theme_dag_blank() +
   geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))
 
 # Adjustierung1
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("C", "X", "Y")) 
 
 DAG_adj1 <- dagify(X ~ C,
                    Y ~ X,
@@ -69,7 +69,7 @@ DAG_adj1 <- dagify(X ~ C,
 
 # Adjustierung2
 
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("C", "X", "Y")) 
 
 DAG_adj2 <- dagify(C ~ X,
                    Y ~ X,
@@ -78,7 +78,7 @@ DAG_adj2 <- dagify(C ~ X,
   geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  
 
 # LWV
-co <- data.frame(x=c(0,1,2), y=c(0,0,0), name=c("X", "C", "Y")) 
+co <- data.frame(x = c(0,1,2), y = c(0,0,0), name = c("X", "C", "Y")) 
 DAG_lwv <- dagify(C ~ X, 
                   Y ~ C, coords = co) %>%
   ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
@@ -88,7 +88,7 @@ DAG_lwv <- dagify(C ~ X,
             x = 0, y = -0.025, size = 7, color = "darkgrey")
 
 # ILK
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("C", "X", "Y")) 
 
 DAG_ilk <- dagify(X ~ C,
                   Y ~ X,
@@ -100,7 +100,7 @@ DAG_ilk <- dagify(X ~ C,
             x = 1, y = 1, size = 7, color = "darkgrey")
 
 # NKB
-co <- data.frame(x=c(0,1,2), y=c(1,0,1), name=c("Y","C","X"))
+co <- data.frame(x = c(0,1,2), y = c(1,0,1), name = c("Y","C","X"))
 
 DAG_nkb <- dagify(C ~ Y,
                   C ~ X, coords = co) %>% 
@@ -111,9 +111,9 @@ DAG_nkb <- dagify(C ~ Y,
             x = 1, y = 1, size = 7, color = "darkgrey")
 
 # Experiment
-co <- data.frame(x=c(0,0,1), y=c(1,0,0), name=c("C", "X", "Y")) 
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("C", "X", "Y")) 
 
-dag_e1<-dagify(Y ~ X,
+dag_e1 <- dagify(Y ~ X,
        X ~ C,
        Y ~ C, coords = co) %>% 
   ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
@@ -124,19 +124,19 @@ dag_e1<-dagify(Y ~ X,
   geom_segment(aes(x = -.1, y = .475, xend = .1, yend = .575), color = "darkgrey") +
   geom_segment(aes(x = -.1, y = .425, xend = .1, yend = .525), color = "darkgrey")
 
-co <- data.frame(x=c(0,0,1,-1), y=c(1,0,0,0), name=c("C", "X", "Y", "E")) 
+co <- data.frame(x = c(0,0,1,-1), y = c(1,0,0,0), name = c("C", "X", "Y", "E")) 
 
-dag_e2<-dagify(Y ~ X,
+dag_e2 <- dagify(Y ~ X,
        X ~ E,
        Y ~ C, coords = co) %>% 
   ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
   geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
-  geom_text(label = "C - Intelligenz\nX -Lernzeit\nY - Klausurpunkte\nE - Experimentatorin", 
+  geom_text(label = "C - Intelligenz\nX - Lernzeit\nY - Klausurpunkte\nE - Experimentatorin", 
             hjust = 0, vjust = 1,
             x = -1.1, y = 0.75, size = 7, color = "darkgrey")
 
 # Mediator
-co <- data.frame(x=c(0.5,0,1), y=c(1,0,0), name=c("M", "X", "Y")) 
+co <- data.frame(x = c(0.5,0,1), y = c(1,0,0), name = c("M", "X", "Y")) 
 
 dag_m <- dagify(M ~ X,
                 Y ~ X,
@@ -179,7 +179,7 @@ Die Studierenden ...
 
 - kennen die Grundbegriffe der Wahrscheinlichkeitstheorie (Zufall, (bedingte) Wahrscheinlichkeit, (bedingte) Unabhängigkeit) und können diese anhand von Beispielen erläutern.
 - wissen, was man unter einem *Structural Causal Model* (SCM) und unter einem *Directed Acyclic Graph* (DAG) versteht.
-- kennen die "Atome" von Kausalstrukturen (Forks, Collider, Chains) und können diese anhand von Beispielen erläutern.
+- kennen die "Atome" von Kausalstrukturen (Forks, Inverted Forks, Chains) und können diese anhand von Beispielen erläutern.
 - können anhand von Beispielen erläutern, zu welchen Fehlern das Nichtbeachten der Atome von Kausalstrukturen führen kann.
 - erkennen das Experimentieren bzw. Randomisieren als Spezialfall eines SCM bzw. eines DAGs.
 
@@ -254,7 +254,7 @@ Wenn wir gewisse Regeln, Annahmen usw. beachten, können wir von einer bzw. kein
 Kausale Überlegungen können insbesondere helfen, die interne und externe Validität einer Datenananlyse einzuschätzen!
 
 
-### Zusammenhang Schlafzimmer und Preis^[Für mehr Informationen über den Datensatz siehe `?SaratogaHouses`. Idee: [De Veaux (2019) *Data Science for All*](https://iase-web.org/conference/satellite19/docs/Data%20Science%20for%20All.pdf)]
+### Zusammenhang Schlafzimmer und Preis^[Für mehr Informationen über die Datentabelle siehe `?SaratogaHouses`. Idee: [De Veaux (2019) *Data Science for All*](https://iase-web.org/conference/satellite19/docs/Data%20Science%20for%20All.pdf)]
 
 Vorbereitungen:
 
@@ -466,6 +466,10 @@ $$P(y|x)=\frac{P(x|y)\cdot P(y)}{P(x)}$$
 
 - Zwei Ereignisse sind **unabhängig**, wenn gilt: $$P(A \cap B)=P(A)\cdot P(B)$$
 - Wenn zwei Ereignisse unabhängig sind, gilt: $$P(A|B)=P(A), \quad P(B|A)=P(B)$$ D.h., dadurch, dass ein Ereignis eingetreten ist, ändert sich *nicht* die Wahrscheinlichkeit des anderen.^[Eine harte Forderung: Wenn in China ein Sack Reis umfällt ...]
+  - Beispiel: Das Ereignis A sei Augenzahl 1 beim Würfeln, B Augenzahl 6 beim Würfeln. 
+  Wie hoch ist die Wahrscheinlichkeit, im ersten Wurf eine 1 **und** (Schnittmenge) im zweiten Wurf eine 6 zu würfeln:
+  $\frac{1}{6}\cdot\frac{1}{6}=\frac{1}{36}$, also $P(A \cap B)=P(A)\cdot P(B)$. 
+  Für die 6 im zweiten Wurf ist es egal, welche Zahl im ersten Wurf kam, also $P(B|A)=P(B)$.
 - Andernfalls sind sie nicht unabhängig, d.h. **abhängig**.
 - Für Zufallsvariablen gilt dies entsprechend.^[$f(x,y)=f(x)\cdot f(y)$. Dann gilt auch für den Korrelationskoeffizienten $\rho_{X,Y}=0$. Symbol: $X{\perp\!\!\!\perp}Y$] 
 
@@ -474,11 +478,8 @@ $$P(y|x)=\frac{P(x|y)\cdot P(y)}{P(x)}$$
 - Ereignisse können auch **bedingt unabhängig** gegeben $C$ sein. Genau dann, wenn gilt: $P(A|B,C)=P(A|C)$ bzw. $P(B|A,C)=P(B|C)$. 
 - Für Zufallsvariablen gilt dies wieder entsprechend.^[$f(x,y|z)=f(x|z) \cdot f(y|z)$, $X{\perp\!\!\!\perp}Y|C$]
 
-*Beispiel*: 
+- Umgekehrt gibt es auch die bedingte Abhängigkeit.
 
-- Angenommen innerhalb der einzelnen Länder ($C$) gibt es keinen Zusammenhang zwischen Essenspräferenz ($A$) und Sportart ($B$). 
-D.h., z.B. in Deutschland ($C$) wissen Sie nicht, ob jemand, der Schweinshaxe isst ($A$), auch Fußball spielt ($B$). 
-Unbedingt (d.h. weltweit) sind die Wahrscheinlichkeiten nicht unabhängig: In anderen Ländern gibt es andere Ess- und Sportgewohnheiten.  
 
 ### Beispiel: Sonnenschein, Eis und Sonnencreme
 
@@ -492,7 +493,7 @@ Unbedingt (d.h. weltweit) sind die Wahrscheinlichkeiten nicht unabhängig: In an
 - Angenommen: Sowohl am Wochenende als auch im Urlaub kann mensch ausschlafen.
 - In der Urlaubszeit gibt es genau so oft Wochenende wie sonst^[vereinfachende Annahme], *Wochenende* und *Urlaub* sind (unbedingt, marginal) unabhängig. Aus der Information *Wochenende* lerne ich nichts über *Urlaub*.
 - Wenn ich weiß, dass ich ausschlafen kann, weiß ich, dass entweder *Wochenende* oder *Urlaub* (oder beides) ist. Bei *Ausschlafen* lerne ich aus der Information kein *Urlaub*, dass *Wochenende* ist. Bedingt *Ausschlafen* sind *Wochenende* und *Urlaub* nicht unabhängig.
-- Graphisches Modell: Wochenende $\rightarrow$ Ausschafen $\leftarrow$ Urlaub.
+- Graphisches Modell: Wochenende $\rightarrow$ Ausschlafen $\leftarrow$ Urlaub.
 
 
 
@@ -533,7 +534,7 @@ $X$ und $Y$ sind marginal, d.h. unbedingt, abhängig, aber bedingt $Z$ unabhäng
 
 <!-- Bug? -->
 
-### Beispiel: Marginale Unabhängigkeit, Bedingte^[Idee: [https://fabiandablander.com/r/Causal-Inference](https://fabiandablander.com/r/Causal-Inference)] {include-only=master}
+### Beispiel: Marginale Unabhängigkeit, Bedingte Abhängigkeit^[Idee: [https://fabiandablander.com/r/Causal-Inference](https://fabiandablander.com/r/Causal-Inference)] {include-only=master}
 
 ```{r marg-unabh, echo=FALSE, fig.width = 6, out.width = "5cm", fig.align="center", fig.show="hold"}
 sigcol <- matrix(c(2,-sqrt(2),-sqrt(2),2), ncol=2)
@@ -625,8 +626,8 @@ Modellierung von $y$ durch $x$ bzw. $z$:
 
 ```{r simu2, echo=FALSE, fig.width = 6, out.width = "6cm", fig.asp = 0.8, fig.align="center", fig.show="hold"}
 Chain <- data.frame(x=x, y=y, z=z)
-pcx <- gf_point(y~x, data = Chain) %>% gf_lims(x=c(-6,6)) %>% gf_vline(xintercept = ~2, linetype = "dashed")
-pcz <- gf_point(y~z, data = Chain) %>% gf_lims(x=c(-6,6)) %>% gf_vline(xintercept = ~2, linetype = "dashed")
+pcx <- gf_point(y~x, data = Chain) %>% gf_lims(x = c(-6,6)) %>% gf_vline(xintercept = ~2, linetype = "dashed")
+pcz <- gf_point(y~z, data = Chain) %>% gf_lims(x = c(-6,6)) %>% gf_vline(xintercept = ~2, linetype = "dashed")
 pcx
 pcz
 ```
@@ -637,18 +638,18 @@ pcz
 ```{r plot-simu, echo=FALSE, fig.width = 5, out.width = "4cm", fig.asp = 0.8, fig.align="center"}
 pdm <- gf_dist("norm", params = list(sd=sqrt(2))) %>% 
   gf_labs(x="y", y="f(y)", subtitle = "(Marginale) Dichtefunktion \nvon y") %>% 
-  gf_lims(x=c(-6,6))
+  gf_lims(x = c(-6,6))
 pdm
 ```
 
 ```{r plot2-simu, echo=FALSE, fig.width = 5, out.width = "4cm", fig.asp = 0.8, fig.align="center", fig.show="hold"}
 pdcx <- gf_dist("norm", params = list(mean=2, sd=1)) %>% 
   gf_labs(x="y", y="f(y|x=2)", subtitle = "Bedingte Dichtefunktion \nvon y, gegeben x = 2") %>% 
-  gf_lims(x=c(-6,6))
+  gf_lims(x = c(-6,6))
 
 pdcz <- gf_dist("norm", params = list(mean=2, sd=0.1)) %>% 
   gf_labs(x="y", y="f(y|z=2)", subtitle = "Bedingte Dichtefunktion \nvon y, gegeben z = 2") %>% 
-  gf_lims(x=c(-6,6))
+  gf_lims(x = c(-6,6))
 
 pdcx
 pdcz
@@ -668,11 +669,11 @@ Die bedingte Verteilung von $y$ gegeben $x$ oder $z$ ist anders als die marginal
 ```{r kausal-vert, echo=FALSE, fig.width = 5, out.width = "5cm", fig.asp = 0.8, fig.align="center", fig.show="hold"}
 pddx <- gf_dist("norm", params = list(mean=2, sd=1)) %>% 
   gf_labs(x="y", y="f(y|do(x) = 2)", subtitle = "Bedingte Dichtefunktion \nvon y, gegeben do(x) = 2") %>% 
-  gf_lims(x=c(-6,6))
+  gf_lims(x = c(-6,6))
 
 pddz <- gf_dist("norm", params = list(mean=0, sd=sqrt(2))) %>% 
   gf_labs(x="y", y="f(y|do(z) = 2)", subtitle = "Bedingte Dichtefunktion \nvon y, gegeben do(z) = 2") %>% 
-  gf_lims(x=c(-6,6))
+  gf_lims(x = c(-6,6))
 
 pddx
 pddz
@@ -783,21 +784,32 @@ DAG_bsp1
 - $C$ wirkt weder auf $A$ noch auf $B$.
 
 
-### Bestandteile eines DAGs
+### Bestandteile eines DAGs (I/II)
 
 
 ::: {.small}
 
 | Pfad                       | $X \rightarrow C \rightarrow Y$ | $X \leftarrow C \rightarrow Y$ | $X \rightarrow C \leftarrow Y$ 
 | ---------------------------|---------------------------------|--------------------------------|--------------------------------|
-| Name                       | Chain (Kette)                   | Fork (Gabel)                   | Collider (Kollision)           
-| Zusammenhang $X$ und $Y$   | Kausal                          | Nicht-kausal                   | Kein Zshg.                           
+| Name                       | Chain (Kette)                   | Fork (Gabel)                   | Inverted Fork
+|                            |                                 |                                | (umgedrehte Gabel)    
+|                            |                                 |                                |
+| Bezeichnung $C$            | Mediator                        | Confounder                     | Collider
+|                            |                                 |                                |
+| Zusammenhang $X$ und $Y$   | Kausal                          | Nicht-kausal                   | Kein Zshg.             |                            |                                 |                                |
 | Adjustierung $C$           | Blockiert kausalen Pfad         | Blockiert nicht-kausalen Pfad  | Öffnet nicht-kausalen Pfad 
 
 :::
 
 
-### Forks und Collider
+### Bestandteile eines DAG (II/II)
+
+**Chain:**
+
+- Der *totale* Effekt von $X$ auf $Y$ wird in einen *direkten* Effekt $X\rightarrow Y$ und einen *indirekten* Effekt $X\rightarrow C \rightarrow Y$ über den Mediator $C$ zerlegt.
+
+\vspace{2\baselineskip}
+
 
 :::::: {.columns}
 ::: {.column width="40%"}
@@ -805,15 +817,15 @@ DAG_bsp1
 **Fork:**
 
 - $A \leftarrow C \rightarrow B$
-- $A$ und $B$ haben eine gemeinsame Ursache: *C* 
+- $A$ und $B$ haben eine gemeinsame Ursache: $C$ 
 
 :::
 ::: {.column width="40%"}
 
-**Collider:**
+**Inverted Fork:**
 
 - $A \rightarrow C \leftarrow B$
-- $A$ und $B$ haben eine gemeinsame Wirkung: *C* 
+- $A$ und $B$ haben eine gemeinsame Wirkung: $C$ 
 
 :::
 ::::::
@@ -886,13 +898,13 @@ $X \leftarrow C \rightarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (b
 :::
 
 
-### Collider {include-only=deprecated}
+### Inverted Fork {include-only=deprecated}
 
-Eine Kollision (Collider) liegt bei folgender Graphenstruktur vor: 
+Eine Inverted Fork liegt bei folgender Graphenstruktur vor: 
 
 $$X \rightarrow C \leftarrow Y$$
 
-### Übung `r nextExercise()`: Collider: Unbedingte Unabhängigkeit {.exercise type=yesno answer=yes include-only=deprecated}
+### Übung `r nextExercise()`: Inverted Fork: Unbedingte Unabhängigkeit {.exercise type=yesno answer=yes include-only=deprecated}
 
 $X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind unabhängig?
 
@@ -904,7 +916,7 @@ $X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind unabhängig
 :::
 
 
-### Übung `r nextExercise()`: Collider: Bedingte Unabhängigkeit {.exercise type=yesno answer=no include-only=deprecated}
+### Übung `r nextExercise()`: Inverted Fork: Bedingte Unabhängigkeit {.exercise type=yesno answer=no include-only=deprecated}
 
 $X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (bedingt) $C$, unabhängig?
 
@@ -924,7 +936,7 @@ $X \rightarrow C \leftarrow Y$: Stimmt die Aussage: $X$ und $Y$ sind, gegeben (b
 DAG_str
 ```
 
-Welche Chains, Forks und Colliders gibt es im Graph?
+Welche Chains, Forks und Inverted Forks gibt es im Graph?
 
 ::: {.notes}
 
@@ -933,7 +945,7 @@ Welche Chains, Forks und Colliders gibt es im Graph?
   - Jahreszeit $\rightarrow$ Wassersprenger $\rightarrow$ Nass $\rightarrow$ Rutschig
 - Fork:
   - Wassersprenger $\leftarrow$ Jahreszeit $\rightarrow$ Regen
-- Collider: 
+- Inverted Fork: 
   - Wassersprenger $\rightarrow$ Nass $\leftarrow$ Regen
 
 :::
@@ -945,7 +957,7 @@ Welche Chains, Forks und Colliders gibt es im Graph?
 - Ansatz: 
   - Öffne kausale Pfade (Chain)
   - Blockiere nicht-kausale Pfade (Fork)
-  - Erzeuge keinen Scheinpfad (Collider)
+  - Erzeuge keinen Scheinpfad (Inverted Fork)
   
 - Adjustierung kann z.B. durch Bedingung, Stratifizierung usw. erfolgen. Z.B. im linearen Modell: `Y ~ X + C`.
 
@@ -966,7 +978,7 @@ Sollte zur Bestimmung der erwarteten Änderung von $Y$, wenn $X$ geändert wird,
 - Nein
 
 ::: {.notes}
-Der nicht-kausale Pfad $X \leftarrow C \rightarrow Y$ (Fork), der durch die *Hintertür* (engl. *Backdoor*) sollte blockiert werden, also ***Ja***.
+Der nicht-kausale Pfad $X \leftarrow C \rightarrow Y$ (Fork), der durch die *Hintertür* (engl. *Backdoor*) geht, sollte blockiert werden, also ***Ja***.
 
 `Y ~ X + C`
 :::
@@ -1056,7 +1068,7 @@ knowing <- 5 * learning + rnorm(n)
 understanding <- 3 * knowing + rnorm(n)
 
 LKU <- data.frame(learning = learning, knowing = knowing,
-                  understanding = understanding) # Datensatz
+                  understanding = understanding) # Datentabelle
 ```
 
 ### DAG: Lernen, Wissen und Verstehen
@@ -1133,7 +1145,7 @@ DAG_ilk
 ### Daten: Intelligenz, Lernzeit und Klausurpunkte
 
 ```{r, echo=FALSE, out.width = "80%", fig.align="center"}
-ggformula::gf_point(test.score~learning.time, color=~intelligence, data = ILT) 
+ggformula::gf_point(test.score ~ learning.time, color = ~intelligence, data = ILT) 
 ```
 
 ### Ergebnis: Intelligenz, Lernzeit und Klausurpunkte
@@ -1190,7 +1202,7 @@ luck <- rbinom(n, size = 1, prob = 0.05)
 promotion <- (1 - luck) * promotion + luck * (1 - promotion)
 
 NCP <- data.frame(network = network, competence = competence,
-                  promotion = promotion) # Datensatz
+                  promotion = promotion) # Datentabelle
 ```
 
 
@@ -1204,7 +1216,7 @@ DAG_nkb
 
 ```{r plot-ncp2, echo=FALSE, out.width = "80%", fig.align="center"}
 NCP2 <- NCP %>% dplyr::mutate(promotion = as.factor(promotion))
-ggformula::gf_point(competence~network, color=~promotion, data = NCP2) +
+ggformula::gf_point(competence ~ network, color = ~promotion, data = NCP2) +
   scale_color_viridis_d() + theme(legend.title = element_blank())
   #ggthemes::scale_color_colorblind()
 ```
@@ -1235,7 +1247,7 @@ B.  $\hat{y} = `r round(coef(lm3.b)[1],2)`   `r round(coef(lm3.b)[2],2)` \cdot x
 
 
 ::: {.notes}
-Bei einem Collider sollte über $C$ nicht adjustiert werden (***A***). Mit Adjustierung (B) scheint es einen Zusammenhang zu geben: *Berkson-Paradox*: Man ist geneigt zu denken, dass es einen negativen Zusammenhang zwischen Netzwerkfähigkeit und Kompetenz gebe.
+Bei einer Inverted Fork sollte über $C$ nicht adjustiert werden (***A***). Mit Adjustierung (B) scheint es einen Zusammenhang zu geben: *Berkson-Paradox*: Man ist geneigt zu denken, dass es einen negativen Zusammenhang zwischen Netzwerkfähigkeit und Kompetenz gebe.
 :::
 
 
@@ -1258,8 +1270,8 @@ Nicht zufällige Stichprobe: geringe *externe* Validität für die zugrundeliege
 
 In einem randomisierten Experiment wird der $X$-Wert den Beobachtungen zufällig zugeordnet, d.h., Pfade in $X$ werden durch die Experimentatorin gekappt, $X$ wird unabhängig von $C$ manipuliert:
 
-```{r plot dag-e1, echo=FALSE, out.width = "70%", fig.align="center"}
-gridExtra::grid.arrange(dag_e1, dag_e2, nrow=1)
+```{r plot-dag-e1, echo=FALSE, out.width = "70%", fig.align="center"}
+gridExtra::grid.arrange(dag_e1, dag_e2, nrow = 1)
 ```
 
 
@@ -1281,13 +1293,13 @@ test.score.exp <- 0.5*intelligence + 0.1*learning.time.exp + rnorm(n)
 
 ILT.exp <- data.frame(intelligence = intelligence, 
                       learning.time = learning.time.exp,
-                      test.score = test.score.exp) # Datensatz
+                      test.score = test.score.exp) # Datentabelle
 ```
 
 ### Daten: Experiment Intelligenz, Lernzeit und Klausurpunkte
 
 ```{r plot-ilt-exp, echo=FALSE, out.width = "80%", fig.align="center"}
-ggformula::gf_jitter(test.score~learning.time, color=~intelligence, data = ILT.exp, width = 1, height = 0) 
+ggformula::gf_jitter(test.score ~ learning.time, color = ~intelligence, data = ILT.exp, width = 1, height = 0) 
 ```
 
 
@@ -1347,7 +1359,7 @@ $\widehat{\text{Klausurpunkte}} = `r round(coef(lm4.b)[1],2)` + `r round(coef(lm
 
 ```{r ilt2}
 ILT %>%
-  filter(learning.time> 115 & learning.time < 125) %>%
+  filter(learning.time > 115 & learning.time < 125) %>%
   summarise(mean.score.obs = mean(test.score))
 ```
 
@@ -1356,17 +1368,17 @@ ILT %>%
 
 ```{r ilt2-exp}
 ILT.exp  %>%
-  filter(learning.time> 115 & learning.time < 125) %>%
+  filter(learning.time > 115 & learning.time < 125) %>%
   summarise(mean.score.exp = mean(test.score))
 ```
 
 ```{r tmeanobs-exp, echo=FALSE}
 tmeanobs <- ILT %>%
-  filter(learning.time> 115 & learning.time < 125) %>%
+  filter(learning.time > 115 & learning.time < 125) %>%
   summarise(mean.score.obs = mean(test.score))
 
 tmeanexp <- ILT.exp  %>%
-  filter(learning.time> 115 & learning.time < 125) %>%
+  filter(learning.time > 115 & learning.time < 125) %>%
   summarise(mean.score.exp = mean(test.score))
 ```
 
@@ -1393,7 +1405,7 @@ Auf die Punkte ($Y$) wirkt aber sowohl $X$ als auch $C$ positiv.
 
 ### Offene Übung `r nextExercise()`: Pfade Kausalanalyse {.exercise type=essay}
 
-Welche Pfade führen von $X$: `Smoking` (Rauchen) zu $Y$: `Cardiac Arrest` (Kreislaufstillstand)?^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
+Welche Pfade führen von $X$: `Smoking` (Rauchen) zu $Y$: `Cardiac Arrest` (Herzstillstand)?^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
 
 ```{r path-causal, echo=FALSE, out.width="60%", fig.align="center"}
 set.seed(1896)
@@ -1415,7 +1427,7 @@ Um den kausalen Effekt von $X$: `Smoking` (Rauchen) auf $Y$: `Cardiac Arrest` zu
 
 ### Offene Übung `r nextExercise()`: Adjustierung Kausalanalyse {.exercise type=essay}
 
-Welche Variablen $C_i$ sollten im Modell `Y ~ X + C`^[$X$: `Smoking` (Rauchen),  $Y$: `Cardiac Arrest` (Kreislaufstillstand)] adjustiert werden? Die Variable `Unhealthy Lifestyle` ist dabei eine latente, nicht beobachtete Variable.^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
+Welche Variablen $C_i$ sollten im Modell `Y ~ X + C`^[$X$: `Smoking` (Rauchen),  $Y$: `Cardiac Arrest` (Herzstillstand)] adjustiert werden? Die Variable `Unhealthy Lifestyle` ist dabei eine latente, nicht beobachtete Variable.^[Quelle: [Malcolm Barrett: An Introduction to Directed Acyclic Graphs](https://ggdag.netlify.com/articles/intro-to-dags.html)]
 
 ```{r plot-adj-causal, echo=FALSE, out.width="60%", fig.align="center"}
 set.seed(1896)

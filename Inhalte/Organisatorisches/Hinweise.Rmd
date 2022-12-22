@@ -18,7 +18,7 @@ pathToImages = getPathToImages()
 
 ### Bitte {exclude=virtuell}
 
-- Stellen Sie ein Namensschild auf.
+- Stellen Sie ein Namensschild auf. 
 - Seien Sie offen für das Thema.
 - Haben Sie Respekt aber keine Angst vor der Schwierigkeit des Themas.
 - Bereiten Sie den Lehrstoff von Anfang an kontinuierlich nach.
@@ -33,6 +33,7 @@ pathToImages = getPathToImages()
 
 ### Bitte {include-only=virtuell}
 
+- Nehmen Sie unter Ihrem Namen an der virtuellen Veranstaltung teil.
 - Seien Sie offen für das Thema.
 - Haben Sie Respekt aber keine Angst vor der Schwierigkeit des Themas.
 - Bereiten Sie den Lehrstoff von Anfang an kontinuierlich nach.
@@ -72,11 +73,11 @@ Siehe z.B. echte Tipps unter [Putnam, A. L., Sungkhasettee, V. W., & Roediger II
 
 ### Data Literacy und Growth Mindset
 
-In dieser Vorlesung geht es nicht um Mathematik oder Programmierung, und es ist auch nicht wichtig ob Sie in der Schule darin gut oder schlecht waren. Es geht darum Daten auf kritische Art und Weise zu sammeln, zu managen, zu bewerten und anzuwenden (**Data Literacy**)
+In dieser Vorlesung geht es nicht um Mathematik oder Programmierung, und es ist auch nicht wichtig, ob Sie in der Schule darin gut oder schlecht waren. Es geht darum, Daten auf kritische Art und Weise zu sammeln, zu managen, zu bewerten und anzuwenden (**Data Literacy**).
 
 **Sie** können datenkompetent werden!
 
-Stark vereinfacht: Hier Gehirn ist wie ein Muskel -- es wird stärker wenn Sie es durch Übungen trainieren. Es kann Rückschläge geben, z.B. Übungen die Sie nicht auf anhieb verstehen, nicht resignieren. Arbeiten Sie dran, wachsen Sie (**Growth Mindset**).
+Stark vereinfacht: Ihr Gehirn ist wie ein Muskel -- es wird stärker, wenn Sie es durch Übungen trainieren. Es kann Rückschläge geben, z.B. Übungen, die Sie nicht auf Anhieb verstehen. Resignieren Sie nicht! Arbeiten Sie daran, wachsen Sie (**Growth Mindset**).
 
 
 

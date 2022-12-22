@@ -244,13 +244,13 @@ createTimetableXtable <- function(df) {
 sortTable <- function(df) {
   df.colname <- names(df)
   
-  if (!("Tag" %in% df.colname)){
+  if (!("Tag" %in% df.colname)) {
       df$Tag <- rep("", length(df$Inhalt))
   }
-  if (!("Datum" %in% df.colname)){
+  if (!("Datum" %in% df.colname)) {
       df$Datum <- rep("", length(df$Inhalt))
   }
-  if (!("Uhrzeit" %in% df.colname)){
+  if (!("Uhrzeit" %in% df.colname)) {
       df$Uhrzeit <- rep("", length(df$Inhalt))
   }
   df %>% select("Tag", "Datum", "Uhrzeit", "Inhalt") -> df
@@ -277,7 +277,7 @@ makeTimetable <- function(ttname = "", tttype = "xtable") {
     return()
   }
   ret <- "XXX"
-  df <- loadTimetable(ttname, prefix = prefixZeit, suffix = suffix)
+  df <- loadTimetable(ttname, prefix = getAnywhere("prefixZeit"), suffix = suffix)
   if (tttype == "png") {
     ret <- createTimetablePNG(df, ttname, prefix)
   } else if (tttype %in% c("knitr", "kable", "kntir::kable")) {

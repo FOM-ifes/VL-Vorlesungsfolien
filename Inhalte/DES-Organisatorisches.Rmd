@@ -14,7 +14,7 @@ pathToImages <- getPathToImages()
 
 ```
 
-# `r if(abschluss) WDH` Organisatorisches
+# `r if(get("abschluss")) WDH` Organisatorisches
 
 ```{r child = './Organisatorisches/LizenzVersion.Rmd'}
 ```
@@ -54,10 +54,10 @@ Workload:
 - Workload gesamt:	175,0 ZStd
 - ECTS-Credit Punkte:	7
 
-```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = showVorlesungsplan}
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
 ```
 
 ```{r, include=FALSE}
-abschluss <<- TRUE
+assign("abschluss", TRUE, envir = .GlobalEnv)
 rm(pathToImages)
 ```

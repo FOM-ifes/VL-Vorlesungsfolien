@@ -14,37 +14,371 @@ pathToImages <- getPathToImages()
 
 ```
 
-# Entwicklung eines Fragebogens
+# Grundlagen wissenschaftlicher Fragebögen
 
+### Fragebogenentwicklung
+
+*„Fragen stellen ist nicht schwer, Fragebogen konstruieren sehr!“*
+^[Kirchhoff S., Kuhnt S., Lipp P., Schlawin S.(2010): Der Fragebogen. 5. Auflage, VS Verlag)]
+
+
+### Literatur (Auswahl)
+
+- Helfried Moosbrugger, Augustin Kelava (2012): Testtheorie und Fragebogenkonstruktion. 2. Auflage, Springer Verlag Berlin Heidelberg. 
+
+- Sabine Kirchhoff, Sonja Kuhnt, Peter Lipp, Siegfried Schlawin (2010): Der Fragebogen. Datenbasis, Konstruktion und Auswertung, 5. Auflage, VS-Verlag Wiesbaden.
+
+- Christoph J. Kemper, Elmar Brähler, Markus Zenger (2013): Psychologische und sozialwissenschaftliche Kurzskalen. 1.Auflage, Medizinisch Wissenschaftliche Verlagsgesellschaft Berlin.
+
+- Nicola Doering, Jürgen Bortz (2016): Forschungsmethoden und Evaluation in den Sozial- und Humanwissenschaften, 5. Auflage, Springer Verlag Berlin Heidelberg.
 
 ### Lernziele {exclude-only=NOlernziele}
 
 
 Die Studierenden ...
 
-- können Befragungen und Fragen/Items taxonomisch einteileen (z.B. nach Kommunikationsform).
+- können Befragungen und Fragen/Items taxonomisch einteilen (z.B. nach Kommunikationsform).
 - kennen Grundlagen der Formulierung von Fragen.
 - kennen typische Fehlerquellen bei der Beantwortung von Fragen und wissen um Ansätze, solche Fehler zu vermeiden.
-- können Richtlinien für gute Qualität beim Erstellen eines Fragebogens nennen.
+- können Richtlinien für gute Qualität beim Erstellen eines Fragebogens nennen (Gütekriteren).
+- Wissen um die Wichtigkeit des Pre-Tests und dessen erfolgreiche Durchführung
+
+## Der Fragebogen - ein Beispiel
 
 
+
+### Wissenschaftlicher Fragebogen vs. "einfacher Fragebogen"
+
+
+
+```{r echo=FALSE, out.width = "80%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "psq_anamnese.png"), error=FALSE)
+```
+^[Fliege, H., Rose, M., Arck, P., Levenstein, S. & Klapp, B. F. (2001). Validierung des "Perceived Stress Questionnaire" (PSQ) an einer deutschen Stichprobe. Diagnostica, 47, 142-152. (https://www.testarchiv.eu/de/test/9004426)]
+
+
+### Offene Übung `r nextExercise()`: Fragebogenvergleich {.exercise type=essay}
+
+Vergleichen Sie die beiden Fragebögen.  
+
+Was sind die Unterschiede?    
+Was fällt Ihnen auf?  
+
+Diskutieren Sie in kleinen Breakout-Sessions / Murmelgruppen in 5 Min. die Unterschiedlichkeit der Fragebögen.
+
+
+::: {.notes}
+
+Erhobene Informationen und die Antwortmöglichkeiten sind verschieden.
+
+Ziel der Befragung und Nutzung der Daten sind unterschiedlich; Anamnesefragebogen erfragt und nutzt Informationen eines Patienten. Wissenschaftliche Fragebögen erheben Informationen nicht für einzelne Individuen.
+Anamnesefragebögen werden i.d.R. nicht statistisch ausgewertet.
+
+Operationalisierung erfolgt bei Anamnesefragebogen nicht. Abgefragte Variablen sind wenig definiert.
+
+
+:::
+
+### Beispiel wissenschaftlicher Fragebogen PSQ
+
+**Beispiel einer Fragestellung:**
+*Haben berufsbedingte Stressoren bei intensiver Wahrnehmung einen stärkeren Einfluss auf stressbedingte Erkrankungen wie Burnout?*
+
+**Der PSQ - perceived stress questionnaire**  
+
+- erfasst die aktuelle subjektive Belastung   
+- in der Kurzversion aus 20 Items bestehend, die in  
+- 4 Subskalen: Sorgen, Anspannung, Freude und Anforderungen erheben.  
+- Jede der Subskalen wird durch jeweils 5 Items (Fragen) operationalisiert  
+- Auf einer Skala von 1 - 4  
+
+### Beispiel wissenschaftlicher Fragebogen PSQ – Subskalen
+
+Die 4 Subskalen operationalisieren  
+
+- Sorgen  
+- Freude  
+- Anspannung  
+- Anforderung  
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "4_Subskalen_psq.png"), error=FALSE)
+```
+Fliege, H. etal.(2001)^[Fliege, H., Rose, M., Arck, P., Levenstein, S. & Klapp, B. F. (2001). Validierung des "Perceived Stress Questionnaire" (PSQ) an einer deutschen Stichprobe. Diagnostica, 47, 142-152. (https://www.testarchiv.eu/de/test/9004426)]
+
+
+<!-- 
+### Beispiel wissenschaftlicher Fragebogen PSQ – Subskala Sorgen
+:::::::::::::: {.columns}
+::: {.column width="43%"}
+
+
+```{r echo=FALSE, out.width = "120%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Items_Sorgen.png"), error=FALSE)
+```
+
+
+
+```{r echo=FALSE, out.width = "120%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Items_Sorgen_gekreuzt.png"), error=FALSE)
+```
+
+:::
+::: {.column width="45%"}
+
+$\Biggr\}$ 
+das Konstrukt "Sorgen" ist operationalisiert durch die Erhebung von *Sorgen*, *Zukunftsängsten* und *Frustrationsgefühl*.
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Auswertung_Subskala_Sorgen.png"), error=FALSE)
+```
+:::
+::::::::::::::
+ -->
+ 
+ 
+### Beispiel wissenschaftlicher Fragebogen PSQ – Subskala Sorgen
+
+:::::::::::::: {.columns}
+::::::: {.column width="40%"}
+
+**Subskala Sorgen** 
+
+Das Konstrukt *Sorgen* ist operationalisiert durch die Erhebung von *Sorgen*, *Zukunftsängsten* und *Frustrationsgefühl.*
+
+
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Items_Sorgen.png"), error=FALSE)
+```
+
+
+
+:::::::
+::::::: {.column width="45%"}
+
+**Beispiel Beantwortung** 
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "Items_Sorgen_gekreuzt.png"), error=FALSE)
+```
+
+**Auswerteschema**   
+
+Die erste Zeile zeigt die Auswertestrategie für die Subskala *Sorgen*.
+```{r echo=FALSE, out.width = "105%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Auswertung_Subskala_Sorgen.png"), error=FALSE)
+```
+
+:::::::
+::::::::::::::
+
+### Beispiel wissenschaftlicher Fragebogen PSQ – Auswertung schrittweise 
+
+psq15 + psq18 + psq22 + psq09 + psq12
+
+```{r auswertung_psq_sorgen, fig.align="center", out.width="60%"}
+3 + 2 + 4 + 3 + 2   # Summe der items 
+14/5  	# geteilt durch die Anzahl der Items 
+2.8-1  	# auf  Skala von 0-3 
+1.8/3 	# Transformation der Skala auf 0 
+0.6 *100   # auf Skala von 0 - 100
+
+```
+
+### Beispiel wissenschaftlicher Fragebogen PSQ – Auswertung gesamt
+
+
+```{r auswertung_psq_sorgen_gesamt, fig.align="center", out.width="60%"}
+
+# Berechnung gesamt
+((((3 + 2 + 4 + 3 + 2)/5) -1)/3)*100  
+```
+
+
+### Beispiel wissenschaftlicher Fragebogen PSQ - Stichprobenwerte
+
+Jede teilnehmende Person der Stichprobe beantwortet die Fragen (= Items).
+
+```{r echo=FALSE, out.width = "100%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "Beispiel_wertetabelle_PSQ.png"), error=FALSE)
+```
+
+$\underbrace{\phantom{-----------------------------------fülltext}}_{\text{Übertragene Werte der gekreuzten einzelnen Items pro teilnehmende Person.}}$
+
+:::{.spaceing top=1cm bottom=0.5cm}
+
+Pro Zeile eine an der Befragung teilnehmende Person;   
+ID = identifiziert teilnehmende Person   
+Unter PS01 – PS20 sind die Werte  der jeweiligen teilnehmenden Person gezeigt, die auf der Likert-Skala angegeben wurden.  
+
+:::
+
+## Gestaltung der Inhalte eines Fragebogens
+
+### Aufgabe und Ziel eines Fragebogens
+ 
+[Der Fragebogen…]{.cemph}  
+… ermöglicht eine zielgerichtete, systematische und regelgeleitete Generierung und Erfassung von verbalen, numerischen Selbstauskünften von Befragungspersonen zu ausgewählten Aspekten ihres Erlebens und Verhaltens in schriftlicher Form.    
+
+
+
+:::{.spaceing top=1cm bottom=0.5cm}
+
+> „Ein Fragebogen ist eine mehr oder weniger standardisierte Zusammenstellung von Fragen, die Personen zur Beantwortung vorgelegt werden mit dem Ziel, deren Antworten zur Überprüfung der den Fragen zugrundeliegenden theoretischen 
+Konzepte und Zusammenhänge zu verwenden. Somit stellt ein Fragebogen das zentrale Verbindungsstück zwischen Theorie und Analyse dar.” (Porst, 1996, S. 738)^[Porst, Rolf (1996): Fragebogenerstellung. In: Goebl/Nelde/Starý/Wölck, Hrsg. (1996): 737–744 
+]
+
+:::
+
+### Aufgabe und Ziel eines Fragebogen – selbstadministrierte Datenerfassung
+
+
+[Der Fragebogen…]{.cemph}  
+… wird von den Befragungspersonen eigenständig und selbstadministriert ausgefüllt.  
+… erfasst Aspekte, die nicht direkt beobachtbar und in Verhalten oder Dokumenten manifestiert sind (subjektives Erleben, vergangenes Verhalten, privates Verhalten).  
+… ist effizient, wenig Zeitaufwand (viele Erhebungen möglich) der Befrager muss nicht anwesend sein (z.B. über eine online Befragung).      
+… Befragte müssen eine Lese- und Schreibkompetenz haben. Für Settings, die diese Kompetenz nicht erfüllen können spezielle Fragebogenformate genutzt werden. ^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer]
+
+
+
+::: {.spaceing top=1cm bottom=0.5cm}
+
+[Die Konstruktion und somit die Eigenschaften Fragebogens haben einen 
+maßgeblichen Einfluss auf die Beantwortung dessen.
+]{.cemph}
+
+:::
+
+### Anforderungen an selbstadministrierte Datenerfassung und den Befragten
+
+[Personen, die an einer Befragung teilnehmen, müssen…
+]{.cemph}   
+
+1. … die gestellte Frage verstehen,   
+2. … relevante Informationen zum Beantworten der Frage aus dem Gedächtnis abrufen,   
+3. … auf der Basis dieser Informationen ein Urteil bilden,   
+4. … dieses Urteil gegebenenfalls in ein Antwortformat einpassen und   
+5. … ihr „privates“ Urteil vor Weitergabe an den Interviewer bzw. den Fragebogen gegebenenfalls „editieren”.^[Porst, R. (2014): Fragebogen, Studienskripten zur Soziologie (4. überarb. Aufl.). Wiesbaden: Springer VS]
+
+
+### Die richtige Frage stellen I / III
+
+> „Die richtige Antwort, mein lieber Watson, erhalten Sie nur, wenn Sie die richtige Frage stellen!"(Porst, 2014, S. 13)]^[Porst, R. (2014): Fragebogen, Studienskripten zur Soziologie (4. überarb. Aufl.). Wiesbaden: Springer VS]
+
+Der Fragebogen erlaubt, anders als eine unstrukturierte Befragung z.B. Zeugenbefragungen, keine Nachfragen, kein Klarstellen von Formulierungen.  
+Zum Erhalt der richtigen Antwort ist viel Arbeit notwendig bevor die Frage gestellt wird.  
+Die Reihenfolge, die Wortwahl und das Layout des Fragebogen (Farbe, Schriftart etc.) haben Einfluss auf die Antwort auf die gestellte Frage.
+
+
+### Die richtige Frage stellen II / III
+ 
+
+[Die Frage...]{.cemph}
+ 	                    
+:::::::::::::: {.columns}
+::::::: {.column width="32%"}
+
+#### Sind Sie 
+$\Box$ glücklich  
+$\Box$ unglücklich   
+$\Box$ weder/ noch  
+
+
+:::::::
+
+::::::: {.column width="30%"}
+  
+\bigskip ergibt eine andere Antwort bzw. einen anderen Anteil glücklicher Menschen, als die Frage
+  
+:::::::
+
+::::::: {.column width="32%"}
+#### Sind Sie 
+
+$\Box$ glücklich     
+$\Box$ zufrieden  
+$\Box$ eher zufrieden  
+$\Box$ eher unzufrieden  
+$\Box$ unzufrieden  
+
+
+:::::::
+::::::::::::::
+Porst (2014)^[Porst, R. (2014): Fragebogen, Studienskripten zur Soziologie (4. überarb. Aufl.). Wiesbaden: Springer VS
+]
+
+
+
+### Die richtige Frage stellen III / III
+
+Zwei Priester, ein Dominikaner und ein Jesuit, streiten darüber, ob es Sünde sei, gleichzeitig zu rauchen und zu beten. Weil sie sich nicht einig werden 
+können, beschließen sie, ihren jeweiligen Prior zu fragen.   
+
+Ein paar Tage später treffen sie sich wieder. Der Dominikaner fragt: 
+„Na, was hat Dein Prior gesagt?“  
+Der Jesuit antwortet: „Er sagt, das sei schon in Ordnung, es sei keine Sünde, beides gleichzeitig zu tun“.   
+„Das ist ja lustig“, antwortet der Dominikaner. „Mein Prior sagt, gleichzeitig rauchen und beten sei natürlich eine Sünde“.  
+Der Jesuit: „Was hast Du ihn denn gefragt?“ 
+Der Dominikaner antwortet: „Ich fragte meinen Prior, ob man beim Beten rauchen darf“. 
+„Nun“, sagt der Jesuit, „meinen Prior habe ich gefragt, ob man beim Rauchen beten darf“.^[Porst, R. (2014): Fragebogen, Studienskripten zur Soziologie (4. überarb. Aufl.). Wiesbaden: Springer VS
+]
+
+
+
+### Der Fragebogen ist ein sehr sensibles Erhebungsinstrument 
+
+[Wichtige Aspekte der Fragebogenanalytik (s. auch PPDAC und Studiendesign)]{.cemph}
+
+1. Relevante Vorarbeiten und Publikationen zum Thema kennen (Literaturrecherche!!).  
+2. Definition und Präzisierung der Fragestellung, Formulierung der Forschungsfrage und  
+3. Ziel der Studie klar definieren.  
+4. Zielgruppe (= Population) kennen, Definition der Stichprobe.  
+5. Hypothesen formulieren, Operationalisierung der Konstrukte/ Variablen, auf Skalierung achten!) ( = Erhebungs- und Messinstrumente auswählen).    
+6. Zeitlicher Rahmen der Umfrage; Wann sind die Probanden zu erreichen? Wie lange nach der Maßnahme ist eine Erhebung (noch) sinnvoll?  
+7. Formen der Befragung? Onlinebefragung, Paper-Pencil, telefonisch o.a.  
+8. Itemreihenfolge, Itemformulierung  
+9. Statistische Analyse  
+
+### Validierte Fragebögen sind vorzuziehen
+
+
+**Oberstes Gebot**: Suche nach bereits validierten Verfahren, bevor man selbst konzipiert.  
+Es gibt unzählige Konstrukte/Items/Skalen für eine Vielzahl von Fragestellungen.  
+
+Zugang zu **validierten Fragebögen:**
+
+- Psychometrische Tests aus der ZPID-Datenbank
+    * <https://www.testarchiv.eu/>   
+    * <https://www.psyndex.de/psychologie/psychologietests.php>   
+- Sozialwissenschaftliche Items von GESIS: <http://zis.gesis.org>   
+- Literaturrecherche, Skalen werden in Fachzeitschriften publiziert  
+- Research Gate <https://www.researchgate.net/> 
+- Autoren anschreiben
+
+[Grundsätzlich auf NUTZUNGSRECHTE Acht geben (Zitation und Referenz!)]{.cemph}
+
+<!--
 ### Formen der Befragung
 
 :::::::::::::: {.columns}
 ::: {.column width="33%"}
 **Kommunikationsformen**
 
-- standardisiert: nicht gestalbarer, starrer Ablauf       
-- teilstandardisiert: teilweise gestaltbarerer Ablauf     
-- nicht standardisiert: gestaltbarerer, flexibler Ablauf  
+- standardisiert: nicht gestaltbarer, starrer, Ablauf
+- teilstandardisiert: teilweise gestaltbarerer, Ablauf
 
-**Befragungssetting**
+**Kommunikationsart**
+- schriftlich
+- mündlich /persönlich
+- online
 
-- Einzelperson  (Einzelbefragung)
-- Gruppe (Gruppenbefragung)
 
 :::
 ::: {.column width="33%"}
+
 **Durchführungsform**
 
 - schriftlich (Fragebogen)
@@ -52,46 +386,128 @@ Die Studierenden ...
 - mündlich, persönlich (face to face)
 - telefonisch (Telefoninterview)
 
-**Kommunikationsart**
+**Befragungssetting**
 
-- schriftlich
-- mündlich
+- Einzelpersonen (Einzelbefragung)
+- Gruppe (Gruppenbefragung)
+
+
+:::
+::::::::::::::
+--> 
+
+### Formen der Befragung
+
+**Kommunikationsformen**  
+- standardisiert: nicht gestaltbarer, starrer, Ablauf  
+- teilstandardisiert: teilweise gestaltbarerer, Ablauf  
+
+**Kommunikationsart**  
+- schriftlich  
+- mündlich /persönlich  
+- online  
+
+**Durchführungsform**  
+- schriftlich (Fragebogen)  
+- internetgestützt (Onlinebefragung)  
+- mündlich, persönlich (face to face)  
+- telefonisch (Telefoninterview)  
+
+**Befragungssetting**  
+- Einzelpersonen (Einzelbefragung)  
+- Gruppe (Gruppenbefragung)  
+
+
+### Schriftliche Befragung: Vor- und Nachteile
+
+:::::::::::::: {.columns}
+::: {.column width="45%"}
+
+**Vorteile**  
+
+- Geringerer Zeit- und Personalaufwand, geringere Kosten.  
+- Geeignet bei der Befragung großer homogener Gruppen.  
+- Befragte können Fragen besser durchdenken.  
+- Keine Beeinﬂussung durch Merkmale und Verhalten des Interviewers.    
+ 
+
+:::
+::: {.column width="45%"}
+
+**Nachteile**  
+
+- Befragungssituation ist kaum hinreichend kontrollierbar.   
+- Bei Verständnisproblemen kann keine Hilfe erfolgen.   
+- Risiko, dass einzelne Fragen wenig sorgfältig, unvollständig oder überhaupt nicht ausgefüllt werden.  
+
 
 
 :::
 ::::::::::::::
 
 
-### Die Frage: Formen, Struktur und Funktionen 
+### Übung `r nextExercise()`: Schriftliche Befragung{.exercise type=A-B-C-D answer=D}
 
-**Fragetypen**
+Was ist kein Vorteil einer schriftlichen Befragung?  
 
-- Einstellungs- oder Meinungsfragen
-  - "Auf der Autobahn sollte Tempo 100 eingeführt werden"
-  - Antwortkategorien von "stimme überhaupt nicht zu" bis "stimme voll zu"
-- Überzeugungsfragen
-  - "Im letzten Jahr wurden in Deutschland mehr ausländische als deutsche Kinder geboren"
-  - Antwortkategorien: "richtig" / "falsch"
-- Verhaltensfragen
-  - "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?"
-  - Antwortkategorie: ........
-- Fragen nach Eigenschaften der APN (Antwortperson)
-  - "Was ist ihr höchster Bildungsabschluss?"
-  - Antwortkategorie: "Hauptschulabschluss" / "Mittlere Reife" / "Fachhochschulreife" / "Allgemeine Hochschulreife" / "Kein Abschluss"
+A. Geeignet bei der Befragung großer homogener Gruppen.  
+B.  Keine Beeinflussung durch Merkmale und Verhalten des Interviewers.  
+C.  Geringerer Zeit- und Personalaufwand, geringere Kosten.  
+D.  Befragungssituation ist hinreichend kontrollierbar.  
 
 
-### Übung `r nextExercise()`: Fragetypen {.exercise type=A-B-C-D answer=B}
-
-Um welchen Fragentyp handelt es sich bei der Frage: „Im Abgangsjahr 2017 haben mehr Schulabsolventen/ -abgänger die Schule mit allgemeiner Hochschulreife als mit einem Realschulabschluss verlassen.“
-
-A.  Einstellungs - oder Meinungsfrage.
-B.  Überzeugungsfrage.
-C.  Verhaltensfrage.
-D.  Frage nach Eigenschaften der APN (Antwortperson).
 
 ::: {.notes}
-Die Frage zielt darauf ab, eine Einschätzung der APN zu bekommen, ob der beschriebene Sachverhalt richtig oder falsch ist, daher Antwort ***B***.
+Die Befragungssituation ist bei schriftlichen Befragungen kaum hinreichend kontrollierbar, da der Interviewer häufig nicht vor Ort ist, daher Antwort ***D***.
 :::
+
+
+
+### Arten und Formen der Fragen eines Fragebogens
+
+
+
+ 	                    
+:::::::::::::: {.columns}
+::::::: {.column width="32%"}
+
+#### Geschlossene Fragen
+- Antworten vorgegeben  
+- Definierte, begrenzte Auswahl an Antwortmöglichkeiten  
+- Verlangt Entscheidung für eine der Vorgaben  
+
+Bsp.: Single-Choice, 
+Likert-Skala, Rating-Skala
+
+
+
+:::::::
+
+::::::: {.column width="32%"}
+  
+#### Offene Fragen 
+
+- Keine Antwortvorgaben  
+- Freie Antworten erwünscht   
+
+
+
+Bsp.: einfache numerische Angaben, freie Textformulierung
+
+  
+:::::::
+
+::::::: {.column width="32%"}
+#### Halboffene Fragen 
+
+Kombination aus geschlossener Frage und der Möglichkeit der Freitexteingabe.  
+
+
+Bsp.:  Sonstige: ______
+
+
+:::::::
+::::::::::::::
 
 
 ### Die Frage: Formen, Struktur und Funktionen 
@@ -122,119 +538,425 @@ Die Frage zielt darauf ab, eine Einschätzung der APN zu bekommen, ob der beschr
 
 ### Übung `r nextExercise()`: Geschlossene und offene Fragen {.exercise type=A-B-C-D answer=C}
 
-Was ist ein Vorteil von offenen Fragen?
+Was ist ein Vorteil von offenen Fragen?  
 
-A.  Unterschiedliches Verbalisierungsvermögen der Befragten.
-B.  Geringerer Zeitaufwand für Befragte.
-C.  Befragter muss sich nicht an vorgegebene Antwortkategorien halten.
-D.  Vergleichbarkeit der Antworten.
+A.  Unterschiedliches Verbalisierungsvermögen der Befragten.  
+B.  Geringerer Zeitaufwand für Befragte.  
+C.  Befragter muss sich nicht an vorgegebene Antwortkategorien halten.  
+D.  Vergleichbarkeit der Antworten.  
 
 ::: {.notes}
 Offene Fragen erlauben dem Befragten frei zu antworten, ohne sich dabei an vorgegebene Antwortkategorien halten zu müssen, daher Antwort ***C***.
 :::
 
 
-### Die Frage: Formen, Struktur und Funktionen 
+<!--
+### Offene Übung `r nextExercise()`: Vorteile / Nachteile Fragen {.exercise type=essay}
 
-**Antwortformate**
+Was sind geschlossen und offene Fragen - wiederholen Sie für sich?   
+Diskutieren Sie mögliche Vor- und Nachteile. 
 
-- freies (offenes) Antwortformat
-  - Befragter formuliert Antwort selbst in Sprache, Zahlen, Bilder etc.
-- dichotomes Antwortformat
-  - Antwortkategorie mit zwei Ausprägungen: "richtig"/"falsch", "ja"/"nein"
-- Ratingskala
-  - Skala mit mehr als zwei abgestuften Antwortkategorien, Informationsgewinn
-  - am häufigsten in der Sozialforschung eingesetztes Erhebungsinstrument
-  - verbale Skalenbezeichnung können sich auf unterschiedliche Variablenarten beziehen
-- Rankingskala
-  - Themen werden nach Wichtigkeit in eine Reihenfolge gebracht
+
+::: {.notes}
+
+             
+:::::::::::::: {.columns}
+::::::: {.column width="48%"}
+
+#### Geschlossene Fragen
+
+**Vorteile:**
+
+- Vergleichbarkeit der Antworten  
+- Höhere Durchführungs- und Auswertungsobjektivität  
+- Geringerer Zeitaufwand für Befragte  
+- Geringerer Aufwand bei der Auswertung  
+
+**Nachteile:**
+
+- Gefahr der Suggestivwirkung, v. a. bei Meinungsfragen  
+- Erhalt von Informationen im Rahmen der vorgegebenen Kategorien  
+
+
+:::::::
+
+::::::: {.column width="48%"}
   
-### Die Frage: Formen, Struktur und Funktionen
+#### Offene Fragen 
 
-**Ratingskalen**
+**Vorteile:**  
 
-- das Skalenniveau unterscheidet sich nach der Gestaltung der Skala
-- oft maximale Abstufung von 5 bis 7 Kategorien
-- unipolare vs. bipolare Ratingskala
-```{r echo=FALSE, out.width = "60%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Rating.png"), error=FALSE)
-```
+- Befragter muss sich nicht an vorgegebene Antwortkategorien halten  
+- Dient der Exploration des Problemfelds  
+- Generierung relevanter Antwortkategorien hinsichtlich geschlossener Fragen  
+  
+  
+**Nachteile:**  
 
-- Skala mit der Angabe der Ausprägungen pro Antwortmöglichkeit: Ordinalskala
-```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Ordinalskala.png"), error=FALSE)
-```
-
-- **Likert-Skala** mit Angabe an den Extrempunkten: Intervallskala
-```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Intervallskala1.png"), error=FALSE)
-```
-
-- **Likert-Skala** mit Angabe aller *gleichabständigen* Skalenwerte: Intervallskala
-```{r echo=FALSE, out.width = "30%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Intervallskala2.png"), error=FALSE)
-```
+- Unterschiedliches Verbalisierungsvermögen der Befragten  
+- Schwierige und zeitaufwändige Auswertung  
 
 
-### Die Frage: Formen, Struktur und Funktionen 
+:::::::
+:::::::::::::: 
 
-- Kontrollfragen
-  - Kontrolle einer gegebenen Antwort auf eine schon vorher gestellte Frage
-  - "Sind Sie für die Todesstrafe?" - "In den USA ist ein überführter Straftäter letzte Woche zum Tode verurteilt worden. Befürworten Sie die Entscheidung oder lehnen Sie sie ab?"
-- Filterfrage
-  - Frageblöcke, die nur für eine Teilmenge der befragten Personen relevant sind, werden "ausgeblendet"
-  - "Sind Sie erwerbstätig?" Antwortkategorie: "ja"/"nein" - Weiter mit Frage 12
-- Trichterfragen
-  - Fragen mit denen man sich schrittweise vom Allgemeinen zum Besonderen vortastet, um z.B. Hemmungen im Fall "heikler" Fragen abzubauen
-- Eisbrecherfragen
-  - stehen am Anfang des Fragebogens und sollen eine kooperative Intervieweratmosphäre aufbauen sowie den Einstieg in den Fragebogen erleichtern
-
-### Frageformulierung
-
-- kurze, verständliche, direkte und eindimensionale Fragen
-  - "Fahren Sie gerne und schnell Auto?"
-  - "Was haben Sie für Nachbarn?"
-- keine doppelten Verneinungen
-  - "Neigen Sie nicht dazu, die Dinge nicht leicht zu nehmen?"
-- Antwortkategorien von geschlossenen Fragen sollten disjunkt (nicht überlappend), erschöpfend und präzise sein
-  - "Rauchen Sie Zigaretten?"
-    Antwortkategorien: "häufig"/"manchmal"/"selten"/"nie"
-- Vorsicht bei stark wertbesetzten Begriffen
-  - "Gerechtigkeit", "Freiheit", "Verbrechen", "Selbstbestimmung" - starker positiver oder negativer Beigeschmack
-- möglichst keine indirekten Fragen
-  - "Viele Erwachsene sind der Ansicht, dass es im Kinderfernsehen keine Werbung geben sollte. Meinst du das auch?"
-- keine Suggestivfragen
-  - "Sind Sie nicht auch der Meinung, dass ausländische Straftäter schneller abgeschoben werden müssten?"
-- Befragte nicht überfordern
-  - "Wie viel Prozent des Monatseinkommens geben Sie für die Miete aus?"
+:::
+-->  
 
 
-### Übung `r nextExercise()`: Fragenformulierung {.exercise type=A-B-C-D answer=C}
 
-Welche dieser Fragen entspricht den genannten Kriterien zur Fragenformulierung?
+### Frageformulierung I / II
+
+
+- kurze, verständliche, direkte Fragen  
+   “Was haben Sie für Nachbarn?”  
+
+
+- Ein Sachverhalt pro Frage (eindimensional)  
+     “Fahren Sie gerne und schnell Auto?”  
+    
+- keine doppelten Verneinungen  
+     “Neigen Sie nicht dazu, die Dinge nicht leicht zu nehmen?”  
+
+- Antwortkategorien von geschlossenen Fragen sollten disjunkt (nicht überlappend),   erschöpfend und präzise sein.  
+   “Rauchen Sie Zigaretten?” Antwortkategorien: “häuﬁg”/“manchmal”/“selten”/“nie”.  
+
+- Vorsicht bei stark wertbesetzten Begriffen.  
+    “Gerechtigkeit”, “Freiheit”, “Verbrechen”, “Selbstbestimmung” - starker positiver
+    oder negativer Beigeschmack
+
+
+### Frageformulierung II / II
+
+
+
+- keine indirekten Fragen    
+    "Viele Erwachsene sind der Ansicht, dass es im Kinderfernsehen keine Werbung geben
+    sollte. Meinst du das auch?"
+
+- Einfache Fragen, Befragte nicht überfordern   
+    "Wie viel Prozent des Monatseinkommens geben Sie für die Miete aus?"  
+
+- Keine Suggestivfragen, neutrale Fragen  
+    "Sind Sie nicht auch der Meinung, dass ausländische Straftäter schneller abgeschoben
+	   werden müssten?" 	    
+	  "Sind die Schmerzen nachts schlimmer als am Tage?" $\Box$ ja  $\Box$ nein  
+    Besser: "Wann sind Ihre Schmerzen schlimmer?": $\Box$ nachts   $\Box$ tagsüber
+
+- Gestalten Sie den Fragebogen übersichtlich und eindeutig – lassen Sie ausreichend Platz 
+
+- Vermeiden Sie Items, die nahezu jeder mit ja/ nein beantworten würde/ wird. (Varianz!)     
+
+
+### Übung `r nextExercise()`: Fragenformulierung {.exercise type=A-B-C-D answer=B}
+
+
+Welche dieser Fragen entspricht den genannten Kriterien zur Fragenformulierung?  
 
 A.  Freuen Sie sich nicht auch auf Weihnachten und kaufen schon ab September Weihnachtsgebäck?
 B.  Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?
 C.  Wieviel Prozent der Weltbevölkerung lebt in Afrika?
 D.  Denken Sie nicht, dass es nicht verboten sein sollte in öffentlichen Gebäuden zu rauchen?
 
+ 
+
 ::: {.notes}
-***C***: Nur die Frage "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?" entspricht den genannten Kriterien.
+Nur die Frage "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?" entspricht den genannten Kriterien, daher Antwort ***B***.
 :::
 
 
-### Fehlerquellen
 
-- soziale Erwünschtheit
-  - Beantwortung der Frage in Richtung der entsprechenden sozialen Norm
-  - Lösung: ausbalancierte Antwortvorgaben (Antwortvorgaben sind alle gleich erwünscht oder unerwünscht), Kontrollskalen, Aufforderung zu korrektem Testverhalten
-- Response-Set
-  - systematische Antwortmuster, die unabhängig vom Inhalt der Frage zustande kommen: Tendenz zur Mitte oder Extrempositionen sowie Akquieszenz (Ja-Sage-Bereitschaft)
-  - Lösung: abgestufte Antwortmöglichkeiten, unterschiedliche Polung der Items
-- Positionierung der Frage
-  - Halo-Effekt (Fragereiheneffekt): Fragen können auf andere Fragen ausstrahlen:
-    "Wie stehen Sie zur Todesstrafe?" - "Wie sollte man Ihrer Meinung nach Sexualstraftäter bestrafen?"
-  - Lösung: andere Platzierung der Frage, Umformulierung oder Präzisierung der Frage
+### Fragetypen zur Befragung inhaltlicher Aspekte
+ 
+- Einstellungs- oder Meinungsfragen  
+   "Auf der Autobahn sollte Tempo 100 eingeführt werden"  
+    Antwortkategorien von "stimme überhaupt nicht zu" bis "stimme voll zu"  
+- Überzeugungsfragen  
+   "Im letzten Jahr wurden in Deutschland mehr ausländische als deutsche Kinder geboren"  
+   Antwortkategorien: "richtig" / "falsch"  
+- Verhaltensfragen  
+   "Wie häufig haben Sie in den letzten 14 Tagen in einem Bio- oder Ökoladen eingekauft?"  
+   Antwort in Häufigkeiten als Kategorie  
+- Fragen nach Eigenschaften der APN (Antwortperson)  
+   "Was ist ihr höchster Bildungsabschluss?"  
+   Antwortkategorie: "Hauptschulabschluss" / "Mittlere Reife" / "Fachhochschulreife" / "Allgemeine Hochschulreife" / "Kein Abschluss"  
+
+
+### Übung `r nextExercise()`: Fragetypen {.exercise type=A-B-C-D answer=B}
+
+Um welchen Fragentyp handelt es sich bei der Frage: „Im Abgangsjahr 2017 haben mehr Personen mit Abschluss die Schule mit allgemeiner Hochschulreife als mit einem Realschulabschluss verlassen.“
+
+A.  Einstellungs - oder Meinungsfrage.
+B.  Überzeugungsfrage.
+C.  Verhaltensfrage.
+D.  Frage nach Eigenschaften der APN (Antwortperson).
+
+::: {.notes}
+Die Frage zielt darauf ab, eine Einschätzung der APN zu bekommen, ob der beschriebene Sachverhalt richtig oder falsch ist, daher Antwort ***B***.
+:::
+
+
+### Funktionsfrageformen I / II
+
+- Eisbrecherfragen stehen am Anfang des Fragebogens und sollen eine kooperative und vertrauensvolle           Intervieweratmosphäre aufbauen sowie den Einstieg in den Fragebogen erleichtern.  
+
+
+- Kontrollfragen zur Überprüfung vorangegangener Fragen  
+    „Haben Sie den Wahlkampf von Baden-Württemberg und die Wahl verfolgt?“   
+    „Wie zufrieden sind Sie, dass die FDP die Wahl gewonnen hat?“  
+
+- Kontrollfragen zur Überprüfung der individuellen Beantwortung   
+     Zur Überprüfung der Beantwortung bei online-Befragungen, können ebenfalls                  Kontrollfragen eingesetzt werden. Hiermit erfolgt die Prüfung, ob Fragen (richtig)         gelesen und sinnvoll beantwortet werden.
+  „Kreuzen Sie hier die Antwortkategorie „stimme nicht zu“ an.“
+
+
+### Funktionsfrageformen II / II  
+
+- Filter- und Trichterfragen arbeiten mit Gabelungen und werden zur individuellen Anpassung des Fragebogens verwendet.  
+
+Frageblöcke, die nur für eine Teilmenge der befragten Personen relevant sind, werden dementsprechend ein- oder ausgeblendet.  
+“Rauchen Sie?” Antwortkategorie: “ja”/“nein”.   
+Fragen zur gesundheitlichen Beeinträchtigung durch Rauchen können ausschließlich Raucher beantworten, somit werden Fragen für Raucher ein-, für Nichtraucher ausgeblendet.
+
+- Trichterfragen werden auch zur Hinführung auf prekäre Fragen genutzt.  
+
+Fragen mit denen man sich schrittweise vom Allgemeinen zum Besonderen vortastet, um         z. B. Hemmungen im Fall “heikler” Fragen abzubauen.
+
+
+
+### Antwortformate geschlossener Fragen
+ 
+
+**Antwortformate**
+
+
+- dichotomes Antwortformat
+   Antwortkategorie mit zwei Ausprägungen: "richtig"/"falsch", "ja"/"nein"  
+  
+- Ratingskala  
+  - am häufigsten in der Sozialforschung eingesetztes Erhebungsinstrument  
+  - über die Ratingskala geben Befragte Urteile auf einer numerisch interpretierbaren Skala ab
+  
+- Rankingskala  
+   Merkmalsausprägungen werden nach Wichtigkeit in eine Reihenfolge gebracht. 
+   „Was ist Ihnen beim Kauf von Lebensmitteln wichtig? Ordnen Sie die Aspekte absteigend      der Wichtigkeit an.“
+  
+### Rating-Skalen Grundlagen
+
+[Ratingskalen (Thurstone (1929), Likert (1932))]{.cemph}
+
+- Zählen zu den wichtigsten und am häufigsten verwendeten Instrumenten der    sozialwissenschaftlichen quantitativen Datenerhebung.  
+- ermöglichen die Abfrage der Rangstufe, die einem persönlichen Empfinden entspricht (Zustimmung, Intensität, Häufigkeit, Zufriedenheit).   
+- die Probanden bewerten eine Frage (Item), mit dem ankreuzen einer passenden Antwortmöglichkeit (Kategorie) der Ratingskala.  
+- Ratingskalen geben gleich große markierte Abschnitte des Merkmalskontinuums vor.  
+- Die Ratingskala ist ordinalskaliert und kann nicht per se als intervallskaliert angesehen werden.^[Menold, N., Bogner, K. (2015). Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 
+]  
+
+*Beispiel:*
+*Wie zufrieden sind Sie – alles in allem – mit Ihrem gegenwärtigen Leben?* (aus. EES  - European Social Survey)
+Auf einer 11-stufigen Ratingskale von 0 (äußerst unzufrieden)  bis 10 (äußerst zufrieden)
+
+### Rating-Skalen – Darstellung
+
+**Anzahl der Antwortkategorien**  
+Die Anzahl der Antwortkategorien: wichtig für das Verständnis der Bewertungsdimension, orientiert sich auch an Abstraktionsfähigkeit der Befragten.  
+- Legt den Differenzierungsgrad der Ratingskala nach Range-Frequency Modell fest.  
+- Beste Validität Reliabilität bei fünf bis sieben Antwortkategorien gegeben.  
+- Bei zu vielen Antwortkategorien >7 ist die Bedeutung der einzelnen Kategorie weniger klar   somit erhöht sich die Schwierigkeit der Beantwortung.  
+- Bei zu wenigen Antwortkategorien <5 differenzieren die Ratingskalen unzureichend.  
+
+
+**Orientierung der Skalen**  
+- steigend von links nach rechts! Diese Ordnung ist intuitiv.    
+- ggf. inverse Items erzeugen und zur Analyse die Werte umdrehen  
+- Orientierung immer in die gleiche Richtung  
+
+
+
+**Benennunge der Kategorien**  
+- verbale Aussagen (stimme voll und  ganz zu…)  
+- Nur die Extremwerte verbalisieren – restliche Skale Zahlen  
+- Bildchen/ Symbole^[Menold, N., Bogner, K. (2015). Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 ]
+  
+
+### Rating-Skalen – Vollverbalisierung I / II
+
+[Label der Antwortkategorien I]{.cemph}  
+
+Vollverbalisierte Version ist die Beschriftung jeder Kategorie:  
+```{r echo=FALSE, out.width = "50%", fig.align="left"}
+knitr::include_graphics(file.path(pathToImages, "likert_vollverb.png"), error=FALSE)
+```
+
+Die Vollbeschriftung/ Vollverbalisierung der Ratingskala…    
+
+ … erhöht Validität und Reliabilität gegenüber Endkategorienbeschriftung   
+ … wird von befragten Personen präferiert.    
+ … erhöht die Bedeutung der Kategorien – weniger unerwünschte Effekte hinsichtlich der        Beantwortung.    
+ … ist bei längeren Skalen >7 nicht empfehlenswert, da angemessene verbale Abstufungen        schwierig zu konstruieren sind.^[Menold, N., Bogner, K. (2015).       Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für       Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 
+]    
+
+### Rating-Skalen – Vollverbalisierung II / II
+
+
+… müssen präzise Formulierung.  
+… sollten symmetrisch formuliert sein (gleiche Anzahl Kategorien negativ und positiv/           links und rechts der Mitte).  
+… Abstände zwischen Kategorien sollten gleich sein.^[Menold, N., Bogner, K. (2015).       Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für       Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 
+]  
+
+
+### Rating-Skalen – Teilverbalisierung und numerische Beschriftung
+
+[Label der Antwortkategorien II]{.cemph}   
+
+:::::::::::::: {.columns}
+::::::: {.column width="40%"}
+
+**Numerische Labels**  
+
+Beschriftung der Kategorien mit Zahlen:  
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_vollverb_numeric.png"), error=FALSE)
+```    
+  
+:::::::
+
+::::::: {.column width="40%"}
+  
+**Teil-/ Endverbalisierte Version**  
+
+Beschriftung nur der Endkategorien:   
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_endverb.png"), error=FALSE)
+```    
+   
+
+
+:::::::
+
+::::::::::::::
+
+
+### Rating-Skalen – Skalenpolarität I / III  
+
+[Unipolare und bipolare Skalen:]{.cemph}  
+
+:::::::::::::: {.columns}
+::::::: {.column width="40%"}
+
+**Bipolare Skalen** bilden zwei gegensätzliche Dimensionen ab. („Nullpunkt“ mittig)
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_bipolar.png"), error=FALSE)
+```    
+  
+  
+**Unipolare Skalen** ein Kontinuum ab. Beginnend beim „Nullpunkt“ bis zum Endpol. 
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_unipolar.png"), error=FALSE)
+```    
+    
+  
+:::::::
+
+::::::: {.column width="40%"}
+  
+\vspace{2.3cm}
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_bipolar_num.png"), error=FALSE)
+```    
+ 
+ 
+\vspace{2.3cm}
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_unipolar_num.png"), error=FALSE)
+```    
+   
+
+:::::::
+
+::::::::::::::
+
+### Rating-Skalen – Skalenpolarität II / III
+
+Die Effekte der Skalenpolarität auf die Gütekriterien ist bislang nur wenig erforscht. 
+Welche Skalenpolarität hier besser ist, ist somit abschließend nicht zu sagen.^[Menold, N., Bogner, K. (2015). Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 
+]
+
+Nach Möglichkeit:
+
+- sollen unipolare Antwortmöglichkeiten verwendet werden.
+- negative  Werte eher vermeiden.
+- steigend von links nach rechts anordnen.
+
+
+
+### Rating-Skalen – Skalenpolarität III / III
+
+[Vertikale Ratingskalen:]{.cemph}  
+
+
+
+Vertikale Skalen führen aufgrund der Ausrichtung zu einer Wertung, untere Werte werden eher negativ interpretiert.
+
+Der Primacy-Effekt führt zu häufigeren Antworten im oberen Bereich, (Tourangeau et al., 2000^[Tourangeau, R., Rips, L. J., & Rasinski, K. A. (2000). The Psychology of Survey Response. Cambridge: Cambridge University Press.], Tourangeau et al. 2004)^[Tourangeau, R., Couper, M. P. & Conrad, F. G. (2004). Spacing, position and order. Interpretive heuristics for visual features of survey questions. Public Opinion Quarterly, 68, 368-393. 
+]
+
+
+
+
+```{r echo=FALSE, out.width = "10%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "horizontal_scale.png"), error=FALSE)
+```    
+
+
+
+### Ratingskala – Skalenart innerhalb Fragebogen nicht wechseln 
+
+
+Die Art und Anzahlen der Antwortalternative sollte innerhalb eines Fragebogens immer gleich sein!   
+
+…sowohl bei abgefragten Dimensionen     
+   
+     
+\hspace{2cm} *Häufigkeit: \hspace{0.5cm} nie, …, immer    *   
+
+\hspace{2cm} *Intensität: \hspace{0.5cm} gar nicht, …, sehr  *   
+
+\hspace{2cm} *Zustimmung: \hspace{0.5cm} stimme nicht zu, …, stimme voll zu  * 
+
+
+\vspace{1cm}
+
+…als auch bei der Skalierung.  
+
+
+Der/die Befragte liest genau einmal, was als Angabe gefordert ist und dann „kreuzt“ die Person. 
+Befragte gehen davon aus, dass überall das Gleiche gefordert und geschrieben ist.
+
+
+### Beispiele Ratingskalen 
+
+
+
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_arten.png"), error=FALSE)
+```    
+Döring N. und Bortz J. (2016)^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. Seite 246 ]
+
+
+
 
 ### Wie beurteilen Sie diese Fragen?
 
@@ -242,40 +964,32 @@ D.  Denken Sie nicht, dass es nicht verboten sein sollte in öffentlichen Gebäu
 knitr::include_graphics(file.path(pathToImages, "Fragen.png"), error=FALSE)
 ```
 
-### Bewährte Fragebögen
-
-**Oberstes Gebot**: Suche nach bereits validierten Verfahren, bevor du selber konzipierst.
-Es gibt unzählige Konstrukte für eine Vielzahl von Fragestellungen und man muss nicht immer das Rad neu erfinden!
-
-Zugang zu **validierten Fragebögen** 
-
-- Psychometrische Tests aus der **ZPID-Datenbank**: [https://www.zpid.de/index.php?wahl=products&uwahl=frei&uuwahl=testarchiveintro-klassifikatoren](https://www.zpid.de/index.php?wahl=products&uwahl=frei&uuwahl=testarchiveintro-klassifikatoren)
-- Sozialwissenschaftliche Items von **GESIS**: [http://zis.gesis.org/](http://zis.gesis.org/)
-- Literaturrecherche: in Fachzeitschriften publiziert
 
 
-Grundsätzlich auf **NUTZUNGSRECHTE** Acht geben
+### Abfrage von Intensitäten und Häufigkeiten
 
-### Schriftliche Befragung: Aufbau des Fragebogens 
 
-- Einleitungs-/Eröffungsfrage (Eisbrecherfrage)
+
+```{r echo=FALSE, out.width = "80%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "likert_intens_haeufigk.png"), error=FALSE)
+```
+
+
+### Schriftliche Befragung: Aufbau des Fragebogens  
+
+- Einleitungs-/Eröﬀnungsfrage (Eisbrecherfrage)
 - Spannungskurve (motivierende, schwierige, leichte Fragen)
 - Platzierung/Anordnung der Fragen
-  - Bildung thematischer Blöcke
-  - vom Allgemeinen zum Besonderen
-  - Platzierung sensibler Fragen: Fragen nach dem Einkommen, Sexualität, usw. erst im späteren Verlauf der Befragung
-  - Ausstrahlungseffekte beachten
+    - Bildung thematischer Blöcke
+    - vom Allgemeinen zum Besonderen
+    - Platzierung sensibler Fragen: Fragen nach dem Einkommen, Sexualität, usw. erst im späteren Verlauf der Befragung
+    - Ausstrahlungseﬀekte beachten
 - Filterfragen
 - Überleitungsformulierungen
 - Sozialstatistische Angaben
 
-### Schriftliche Befragung: Aufbau des Fragebogens 
-
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"), error=FALSE)
-```
   
-### Schriftliche Befragung: Aufbau des Fragebogens 
+### Zu beachten beim Aufbau des Fragebogens 
 
 **Wichtige Merkmale**
 
@@ -285,7 +999,7 @@ knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"), error=FALSE
 - Je kürzer der Fragebogen, desto besser!
 
 
-### Schriftliche Befragung: Aufbau des Fragebogens 
+### Das Anschreiben 
 
 **Aufbau des Anschreibens**
 
@@ -295,77 +1009,380 @@ knitr::include_graphics(file.path(pathToImages, "Fragenaufbau.png"), error=FALSE
 - Interesse und Motivation des Befragten wecken
 - Zusicherung der Anonymität (Hinweis zum Umgang mit den Daten)
 - Auswahl des Befragten (warum er und niemand anderes)
-- Rücksendetermin/Abgabetermin
+- Rücksendetermin/Abgabetermin/ Befragungsdeadline
 - Incentivierung (Schaffung eines materiellen Anreizes)
 - Absender mit Kontaktdaten/Unterschrift
 - Dank für die Bearbeitung des Fragebogens
+- ggf. frankierter Rückumschlag
 
-### Schriftliche Befragung: Das Anschreiben
+### Das Anschreiben - ein Beispiel 
 
-```{r echo=FALSE, out.width = "50%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Anschreiben.png"), error=FALSE)
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "anschreiben_bsp..png"), error=FALSE)
 ```
 
-### Schriftliche Befragung: Der Pretest
+### Codierung und Anonymisierung
 
-**Pretest**
+Anonymisierung ist notwendig, wenn z.B. eine Longitudinalstudie durchgeführt wird. 
+Über die Codierung können die Fragebögen zusammengeführt werden, ohne dass eine persönliche Angabe der Daten notwendig ist. 
 
-- Prüfung des Fragebogens auf Anwendbarkeit, Vollständigkeit, Verständlichkeit, Qualität und Bearbeitungsdauer
-  - Sind Antworten in den vorgegebenen Antwortkategorien eindeutig zuordenbar?
-  - Ist das Layout übersichtlich und ansprechend?
-  - Menge der offenen Fragen
-  - Ist der Fragebogen sprachlich auf die Zielgruppe abgestimmt?
-  
-- Stichprobe soll strukturell denen der endgültigen Personengruppe entsprechen oder Beurteilung durch unabhängige Experten 
-- abschließende Befragung der Testpersonen hinsichtlich aller Auffälligkeiten und Schwierigkeiten bei der Bearbeitung des Fragebogens 
-
-### Schriftliche Befragung: Vor- und Nachteile
-
-**Vorteile**
-
-- geringerer Zeit- und Personalaufwand, geringere Kosten 
-- geeignet bei der Befragung großer homogener Gruppen
-- Befragte können Fragen besser durchdenken
-- keine Beeinflussung durch Merkmale und Verhalten des Interviewers
-
-**Nachteile**
-
-- Befragungssituation ist kaum hinreichend kontrollierbar
-- bei Verständnisproblemen kann keine Hilfe erfolgen
-- Risiko, dass einzelne Fragen wenig sorgfältig, unvollständig oder überhaupt nicht ausgefüllt werden
+*Bitte tragen Sie Ihren Code in die kleine Tabelle, jeweils am Ende einer jeden Seite, ein und benutzen Sie fortan bei jeder Befragung denselben. Der Code besteht aus der Kombination von Buchstaben und Zahlen. Er entsteht folgendermaßen:*
 
 
-### Übung `r nextExercise()`: Schriftliche Befragung {.exercise type=A-B-C-D answer=C}
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "codierung_bsp.png"), error=FALSE)
+```
 
-Was ist *kein* Vorteil einer schriftlichen Befragung?
 
-A.  Geeignet bei der Befragung großer homogener Gruppen.
-B.  Keine Beeinflussung durch Merkmale und Verhalten des Interviewers.
-C.  Geringerer Zeit- und Personalaufwand, geringere Kosten.
-D.  Befragungssituation ist hinreichend kontrollierbar.
+### Online-Befragungen
+
+Online-Befragungen werden heute häufig anstelle von Paper-Pencil Befragungen durchgeführt.
+
+Bekannte Portale für Online-Befragungen:
+
+:::::::::::::: {.columns}
+::::::: {.column width="40%"}
+
+**SoSciSurvey** 
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "bild_soscisurvey.png"), error=FALSE)
+```    
+SoSciSurvey: <https://www.soscisurvey.de/>
+
+:::::::
+
+::::::: {.column width="40%"}
+**LimeSurvey** 
+
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "bild_limesurvey.png"), error=FALSE)
+```    
+
+LimeSurvey. <https://www.limesurvey.org/de/>
+:::::::
+::::::::::::::
+
+
+
+
+
+### Offene Übung `r nextExercise()`: Online-Befragungen {.exercise type=essay}
+
+
+Diskutieren Sie in kleinen Murmelgruppen in den nächsten 5 Minuten die Vor- und Nachteile einer Online-Befragung.
+
+Stellen Sie danach kurz Ihre Punkte vor und diskutieren Sie diese im Plenum.
+
+
+
 
 ::: {.notes}
-Die Befragungssituation ist bei schriftlichen Befragungen kaum hinreichend kontrollierbar, da der Interviewer häufig nicht vor Ort ist, daher Antwort ***C***.
+
+- keine Kontrolle der Umgebungssituation/ Befragungssituation wie z.B. Internetverbindung
+- individuelle Störfaktoren wie Ablenkung, Müdigkeit bleiben unbekannt
+- einfach und schnelle Befragung, unkompliziert
+- Befragungszeitraum kann zur Vorbereitung der Auswertung genutzt werden. Daten können bereits nach wenigen Teilnahmen heruntergeladen  und R-Skripte etc. vorbereitet werden.
+- Befragungsteilnahme kann online beobachtet werden
+- ...
+
+
 :::
 
+   
+### Aufbereitung der Daten
 
-### Schriftliche Befragung: Aufbereitung der Daten (1)
 
-- Antwortbögen durchnummerieren, sowohl auf den Bögen als auch im Datensatz
-- eine Spalte pro Variable
-- eine Zeile pro Antwortbogen
-- (z.B.) 99, 999, NA, falls die Antwort zu einer Frage fehlt
-- keine Änderungen an den Werten, auch wenn diese offensichtlich falsch sind
-- nach der Eingabe ist die Eingabe durch eine andere Person zu überprüfen (4-Augen-Prinzip)
-  - falls zu viele Fehler entdeckt werden, ist die Eingabe zu wiederholen
-- Sicherung der Daten
-- weitere Arbeiten mit dem Datensatz erfolgen auf der Kopie, das Original wird nicht mehr verwendet
+- alle Teilnehmenden erhalten eine ID / fortlaufende Nummer  
+- eine Spalte pro Variable  
+- eine Zeile pro Teilnehmenden / Antwortbogen  
+- fehlende Antwort wird mit NA ersetzt   
+- Überprüfung der Werte – es dürfen keine Änderungen an den Werten erfolgen, auch wenn diese offensichtlich falsch sind.  
+- bei online Befragungen wird die Zeit der Eingabedauer überprüft.  
+- bei Übertragung der Daten von Papierfragebögen ist die Eingabe durch eine andere Person zu überprüfen (4-Augen-Prinzip) - falls zu viele Fehler entdeckt werden, ist die Eingabe zu wiederholen.  
 
-### Schriftliche Befragung: Aufbereitung der Daten (2)
 
-```{r echo=FALSE, out.width = "80%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Datenaufbereitung.png"), error=FALSE)
-```
+- Sicherung der Daten!! weitere Arbeiten mit dem Datensatz erfolgen auf der Kopie, das Original wird nicht mehr verwendet!
+- Datenaufbereitung, NA-Werte, Ausreißer, unplausible Werte
+
+### Beispiel Fragebogen und Codebuch
+
+```{r echo=FALSE, out.width = "100%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "codebuch.png"), error=FALSE)
+```    
+
+## Wissenschaftliche Gütekriterien
+
+
+
+
+### Gütekriterien des Erhebungs- / Messinstruments Fragebogen
+
+
+:::::::::::::: {.columns}
+::::::: {.column width="32%"}
+
+**Objektivität** 
+
+Unabhängigkeit der Testergebnisse von der Person des Testanwenders/ Testleiters  
+
+- Durchführungsobj.  
+- Auswertungsobj.  
+- Interpretationsobj.  
+
+:::::::
+
+::::::: {.column width="32%"}
+
+**Reliabilität** 
+
+Beschreibt die Genauigkeit (Präzision) einer Messung.
+
+- Test-Wiederholungs-R.  
+- Paralleltest-R.  
+- Testhalbierungs-R.  
+- Interne-Konsistenz  
+
+:::::::
+
+::::::: {.column width="32%"}
+**Validität** 
+
+Erfragt ein Konstrukt nicht das, was es fragen soll, so hat es keine Validität.  
+Aufstellen neuer Konstrukte und Operationalisierungen sind langwierige Verfahren.  
+
+
+* Inhaltliche Validität  
+* Konstruktvalidität  
+* Kriteriumsvalidität  
+:::::::
+::::::::::::::
+
+
+
+
+
+### Reliabilität
+
+
+Wird das Merkmal zuverlässig gemessen, so ist es exakt und ohne Messfehler gemessen. D.h. ein vollständig reliabler Test müsste bei Wiederholung an denselben Personen zu exakt gleichen Ergebnissen führen (Korrelation der Messwerte). 
+Voraussetzung: Zeitstabilität des zu messenden Merkmals.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. ]  
+
+Faustregel: Reliabilitätskoeffizienten von   
+$> 0.90$: hohe Reliabilität  
+$> 0.80$: ausreichende Reliabilität   
+
+
+CAVE: Merkmalsabhängig  
+
+
+### Testwiederholungsreliabilität – Re-test-Reliabilität
+
+[1. Retest-Reliabilität (Stabilität)  ]{.cemph}
+
+Hohe positive Korrelation (Übereinstimmung) des Testwertes mit einem zeitversetzt
+mit demselben Test an denselben Testpersonen gemessenen zweiten Testwert.
+
+Bei Retest-Reliabilität zu beachten:  
+
+a) das abgefragte Merkmal muss zeitstabil sein.  
+b) Übungs-/ Erinnerungseffekte verbessern die Reliabilität falsch – eher lange Zeitabstände wählen.   
+c) Wiedererreichen der Stichprobe und Erhalt derselben Stichprobe für Wiederholung.  
+
+
+
+
+
+### Paralleltestreliabilität
+
+
+[2. Paralleltest-Reliabilität (Äquivalenz) ]{.cemph}
+
+Entwicklung von zwei Testversionen, die beide die Operationalisierung desselben Konstrukts darstellen – gleiches Konstrukt, unterschiedliche Items.  
+Hohe positive Korrelation des Testwertes mit einem zum gleichen Zeitpunkt mit einem inhaltsähnlichen (parallelen) Test gemessenen Testwert.   
+Die Testversionen werden kurz hintereinander bearbeitet.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. ]    
+
+Bei Paralleltest-Reliabilität zu beachten:  
+
+a) Untersuchungstechnischer Aufwand hoch.
+b) Konstruktion der Paralleltests, muss sehr akkurat erfolgen und ist aufwendig.
+c) Beachten der Übertragungseffekte – wie Lerneffekt.
+
+### Testhalbierungsreliabilität – Split-half-Reliabilität
+
+
+[3.Testhalbierungs-Reliabilität (Split-Half-Reliabilität)]{.cemph}
+
+
+Der Test wird einer Stichprobe nur einmal zur Bearbeitung vorgelegt (wenig untersuchungstechnischer Aufwand).  Berechnet werden zwei Testwerte aus demselben Test und korreliert. 
+Hohe positive Korrelation des Testwertes mit der zum gleichen Zeitpunkt erhobenen anderen Testhälfte. (Bsp.: erste vs. zweite Testhälfte, gerade vs. ungerade Items, Zufallsauswahl).
+Ist somit eine Sonderform des Paralleltests, nur mit Halbierung des Tests. 
+Testhälften müssen somit dasselbe messen.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. ]    
+
+Bei Testhalbierungs-Reliabilität zu beachten:    
+
+a) Reliabilität steigt mit Anzahl der Items – hier kann also eine Unterschätzung der Reliabilität vorliegen. (Korrektur über Spearman-Brown-Prophecy Formel)  
+b) Ermüdungseffekte   
+
+
+### Interne-Konsistenz – Cronbachs-alpha
+
+
+[4. Interne-Konsistenz  (Cronbachs-alpha)]{.cemph}
+
+Erweiterung der Split-Half Methode.  
+Vergleich der Messung zweier oder mehrerer Items, die dasselbe Merkmal in vergleichbarer Weise messen.  D.h. die Korrelation der Items einer Skala untereinander.  
+Separate Bestimmung der internen Konsistenz der Subtests.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. ]     
+
+Bei interner Konsistenz zu beachten: 
+
+Cronbachs-alpha steigt mit zunehmender Itemanzahl.  
+
+
+### Normierung/ Eichung/Standardisierung von Tests 
+
+
+Mit einer Normierung kann ein Testverfahren vergleichbar (standardisiert) werden.  
+Verwendung bei psychometrischen Tests, um z.B. Einzelpersonen einordnen zu können und um wissenschaftliche Aussagen treffen zu können.
+Testergebnis: Über-/ Unterdurchschnittlich in Relation auf die Bezugsgruppe.  
+
+   Die Eichung eines Tests erfolgt unter Erstellung eines Bezugssystems.  
+Ein Test gilt als normiert, wenn durchschnittliche Testergebnisse repräsentativer Vergleichsstichproben (= Eichstichprobe) vorliegen.   Eichstichproben n $\geq$ 300.     
+Testwerte werden anhand der Normwerte standardisiert (z.B.: z-Wert).    
+
+
+## Pre-Test 
+
+### Pre-Test - Erprobung von Untersuchungsdesign und Messinstrumenten
+
+Der Pre-Test prüft den Fragebogen auf  
+
+**Anwendbarkeit - Vollständigkeit - Verständlichkeit – Auswertung.**
+
+ * sind die Fragen verständlich? Können die Fragen ohne Hilfe beantwortet werden?   
+ * Gibt es kritische Fragen?    
+ * sind die Antworten in den vorgegebenen Antwortkategorien eindeutig zuordenbar?  
+ * ist das Layout übersichtlich und ansprechend?  
+ * Menge der offenen Fragen und zeitlicher Rahmen der Befragung  
+ * Ist der Fragebogen sprachlich auf die Zielgruppe abgestimmt?  
+
+
+Ein guter Pre-Test erhöht die Qualität der Daten.
+
+
+### Pre-Test Stichprobe
+ 
+*Wer* sind die Pre-Tester?   
+
+- Stichprobe muss strukturell, der endgültigen Befragtengruppe entsprechen! Beurteilung durch unabhängige Experten möglich - CAVE- Einschränkung!  
+- Probanden, die am Pre-Test teilgenommen haben – dürfen NICHT mehr in die endgültige Stichprobe/ Befragtengruppe  
+- Ausreichend große Pre-Test-Stichprobe   
+- Gleiche Test-/ Befragungssituation schaffen  
+-  anschließende Befragung der Testpersonen hinsichtlich aller Auffälligkeiten und Schwierigkeiten bei der Bearbeitung des Fragebogens  
+-  ggf. Anwesenheit der Fragebogenersteller - Zeit stoppen, Beobachtung der Pre-Test-Probanden bei der Befragung  
+ 
+
+
+### Pre-Test Planung
+
+[Planen Sie ausreichend Zeit für einen Pre-Test ein. ]{.cemph}
+
+Planung:   
+
+- Pre-Test-Probanden akquirieren    
+- ggf. Räumlichkeiten organisieren     
+- bei Online-Befragungen komplette Plattform real vorbereiten    
+- Durchführung (bei online Befragung Deadline setzen)    
+- Zeit einplanen, in der die Pre-Test-Befragung läuft    
+- Analyse der Daten.    
+
+
+
+### Kognitiver Pre-Test
+
+
+Der Entwickler sitzt beim (online-)Ausfüllen de Fragebogens dabei.  
+Der Pre-Tester wird gebeten beim Ausfüllen laut zu denken. Der Entwickler beobachtet und schreibt mit.   
+Erwünscht ist die offene Kritik des Pre-Testers während des Ausfüllens, die im Nachhinein optimiert wird.  
+
+### Pre-Test  - Wiederholung
+   
+Ist die Optimierung nach dem Pre-Test durchgeführt – anlässlich der Anmerkungen, Bemerkungen, Fehler etc. der Pre-Tester - wiederholen Sie den Pre-Test mit anderen Personen.  
+Der Pre-Test kann eine iterative Wiederholung von einigen (i.d.R. 2-4) Runden durchlaufen. Somit erhalten Sie einen sehr guten Fragebogen!  
+
+
+## Fehlerquellen bei der Beantwortung
+
+
+
+### Fehlerquellen
+
+[soziale Erwünschtheit]{.cemph}  
+  - Beantwortung der Frage in Richtung der entsprechenden sozialen Norm  
+  - *Lösung:* ausbalancierte Antwortvorgaben (Antwortvorgaben sind alle gleich erwünscht oder unerwünscht), Kontrollskalen, Aufforderung zu korrektem Testverhalten    
+
+
+::: {.spaceing top=0.5cm bottom=0.5cm}
+
+
+[Response-Set]{.cemph}  
+  - systematische Antwortmuster, die unabhängig vom Inhalt der Frage zustande kommen: Tendenz zur Mitte oder Extrempositionen sowie Akquieszenz (Ja-Sage-Bereitschaft)  
+  - *Lösung:* abgestufte Antwortmöglichkeiten, unterschiedliche Polung der Items
+- Positionierung der Frage.  
+
+
+:::
+[Halo-Effekt (Fragereiheneffekt)]{.cemph}    
+- Fragen können auf andere Fragen ausstrahlen;  
+    "Wie stehen Sie zur Todesstrafe?" - "Wie sollte man Ihrer Meinung nach Sexualstraftäter bestrafen?"  
+  - *Lösung:* andere Platzierung der Frage, Umformulierung oder Präzisierung der Frage.  
+
+### Tendenz zur Mitte 
+
+```{r echo=FALSE, out.width = "50%", fig.align="center"}
+knitr::include_graphics(file.path(pathToImages, "tendenz_mitte.png"), error=FALSE)
+```    
+
+- sind die zu beurteilenden Aspekte für den Befragten unbekannt, kennt dieser die Antwort nicht
+- der Befragte hat „keine Lust“ sich über die Frage bzw. Antwort Gedanken zu machen
+- der Befragte kann oder will sich nicht entscheiden 
+
+So wird häufig nicht die gesamte Breite der Skala genutzt, sondern die Antwort in der Skalenmitte genutzt  $\rightarrow$ Tendenz zur Mitte.
+
+- Moderate Urteile  
+- stereotype Beantwortung  
+- kann auch von Persönlichkeitsmerkmalen abhängen.^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. Seite 254]   
+
+Tendenz sollte nach guter Konstruktion (Pre-Test) minimiert sein.
+
+### Tendenz zur Mitte - Vermeidung
+
+
+a)  Geradzahlige Ratingskalen  - keine Möglichkeit zur Antwort in der Mitte geben!
+b)  Oder „legitime“ Fluchtkategorien geben 
+	z.B. „weiß ich nicht“, „kann ich nicht beurteilen“, „keine Meinung“.
+c)  Skala an beiden „Seiten“ mit Extrembeispielen ausstatten
+
+
+
+### Beispiele Online-Portale 
+
+- Schlechte (und lustige) Beispiele  
+https://www.greenadz.de/Archive/1260   
+
+- Fragebögen online erstellen  
+https://www.soscisurvey.de/  
+https://www.limesurvey.org/de/  
+
+- Tipps zur Gestaltung und Befragung   
+https://www.soscisurvey.de/help/doku.php/de:create:tips#fn__5  
+
+
+
+
+
 
 
 ```{r finish-Fragebogen, include=FALSE}

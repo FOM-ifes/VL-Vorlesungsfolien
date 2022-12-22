@@ -28,12 +28,12 @@ inspect <- mosaic::inspect # Sonst wir arules::inspect() vielleicht genommen
 
 
 
-### Lernziele {exclude-only=NOlernziele}
+### Lernziele {exclude=NOlernziele,MasterNeu}
 
 - Die Studierenden kennen zentrale Operationen der Datenvorverarbeitung und können sie anwenden (wie Zeilen filtern).
-- Die Studierenden können einen Datensatz von Lang- zur Breitform pivotieren und können Anwendungsbeispiele beschreiben.
+- Die Studierenden können eine Datentabelle von Lang- zur Breitform pivotieren und können Anwendungsbeispiele beschreiben.
 - Die Studierenden können Unterschiede in den Ursachen von fehlenden Werten erläutern und kennen Strategien zum Umgang mit fehlenden Werten.
-- Die Studierenden wissen um potenzielle Probeleme, die Ausreißerwerte verursachen und können sie im Datensatz identifizieren.
+- Die Studierenden wissen um potenzielle Probeleme, die Ausreißerwerte verursachen und können sie in der Datentabelle identifizieren.
 
 
 ## Grundlagen
@@ -166,9 +166,9 @@ tips %>%
   inspect()
 ```
 
-### Offene Übung `r nextExercise()`: Datensatz auswählen {.exercise type=essay}
+### Offene Übung `r nextExercise()`: Datentabelle auswählen {.exercise type=essay}
 
-Erzeugen Sie einen Datensatz, der nur die Variable `tip` enthält, und zwar für die Tische, an denen zum Dinner geraucht wurde.
+Erzeugen Sie eine Datentabelle, der nur die Variable `tip` enthält, und zwar für die Tische, an denen zum Dinner geraucht wurde.
 
 ```{r, include=FALSE}
 smokingdinner <- tips %>%
@@ -392,7 +392,7 @@ df_stats( tip ~ sex + smoker, data = tips, mean, sd)
 
 
 
-## Datensatz pivotieren
+## Datentabelle pivotieren
 
 ### Tidy Data
 
@@ -404,8 +404,8 @@ Tidy data:^[[Wickham, H. (2014). Tidy data. Journal of Statistical Software, 59(
 
 Herausforderungen:
 
-- *Breiter* Datensatz: Eine Variable über mehrere Spalten.
-- *Langer* Datensatz: Eine Beobachtung über mehrere Zeilen.
+- *Breite* Datentabelle: Eine Variable über mehrere Spalten.
+- *Lange* Datentabelle: Eine Beobachtung über mehrere Zeilen.
 
 ```{r, eval=FALSE}
 # Ggfs. einmalig installieren
@@ -420,7 +420,7 @@ library(tidyr)
 
 ### Von *breit* nach *lang* und zurück
 
-Häufig liegt ein Datensatz in *langer* Form vor, aber man benötigt ihn in *breiter* Form (oder umgekehrt):
+Häufig liegt eine Datentabelle in *langer* Form vor, aber man benötigt sie in *breiter* Form (oder umgekehrt):
 
 ```{r echo = FALSE}
 breit <- tibble::tribble(
@@ -482,11 +482,11 @@ Das Umformatieren von *breit* zu *lang* (und zurück) bezeichnet man als *pivoti
 
 
 
-### Datensatz in *Lang*form überführen mit `pivot_longer()`
+### Datentabelle in *Lang*form überführen mit `pivot_longer()`
 
 [Achtung]{.cemph}: Sie benötigen das R-Paket `tidyr` für diese Funktion!^[Installieren und starten nicht vergessen.]
 
-Überführt einen *breiten* Datensatz in einen *langen*:
+Überführt eine *breite* Datentabelle in eine *lange*:
 
 
 :::::: {.columns}
@@ -526,7 +526,7 @@ knitr::kable()
 
 
 
-### Datensatz in *Breit*form überführen mit `pivot_wider()`
+### Datentabelle in *Breit*form überführen mit `pivot_wider()`
 
 
 [Achtung]{.cemph}: Sie benötigen das R-Paket `tidyr` für diese Funktion!
@@ -536,7 +536,7 @@ knitr::kable()
 ::: {.column width="60%"}
 
 
-Überführt einen *langen* Datensatz in einen *breiten*:
+Überführt eine *lange* Datentabelle in eine *breite*:
 
 ```{r eval = FALSE}
 tips_wide <- tips_long %>%
@@ -572,15 +572,15 @@ Ein ausführlicheres Tutorial findet sich [hier](https://tidyr.tidyverse.org/art
 
 ### Übung `r nextExercise()`: Datenvorverarbeitung {.exercise type=A-B-C answer=A}
 
-Welcher Datensatz hat mehr Zeilen?
+Welche Datentabelle hat mehr Zeilen?
 
-A.  Ein langer.
-B.  Ein breiter.
+A.  Eine lange.
+B.  Eine breite.
 C.  Beide gleich.
 
 ::: {.notes}
 
-In einem *langen* Datensatz stehen die Werte der Variablen untereinander, also ***A***.
+In einer *langen* Datentabelle stehen die Werte der Variablen untereinander, also ***A***.
 
 :::
 
@@ -595,7 +595,7 @@ In einem *langen* Datensatz stehen die Werte der Variablen untereinander, also *
 ### Auf fehlende Werte prüfen
 
 
-Fehlende Werte (`NA`s)  willkürlich erzeugen im Datensatz `tips`:
+Fehlende Werte (`NA`s)  willkürlich erzeugen in der Datentabelle `tips`:
 
 ```{r}
 tips_na <- tips
@@ -607,7 +607,7 @@ tips_na$total_bill[c(10, 11, 12)] <- NA
 favstats(~ tip, data = tips_na)
 ```
 
-Mit `inspect()` bekommt man die Ausgabe  von `favstats()` für jede nummerische Spalte des Datensatzes, und damit auch die Angabe der Anzahl fehlender Werte.
+Mit `inspect()` bekommt man die Ausgabe  von `favstats()` für jede nummerische Spalte der Datentabelle, und damit auch die Angabe der Anzahl fehlender Werte.
 
 
 ```{r eval = FALSE}
@@ -725,7 +725,7 @@ Ein (bivariater) Ausreißer in einer Regressionsanalyse.
 ### Probleme mit Ausreißerwerten
 
 
-Das [Identifikationsproblem]{.cemph} mit Ausreißern besteht darin, dass man oft nicht weiß, ob die Ursache ein "Fehler" (z.B. ein Messfehler) oder ein valides Phänomen ist (z.B. eine 16 Jahre alte Studentin). Daher ist es oft schwer zu entscheiden, ob man z.B. den Ausreißer aus dem Datensatz entfernen soll oder nicht.
+Das [Identifikationsproblem]{.cemph} mit Ausreißern besteht darin, dass man oft nicht weiß, ob die Ursache ein "Fehler" (z.B. ein Messfehler) oder ein valides Phänomen ist (z.B. eine 16 Jahre alte Studentin). Daher ist es oft schwer zu entscheiden, ob man z.B. den Ausreißer aus der Datentabelle entfernen soll oder nicht.
 
 
 Das [Einflussproblem]{.cemph} mit Ausreißern besteht darin, dass einzelne Ausreißerwerte einen im Verhältnis sehr starken Einfluss auf eine Statistik bzw. ein Modell haben können.
@@ -809,7 +809,7 @@ $$
 \text{Cook's Distance }D_i= \frac{\sum ( \hat{y}_i - \hat{y}_{(i)} )^2 } {(k+1) \hat{\sigma}^2_\epsilon}
 $$
 
-Cook's Distance $D_i$ vergleicht die vorhergesagten Werte  $\hat{y}_i$ für jeden Fall $i$ des Datensatzes mit der Vorhersage, wenn Beobachtung $i$ entfernt wurde ($y_{(i)}$). Diese Differenzen werden dann quadriert und aufsummiert. Der Nenner dient der Standardisierung.
+Cook's Distance $D_i$ vergleicht die vorhergesagten Werte  $\hat{y}_i$ für jeden Fall $i$ der Datentabelle mit der Vorhersage, wenn Beobachtung $i$ entfernt wurde ($y_{(i)}$). Diese Differenzen werden dann quadriert und aufsummiert. Der Nenner dient der Standardisierung.
 
 ```{r}
 lm1 <- lm(tip ~ total_bill, data = tips)
@@ -824,7 +824,7 @@ cooks %>% head(3)            # nur die ersten 3 Werte anzeigen
 Einflussreiche Punkte können solche sein, deren Cook's Distance deutlich von den anderen abweichen.^[z.B. John Fox, Applied Regression Analysis, 2016, S. 276 f.]
 Dies läßt sich grafisch überprüfen:
 
-```{r, out.width="70%", fig.asp=0.5}
+```{r, out.width="65%", fig.asp=0.45}
 gf_point(cooks ~ 1:length(cooks))  # Streudiagramm
 ```
 
@@ -845,7 +845,7 @@ Sie können die Werte auch sortiert ausgeben, um zu schauen, wie groß der Sprun
 sort(cooks, decreasing = TRUE) %>% head()
 ```
 
-So können Sie ggf. die einflussreichen Beobachtungen aus einem Datensatz entfernen:
+So können Sie ggf. die einflussreichen Beobachtungen aus einer Datentabelle entfernen:
 
 ```{r}
 tips_ohne_einflusspunkte <- tips %>% 

@@ -1,0 +1,67 @@
+```{r, include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Sebastian Sauer
+#%   - Andrea Schankin
+#% supporter:
+#%   - Norman Markgraf
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "DES-Organisatorisches",  # Dateiname ohne Suffix
+    "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+# `r if(get("abschluss")) WDH` Organisatorisches
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+<!-- ```{r child = './Organisatorisches/Literatur.Rmd'} -->
+<!-- ``` -->
+
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls: 
+
+- den Prozess der Erkenntnisgewinnung in der Psychologie nutzen,
+- Daten gewinnen, zusammenfassen, analysieren und graphisch darstellen,
+- statistische Aussagen über Zusammenhänge und Prognosen machen,
+- die Gültigkeit der gefundenen Schlussfolgerungen abschätzen,
+- wichtige Methoden der deskriptiven und Inferenzstatistik passgenau auswählen und anwenden,
+- Auswertungen mit R durchführen,
+- die Anwendung statistischer Auswertungen in Fachveröffentlichungen verstehen und einordnen,
+- in der Struktur psychologischer Veröffentlichungen ihre Ergebnisse berichten,
+- vorbereitend für die Projektarbeiten und ihre Abschlussarbeit angemessene empirische Methoden einsetzen.
+
+
+### Prüfungsleistung
+
+- Datenanalyse als Prognose-Wettbewerb (ca. 1500 Wörter) -> Näheres folgt! 
+- Klausur 60 Minuten
+
+Seminararbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+Workload:
+
+- Präsenzstunden:	60,0 UE
+- Strukturiertes Eigenstudium	130,00 ZStd
+- Workload gesamt:	175,0 ZStd
+- ECTS-Credit Punkte:	7
+
+<!-- 
+`` `{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
+` ``
+-->
+
+```{r, include=FALSE}
+assign("abschluss", TRUE, envir = .GlobalEnv)
+rm(pathToImages)
+```

@@ -54,7 +54,8 @@ if (!exists("prelude.packages")) {
 # Release Vergleich
 # ---------------------------------------------------------------------------
 releaseCompare <- function(relA, relB) {
-  return (compareVersion(relA, relB) < 0)
+    library(purrr)
+    return (any(map2(relA, relB, compareVersion) < 0))
 }
   
 # ---------------------------------------------------------------------------

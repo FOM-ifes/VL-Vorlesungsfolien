@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+#
+# SPDX-FileCopyrightText: 2018-2021 by Norman Markgraf <nmarkgraf@hotmail.com>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+release = "1.2"
 """
   Quick-Pandoc-Filter: include_exclude.py
 
-  (C)opyleft in 2018-2020 by Norman Markgraf (nmarkgraf@hotmail.com)
+  (C)opyleft in 2018-2021 by Norman Markgraf (nmarkgraf@hotmail.com)
 
   Release:
   ========
@@ -17,6 +22,13 @@
   0.5   - 19.02.2020 (nm) - Bugfix. Endlich auch am Ende löschen.
                             Richtig und fehlerfrei!
   0.6   - 25.08.2020 (nm) - Versuch einer Fehlerbehebung.
+  1.0   - 14.07.2021 (nm) - Kleinere Aktualisierungen
+  1.1   - 29.07.2021 (nm) - Bugfix. exclude-only funktioniert nun endlich.
+  1.1.1   31.12.2021 (nm) - Tiny bug fixed 
+  1.2     31.12.2021 (nm) - Jetzt können wir auch Tabellen richtig löschen
+                            und auch das "letzter Eintrag" Problem scheint
+                            gelöst!
+  1.3     20.05.2022 (nm) - Kleine Änderung der Auswerte Logik.
 
   WICHTIG:
   ========
@@ -52,32 +64,32 @@
 import panflute as pf  # panflute fuer den pandoc AST
 import os as os  # check if file exists.
 import logging  # logging fuer die 'include_exclude.log'-Datei
+import time  # Performace timer 
 
 exclude_flag = None
 
-"""
- Eine Log-Datei "include_exclude.log" erzeugen um einfacher zu debuggen
-"""
-if os.path.exists("include_exclude.loglevel.debug"):
-    DEBUGLEVEL = logging.DEBUG
-elif os.path.exists("include_exclude.loglevel.info"):
-    DEBUGLEVEL = logging.INFO
-elif os.path.exists("include_exclude.loglevel.warning"):
-    DEBUGLEVEL = logging.WARNING
-elif os.path.exists("include_exclude.loglevel.error"):
-    DEBUGLEVEL = logging.ERROR
+# Eine Log-Datei "include_exclude.log" erzeugen um einfacher zu debuggen
+debuglevels = {
+  "debug": logging.DEBUG, 
+  "info": logging.INFO, 
+  "warning": logging.WARNING, 
+  "error": logging.ERROR
+}
+for dl_key, dl_value in debuglevels.items():
+  if os.path.exists("include_exclude.loglevel."+dl_key):
+    DEBUGLEVEL = dl_value
+    break
 else:
     DEBUGLEVEL = logging.ERROR  # .ERROR or .DEBUG  or .INFO
-
-DEBUGLEVEL = logging.ERROR
 
 logging.basicConfig(filename='include_exclude.log', level=DEBUGLEVEL)
 
 
 def prepare(doc):
     global exclude_flag
+
     doc.tag_list = list(doc.get_metadata('tag', default=["all"]))
-    logging.debug("Tags: "+str(doc.tag_list))
+    logging.debug(f"Tags: {str(doc.tag_list)}")
     logging.info("Set exclude_flag to false!")
     exclude_flag = False
 
@@ -85,7 +97,7 @@ def prepare(doc):
 def intersection(lst1, lst2): 
     # Use of hybrid method for O(n) ...
     temp = set(lst2) 
-    lst3 = [value for value in lst1 if value in temp] 
+    lst3 = [value for value in lst1 if value in temp]
     return lst3 
 
 
@@ -103,44 +115,48 @@ def action(e, doc):
     """Main action function for panflute.
     """
     global exclude_flag
-    
-    logging.debug("-"*50)
-    logging.debug("current:" + str(e))
-    logging.debug("type: "+str(type(e)))
-    logging.debug("current.doc:" + str(e.doc))
-    logging.debug("current doc type: "+str(type(e.doc)))
+
+    logging.debug(78*"-")
+    logging.debug(f"current: {str(e)}")
+    logging.debug(f"type: {str(type(e))}")
+    logging.debug(f"current.doc: {str(e.doc)}")
+    logging.debug(f"current doc type: {str(type(e.doc))}")
     ret = e
-    
+
     if isinstance(e, pf.Header):
-        logging.info("Header found: "+str(e.content)+" ("+str(exclude_flag)+")")
+        logging.info(f"Header found: {str(e.content)} ({str(exclude_flag)})")
         exclude_flag = False
         include_list = []
         exclude_list = []
-        
-        if "include" in e.attributes:
-            include_list = list(map(lambda x: x.strip(), e.attributes["include"].split(",")))
-            
-        if "exclude" in e.attributes:
-            exclude_list = list(map(lambda x: x.strip(), e.attributes["exclude"].split(",")))
-            
+
         if "include-only" in e.attributes:
             exclude_list = ["all"]
             include_list = list(map(lambda x: x.strip(), e.attributes["include-only"].split(",")))
+
+        if "exclude-only" in e.attributes:
+            include_list = ["all"]
+            exclude_list = list(map(lambda x: x.strip(), e.attributes["exclude-only"].split(",")))
+
+        if "include" in e.attributes:
+            include_list += list(map(lambda x: x.strip(), e.attributes["include"].split(",")))
+
+        if "exclude" in e.attributes:
+            exclude_list += list(map(lambda x: x.strip(), e.attributes["exclude"].split(",")))
+
 
         # Ersetze "*" durch "all" in den Listen.
         exclude_list = ["all" if x=="*" else x for x in exclude_list]
         include_list = ["all" if x=="*" else x for x in include_list]
 
-        logging.info("Tag-list    : "+str(doc.tag_list))
-        logging.info("Include-list: "+str(include_list))
-        logging.info("Exclude-list: "+str(exclude_list))
-
+        logging.info(f"Tag-list    : {str(doc.tag_list)}")
+        logging.info(f"Include-list: {str(include_list)}")
+        logging.info(f"Exclude-list: {str(exclude_list)}")
 
         if "all" in exclude_list:
             exclude_flag = True
             ret = []
             logging.info("Set flag to true and empty return! (ALL)")
-        
+
         if intersection_not_empty(doc.tag_list, include_list):
             exclude_flag = False
             ret = e
@@ -151,27 +167,31 @@ def action(e, doc):
             ret = []
             logging.info("Set flag to true and empty return!")
 
-            
-        logging.debug("------------- New exclude_flag: "+str(exclude_flag))
-        
+        logging.debug(f"------------- New exclude_flag: {str(exclude_flag)}")
+
     elif exclude_flag:
+        logging.info(f"return should be:{str(ret)}")
+        ret = []
+        logging.info(f"set return to empty! Prove: {str(ret)}")
+        if isinstance(e, pf.Caption):
+            ret = pf.Caption()  # Workaround? - I works, but why?
+        if isinstance(e, pf.Doc):
+            ret = None
         if isinstance(e.next, pf.Header):
             exclude_flag = False
             logging.info("set flag to false! (Header)")
         #if  e.next == None:
             # exclude_flag = False
             # logging.info("set flag to false! (None)")
-        if exclude_flag:
-            logging.info("return should be:"+str(ret))
-            ret = []
-            logging.info("set return to empty!"+str(ret))
-            return []
 
-    
-    logging.debug("Next found: "+str(e))
-    logging.debug("Next found: "+str(type(e)))
+    logging.debug(f"Current: {str(e)}")
+    logging.debug(f"Current: {str(type(e))}")
+    invert_op = getattr(e, "next", None)
+    if callable(invert_op):
+        logging.debug(f"Next found: {str(e.next)}")
+        logging.debug(f"Next found: {str(type(e.next))}")
 
-    logging.debug("return:"+str(ret))
+    logging.debug(f"return: {str(ret)}")
     return ret
 
 
@@ -187,11 +207,17 @@ def finalize(doc):
 def main(doc=None):
     """main function.
     """
-
+    logging.info(78 * "=")
+    logging.info(f"THIS IS include_exclude.py release {release}. A pandoc filter using panflute.")
+    logging.info("(C) in 2018-2021 by Norman Markgraf")
     logging.debug("Start pandoc filter 'include_exclude'")
+    t = time.perf_counter()
     ret = pf.run_filter(action, prepare=prepare, finalize=finalize, doc=doc)
+    elapsed_time = time.perf_counter() - t
     logging.debug("End pandoc filter 'include_exclude'")
-    
+    logging.info(f"Running time: {elapsed_time} seconds.")
+    logging.info(78 * "=")
+
     return ret
 
 

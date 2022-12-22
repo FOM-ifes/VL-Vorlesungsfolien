@@ -17,6 +17,72 @@ initPart(
 pathToImages <- getPathToImages()
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# DAGs
+
+detach("package:mosaic", unload = TRUE)
+detach("package:ggformula", unload = TRUE)
+library(ggdag)
+
+# Experiment
+co <- data.frame(x = c(0,0,1), y = c(1,0,0), name = c("Z", "X", "Y")) 
+
+dag_e1<-dagify(Y ~ X,
+               X ~ Z,
+               Y ~ Z, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "Z - Vorwissen\nX - Lernzeit\nY - Klausurpunkte", 
+            hjust = 1, vjust = 1,
+            x = 1, y = 1, size = 7, color = "darkgrey") +
+  labs(title = "Beobachtungsstudie")
+
+co <- data.frame(x = c(0,0,1,-1), y = c(1,0,0,0), name = c("Z", "X", "Y", "D")) 
+
+dag_e2<-dagify(Y ~ X,
+               X ~ Z,
+               X ~ D,
+               Y ~ Z, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_segment(aes(x = -.1, y = .475, xend = .1, yend = .575), color = "darkgrey") +
+  geom_segment(aes(x = -.1, y = .425, xend = .1, yend = .525), color = "darkgrey") +
+  geom_text(label = "Z - Vorwissen\nX - Lernzeit\nY - Klausurpunkte\nD - Dozentin", 
+            hjust = 0, vjust = 1,
+            x = -1.15, y = 0.85, size = 7, color = "darkgrey") +
+  labs(title = "Randomisiertes Experiment")
+
+# Stichprobe
+
+co <- data.frame(x = c(0.5,0,1), y = c(1,0,0), name = c("Z", "S", "X")) 
+
+dag_s1<-dagify(S ~ Z,
+               X ~ Z,
+               coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_text(label = "Z - Gewissenhaftigkeit\nS - Stichprobe\nX - Lernzeit", 
+            hjust = 0, vjust = 0,
+            x = 0.15, y = 0, size = 7, color = "darkgrey") +
+  labs(title = "Gelegenheitsstichprobe")
+
+co <- data.frame(x = c(0.5,0,1,-1), y = c(1,0,0,0), name = c("Z", "S", "X", "D")) 
+
+dag_s2<-dagify(X ~ Z,
+               S ~ Z,
+               S ~ D, coords = co) %>% 
+  ggdag(node_size = 20, text_size = 8, text = TRUE, text_col = "lightgray") + theme_dag_blank() +
+  geom_dag_edges(arrow_directed = grid::arrow(length = grid::unit(15, "pt"), type = "closed"))  + 
+  geom_segment(aes(x = .15, y = .475, xend = .35, yend = .575), color = "darkgrey") +
+  geom_segment(aes(x = .15, y = .425, xend = .35, yend = .525), color = "darkgrey") +
+  geom_text(label = "Z - Gewissenhaftigkeit\nS - Stichprobe\nX - Lernzeit\nD - Dozentin", 
+            hjust = 0, vjust = 1,
+            x = -1.1, y = 0.75, size = 7, color = "darkgrey") + 
+  labs(title = "Zufallsstichprobe")
+# ---------------------------------------------------------------------------
+
+
+
 library(mosaic)
 library(gridExtra)
 library(emojifont)
@@ -30,7 +96,7 @@ library(tidyr)
 ### Lernziele {exclude-only=NOlernziele}
 
 - Die Studierenden können Messen definieren und können verschiedene Typen von Skalenniveaus sicher unterscheiden.
-- Die Studierenden kennen Grundbegriffe der quantitativen Datenanalyse (wie unabhängige und abhängige Variable) und können Probleme erklären, die aufgrund der Nichtberücksichtigung von Drittvariablen auftreten können (vgl. Simpson-Paradox).
+- Die Studierenden kennen Grundbegriffe der quantitativen Datenanalyse (wie unabhängige und abhängige Variable) und können Probleme erklären, die aufgrund der Nichtberücksichtigung von Drittvariablen auftreten können.
 - Die Studierenden können zentrale Begriffe um Stichproben(arten) und Populationen erläutern.
 - Die Studierenden wissen um die Unterschiede hinsichtlich Zufall und Kausalität bei Beobachtungs- vs. Experimentalstudien.
 - Die Studierenden können die Phasen des PPDAC-Zyklus nennen und anhand von Beispielen illustrieren.
@@ -90,9 +156,9 @@ Ist es bei 20 Grad Celsius doppelt so warm wie bei 10 Grad Celsius?
 
 ::: {.notes}
 
-***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50 Grad Fahrenheit und 68 Grad Fahrenheit -- keine Verdoppelung. 0 Grad Celsius ist kein absoluter Nullpunkt. 
+***Nein***, die gleichen Temperaturen entsprechen in Fahrenheit 50 Grad Fahrenheit und 68 Grad Fahrenheit -- keine Verdoppelung. 0 Grad Celsius ist kein absoluter Nullpunkt. Die Temperatur entspricht ca. 283 bzw. ca. 293 Kelvin.
 
-Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaft (Wärme).
+Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaft (Wärme). Bei 0 Grad Celsius ist uns kalt, bei 0 Kelvin ist mensch tot.
 
 :::
 
@@ -107,17 +173,109 @@ Die Relation der Werte (Temperatur) entspricht nicht der Relation der Eigenschaf
 
 ### Messung: Varianz und Verzerrung
 
-```{r, echo=FALSE, cache=FALSE}
+```{r setup_layout_specific_point_colors, echo=FALSE, cache=FALSE}
 # default: FOM
 point_col <- "#00998a" # FOM
+if (my.options$get("layouttype") == "FOM") {
+    point_col <- "#00998a" # FOM
+}   
+if (my.options$get("layouttype") == "eufom") {
+    point_col <- "#8e000f" # EUFOM
+}   
+if (my.options$get("layouttype") == "DLS") {
+    point_col <- "#004C94" # FOM DLS
+}
 ```
-```{r, echo=FALSE, cache=FALSE, eval=FOMLayout}
-point_col <- "#00998a" # FOM
+```{r new-stuff, echo=FALSE, out.width = "60%", fig.align="center", fig.asp=0.66, cache=FALSE}
+library(mosaic)
+library(purrr)
+library(gridExtra)
+
+set.seed(2009)
+
+theta <- seq(0, 2 * pi, length = 360)
+r <- c(0.1,0.25,0.5,0.75,1)
+radius <- rep(r, each = length(theta))
+
+zielscheibe_df <- data.frame(
+    radius = radius,
+    x = radius * cos(theta), 
+    y = radius * sin(theta)
+)
+
+varianz <- data.frame(
+    x = scale(rnorm(10))/3,
+    y = scale(rnorm(10))/3
+)
+
+verzerrung <- data.frame(
+    x = rnorm(10, mean = 1, sd = 0.3)/3,
+    y = rnorm(10, mean = 1, sd = 0.3)/3
+)
+
+zielscheibe <- ggplot()
+
+ringe <- zielscheibe_df %>% group_by(radius) %>%
+    do(
+        geom = geom_path(mapping=aes(x = x, y = y), data = . )
+       )
+
+for (i in 1:length(r)) {
+    zielscheibe <- zielscheibe + ringe$geom[i]
+}
+
+plotVar <- zielscheibe
+plotVerz <- zielscheibe
+
+plotVar <- plotVar + varianz %>% 
+    geom_point(
+        data = ., 
+        mapping = aes(x = x, y = y),         
+        size = 3,
+        color =  point_col
+    ) +  
+    ggtitle("Varianz") + 
+    theme_void() + 
+    theme(
+        plot.title = element_text(
+            size = 22, 
+            face = "bold", 
+            hjust = 0.5
+        )
+    )
+
+plotVerz <- plotVerz + verzerrung %>% 
+    geom_point(
+        data = ., 
+        mapping = aes(x = x, y = y), 
+        size = 3,
+        color =  point_col
+    ) + 
+    ggtitle("Verzerrung") + 
+    theme_void() + 
+    theme(
+        plot.title = element_text(
+            size = 22, 
+            face = "bold", 
+            hjust = 0.5
+        )
+    )
+
+grid.arrange(plotVar, plotVerz, ncol = 2)
+
+remove(theta)
+remove(zielscheibe)
+remove(zielscheibe_df)
+remove(plotVar)
+remove(plotVerz)
+remove(verzerrung)
+remove(varianz)
+remove(ringe)
+remove(r)
+remove(radius)
+remove(i)
 ```
-```{r, echo=FALSE, cache=FALSE, eval=EUFOMLayout}
-point_col <- "#8e000f" # EUFOM
-```
-```{r, echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
+```{r old-stuff, eval=FALSE,echo=FALSE, out.width = "60%", fig.align="center", cache=FALSE}
 set.seed(1896)
 
 par(mfrow=c(1,2))
@@ -140,11 +298,12 @@ points(rnorm(10, mean=0.5, sd=0.1), rnorm(10, mean=0.5, sd=0.1), pch=19, col=poi
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 - Wenn wir den Kaffee bekommen, den wir bekommen wollen, haben wir eine hohe Validität.
 - Wenn wir immer denselben Kaffee bekommen, dann haben wir eine hohe Reliabilität.^[Skizze: Sebastian Sauer]
+
 
 ### Übung `r nextExercise()`: Gütekriterien Messung {.exercise type=A-B-C-D answer=D}
 
@@ -185,7 +344,6 @@ Weitere Unterscheidung:
 - **diskret**: höchstens abzählbar viele Werte sind möglich, bspw. Anzahl Kinder.
 
 
-
 ### Übung `r nextExercise()`: Skalenniveau (I/ II) {.exercise type=A-B-C-D answer=D}
 
 Welches Skalenniveau hat die Variable Stundenlohn?
@@ -218,20 +376,22 @@ D.  Metrisch verhältnisskaliert.
 
 :::
 
+
 ### Skalen: Aussagen und Operationen
 
-Je nach Skalennvieau sind unterschiedliche Aussagen und Operationen möglich.
+Je nach Skalenniveau sind unterschiedliche Aussagen und Operationen möglich.
 
 - Kategorial -- nominal: $=, \neq$
 - Kategorial -- ordinal: $=, \neq, <,>$
 - Numerisch -- intervallskaliert: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
 - Numerisch -- verhältnisskaliert: $=, \neq, <,>, +,-, *, :$
 
-Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Dousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
 
-### Datensatz
 
-Aufbau eines Datensatzes:
+### Datentabelle
+
+Aufbau einer Datentabelle:
 
 
 |Name | Geschlecht | Größe|
@@ -243,7 +403,7 @@ Susi  | w          | 172
 
 
 - **Zeilen:** Beobachtungen: auf welcher Einheit liegen die Daten vor: z.B. einzelne Menschen, Unternehmen, Länder. Hier Studierende.
-- **Spalten:** Variablen: welche Eigenschaften/ Merkmale liegen je Beobachtung vor: Motivation, Umsatz, Lebenserwartung. Hier Geschlecht (kategorial -- nominal), Größe (Numerisch -- verhältnisskaliert).
+- **Spalten:** Variablen: welche Eigenschaften/ Merkmale liegen je Beobachtung vor: Motivation, Umsatz, Lebenserwartung. Hier Geschlecht (kategorial -- nominal), Größe (numerisch -- verhältnisskaliert).
 
 [Hinweis:]{.cemph} Jede Zeile sollte genau *eine* Beobachtung beinhalten, jede Spalte genau *eine* Variable.
 
@@ -297,7 +457,7 @@ Messwerte einer Variable variieren/ streuen, u. a.
 - in der Statistik/ in `R`: $y \sim x$. Für ein $x$ sind mehrere $y$ möglich: $x$ wird zur Modellierung von $y$ verwendet.
 
 
-### Simpson-Paradoxon (I/ II)
+### Simpson-Paradoxon (I/ II) {include-only=deprecated}
 
 Das Ignorieren von Kovariablen kann zu verzerrten Ergebnissen führen.^[Bickel, P. J., Hammel, E. A., and O'Connell, J. W. (1975). Sex bias in graduate admissions: Data from Berkeley. Science, 187, 398--403. [https://doi.org/10.1126/science.187.4175.398](https://doi.org/10.1126/science.187.4175.398)]
 
@@ -310,14 +470,15 @@ mosaicplot(apply(UCBAdmissions, c(1, 2), sum) %>% t(),
 Höherer Frauenanteil bei den Nicht-Zugelassenen als bei den Zugelassenen; vgl. Höhe der Rechtecke: Diskriminierung?
 
 
-### Simpson-Paradoxon (II/ II)
+
+### Simpson-Paradoxon (II/ II) {include-only=deprecated}
 
 ```{r echo=FALSE, fig.width = 7, out.width = "10cm", fig.asp = 0.75, fig.align="center", cache=FALSE}
 opar <- par(mfrow = c(2, 3), oma = c(0, 0, 2, 0))
-for(i in 1:6)
+for (i in 1:6)
   mosaicplot(UCBAdmissions[,,i] %>% t(),
     xlab = "Admit", ylab = "Sex",
-    main = paste("Department", LETTERS[i]), col=viridis(2, alpha = 0.6))
+    main = paste("Department", LETTERS[i]), col = viridis(2, alpha = 0.6))
 mtext(expression(bold("Zulassungen an der UC Berkeley")),
       outer = TRUE, cex = 1.5)
 par(opar)
@@ -342,6 +503,8 @@ Motivation ist die abhängige Variable $y$, die evtl. von der unabhängigen Vari
 
 :::
 
+
+
 ## Datenerhebung
 
 ### Stichproben
@@ -351,7 +514,7 @@ Motivation ist die abhängige Variable $y$, die evtl. von der unabhängigen Vari
 - In der Regel ist man daran interessiert, das Ergebnis einer Stichprobe zu verallgemeinern, zu generalisieren: vom Geschmack des Suppenlöffels auf die ganze Suppe.^[hier: Kartoffelcremesuppe, Foto: Johann Hauke]
 
 ```{r echo=FALSE, out.width = "40%", fig.align="center"}
-knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error = FALSE)
 ```
 
 
@@ -376,7 +539,7 @@ knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error=FAL
 
 - **Statistik**^[symbolisiert häufig durch lateinische Buchstaben: $\bar{x}, \ldots$]: Wert, der auf Basis der Stichprobe berechnet wird: z. B. Temperatur der Suppe auf dem Löffel.
 
-Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Sousa &copy; Estimation Notation](https://www.causeweb.org/cause/resources/fun/songs/estimation-notation-its-greek-and-roman-me)
+Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Dousa &copy; Estimation Notation](https://www.causeweb.org/cause/resources/fun/songs/estimation-notation-its-greek-and-roman-me)
 
 
 [Hinweis:]{.cemph} Häufig kann die *Datengenerierung* als *Zufallsprozess* aufgefasst werden, z.B. der Aktienkurs. Dann ist der beobachtete Kurs die Stichprobe, der theoretisch mögliche die Population: von den *möglichen* Kursen wurde der beobachtete realisiert.^[Formal: Beobachtung $x$ ist die Realisation einer Zufallsvariable $X$.]
@@ -385,7 +548,7 @@ Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Do
 ### Sebastians Kaffeemühle {include-only=sesmill}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 - Population: Der Sack Bohnen, der uns interessiert, oder der Kaffee allgemein.
@@ -409,17 +572,16 @@ Kann die Dozentin von den Studierenden, die die Vorlesung besuchen^[Stichprobe],
 
 ### Stichprobenverfahren
 
-- Bei einer (einfachen) **Zufallsstichprobe** hat jede Beobachtung die gleiche Wahrscheinlichkeit Teil der Stichprobe  zu sein.
+- Bei einer (einfachen) **Zufallsstichprobe** hat jede Beobachtung die gleiche Wahrscheinlichkeit, Teil der Stichprobe  zu sein.
 
 - Bei **geschichteten Stichproben** setzen sich die Schichten aus ähnlichen Beobachtungen zusammen (z. B. Alter, Geschlecht). Es wird eine einfache, zufällige Stichprobe aus jeder Schicht genommen.
 
 - Zufällige Stichproben erlauben einen Schluss auf die Grundgesamtheit (Generalisierbarkeit).
 
-- Gelegenheitsstichproben, d.h. willkürliche, nicht zufällige Stichproben^[Z.B. die Fleischbällchen in der Suppe.] können verzerrt sein. 
+- Gelegenheitsstichproben, d.h. willkürliche, nicht zufällige Stichproben,^[Z.B. die Fleischbällchen in der Suppe.] können verzerrt sein. 
 
 
 ### Vergleich verschiedener Stichprobenverfahren
-
 
 ```{r fig.showtext=TRUE, out.width="70%", echo = FALSE, fig.asp = .7}
 fa1 <- fontawesome(c("fa-user"))
@@ -441,27 +603,27 @@ d <- crossing(x = 1:10,
 p1 <- ggplot(d, aes(x = x, y = y, color = label)) +
   geom_tile(color = "white", size = .5, aes(fill = label), alpha = .2) +
   theme_void() +
-  geom_text(family='fontawesome-webfont', size=8, label = fa1) +
+  geom_text(family = 'fontawesome-webfont', size = 8, label = fa1) +
   scale_color_manual(label = c("nicht-gewählt", "gewählt"),
                      values = c("grey80", "#00998A"),
                      name = "") +
-  scale_fill_manual( values = c("grey80", "#00998A"))+
+  scale_fill_manual( values = c("grey80", "#00998A")) +
   labs(title = "Zufallstichprobe") +
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-  guides(fill = FALSE)
+  guides(fill = "none")  # was FALSE
 
 
 p2 <- ggplot(d, aes(x = x, y = y, color = label2)) +
   geom_tile(color = "white", size = .5, aes(fill = label2), alpha = .2) +
   theme_void() +
-  geom_text(family='fontawesome-webfont', size = 8, label = fa1) +
+  geom_text(family = 'fontawesome-webfont', size = 8, label = fa1) +
   scale_color_manual(label = c("nicht-gewählt", "gewählt"),
                      values = c("grey80", "#00998A"),
                      name = "") +
   scale_fill_manual( values = c("grey80", "#00998A")) +
   labs(title = "Gelegenheitsstichprobe") +
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-  guides(fill = FALSE)
+  guides(fill = "none")  # was FALSE
 
 
 p3 <- ggplot(d, aes(x = x, y = y, color = label3)) +
@@ -474,32 +636,92 @@ p3 <- ggplot(d, aes(x = x, y = y, color = label3)) +
   scale_fill_manual( values = c("grey80", "#00998A")) +
   labs(title = "Geschichtete Zufallsstichprobe") +
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-  guides(fill = FALSE) +
+  guides(fill = "none")  + # was FALSE
   geom_vline(xintercept = 5.5, linetype = "dashed")
 
 
 p4 <- ggplot(d, aes(x = x, y = y, color = label4)) +
   geom_tile(color = "white", size = .5, fill = "#00998A", alpha = .2) +
   theme_void() +
-  geom_text(family='fontawesome-webfont', size = 8, label = fontawesome("fa-user")) +
+  geom_text(family = 'fontawesome-webfont', size = 8, label = fontawesome("fa-user")) +
   scale_color_manual(label = "gewählt",
                      values = "#00998A",
                      name = "") +
   scale_fill_manual(values = "#00998A") +
   labs(title = "Vollerhebung") +
   theme(legend.position = "none", plot.title = element_text(hjust = 0.5)) +
-  guides(fill = FALSE)
+  guides(fill = "none")  # was FALSE
 
 
 grid.arrange(p1, p2, p3, p4, nrow = 1)
 
 ```
 
-:::{.scriptsize}
-Quelle: Eigene Darstellung
+
+
+### Übung `r nextExercise()`: Gewissenhaftigkeit {.exercise type=A-B-C answer=B}
+
+Was glauben Sie: Welche Gruppe hat eine höhere Wahrscheinlichkeit, an einer freiwilligen Umfrage der Dozentin teilzunehmen?
+
+
+A.  Die Gruppe der nicht besonders gewissenhaft Studierende
+B.  Die Gruppe der besonders gewissenhafte Studierende
+C.  Beide  Gruppen gleich
+
+
+
+::: {.notes}
+Vermutlich ***B***, da gewissenhafte Menschen evtl. durch ein höheres Pflichtbewusstsein eher (freiwillige) Aufgaben übernehmen könnten.
+
+*Hinweis*: In diesem Modul lernen Sie, wie Sie solche Hypothesen empirisch überprüfen können.
 :::
 
 
+### Übung `r nextExercise()`: Vor- und Nacharbeit {.exercise type=A-B-C answer=B}
+
+Was glauben Sie: Welche Gruppe verwendet durchschnittlich mehr Zeit zur Vor- und Nacharbeit der Vorlesungsinhalte?
+
+A.  Die Gruppe der nicht besonders gewissenhaft Studierenden
+B.  Die Gruppe der besonders gewissenhafte Studierenden
+C.  Beide  Gruppen gleich
+
+
+::: {.notes}
+Vermutlich auch ***B***. 
+
+
+Es kann also passieren, dass sich die Gruppe derjenigen, die an der Umfrage teilnehmen, in der Lernzeit von derjenigen unterscheidet, die nicht teilnimmt.
+:::
+
+
+### Beispiel Stichprobe
+
+Ein fiktives Beispiel:
+
+- Sei $Z$ die Gewissenhaftigkeit eines Studierenden.
+
+- Sei $S$ die Teilnahme an einer Umfrage. D.h., an $S$ kann erkannt werden, ob die Person Teil der Stichprobe ist oder nicht.
+
+- Sei $X$ die Lernzeit eines Studierenden. Diese möchte die Dozentin analysieren.
+
+Es kann vermutet werden: 
+
+- Gewissenhaftere Studierende haben eine höhere Bereitschaft zur Teilnahme an der Umfrage: $Z \xrightarrow{+} S$.
+
+- Gewissenhaftere Studierende haben eine längere Lernzeit: $Z \xrightarrow{+} X$.
+
+Insgesamt hat daher die Gelegenheitsstichprobe eine höhere Lernzeit als die Population, da die Studierenden mit einer geringeren Gewissenhaftigkeit, und daher auch Lernzeit, in der Stichprobe fehlen.
+
+Durch eine zufällige Stichprobe wird diese Selbst-Selektion vermieden.
+
+
+### Visualisierung Zufällige Stichprobe
+
+Der Graph zeigt den datengenerierenden Prozess einer Gelegenheitsstichprobe und einer zufälligen Stichprobe. Bei letzterer wählt die Dozentin die Studierenden **zufällig** aus.
+
+```{r plot-dag-s, echo=FALSE, out.width = "70%", fig.align="center"}
+gridExtra::grid.arrange(dag_s1, dag_s2, nrow = 1)
+```
 
 
 ### Cartoon: Gelegenheitsstichproben
@@ -521,10 +743,71 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
     - Durch wiederholte Messung kann der Effekt der Experimentalkonditionen geschätzt werden: hohe interne Validität. Bei Quasi-Experimenten ist die Zuordnung nicht randomisiert: geringe interne Validität.
 
 
+### Übung `r nextExercise()`: Lernzeit {.exercise type=A-B-C answer=A}
+
+Was glauben Sie: Welche Gruppe braucht durchschnittlich weniger Zeit zur Vor- und Nacharbeit der Vorlesungsinhalte?
+
+A.  Die Gruppe mit einem hohen Vorwissen.
+B.  Die Gruppe ohne Vorwissen.
+C.  Beide Gruppen gleich.
+
+::: {.notes}
+Vermutlich ***A***, da diese Gruppe ein höheres Vorwissen hat.
+:::
+
+
+### Übung `r nextExercise()`: Klausurpunkte {.exercise type=A-B-C answer=A}
+
+Was glauben Sie: Welche Gruppe erreicht durchschnittlich mehr Punkte in der Klausur?
+
+A.  Die Gruppe mit einem hohen Vorwissen.
+B.  Die Gruppe ohne Vorwissen.
+C.  Beide Gruppen gleich.
+
+::: {.notes}
+
+Vermutlich auch ***A***, da sie auf ein höheres Vorwissen aufbauen kann.
+
+
+Im *Extremfall* könnte es sein, dass jemand schon alles weiß, also auch ohne hier zu lernen viele Punkte erreichen kann und jemand anders ganz viel lernen muss, um überhaupt zu bestehen.
+
+:::
+
+
+### Beispiel Randomisiertes Experiment
+
+Ein fiktives Beispiel:
+
+- Sei $Z$ das Vorwissen eines Studierenden.
+
+- Sei $X$ die Lernzeit eines Studierenden.
+
+- Sei $Y$ die Klausurpunktzahl. Die Dozentin will den Zusammenhang $X \rightarrow Y$ untersuchen.
+
+Es kann vermutet werden: 
+
+- Studierende mit einem hohen Vorwissen müssen weniger lernen $Z \xrightarrow{-} X$, erreichen aber mehr Punkte: $Z \xrightarrow{+} Y$.
+
+- Studierende, die mehr lernen, erreichen mehr Punkte: $X \xrightarrow{+} Y$.
+
+Aufgrund des höheren Vorwissens ist es möglich, dass Studierende mit einer geringeren Lernzeit mehr Punkte erreichen -- obwohl bei gleichem Vorwissen der Zusammenhang positiv ist.^[Das sogenannte **Simpson-Paradox**.]
+
+In einem randomisierten Experiment würde die Dozentin die Lernzeit zufällig zuordnen -- unabhängig vom Vorwissen.  
+
+
+### Visualisierung Randomisiertes Experiment
+
+Der Graph zeigt den datengenerierenden Prozess in einer Beobachtungsstudie und einem randomisierten Experiment. Im letzteren weist die Dozentin den Studierenden **zufällig** eine Lernzeit zu.
+
+```{r plot-dag-e, echo=FALSE, out.width = "70%", fig.align="center"}
+gridExtra::grid.arrange(dag_e1, dag_e2, nrow = 1)
+```
+
+
 ### Sebastians Kaffeemühle {include-only=sesmill exclude=qmwinf,eufom}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 - Bei einer Beobachtungsstudie werden die Bohnen so verwendet, wie sie sind.
@@ -557,7 +840,7 @@ Es handelt sich um eine Beobachtungsstudie (***A***), da die Dozentin durch rein
 
 ### Offene Übung `r nextExercise()`: Experiment {.exercise type=essay exclude=qmwinf,eufom}
 
-Warum ist die interne Validität bei einem randomisierten Experiment höher als z. B. bei Beobachtungsstudien?
+Warum ist die interne Validität bei einem randomisierten Experiment höher als z.B. bei Beobachtungsstudien?
 
 1.  [Think:]{.cemph} Überlegen Sie für sich.
 2.  [Pair:]{.cemph}  Teilen Sie Ihr Ergebnis mit dem Nachbarn/der Nachbarin.
@@ -565,7 +848,7 @@ Warum ist die interne Validität bei einem randomisierten Experiment höher als 
 
 ::: {.notes}
 
-Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so äußere Einflüsse besser ausschließen zu können. Man hofft dabei, dass sich die die *Experimentalgruppe* ($x=1$, z.B. erhält Werbung) sich nicht systematisch von den  *Kontrollgruppe* ($x=0$, z.B. erhält keine werbung) unterscheiden. Die interne Validität steigt. 
+Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen Variablen entsprechend zu variieren, um so äußere Einflüsse besser ausschließen zu können. Man hofft dabei, dass sich die die *Experimentalgruppe* ($x=1$, z.B. erhält Werbung) nicht systematisch von der  *Kontrollgruppe* ($x=0$, z.B. erhält keine Werbung) unterscheiden. Die interne Validität steigt. 
 
 :::
 
@@ -580,7 +863,7 @@ Bei einem randomisierten Experiment besteht die Möglichkeit, die unabhängigen 
 ### Sebastians Kaffeemühle {include-only=deprecated}
 
 ```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
 - Bei einem Laborexperiment werden die Bohnen in einer künstlichen Umgebung manipuliert.
@@ -609,23 +892,24 @@ Die Datenerhebung und die unmittelbar^[es gibt methodische Erweiterungen] mögli
 
 - Randomisierte Zuordnung innerhalb eines Experimentes: Interne Validität 
 
-+-----------------------+------------------------+------------------------------+
-|                       | **zufällige** \        | **keine zufällige** \        |
-|                       | **Zuordnung**          | **Zuordnung**                |    
-+=======================+========================+==============================+
-| **zufällige** \       | Kausalschluss, \       | kein Kausalschluss, \        |
-| **Stichprobe**        | generalisierbar \      | Aussage generalisierbar \    |
-|                       | für die Population     | für die Population           |
-+-----------------------+------------------------+------------------------------+
-|                       |                        |                              |
-+-----------------------+------------------------+------------------------------+
-| **keine zufällige** \ | Kausalschluss, \       | kein Kausalschluss, \        |                    
-| **Stichprobe**        | nur für die Stichprobe | Aussage nur für die \        |
-|                       |                        | Stichprobe                   |
-+-----------------------+------------------------+------------------------------+
++--------------------------+--------------------------+------------------------------+
+|                          | **zufällige** \          | **keine zufällige** \        |
+|                          | **Zuordnung** \          | **Zuordnung** \              | 
+|                          | *Experiment*             | *Beobachtungsstudie*         |
++==========================+==========================+==============================+
+| **zufällige** \          | Kausalschluss, \         | kein Kausalschluss, \        |
+| **Stichprobe** \         | generalisierbar \        | Aussage generalisierbar \    |
+|                          | für die Population       | für die Population           |
++--------------------------+--------------------------+------------------------------+
+|                          |                          |                              |
++--------------------------+--------------------------+------------------------------+
+| **keine zufällige** \    | Kausalschluss, \         | kein Kausalschluss, \        |   
+| **Stichprobe** \         | nur für die Stichprobe \ | Aussage nur für die \        |
+| *Gelegenheitsstichprobe* |                          | Stichprobe                   |
++--------------------------+--------------------------+------------------------------+
 
 
-### Cartoon: Kausalität {exclude=qmwinf,eufom}
+### Cartoon: Kausalität {include-only=deprecated}
 
 ```{r echo=FALSE, out.width = "40%", fig.align="center", cache=FALSE}
 # Lizenzworkaround: 
@@ -638,20 +922,19 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 Daten **immer** hinterfragen:
 
-- wo kommen sie her?
+- Wo kommen sie her?
 
-- wie wurden sie erhoben?
+- Wie wurden sie erhoben?
 
-- was fehlt?
+- Was fehlt?
 
-- wer profitiert davon?
+- Wer profitiert davon?
 
-- zeigen sie wirklich das, was behauptet wird?
+- Zeigen sie wirklich das, was behauptet wird?
 
 - Werden Rechte (z.B. Persönlichkeitsrechte) verletzt?
 
-- Bei Prozentangaben? Prozent von was?
-
+- Bei Prozentangaben: Prozent von was (Basis)?
 
 
 ### Datenschutz
@@ -676,6 +959,8 @@ Rechtliche Rahmen u.a.:
 
 ### Griechische Buchstaben in den Folien
 
+::: {.small}
+
 | Buchstabe | Aussprache | Bedeutung in der Regel
 |-----------|------------|----------------------------------------------------------------------|
 | $\alpha$  | *alpha*    | - Symbol für das Signifikanzniveau eines Tests 
@@ -690,6 +975,8 @@ Rechtliche Rahmen u.a.:
 | $\rho$    | *rho*      | Symbol für den Populationskorrelation
 | $\chi$    | *chi*      | Symbol für zusammenfassende Statistik im $\chi^2$-Test
 
+:::
+
 
 ### Übersicht: Quantitativer Forschungsprozess {include-only=deprecated}
 
@@ -703,8 +990,6 @@ Rechtliche Rahmen u.a.:
 
 ### Übersicht: Quantitativer Forschungsprozess/ PPDAC {#quantFoprozess}
 
-
-
 :::::: {.columns}
 ::: {.column width="80%"}
 
@@ -714,7 +999,7 @@ Rechtliche Rahmen u.a.:
 
 [P]{.cemph} 
 : (Plan)
-: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl. Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
+: Planung der Analyse, z.B. Operationalisierung/ Variablenauswahl, Operationalisierung der Hypothesen, Wahl des Stichprobenverfahren und/ oder Versuchsplanung.
 
 [D]{.cemph} 
 : (Data)
@@ -726,13 +1011,13 @@ Rechtliche Rahmen u.a.:
 
 [C]{.cemph} 
 : (Conclusion)
-: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+: Schlussfolgerungen, Interpretation, Limitationen, neue Ideen, Kommunikation.
 
 :::
 ::: {.column width="20%"}
 
 ```{r forschungsprozess-image, echo=FALSE, out.width = "95%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error=FALSE)
+knitr::include_graphics(file.path(pathToImages, "PPDAC.png"), error = FALSE)
 ```
 
 :::

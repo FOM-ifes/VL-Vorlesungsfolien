@@ -1,0 +1,65 @@
+```{r,  include=FALSE}
+# ---------------------------------------------------------------------------
+#% maintainer:
+#%   - Karsten Luebke
+#%
+# ---------------------------------------------------------------------------
+source("../prelude.R")
+initPart(
+    "QFM-Organisatorisches",  # Dateiname ohne Suffix
+    "Organisatorisches"              # Verzeichnisname im Bilderverzeichnis 
+    )
+pathToImages <- getPathToImages()
+# ---------------------------------------------------------------------------
+
+```
+
+
+# `r if(get("abschluss")) WDH` Organisatorisches
+
+
+```{r child = './Organisatorisches/Literatur.Rmd'}
+```
+
+```{r child = './Organisatorisches/LizenzVersion.Rmd'}
+```
+
+### Lernergebnisse
+
+Die Studierenden können nach erfolgreichem Abschluss des Moduls:
+
+- den Prozess der Erkenntnisgewinnung in der Psychologie nutzen,
+- Daten gewinnen, zusammenfassen, analysieren und graphisch darstellen,
+- statistische Aussagen über Zusammenhänge und Prognosen machen,
+- die Gültigkeit der gefundenen Schlussfolgerungen abschätzen,
+- wichtige Methoden der deskriptiven und Inferenzstatistik passgenau auswählen und anwenden,
+- Auswertungen mit R durchführen, 
+- die Anwendung statistischer Auswertungen in anderen Teilgebieten der Psychologie verstehen und beurteilen,
+- sich als Rezipient oder Produzent von Forschung neue Verfahren selbstständig aneignen.
+
+```{r child = './Organisatorisches/Wordcloud.Rmd'}
+```
+
+
+### Prüfungsleistung
+
+- $100\%$ **Klausur** 60 Minuten. 
+
+Zur Vergabe von Credit Points muss die Klausur mit einer mindestens ausreichenden Leistung bestanden werden.
+
+**Beachten Sie die im OC hinterlegten Fristen!**
+
+Workload:
+
+- Präsenzstunden:	56,0 UE
+- Strukturiertes Eigenstudium 138,00 ZStd
+- Workload gesamt:	180,0 ZStd
+- ECTS-Credit Punkte:	6
+
+```{r child = './Organisatorisches/Vorlesungsplan.Rmd', eval = my.options$get("showVorlesungsplan")}
+```
+
+```{r, include=FALSE}
+assign("abschluss", TRUE, envir = .GlobalEnv)
+rm(pathToImages)
+```

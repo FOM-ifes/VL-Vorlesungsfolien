@@ -1,5 +1,7 @@
 beamer_presentation:
-  latex_engine: pdflatex
+  #latex_engine: pdflatex
+  latex_engine: xelatex
+  fonttheme: serif
   template: NULL
   toc: true
   md_extensions: +raw_tex+header_attributes
@@ -10,10 +12,15 @@ beamer_presentation:
   pandoc_args:
     - './private.yaml'
     - './default.yaml'
+    - './default-xelatex.yaml' # Nur für "latex_engine: xelatex" ! Schriftarten!
+#    - -V
+#    - aspectratio=169 # 16x9 für DLS nicht nötig, da automatisch 16x9!
     - -V
     - papersize=A4
     - -V
     - fontsize=12pt
+    - -V
+    - toc-title="Inhaltsverzeichnis"
     - -V
     - lang=de
     - -V
@@ -24,18 +31,18 @@ beamer_presentation:
     - csquotes=true
     - -V
     - theme=NPBT
+#    - -V
+#    - themeoptions=DLS
     - -V
-    - colortheme=NPBT-FOM  # NPBT-EUFOM für eufom; NPBT-FOM für FOM
+    - colortheme=NPBT-FOM # NPBT-EUFOM für eufom; NPBT-FOM für FOM; NPBT-FOM-DLS für DLS
     - -V
-    - outertheme=NPBT-FOM  # NPBT-EUFOM für eufom; NPBT-FOM für FOM
+    - outertheme=NPBT-FOM  # NPBT-EUFOM für eufom; NPBT-FOM für FOM; NPBT-FOM-DLS für DLS
     - --filter
     - pandoc-filter/typography.py
     - --filter
     - pandoc-filter/style.py
     - --filter
     - pandoc-filter/include_exclude.py
-    - --filter
-    - pandoc-filter/my_moodle_filter.py
 #    - --filter
 #    - pandoc-filter/watermark.py
 revealjs::revealjs_presentation:

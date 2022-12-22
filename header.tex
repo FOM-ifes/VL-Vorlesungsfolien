@@ -1,20 +1,22 @@
 % ===========================================================================
-% header.tex (Release 2.3)
+% header.tex (Release 5.0.3)
 % ==========-----------------------------------------------------------------
 %
-% (C) in 2017-19 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
+% (C) in 2017-22 by Norman Markgraf (nmarkgraf(at)hotmail(dot)com)
 %
 % 17. Jan. 2019 (nm) Some tiny changes.
 % 05. Jun. 2020 (nm) Die "columns"-Umgebung hacken, so das onlytextwidth
 %                    zum default wird. Damit ragen die Spalten nicht mehr
 %                    links und rechts aus dem Frame heraus.
 % 31. Aug. 2020 (nm) Inhaltverzeichnis jetzt als Buttons (2.3)
+% 23. Aug. 2021 (nm) Buttons nun als Boxen mit Umbruch (2.3.1)
+% 21. Nov. 2021 (nm) Anpassungen für das DLS Layout
+% 09. Feb. 2022 (nm) Weitere Anpassungen an das neue DLS Layout (5.0.2)
+% 10. Feb. 2022 (nm) Von typeout und wlog auf message umgestellt. (5.0.3)
 %
 % ---------------------------------------------------------------------------
 
-\typeout{header.tex wird abgearbeitet!}
-
-\usepackage{letltxmacro}
+\message{Starting 'header.tex' ----------------------------------------------}
 
 %\def\logowidth{1.3cm}
 %\def\logoheight{1.3cm}
@@ -29,7 +31,9 @@
 
 % Provide Option to change "€" in "EUR", as the "€" glyph can be problematic in some converting formats:
 %\newcommand{\oureuro}{\xspace{}EUR\xspace{}}  %für SMALLPDF-Konvertierung
-\newcommand{\oureuro}{€}   %für normales TeX-PDF
+\newcommand{\oureuro}{\text{€}}   %für normales TeX-PDF
+\let\euro\oureuro
+%\newcommand{\oureuro}{\EUR{}}   %für normales TeX-PDF
 
 \newcommand{\handleSection}{%
   %
@@ -43,8 +47,9 @@
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
         \node[% section title
-          xshift=\logoxshift-6.6cm,
-          yshift=3.8cm,
+          %xshift=\logoxshift-6.6cm,
+          xshift=\logoxshift-0.5\linewidth,
+          yshift=0.4\paperheight, %3.8cm,
           inner sep=0pt
         ] at (current page.south east){%
             \makebox[\sectiontitleboxwidth][r]{%
@@ -76,8 +81,9 @@
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
         \node[% section title
-          xshift=\logoxshift-6.6cm,
-          yshift=3.8cm,
+          %xshift=\logoxshift-6.6cm,
+          xshift=\logoxshift-0.5\linewidth,
+          yshift=0.4\paperheight, %3.8cm,
           inner sep=0pt
         ] at (current page.south east){%
             \makebox[\sectiontitleboxwidth][r]{%
@@ -94,8 +100,87 @@
 
 }
 
+\newcommand{\handleSectionDLS}{%
+  %
+  % New section, not section in headline
+  %
+  \setbeamertemplate{footline}[nofootline]
+  %
+  \begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt] at (current page.center){%
+            \includegraphics[width=\myPaperWidth, height=\myPaperHeight]{images/NPBT-FOM-DLS-section-background.png}%
+          };%--
+        \node[% section : section number
+          xshift=3.85cm, %xshift=0.19\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            \makebox(2.92cm, 1.75cm)[c]{% 3cm = 8,5cm => x = 4,2
+                \usebeamercolor[fg]{sectionnumber title}%
+                \usebeamerfont{sectionnumber title}\insertsectionnumber%
+            }% Ende makebox
+            %%}% Ende fbox!
+        };%
+        \node[% section : section title
+          xshift=14.3cm,%xshift=-0.415\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            %\makebox[\sectiontitleboxwidth][l]{%
+            \makebox(16.2cm, 1.75cm)[l]{%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
+              }
+            }% Ende makebox
+            %%}% Ende fbox!
+        };%
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{footline}[normalDLS]
+}
 
-\AtBeginSection[\handleSectionStar]{\handleSection}
+\newcommand{\handleSectionStarDLS}{%
+  %
+  % New section, not section in headline
+  %
+  \setbeamertemplate{footline}[nofootline]
+  %
+  \begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt] at (current page.center){%
+            \includegraphics[width=\myPaperWidth, height=\myPaperHeight]{images/NPBT-FOM-DLS-section-nonumber-background.png}%
+          };%--
+        \node[% section : section title
+          xshift=14.3cm,%xshift=-0.415\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            %\makebox[\sectiontitleboxwidth][l]{%
+            \makebox(16cm, 1.75cm)[l]{%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
+              }
+            }% Ende makebox
+            %%}% Ende fbox!
+        };%
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline. Put section in head
+  \setbeamertemplate{footline}[normalDLS]
+}
+
+
+\AtBeginSection[\ifDLS{\handleSectionStarDLS}\else{\handleSectionStar}\fi]{\ifDLS{\handleSectionDLS}\else{\handleSection}\fi}
 
 \newcommand{\handleSubsection}{%
   %
@@ -109,19 +194,20 @@
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
         \node[% section title
-          xshift=\logoxshift-6.6cm,
+          xshift=\logoxshift-0.5\linewidth,
+          yshift=0.4\paperheight, %3.8cm,
           %anchor=south east,
-          yshift=3.8cm,
+          %yshift=3.8cm,
           inner sep=0pt
         ] at (current page.south east){%
 %          \fbox{
             \makebox[\sectiontitleboxwidth][r]{%
               {%
-                \usebeamercolor{sectionnumber title}%
+                \usebeamercolor[fg]{sectionnumber title}%
                 \usebeamerfont{sectionnumber title}\insertsectionnumber.%\insertsubsectionnumber\hspace*{0.15em}%
               }%
               {%
-                \usebeamercolor{subsectionnumber title}%
+                \usebeamercolor[fg]{subsectionnumber title}%
                 \usebeamerfont{subsectionnumber title}\insertsubsectionnumber\hspace*{0.15em}%
               }%
               {%
@@ -139,6 +225,58 @@
 
 }
 
+\newcommand{\handleSubsectionDLS}{%
+  %
+  % New subsection, not section in headline
+  %
+  \setbeamertemplate{footline}[nofootline]
+  %
+   \begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt] at (current page.center){%
+            \includegraphics[width=\myPaperWidth, height=\myPaperHeight]{images/NPBT-FOM-DLS-section-background.png}%
+          };%--
+        \node[% section : section number
+          xshift=3.85cm, %xshift=0.19\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            \makebox(2.92cm, 1.75cm)[c]{% 3cm = 8,5cm => x = 4,2
+                    {%
+                        \usebeamercolor[fg]{sectionnumber title}%
+                        \usebeamerfont{sectionnumber title}\insertsectionnumber.%
+                    }%
+                    {%
+                        \usebeamercolor[fg]{subsectionnumber title}%
+                        \usebeamerfont{subsectionnumber title}\insertsubsectionnumber\hspace*{0.15em}%
+                    }%
+                }%
+        };%
+        \node[% section : section title
+          xshift=14.3cm,%xshift=-0.415\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            %\makebox[\sectiontitleboxwidth][l]{%
+            \makebox(16cm, 1.75cm)[l]{%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsubsectionhead\endNoHyper%
+              }%
+            }% makebox
+            %%}% Ende fbox
+        };%
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset headline.
+  \setbeamertemplate{footline}[normalDLS]
+%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
+
 \newcommand{\handleSubsectionStar}{%
   %
   % New subsection, not section in headline
@@ -151,9 +289,10 @@
     \vspace*{7cm}
     \begin{tikzpicture}[remember picture, overlay]
       \node[% section title
-          xshift=\logoxshift-6.6cm,
+          xshift=\logoxshift-0.5\linewidth,
+          yshift=0.4\paperheight, %3.8cm,
           %anchor=south east,
-          yshift=3.8cm,
+          %yshift=3.8cm,
           inner sep=0pt
       ] at (current page.south east){%
 %          \fbox{
@@ -171,8 +310,42 @@
   \setbeamertemplate{headline}[sectioninhead]
 }
 
+\newcommand{\handleSubsectionStarDLS}{%
+  %
+  % No footline!
+  %
+  \setbeamertemplate{footline}[nofootline]
+  %
+   \begin{frame}
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[inner sep=0pt] at (current page.center){%
+            \includegraphics[width=\myPaperWidth, height=\myPaperHeight]{images/NPBT-FOM-DLS-section-background.png}%
+          };%--
+        \node[% section : section title
+          xshift=14.3cm,%xshift=-0.415\linewidth,
+          yshift=0.32\paperheight, %3.8cm,
+          inner sep=0pt
+        ] at (current page.south west){%
+            %%\fboxrule1.0mm%
+            %%\fbox{%
+            %\makebox[\sectiontitleboxwidth][l]{%
+            \makebox(16cm, 1.75cm)[l]{%
+              {%
+                \usebeamercolor[fg]{section title}%
+                \usebeamerfont{section title}\NoHyper\insertsectionhead\endNoHyper%
+              }%
+            }% makebox
+            %%}% Ende fbox
+        };%
+    \end{tikzpicture}%
+  \end{frame}
+  % Reset footline!
+  \setbeamertemplate{footline}[normalDLS]
+%  \addtocounter{framenumber}{-1}% If you don't want them to affect the slide number
+}
 
-\AtBeginSubsection[\handleSubsectionStar]{\handleSubsection}
+
+\AtBeginSubsection[\ifDLS{\handleSubsectionStarDLS}\else{\handleSubsectionStar}\fi]{\ifDLS{\handleSubsectionDLS}\else{\handleSubsection}\fi}
 
 %
 % Remove unwanted toc entries:
@@ -181,54 +354,82 @@
 \ifthenelse{\equal{#1}{toc}}{\relax}{\addtocontents{#1}{\protect\contentsline{#2}{#3}}}
 }
 
+
+\newcommand{\setnormaltoc}{%
+    \message{+++++ Switch to Old Table of Content!}%
 %
 % Altes Inhaltsverzeichnis
 %
-%\setbeamertemplate{section in toc}{%
-%    \leavevmode\leftskip=2.75ex%
-%  \llap{%
-%    \usebeamerfont*{section number projected}%
-%    \usebeamercolor[bg]{section number projected}%
-%    \vrule width2.50ex height2.05ex depth.4ex%
-%    \hskip-2.50ex%
-%    \hbox to2.50ex{\hfil\color{fg}\inserttocsectionnumber\hfil}}%
-%  \kern1.35ex\inserttocsection\par}
-
-
-%
-% Neues Inhaltsverzeichnis
-%
-\setbeamertemplate{button}{\tikz
-  \node[
-  inner xsep=10pt,
-  outer sep=0pt,
-  draw=structure!80,
-  fill=structure!50,
-  minimum size=5.7em,
-  text width=5.9cm,
-  rounded corners=4pt]  {\large\insertbuttontext};%
-}
-
 \setbeamertemplate{section in toc}{%
-    \beamerbutton{\usebeamercolor[fg]{FOMFrametitelInverseColor}\inserttocsectionnumber.~ \hfil\parbox{\dimexpr\linewidth-4\fboxsep-2\fboxrule}{\vspace*{-1px}\usebeamercolor[fg]{FOMFrametitelInverseColor}\inserttocsection}}%
+    \leavevmode\leftskip=2.75ex%
+  \llap{%
+    \usebeamerfont*{section number projected}%
+    \usebeamercolor[bg]{section number projected}%
+    \vrule width2.50ex height2.05ex depth.4ex%
+    \hskip-2.50ex%
+    \hbox to2.50ex{\hfil\color{fg}\inserttocsectionnumber\hfil}}%
+  \kern1.35ex\inserttocsection\par}
 }
+
+\newcommand{\setmoderntoc}{%
+    \message{+++++ Switch to New Table of Content!}%
+    %
+    % Neues Inhaltsverzeichnis
+    %
+    \setbeamertemplate{button}{\tikz
+      \node[
+          inner xsep=10pt,    %
+          outer sep=0pt,      %
+%          draw=FOMTOCBackgroundColor!80,  %
+%          fill=FOMTOCBackgroundColor!50,  %
+          draw=FOMTOCBackgroundColor!99,  %
+          fill=FOMTOCBackgroundColor!90,  %
+          minimum size=5.7em, %
+          %text width=5.9cm,   %
+          text width=6.5cm,   %
+          rounded corners=4pt %
+       ] {\large\insertbuttontext};%
+    } % End setbeamertemplate
+    
+    \setbeamertemplate{section in toc}{%
+        \beamerbutton{%
+            %\fbox{%
+            \usebeamercolor[fg]{FOMTOCSectionNumberColor}%
+            \inserttocsectionnumber.~ %
+            %}
+            %\vspace*{-.75pt}%
+            %\vskip-0.25cm%
+            %\fbox{%
+            \parbox{%
+%                \dimexpr\linewidth-4\fboxsep-4\fboxrule%
+                \dimexpr\linewidth-5\fboxsep-5\fboxrule-3pt%
+             }{%
+                \usebeamercolor[fg]{FOMTOCSectionTitleColor}%
+                \raggedright\nohyphens{\inserttocsection}%
+            }% 
+            %}% End fbox
+        }% End beamerbutton
+    }% End setbeamertemplate
+}% End newcommand
+
 
 %\makeatletter
 \LetLtxMacro{\oldtableofcontents}{\tableofcontents}
 \renewcommand{\tableofcontents}[1][]{%
-  \typeout{New Table of Content in use!}
+  \message{New Table of Content in use!}%
   \setlength{\columnsep}{0.2cm}%
-  %\beamer@noframenumberingtrue%
-  %\setkeys{beamerframe}{noframenumbering=true}
+  \raggedcolumns
+  \setkeys{beamerframe}{noframenumbering=true}
   \begin{multicols}{2}
-        \vspace*{-0.8em}%
-        \hypersetup{linkbordercolor=white, linkcolor=white, colorlinks=false, hidelinks=true}% hidelinks
+        \vspace*{-4pt}%
+        \hypersetup{linkbordercolor=white, linkcolor=white, colorlinks=false, hidelinks}% hidelinks
         \oldtableofcontents[#1]
   \end{multicols}%
+  \message{New Table of Content in use! **ENDE**}%
 }
 %\makeatother
 
-
+%\setnormaltoc
 
 %
 % BUGFIX für caption bug in 2018!
@@ -244,7 +445,7 @@
 
 
 %
-% Default für columns auf "onlytextwidth" setzen, damit die Splaten besser
+% Default für columns auf "onlytextwidth" setzen, damit die Spalten besser
 % ins Bild passen.
 % Quelle: https://tex.stackexchange.com/questions/204022/make-onlytextwidth-default-width-of-columns
 %
@@ -281,10 +482,35 @@
     {\beamer@colclose\def\beamer@colclose{}\beamer@colexitcode\end{actionenv}}%
 \makeatother
 
+%%%%%%%% TEST %%%%%%%%
+\makeatletter
+\let\oldsectionintoc\beamer@sectionintoc%
+\def\beamer@sectionintoc#1#2#3#4#5{%
+%    \nonstopmode% Ich schäme mich für diese Zeile, aber ich finde den Bug nicht!
+%    % 7 / 13 / 19 
+%    % 6 / 11 / 16
+    \ifnum#1=6 \vfill\columnbreak \else \relax \fi%
+%%    \ifnum#1=11 \vfill\columnbreak\expandafter\end\expandafter{multicols}%
+%%    \expandafter\framebreak\vspace*{2pt}\expandafter\begin\expandafter{multicols}{2}%
+    \ifnum#1=11 \vfill\egroup\endmulticols%
+    \framebreak\vspace*{2pt}\multicols{2}[]\bgroup%
+    \makeatletter%
+    \def\beamer@toc@cs{show}%
+    \def\beamer@toc@os{show}%
+    \def\beamer@tocsections{<*>}%
+    \setkeys{beamertoc}{hideallsubsections}%
+    \hypersetup{linkbordercolor=white, linkcolor=white, hidelinks}%
+    \else \relax%
+    \fi%
+    \ifnum#1=16 \vfill\columnbreak \else \relax \fi%
+    \oldsectionintoc {#1}{#2}{#3}{#4}{#5}%
+%    \batchmode% Ich schäme mich für diese Zeile, aber ich finde den Bug nicht!
+}%
+\makeatother
 
 
 \InputIfFileExists{include-notes.tex}{\relax}{\relax}
-\InputIfFileExists{header_costums.tex}{\relax}{\relax}
+\InputIfFileExists{header_customs.tex}{\relax}{\relax}
 
-\typeout{header.tex ist abgearbeitet!}
+\message{Ending 'header.tex' -----------------------------------------------}
 % ===========================================================================
