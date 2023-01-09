@@ -9,9 +9,9 @@ Fehler etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/is
 
 - möglichst aktuelles R, RStudio, LaTeX
 - LaTeX u. a. Paket `beamer`, `cm-super`, `ulem`
-- pandoc in einer aktuellen Version (2.14.1) -- RStudio 1.4 liefert gegenwärtig nur 2.11. mit: [https://github.com/jgm/pandoc/releases/tag/2.14.1](https://github.com/jgm/pandoc/releases/tag/2.14.1). 
-- rmarkdown in der aktuellen Version (2.7 oder später).
-- Python3 mit panflute: [https://www.python.org/downloads/](https://www.python.org/downloads/). Nach der Installation über die Windows Eingabeaufforderung (Terminal) panflute installieren: `python3 -m pip install panflute`. Python 2.\* wird **nicht unterstützt**!!
+- rmarkdown in der aktuellen Version (2.19 oder später).
+- pandoc in einer aktuellen Version (2.19.2) -- RStudio liefert ein integriertes Pandoc, welches aber nicht zwangsläufig dem aktuellsten entspricht. Mit dem Befehl `rmarkdown::find_pandoc()` kann man sich die von RStudio verwendete Version anzeigen lassen. Ggf. die aktuelle Version von der Pandoc Website installieren [https://pandoc.org/installing.html](https://pandoc.org/installing.html).
+- Python3 mit panflute: [https://www.python.org/downloads/](https://www.python.org/downloads/). Nach der Installation über die Windows Eingabeaufforderung (Terminal) panflute installieren: `python -m pip install panflute`. Python 2.\* wird **nicht unterstützt**!!
 
 
 ### Wichtige zusätzliche Hinweise
@@ -60,7 +60,7 @@ sondern eine Fehlermeldung erhalten!
 
 - Um eine Rohfassung der Skripte zu erzeugen, die entsprechende Rmd Datei mit dem jeweiligen Vorlesungsnamen in RStudio öffnen und knitrn.
 - Sie können auch die Datei *makerender.R* anpassen und mit `source("makerender.R")` starten. So werden ggf. gleich alle drei Ausgaben (Dozentenfassung, Studierendenfassung und Lösungsskript) erstellt.
-- ebenfalls können die Skriptversionen über die batch- oder sh-Datei *makerender.bat* / *makerender.sh* erstellt werden. Eine Beschreibung über das Vorgehen findet sich weiter unten.
+- Ebenfalls können die Skriptversionen über die batch- oder sh-Datei *makerender.bat* / *makerender.sh* erstellt werden. Eine Beschreibung über das Vorgehen findet sich weiter unten.
 
 *Tipps*: 
 
@@ -70,7 +70,7 @@ sondern eine Fehlermeldung erhalten!
 
 ## Wo muss/kann ich etwas anpassen?
 
-**Kontrollieren Sie die Prüfungsleistungen!** Diese sind in der Datei `Inhalte/xxx-Organisatorisches.Rmd`, wobei `xxx` für die Vorlesungen (*DES*, *QFM*, *WM*, *WMQD*) steht.
+**Kontrollieren Sie die Prüfungsleistungen!** Diese sind in der Datei `Inhalte/xxx-Organisatorisches.Rmd`, wobei `xxx` für die jeweilige Vorlesung (*DES*, *QFM*, *WM*, *WMQD*) steht.
 
 Es gibt eine Stelle, an denen Sie vor dem (ersten) Erstellen der Skripte Hand anlegen sollten:
 
@@ -88,7 +88,7 @@ Passen Sie die Datei `Inhalte/private/privatet.R` mit Ihren Daten an.
 # DozentInnen Information
 DozInfo <- list(
   PreTitel = "Dipl.-Math.",    # "Prof. Dr.", "Dr.", ""
-  PostTitel = "",              # "(MBA)", "(LL.B.)", "(M.Sci)"
+  PostTitel = "",              # "(MBA)", "(LL.B.)", "(M.Sc)"
   Vorname = "Norman",          # "Karla Antonia Sybilla"
   Nachname = "Markgraf" ,      # "Säuerreich-Weinenie"
   Geschlecht = "m",            # "m" männlich, "w" weiblich und "d" drittes Geschlecht
@@ -105,16 +105,16 @@ DozInfo <- list(
 
 **Vorlesungszeitplan einfügen**
 
-Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter showVorlesungsplan auf TRUE und passen die Datei xx-default.Rmd im Ordner Vorlesungstermine mit Ihren Daten und Inhalten an.
+Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter showVorlesungsplan auf TRUE und passen die Datei `xx-default.Rmd` im Ordner `Vorlesungstermine` mit Ihren Daten und Inhalten an.
 
 
 **Batch-Datei verwenden**
 
-Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen mittels `makerender.bat`.
+Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen gleichzeitig erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen -- mittels `makerender.bat`.
 
-Hierzu muss in der `makerender.bat` in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre R-Version angepasst werden und, falls R unter eineme anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z.B. `C:\Benutzer\Programme` o.ä.) entsprechend angepasst werden.
+Hierzu muss in der `makerender.bat` in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre installierte R-Version angepasst werden und, falls R unter eineme anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z.B. `C:\Benutzer\Programme` o.ä.) ebenfalls entsprechend gesetzt werden.
 
-Folgende Parameter können hierbei mit angegeben werden:
+Folgende Parameter können für die Ausführung mit angegeben werden:
 
 -v, --verbose
       Erweiterte Ausgabe von Laufzeitinformationen
@@ -153,9 +153,9 @@ Folgende Parameter können hierbei mit angegeben werden:
       Lösungsskript nicht erstellen
       
       
-Die Parameter können Sie sich auch in der Eingabeaufforderung  mittels `makerender --help` auflisten lassen.
+Die Parameter können Sie sich auch in der Eingabeaufforderung  mittels `makerender --help` auflisten lassen (vorausgesetzt die Pfade und Angaben zur R-Version sind wie oben beschrieben korrekt gesetzt).
 
-Wenn Sie also z.B. eine Dozierendenversion der Wissenschaftlichen Methodik (Angabe des Namens der entsprechenden Rmd-Datei) erstellen wollen, mit privater Vorstellung und der Angabe von Semester und Studienort, können Sie dies über folgenden Befehl in der Kommandozeile abschicken:
+Wenn Sie also z.B. eine Dozierendenversion der Wissenschaftlichen Methodik (Angabe des Namens der entsprechenden Rmd-Datei) erstellen wollen, mit privater Vorstellung und der Angabe von Semester und Studienort, können Sie dies über folgenden Befehl in der Kommandozeile anfordern:
 
 ```
 makerender.bat -s "SoSe 2023" -o "Essen" Wissenschaftliche-Methodik
@@ -167,7 +167,7 @@ oder analog:
 makerender.bat --semester="SoSe 2023" -studienort="Essen" Wissenschaftliche-Methodik
 ```
 
-Die Parameter zur Personalisierung (private Vorstellung oder den Zeitplan der Vorlesung) werden -- bei Bedarf -- zuvor in der `makerender.R` Datei gesetzt.
+Die Parameter zur Personalisierung werden, bei Bedarf, zuvor in der `makerender.R` Datei auf `TRUE` gesetzt (private Vorstellung: `ShowPrivate` -- Zeile 27 -- oder Zeitplan der Vorlesung einbauen: `showVorlesungsplan` -- Zeile 34).
 
 
 ## Literatur
