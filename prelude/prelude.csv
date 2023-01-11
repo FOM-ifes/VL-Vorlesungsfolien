@@ -15,7 +15,6 @@ packages, minrelease
 "readr", "0"
 "randomForest", "0"
 "psych", "0"
-"okcupiddata", "0"
 "nFactors", "0"
 "mvtnorm", "0"
 "mosaic", "1.2.0"
