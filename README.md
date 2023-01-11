@@ -2,7 +2,7 @@
 
 **Wiki zu den Vorlesungsunterlagen:** [https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki](https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki)
 
-Fehler etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/issues](https://github.com/FOM-ifes/VL-Vorlesungsfolien/wiki/issues) melden!
+Fehler, Hinweise etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues](https://github.com/FOM-ifes/VL-Vorlesungsfolien/issues) melden!
 
 
 ## Notwendige Software
