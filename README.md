@@ -110,7 +110,7 @@ Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter sho
 
 **Batch-Datei verwenden**
 
-Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen gleichzeitig erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen -- mittels `> makerender.bat`.
+Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen gleichzeitig erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen.
 
 Hierzu muss in der `makerender.bat` Datei in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre installierte R-Version angepasst werden und, falls R unter einem anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z. B. `C:\Benutzer\Programme` o.ä.) ebenfalls entsprechend gesetzt werden.
 
