@@ -105,66 +105,59 @@ DozInfo <- list(
 
 **Vorlesungszeitplan einfügen**
 
-Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter showVorlesungsplan auf TRUE und passen die Datei `xx-default.Rmd` im Ordner `Vorlesungstermine` mit Ihren Daten und Inhalten an.
+Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie den Parameter showVorlesungsplan auf TRUE und passen die Datei `xxx-default.Rmd` im Ordner `Vorlesungstermine` mit Ihren Daten und Inhalten an.
 
 
 **Batch-Datei verwenden**
 
-Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen gleichzeitig erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen -- mittels `makerender.bat`.
+Mit der Batch-Datei `makerender.bat` (analoges Vorgehen für `.sh`) können alle drei Skriptversionen gleichzeitig erstellt werden. Zum Ausführen der Datei wird diese in der Eingabeaufforderung (über's Terminal möglich) aufgerufen.
 
-Hierzu muss in der `makerender.bat` in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre installierte R-Version angepasst werden und, falls R unter eineme anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z.B. `C:\Benutzer\Programme` o.ä.) ebenfalls entsprechend gesetzt werden.
+Hierzu muss in der `makerender.bat` Datei in Zeile 8 `set RSCRIPTEXE="%ProgramFiles%\R\R-4.2.1\bin\x64\Rscript.exe"` ggf. auf Ihre installierte R-Version angepasst werden und, falls R unter einem anderen Speicherort installiert sein sollte, der Pfad `%ProgramFiles%` (z. B. `C:\Benutzer\Programme` o.ä.) ebenfalls entsprechend gesetzt werden.
 
 Folgende Parameter können für die Ausführung mit angegeben werden:
 
--v, --verbose
-      Erweiterte Ausgabe von Laufzeitinformationen
+```
+Options: 
+        -h, --help 
+                show this help message and exit
+        -v, --verbose
+                Erweiterte Ausgabe von Laufzeitinformationen
+        -c, --clean
+                Zu Beginn alle temporären Dateien löschen 
+        -d, --dls
+                Erzeugen eines DLS Skripts
+        -s SEMESTER, --semester=SEMESTER
+                Semesteranagabe einstellen
+        -o STUDIENORT, --studienort=STUDIENORT
+                Studienort einstellen
+        -l LECTURER, --lecturer=LECTURER
+                Vortragende:n einstellen
+        -a AUTHOR, --author=AUTHOR
+                Vortragende:n einstellen
+        -e LATEX-ENGINE, --lates-engine=LATEX-ENGINE
+                LaTeX engine [xelatex/pdflatex/lualatex]
+        --layout=LAYOUT
+                Layout [FOM/eufom]
+        -m MIDFIX, --midfix=MIDFIX
+                Wird zwischen dem Dateinamen und der Endung eingefügt
+        --nostudi
+                Studierendenskript nicht erstellen
+        --nolsg
+                Lösungsskript nicht erstellen
+```
+      
+Die Parameter können Sie sich auch in der Eingabeaufforderung  mittels `> makerender --help` auflisten lassen (vorausgesetzt die Pfade und Angaben zur R-Version sind wie oben beschrieben korrekt gesetzt).
 
--c, --clean
-      Zu Beginn alle temporären Dateien löschen
-      
--d, --dls
-      Erzeugen eines DLS Skripts
-      
--s SEMESTER, --semester=SEMESTER
-      Semesteranagabe einstellen
-      
--o STUDIENORT, --studienort=STUDIENORT
-      Studienort einstellen
-      
--l LECTURER, --lecturer=LECTURER
-      Vortragende:n einstellen
-      
--a AUTHOR, --author=AUTHOR
-      Vortragende:n einstellen
-      
--e LATEX-ENGINE, --lates-engine=LATEX-ENGINE
-      LaTeX engine [xelatex/pdflatex/lualatex]
-      
---layout=LAYOUT
-      Layout [FOM/eufom]
-      
--m MIDFIX, --midfix=MIDFIX
-      Wird zwischen dem Dateinamen und der Endung eingefügt
-      
---nostudi
-      Studierendenskript nicht erstellen
-      
---nolsg
-      Lösungsskript nicht erstellen
-      
-      
-Die Parameter können Sie sich auch in der Eingabeaufforderung  mittels `makerender --help` auflisten lassen (vorausgesetzt die Pfade und Angaben zur R-Version sind wie oben beschrieben korrekt gesetzt).
-
-Wenn Sie also z.B. eine Dozierendenversion der Wissenschaftlichen Methodik (Angabe des Namens der entsprechenden Rmd-Datei) erstellen wollen, mit privater Vorstellung und der Angabe von Semester und Studienort, können Sie dies über folgenden Befehl in der Kommandozeile anfordern:
+Wenn Sie also z. B. eine Dozierendenversion der Wissenschaftlichen Methodik (Angabe des Namens der entsprechenden Rmd-Datei) erstellen wollen, mit der Angabe von Semester und Studienort, können Sie dies über folgenden Befehl in der Kommandozeile anfordern:
 
 ```
-makerender.bat -s "SoSe 2023" -o "Essen" Wissenschaftliche-Methodik
+> makerender.bat -s "SoSe 2023" -o "Essen" Wissenschaftliche-Methodik
 ```
 
 oder analog:
 
 ```
-makerender.bat --semester="SoSe 2023" -studienort="Essen" Wissenschaftliche-Methodik
+> makerender.bat --semester="SoSe 2023" -studienort="Essen" Wissenschaftliche-Methodik
 ```
 
 Die Parameter zur Personalisierung werden, bei Bedarf, zuvor in der `makerender.R` Datei auf `TRUE` gesetzt (private Vorstellung: `ShowPrivate` -- Zeile 27 -- oder Zeitplan der Vorlesung einbauen: `showVorlesungsplan` -- Zeile 34).
