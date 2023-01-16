@@ -57,7 +57,7 @@ Die Folien bilden die *Leinwand* der Vorlesung: sie werden *interaktiv* erklärt
 
 
 
-### Anleitung zum Unglücklichwerden -- später {exclude=virtuell}
+### Anleitung zum Unglücklichwerden {exclude=virtuell}
 
 - Ich besuche die Vorlesung nicht, ich gucke Videos.
 - Kontinuierlich nacharbeiten? Quatsch, ich lerne eine Woche vor der Klausur intensiv.
