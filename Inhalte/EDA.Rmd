@@ -116,11 +116,11 @@ Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offe
 
 - **R** [https://www.r-project.org/](https://www.r-project.org/): ist das Basisprogramm
 
-- **RStudio Desktop** [https://www.rstudio.com/](https://www.rstudio.com/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z.B. Dokumentenerstellung etc.
+- **RStudio Desktop** [https://posit.co/downloads/](https://posit.co/downloads/): ist eine komfortable Entwicklungsumgebung für R und bietet zusätzliche Tools, wie z.B. Dokumentenerstellung etc.
 
-Ausführliche Installationsanleitung [hier](https://rawgit.com/luebby/Datenanalyse-mit-R/master/Installation/Install.html).
+Ausführliche Installationsanleitung [hier](https://fomshinyapps.shinyapps.io/Installation-R-RStudio-mosaic/).
 
-Alternative zur Installation von R: Clouddienst [https://rstudio.cloud/](https://rstudio.cloud/)
+Alternative zur Installation von R: Clouddienst [https://posit.cloud/plans/free](https://posit.cloud/plans/free)
 
 
 ### Installation Zusatzpakete {include-only=MasterNeu}
