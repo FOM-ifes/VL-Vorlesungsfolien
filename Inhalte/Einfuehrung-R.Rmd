@@ -104,7 +104,7 @@ Transparenz ist eines der Gütekriterien für Forschung, und die wird durch Offe
 
 Ausführliche Installationsanleitung [hier](https://fomshinyapps.shinyapps.io/Installation-R-RStudio-mosaic/).
 
-Alternative zur Installation von R: Clouddienst [https://posit.cloud/plans/free](https://posit.cloud/plans/free)
+Alternative zur Installation von R und RStudio: Clouddienst [https://posit.cloud/plans/free](https://posit.cloud/plans/free)
 
 
 ### Installation Zusatzpakete
