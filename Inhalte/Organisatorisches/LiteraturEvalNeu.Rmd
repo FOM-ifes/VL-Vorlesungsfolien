@@ -1,0 +1,71 @@
+### Literatur (Auswahl)
+
+
+```{r echo=FALSE}
+pathToLiteraturImages <- "./images/Literatur"
+```
+
+::: {.columns .small}
+
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"Moderne-Datenanalyse-mit-R.jpg"), error = FALSE)
+```
+
+Sebastian Sauer (2019): *Moderne Datenanalyse mit R.* Springer. [https://link.springer.com/book/10.1007/978-3-658-21587-3](https://link.springer.com/book/10.1007/978-3-658-21587-3)
+::::
+    
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"Introduction-to-Modern-Statistics.jpg"), error = FALSE)
+```
+
+Mine &Ccedil;etinkaya-Rundel, Johanna Hardin (2021): *Introduction to Modern Statistics*, [https://openintro-ims.netlify.app/index.html](https://openintro-ims.netlify.app/index.html)
+::::
+
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"Forschungsmethoden-und-Evaluation-in-den-Sozial-und-Humanwissenschaften.jpg"), error = FALSE)
+```
+
+Nicola Doering, Jürgen Bortz (2016): *Forschungsmethoden und Evaluation in den Sozial- und Humanwissenschaften*, Springer Verlag Berlin Heidelberg.
+::::
+    
+:::
+
+### Literatur (Auswahl)
+
+::: {.columns .small}
+
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"A-Students-Guide-to-R-fix.jpg"), error = FALSE)
+```
+
+Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Little Books *A Student's Guide to R*,  [https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf](https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf)
+
+::::
+
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"ModernDive---An-Introduction-to-Statistical-and-Data-Science-via-R.jpg"), error = FALSE)
+```
+
+Chester Ismay, Albert Y. Kim (2020): *ModernDive -- An Introduction to Statistical and Data Sciences via R*, [http://moderndive.com/](http://moderndive.com/)
+::::
+
+:::: {.column width="33%"}
+
+```{r, echo=FALSE, fig.align="center", out.width="60%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"An-Introduction-to-Statistical-Learning---with-Applications-in-R.jpg"), error = FALSE)
+```
+
+Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2021): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_website.pdf](https://hastie.su.domains/ISLR2/ISLRv2_website.pdf)
+::::
+
+:::

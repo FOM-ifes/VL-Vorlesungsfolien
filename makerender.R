@@ -46,7 +46,7 @@ Dozent <- "FOM Dozent:in"  # Standard Dozent:innenangabe
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe des Studienortes. Standard ist "FOM"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
-Studienort <- "FOM"  # Standard Studienort
+Studienort <- ""  # Standard Studienort
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Mit welchem LaTeX Programm soll übersetzt werden?
 # Seit Januar 2022 ist xelatex die Standardmethode! Vorher war es pdflatex
@@ -115,7 +115,6 @@ SetupArgumentParser <- function() {
                          c("-s", "--semester"),
                          action = "store",
                          type = "character",
-                         default = "SoSe 2022",
                          dest = "semester",
                          help = "Semesterangabe einstellen")
     # Variable: studienort
@@ -123,7 +122,6 @@ SetupArgumentParser <- function() {
                          c("-o", "--studienort"),
                          action = "store",
                          type = "character",
-                         default = "",
                          dest = "studienort",
                          help = "Studienort einstellen")
     # Variable: dozent  

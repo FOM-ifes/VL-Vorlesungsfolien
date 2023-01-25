@@ -17,7 +17,7 @@ pathToImages <- getPathToImages()
 
 # `r if(get("abschluss")) get("WDH")` Organisatorisches
 
-```{r child = './Organisatorisches/Literatur.Rmd'}
+```{r child = './Organisatorisches/LiteraturNeu.Rmd'}
 ```
 
 ```{r child = './Organisatorisches/LizenzVersion.Rmd'}
