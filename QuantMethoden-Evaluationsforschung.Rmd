@@ -63,7 +63,7 @@ ChildList <- c(
              'QMEval-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
              'QMEval-Organisatorisches.Rmd')},
     {if_else(my.options$get("privateVorstellung"),
-             'private-Vorstellung.Rmd', NULL)},
+             'private/private-Vorstellung.Rmd', NULL)},
     'Organisatorisches/Hinweise.Rmd', 
     'Grundlagen-Wissenschaft.Rmd', 
     'Grundlagen-QuantDat.Rmd', 
