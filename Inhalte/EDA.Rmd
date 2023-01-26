@@ -1721,7 +1721,7 @@ inspect(tips)
 ::: {.scriptsize}
 ```{r  Trinkgelddaten_inspect_output, echo=FALSE}
 options(width = 150)
-opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, tidy = TRUE, size="small")
+opts_chunk$set(comment = "", warning = FALSE, message = FALSE, echo = TRUE, size="small")
 (insp <- mosaic::inspect(tips))
 ```
 :::
