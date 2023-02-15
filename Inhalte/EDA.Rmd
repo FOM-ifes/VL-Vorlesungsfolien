@@ -2198,7 +2198,7 @@ cov(tip ~ total_bill, data = df)
 
 ### Korrelationskoeffizienten
 
-```{r Visualisierung_Korrelation, fig.align="center", echo=FALSE, fig.width = 14, fig.asp = 25/40, out.width="60%"}
+```{r Visualisierung_Korrelation, fig.align="center", echo=FALSE, out.width="90%"}
 #### Quelle http://moderndive.com/scripts/06-regression.R
 ## Leichte Anpassungen durch N. Markgraf
 # library(mosaic)
