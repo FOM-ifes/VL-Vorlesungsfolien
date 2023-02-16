@@ -32,8 +32,8 @@ if (!exists("prelude.rendertools")) {
 assign("abschluss", FALSE, envir = .GlobalEnv)
 
 my.options$set(
-  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
-  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WM-default.Rmd anpassen
+  privateVorstellung = FALSE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WM-default.Rmd anpassen
   showuseR  = TRUE,            # Folien mit useR-Umfragen anzeigen oder ausschließen
   Corona    = FALSE,
   MasterNeu = TRUE             # Überarbeitung Master mg, kl

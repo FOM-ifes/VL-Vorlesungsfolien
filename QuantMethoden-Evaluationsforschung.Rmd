@@ -31,8 +31,8 @@ if (!exists("prelude.rendertools")) {
 assign("abschluss", TRUE, envir = .GlobalEnv)
 
 my.options$set(
-  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
-  showVorlesungsplan = TRUE,   # Zeige Vorlesungstermine -> In der Datei QMEval-default.Rmd anpassen
+  privateVorstellung = FALSE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = FALSE,   # Zeige Vorlesungstermine -> In der Datei QMEval-default.Rmd anpassen
   showuseR = TRUE,             # Folien mit useR-Umfragen anzeigen oder ausschließen
   Corona = FALSE
 )

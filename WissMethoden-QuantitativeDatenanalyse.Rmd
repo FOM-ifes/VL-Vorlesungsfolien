@@ -30,8 +30,8 @@ assign("abschluss", FALSE, envir = .GlobalEnv)
 # assign("WDH", "Wiederholung: ", envir = .GlobalEnv)
 
 my.options$set(
-  privateVorstellung = TRUE,   # Zeige die Private Vorstellung
-  showVorlesungsplan = TRUE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
+  privateVorstellung = FALSE,   # Zeige die Private Vorstellung
+  showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
   showuseR = TRUE,             # Folien mit useR-Umfragen anzeigen oder ausschließen
   Corona = FALSE
 )
