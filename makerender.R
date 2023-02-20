@@ -333,7 +333,6 @@ if (exists("parsedArguments") && hasName(parsedArguments,"options")) {
   }
   if (hasName(parsedArguments$options, "dozent")) {
       Dozent <- parsedArguments$options$dozent
-      UsePrivate <- FALSE
   } 
   if (hasName(parsedArguments$options, "showprivate")) {
       ShowPrivate <- parsedArguments$options$showprivate
