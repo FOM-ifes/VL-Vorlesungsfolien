@@ -8,7 +8,7 @@ Fehler, Hinweise etc. bitte unter [https://github.com/FOM-ifes/VL-Vorlesungsfoli
 ## Notwendige Software
 
 - möglichst aktuelles R, RStudio, LaTeX
-- LaTeX u. a. Paket `beamer`, `cm-super`, `ulem`
+- LaTeX u. a. Paket `beamer`, `cm-super`, `ulem`, ggf. tinytex über `install.packages(tinytex)` und anschließend `tinytex::install_tinytex()` instalieren.
 - rmarkdown in der aktuellen Version (2.19 oder später).
 - pandoc in einer aktuellen Version (2.19.2) -- RStudio liefert ein integriertes Pandoc, welches aber nicht zwangsläufig dem aktuellsten entspricht. Mit dem Befehl `rmarkdown::find_pandoc()` kann man sich die von RStudio verwendete Version anzeigen lassen. Ggf. die aktuelle Version von der Pandoc Website installieren [https://pandoc.org/installing.html](https://pandoc.org/installing.html).
 - Python3 mit panflute: [https://www.python.org/downloads/](https://www.python.org/downloads/). Nach der Installation über die Windows Eingabeaufforderung (Terminal) panflute installieren: `python -m pip install panflute`. Python 2.\* wird **nicht unterstützt**!!
@@ -58,7 +58,7 @@ sondern eine Fehlermeldung erhalten!
 ## Erste Schritte
 
 - Um eine Rohfassung der Skripte zu erzeugen, die entsprechende `Rmd` Datei mit dem jeweiligen Vorlesungsnamen in RStudio öffnen und knitrn.
-- Sie können auch die Datei `makerender.R` anpassen und mit `source("makerender.R")` starten. So werden ggf. gleich alle drei Ausgaben (Dozentenfassung, Studierendenfassung und Lösungsskript) erstellt.
+- Sie können auch die Datei `makerender.R` anpassen und mit `source("makerender.R")` starten. So werden gleich alle drei Ausgaben (Dozentenfassung, Studierendenskript und Lösungsskript) erstellt.
 - Ebenfalls können die Skriptversionen über die `batch` oder `sh` Datei `makerender.bat` / `makerender.sh` erstellt werden. Eine Beschreibung über das Vorgehen findet sich weiter unten.
 
 *Tipps*: 
@@ -79,10 +79,11 @@ Wenn Sie eine Terminübersicht einfügen möchten, stellen Sie in der `makerende
 
 **Erstellen einer privaten Vorstellung**
 
-Soll noch eine persönliche Vorstellung mit eingebaut werden, setzen Sie den Parameter `ShowPrivate` -- Zeile 27 -- in der Datei `makerender.R` auf TRUE und passen die Datei `Inhalte/private/private.R` mit Ihren Daten an: 
+Soll noch eine persönliche Vorstellung mit eingebaut werden, passen Sie zunächst die Datei `Inhalte/private/private.R` sowie in der Datei `Inhalte/private/private-Vorstellung.Rmd` die Abschnitte unter `[Akademische Ausbildung:]{.cstrong}` mit Ihren Daten an.
 
+1. `Inhalte/private/private.R` anpassen:
 
-```
+```{r, eval=FALSE}
 # ===========================================================================
 # private.R
 # =========
@@ -91,21 +92,71 @@ Soll noch eine persönliche Vorstellung mit eingebaut werden, setzen Sie den Par
 
 # DozentInnen Information
 DozInfo <- list(
-  PreTitel = "Dipl.-Math.",    # "Prof. Dr.", "Dr.", ""
-  PostTitel = "",              # "(MBA)", "(LL.B.)", "(M.Sc)"
-  Vorname = "Norman",          # "Karla Antonia Sybilla"
-  Nachname = "Markgraf" ,      # "Säuerreich-Weinenie"
-  Geschlecht = "m",            # "m" männlich, "w" weiblich und "d" drittes Geschlecht
-  Email = "nmarkgraf@hotmail.com", 
-  WebURL = "http://www.sefiroth.net",
+  PreTitel = "",                # "Prof. Dr.", "Dr.", ""
+  PostTitel = "",               # "(MBA), "(LL.B)", "(M.Sci)"
+  Vorname = "",                 # "Karla Antonia Sybilla"
+  Nachname = "" ,               # "Säuerreich-Weinenie"
+  Geschlecht = "",              # "m" männlich, "w" weiblich und "d" drittes Geschlecht
+  Email = "",                   # Karla.Säuerreich@fom.de
+  WebURL = "",                  # www.karlasaeuerreich.de
   Avatar = NULL,
   Telegram = "",
   WhatsApp = "",
-  Skype = ""
+  Skype = "",
+  ORCID = "",
+  privateVorstellung = TRUE     # Soll eine private Vorstellung angezeugt werden?
 )
 
 # ===========================================================================
 ```
+
+2. die Abschnitte unter `[Akademische Ausbildung:]{.cstrong}` in `Inhalte/private/private-Vorstellung.Rmd` anpassen:
+
+```{r, eval=FALSE}
+# ===========================================================================
+# private-Vorstellung.Rmd
+# =========
+#
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+### Kurzvorstellung
+
+::::::: {.columns} 
+::: {.column width="49%" .small} 
+
+`r paste(DozInfo$PreTitel, " ", DozInfo$Vorname, DozInfo$Nachname, " ", DozInfo$PostTitel)`
+
+
+- Kontakt: [`r paste(DozInfo$Email)`](<`r paste0("mailto:",DozInfo$Email)`>)
+- Homepage: [`r paste(DozInfo$WebURL)`](`r paste(DozInfo$WebURL)`)
+
+:::
+::: {.column width="49%" .footnotesize} 
+
+
+[Akademische Ausbildung:]{.cstrong}
+
+- hat studiert
+- und ggfs. auch promoviert
+- vielleicht sogar habiliert
+    
+[Beruflicher Werdegang:]{.cstrong}
+
+- xxxx bis xxx: Spannender Job 1
+- xxxx bis xxx: Spannender Job 2
+- Seit yyyy: Neue Herausforderung an der FOM
+
+[Forschungsinteressen:]{.cstrong}
+- General Abstract Nonsense 1
+- General Abstract Nonsense 2
+
+:::
+:::::::
+
+# ===========================================================================
+```
+
+## Unterlagen erstellen
 
 ### Unterlagen erstellen mit der Batch-Datei
 
@@ -148,43 +199,54 @@ Options:
                 Layout [FOM/eufom]
         -m MIDFIX, --midfix=MIDFIX
                 Wird zwischen dem Dateinamen und der Endung eingefügt
+        -p, --showprivate
+                Soll eine 'Private Vorstellung' eingebaut werden?
         --nostudi
                 Studierendenskript nicht erstellen
         --nolsg
                 Lösungsskript nicht erstellen
 ```
 
+#### Personalisierung 
 Soll lediglich Name, Semester und Studienort auf Titelfolie sowie in der Fußzeile eingefügt werden, können hier die Parameter `-l`, `-s`, `-o` bzw. `--lecturer`, `--semester`, `--studienort` verwendet werden.
 
 Wenn Sie also z.B. eine Dozierendenversion für *Wissenschaftlichen Methodik* (Angabe des Namens der entsprechenden `Rmd` Datei) erstellen wollen, mit personalisierter Angabe von Ihrem Namen, dem aktuellen Semester sowie Ort der Vorlesung, können Sie dies über folgenden Befehl in der Kommandozeile anfordern:
 
 ```
-makerender.bat -l "Mein Name" -s "SoSe 2023" -o "Essen" Wissenschaftliche-Methodik
+makerender.bat -o "Essen" -s "SoSe 2023" -l "Mein Titel. Mein Name" Wissenschaftliche-Methodik
 ```
 
 oder analog:
 
 ```
-makerender.bat --lecturer "Mein Name" --semester="SoSe 2023" -studienort="Essen" Wissenschaftliche-Methodik
+makerender.bat --studienort="Essen" --semester="SoSe 2023" --lecturer "Mein Titel. Mein Name" Wissenschaftliche-Methodik
 ```
 
-Beachten Sie:
+Soll eine **persönliche Vorstellungsfolie** eingefügt werden und die entsprechenden Dateien sind -- wie oben beschrieben -- angepasst, 
 
-- Wenn Sie eine private Vorstellung mit einbauen, können die Parameter `-l` oder `-a` hier nicht verwendet werden. In dem Fall geben Sie Ihren Namen in der `makerender.R` Datei im Parameter `Dozent` -- Zeile 45 -- an.
-  - Sie können hier auch die Parameter `Semester` -- Zeile 41 -- sowie `Studienort` -- Zeile 49 -- definieren.
-- Sollen die Studierendenversion und/ oder die Lösungsfolien nicht erzeugt werden, nutzen Sie noch zusätzlich die Parameter `--nostudi` und/ oder `--nolsg`.
+- Geben Sie entweder bei den Parametern im Terminal zusätzlich den Parameter `-p` oder `--showprivate` an 
+- oder setzen Sie den Parameter `ShowPrivate` -- **Zeile 27** -- in der Datei `makerender.R` auf TRUE 
+
+
+**Beachten Sie:**
+
+- Sie können Ihre Angaben zu den Parametern `studienort`, `semester` und `lecturer` auch in der `makerender.R` Datei in Zeile **Zeile 41** (`Semester`), **Zeile 45** (`Dozent`) **Zeile 49** (`Studienort`) definieren.
+- Wenn keine Studierendenversion und/ oder die Lösungsfolien separat erzeugt werden sollen, nutzen Sie noch zusätzlich die Parameter `--nostudi` und/ oder `--nolsg`.
+
 
 
 ### Unterlagen erstellen mit der makerender.R Datei
 
-Wie oben beschrieben kann ein **Vorlesungszeitplan** eingefügt werden, indem `showVorlesungsplan` in Zeile 34 auf TRUE gesetzt und die Datei `xxx-default.Rmd` im Ordner `Vorlesungstermine` mit den entsprechenden Inhalten angepasst wird. 
+Wie oben beschrieben kann ein **Vorlesungszeitplan** eingefügt werden, indem `showVorlesungsplan` in **Zeile 34** auf TRUE gesetzt und die Datei `xxx-default.Rmd` im Ordner `Vorlesungstermine` mit den entsprechenden Inhalten angepasst wird. 
 
-Zudem kann eine private Vorstellung eingebaut werden, wenn Zeile 27 `ShowPrivate` auf TRUE gesetzt wird und die Datei `Inhalte/private/private.R` mit den eigenen Daten abgeändert wird. 
+Zudem kann eine **private Vorstellung** eingebaut werden, wenn **Zeile 27** `ShowPrivate` auf TRUE gesetzt wird und die Datei `Inhalte/private/private.R` sowie `Inhalte/private/private-Vorstellung.Rmd` mit den eigenen Daten abgeändert wird. 
 
 Zur Anpassung der Titelfolie sowie Fußzeilen werden nun noch 
-- in Zeile 41 das aktuelle Semester, 
-- in Zeile 45 Ihr Name, und
-- in Zeile 49 der Studienort der Vorlesung
+
+- in **Zeile 41** das aktuelle Semester, 
+- in **Zeile 45** Ihr Name, und
+- in **Zeile 49** der Studienort der Vorlesung
+
 eingetragen
 
 Sind alle benötigten Personalisierungen und Anpassungen vorgenommen, wird die `makerender.R` Datei über den `Source` Button oder den Befehl `source("makerender.R")` gestartet. Es werden alle drei Ausgaben (Dozentenfassung, Studierendenfassung und Lösungsskript) erstellt.
@@ -192,15 +254,26 @@ Sind alle benötigten Personalisierungen und Anpassungen vorgenommen, wird die `
 
 ### Unterlagen erstellen mit der Rmd Datei
 
-Wenn die `Rmd` Datei genutzt wird, kann immer nur EINE Skriptversion erstellt werden (Dozierendenskript ODER Studierendenskript ODER Lösungsskript).
+Wenn die `Rmd` Datei genutzt wird, kann immer nur **eine** Skriptversion erstellt werden (Dozierendenskript **oder** Studierendenskript **oder** Lösungsskript).
 
 Parameter prüfen und ggf. anpassen:
-- In Zeile 35 den Parameter `privateVorstellung` auf TRUE setzen, falls eine private Vorstellungsfolie erstellt werden soll -- andernfalls auf FALSE setzen oder lassen -- und die eigenen Daten in die Datei `Inhalte/private/private.R` eingeben.
-- In Zeile 36 den Parameter `showVorlesungsplan` auf TRUE setzen, falls eine Folie mit der Terminübersicht und Themen der Veranstaltung eingefügt werden soll -- andernfalls auf FALSE setzen oder lassen -- und die entsprechenden Daten in der Datei `Vorlesungstermine/WM-default.Rmd` eintragen.
-- Zur Anpassung der Titelfolie sowie Fußzeilen wird in Zeile 47 der Aufruf `createPrivateYaml("Dozent*in", "Semester", "Studienort")` mit den entsprechenden Parametern `"Dozent*in" = Ihr Name`, `"Semester" = das aktuelle Semester, in dem die Vorlesung stattfindet, in der Form: SoSe xxxx bzw. WiSe xxxx` und `"Studienort" = Ort der Veranstaltung, z.B. FOM Essen`.
-- In Zeile 50 im Aufruf `makeSriptOfType()` tragen Sie nun noch ein, welche Skriptversion erstellt werden soll: `DozentenSkript`, `Studierendenskript` oder `LösungsSkript`.
+
+- In **Zeile 35** den Parameter `privateVorstellung` 
+  - auf TRUE setzen, falls eine *private Vorstellungsfolie* erstellt werden soll und die eigenen Daten 
+    - in die Datei `Inhalte/private/private.R` eingeben sowie 
+    - die Abschnitte unter `[Akademische Ausbildung:]{.cstrong}` in `Inhalte/private/private-Vorstellung.Rmd` anpassen.
+  - auf FALSE setzen oder lassen, wenn keine private Vorstellungsfolie integriert werden soll
+- In **Zeile 36** den Parameter `showVorlesungsplan` 
+  - auf TRUE setzen, falls eine Folie mit der *Terminübersicht und Themen der Veranstaltung* eingefügt werden soll und die entsprechenden Daten in der Datei `Vorlesungstermine/WM-default.Rmd` eintragen. 
+  - auf FALSE setzen oder lassen, falls keine Terminübersicht hinzugefügt werden soll.
+- Zur Anpassung der *Titelfolie* sowie *Fußzeilen* werden die Parameter im Aufruf `createPrivateYaml("Dozent*in", "Semester", "Studienort")` in **Zeile 47** entsprechend angepasst: 
+  - Ihr Name, 
+  - das aktuelle Semester, in dem die Vorlesung stattfindet (`SoSe xxx` oder `WiSe xxx`)
+  - Ort der Veranstaltung.
+- In **Zeile 50** im Aufruf `makeSriptOfType()` tragen Sie nun noch ein, welche Skriptversion Sie benötigen: `DozentenSkript`, `Studierendenskript` oder `LösungsSkript`.
 
 Sind alle Parameter wie gewünscht gesetzt, kann das Skript über den `Knit` Button abgeschickt werden. 
+
 
 
 
