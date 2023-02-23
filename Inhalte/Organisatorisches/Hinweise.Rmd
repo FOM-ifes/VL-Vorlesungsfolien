@@ -59,7 +59,7 @@ Die Folien bilden die *Leinwand* der Vorlesung: sie werden *interaktiv* erklärt
 
 ### Anleitung zum Unglücklichwerden {exclude=virtuell}
 
-- Ich besuche die Vorlesung nicht, ich gucke Videos.
+- Ich besuche die Vorlesung nicht, ich schaue Videos.
 - Kontinuierlich nacharbeiten? Quatsch, ich lerne eine Woche vor der Klausur intensiv.
 - Es reicht, wenn ich mit einem halben Ohr zuhöre -- ich spiele, chatte, surfe während der Vorlesung.^[vgl. [https://youtu.be/vJG698U2Mvo](https://youtu.be/vJG698U2Mvo)]
 - Mitschreiben? Ich mache, wenn überhaupt, ein Foto. Hier nicht erlaubt!

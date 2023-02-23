@@ -472,72 +472,72 @@ Gegeben die Wohnfläche: Ist dann der (marginale) Effekt des Kamins in einem lin
 :::
 
 
-<!-- ### Übung  `r nextExercise()`: Kausalanalyse {.exercise type=A-B answer=B} -->
+### Übung  `r nextExercise()`: Kausalanalyse {.exercise type=A-B answer=B}
 
-<!-- Angenommen es gelte folgendes Kausalmodell: -->
+Angenommen es gelte folgendes Kausalmodell:
 
-<!-- ```{r echo=FALSE, out.width = "40%", fig.align="center"} -->
-<!-- DAG_Immo -->
+```{r echo=FALSE, out.width = "40%", fig.align="center"}
+DAG_Immo
+```
+
+Welches Modell sollte zur Bestimmung des erwarteten Preisänderung durch Einbau eines Kamins verwendet werden?
+
+A.  `lm(Preis ~ Kamin, data = Houses)`
+B.  `lm(Preis ~ Kamin + Wohnflaeche, data = Houses)`
+
+
+
+::: {.notes}
+***B***: Der nicht-kausale Pfad Kamin $\leftarrow$ Fläche $\rightarrow$ Preis sollte durch Adjustierung geschlossen werden.
+:::
+
+
+<!-- ### Logistische Regression (I/II) -->
+
+<!-- Modellierung der Wahrscheinlichkeit, dass eine Immobilie eine Klimaanlage hat (`Klimaanlage=="Ja"`): -->
+
+<!-- ```{r} -->
+<!-- Houses <- Houses %>% -->
+<!--   mutate(Klimaanlage = relevel(as.factor(Klimaanlage), -->
+<!--                                ref="Nein")) -->
+
+<!-- ergglm <- glm(Klimaanlage ~ Heizung, data = Houses,  -->
+<!--               family = "binomial") -->
 <!-- ``` -->
 
-<!-- Welches Modell sollte zur Bestimmung des erwarteten Preisänderung durch Einbau eines Kamins verwendet werden? -->
 
-<!-- A.  `lm(Preis ~ Kamin, data = Houses)` -->
-<!-- B.  `lm(Preis ~ Kamin + Wohnflaeche, data = Houses)` -->
+<!-- ### Logistische Regression (II/II) {.shrink} -->
 
 
+<!-- ```{r} -->
+<!-- summary(ergglm) -->
+<!-- exp(coef(ergglm)) # Odds Ratio -->
+<!-- ``` -->
+
+
+<!-- ### Übung  `r nextExercise()`: Logistische Regression {.exercise type=A-B-C answer=A} -->
+
+<!-- Bei welcher Heizungsart ist in dem Modell die Wahrscheinlichkeit am höchsten, dass die Immobilie eine Klimaanlage besitzt? -->
+
+<!-- A.  Gas -->
+<!-- B.  Öl -->
+<!-- C.  Strom -->
 
 <!-- ::: {.notes} -->
-<!-- ***B***: Der nicht-kausale Pfad Kamin $\leftarrow$ Fläche $\rightarrow$ Preis sollte durch Adjustierung geschlossen werden. -->
+<!-- ***Gas***: `Heizung=="Gas"` ist hier die nicht angegebene Referenz. Die Odds Ratios für Öl und Strom sind $<1$, die geschätzten Koeffizienten $<0$, d.h., die Chance bzw. Wahrscheinlichkeit sinkt, wenn statt einer Gasheizung eine mit Öl bzw. Strom vorliegt. -->
 <!-- ::: -->
 
 
-### Logistische Regression (I/II)
+<!-- ### Übung  `r nextExercise()`: Modellwahl {.exercise type=yes-no answer=yes} -->
 
-Modellierung der Wahrscheinlichkeit, dass eine Immobilie eine Klimaanlage hat (`Klimaanlage=="Ja"`):
+<!-- Stimmt die Aussage: mit zusätzlichen, erklärenden Variablen $x$ wird die Modellanpassung für $y$ für die vorhandene Stichprobe nicht schlechter? -->
 
-```{r}
-Houses <- Houses %>%
-  mutate(Klimaanlage = relevel(as.factor(Klimaanlage),
-                               ref="Nein"))
+<!-- - Ja. -->
+<!-- - Nein. -->
 
-ergglm <- glm(Klimaanlage ~ Heizung, data = Houses, 
-              family = "binomial")
-```
-
-
-### Logistische Regression (II/II) {.shrink}
-
-
-```{r}
-summary(ergglm)
-exp(coef(ergglm)) # Odds Ratio
-```
-
-
-### Übung  `r nextExercise()`: Logistische Regression {.exercise type=A-B-C answer=A}
-
-Bei welcher Heizungsart ist in dem Modell die Wahrscheinlichkeit am höchsten, dass die Immobilie eine Klimaanlage besitzt?
-
-A.  Gas
-B.  Öl
-C.  Strom
-
-::: {.notes}
-***Gas***: `Heizung=="Gas"` ist hier die nicht angegebene Referenz. Die Odds Ratios für Öl und Strom sind $<1$, die geschätzten Koeffizienten $<0$, d.h., die Chance bzw. Wahrscheinlichkeit sinkt, wenn statt einer Gasheizung eine mit Öl bzw. Strom vorliegt.
-:::
-
-
-### Übung  `r nextExercise()`: Modellwahl {.exercise type=yes-no answer=yes}
-
-Stimmt die Aussage: mit zusätzlichen, erklärenden Variablen $x$ wird die Modellanpassung für $y$ für die vorhandene Stichprobe nicht schlechter?
-
-- Ja.
-- Nein.
-
-::: {.notes}
-***Ja***: Die Anpassung wird besser (z.B. $R^2$), allerdings steigt die Gefahr der Überanpassung. Die Vorhersagegüte wird nicht immer besser.
-:::
+<!-- ::: {.notes} -->
+<!-- ***Ja***: Die Anpassung wird besser (z.B. $R^2$), allerdings steigt die Gefahr der Überanpassung. Die Vorhersagegüte wird nicht immer besser. -->
+<!-- ::: -->
 
 
 

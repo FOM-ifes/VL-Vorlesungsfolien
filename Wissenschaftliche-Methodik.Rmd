@@ -3,7 +3,7 @@ title: "Wissenschaftliche Methodik"
 tag:
     - master
     - MasterNeu
-    # - sesmill
+    - sesmill
     # - exclude-crazy-norman
     - shiny
 ---
@@ -30,11 +30,12 @@ if (!exists("prelude.rendertools")) {
 }
 
 assign("abschluss", FALSE, envir = .GlobalEnv)
+assign("WDH", "", envir = .GlobalEnv)
 
 my.options$set(
   privateVorstellung = FALSE,   # Zeige die Private Vorstellung
   showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WM-default.Rmd anpassen
-  showuseR  = TRUE,            # Folien mit useR-Umfragen anzeigen oder ausschließen
+  showuseR  = FALSE,            # Folien mit useR-Umfragen anzeigen oder ausschließen
   Corona    = FALSE,
   MasterNeu = TRUE             # Überarbeitung Master mg, kl
 )
@@ -52,8 +53,8 @@ makeSkriptOfType("DozentenSkript")
 #makeSkriptOfType("LösungsSkript")
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggsci)
 library(ggplot2)
-library(viridis)
 # ggformula, also ggplot2 muss noch etwas konfiguriert werden.
 theme.fom <- theme_classic(22*1.02)
 theme.fom <- theme.fom

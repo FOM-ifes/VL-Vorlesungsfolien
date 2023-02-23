@@ -9,7 +9,7 @@ title: "Wiederholung"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 source("prelude.R")
 initPrelude(
-    "WMQD-",        # Prefix für Terminlisten etc.
+    "WM-",        # Prefix für Terminlisten etc.
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
 
@@ -32,10 +32,10 @@ initPrelude(
 assign("abschluss", FALSE, envir = .GlobalEnv)
 
 my.options$set(
-  privateVorstellung = FALSE,   # Zeige die Private Vorstellung
+  privateVorstellung = FALSE,  # Zeige die Private Vorstellung
   showVorlesungsplan = FALSE,  # Zeige den Vorlesungsplan
   showuseR = FALSE,
-  Corona = TRUE
+  Corona = FALSE
 )
 
 assign("UseCache", TRUE)  # immer mal wieder auf FALSE setzen
@@ -45,7 +45,7 @@ if (!exists("prelude.rendertools")) {
     loadPrelude("prelude_rendertools.R")
 }
 
-createPrivateYaml("FOM", "SoSe 2023", "WMQD")
+createPrivateYaml("FOM", "SoSe 2023", "WM")
 
 options(scipen = 10, digits = 2) # scipen = 100 ist zu viel, dann werden die p-Werte mit x Nachkommastellen angezeigt
 
@@ -56,7 +56,7 @@ makeDozi()        # Erzeuge Dozentenskript
 ```
 
 
-```{r child = './Inhalte/Wiederholung/Wiederholungs-WMQD.Rmd'}
+```{r child = './Inhalte/Wiederholung/Wiederholungs-WM.Rmd'}
 ```
 
 ```{r finalize, include=FALSE}

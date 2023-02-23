@@ -42,10 +42,10 @@ Die Studierenden können nach erfolgreichem Abschluss des Moduls:
 
 ### Prüfungsleistung
 
-- Hausarbeit (ca. 1500 Wörter)
+- Seminararbeit (ca. 1500 Wörter)
 - Klausur 60 Minuten
 
-Hausarbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
+Seminararbeit und Klausur gehen jeweils zu $50\,\%$ in die Modulnote ein, beide Prüfungsleistungen müssen mit mindestens $4{,}0$ bewertet werden. 
 
 Workload:
 

@@ -82,7 +82,7 @@ Zwei mögliche Ziele dabei:^[Shmueli, G. (2015) To Explain or to Predict? Statis
 
 - Modellierung des Risikos einer Anlage (Betafaktor).
 
-- Vorhersage der Verspätung von Flügen (s. Datensatz [nycflights13](https://CRAN.R-project.org/package=nycflights13)).
+- Vorhersage der Verspätung von Flügen (s. Datentabelle [nycflights13](https://CRAN.R-project.org/package=nycflights13)).
 
 - Vorhersage der Persönlichkeit anhand von Social-Media-Daten (s. [dieses Paper](http://www.pnas.org/content/112/4/1036.full)).
 
@@ -245,8 +245,8 @@ Welches Skalenniveau hat die Variable Trinkgeldhöhe?
 
 A.  Kategorial - nominal.
 B.  Kategorial - ordinal.
-C.  Numerisch - Intervallskala.
-D.  Numerisch - Verhältnisskala.
+C.  Metrisch - Intervallskala.
+D.  Metrisch - Verhältnisskala.
 
 ::: {.notes}
 ***D***: Es gibt eine Ordnung, die Abstände sind vergleichbar und es gibt einen absoluten Nullpunkt.
@@ -301,7 +301,7 @@ Schätze: $\widehat{{\text{tip}}}_i=\hat{\beta}_0 + \hat{\beta}_1 \cdot \text{to
 # Speichere Ergebnis der Regression lm() in "erglm1"
 erglm1 <- lm(tip ~ # abhängige Variable 
              total_bill, # unabhängige Variable(n)
-             data = tips) # Datensatz
+             data = tips) # Datentabelle
 
 erglm1
 ```
@@ -333,18 +333,6 @@ best_fit_plot
 ```
 
 
-### Modellzusammenfassung
-
-::: {.footnotesize}
-
-```{r summary-erglm1}
-# Zeige Zusammenfassung von "erglm1"
-summary(erglm1) 
-```
-
-:::
-
-
 ### Übung `r nextExercise()`: Regression: Trinkgeld auf Rechnungshöhe {.exercise type=A-B-C-D answer=D}
 
 Welche Aussage stimmt für Beobachtungen in dem geschätzten linearen Modell dieser Stichprobe?
@@ -371,7 +359,7 @@ $$\widehat{\text{tip}} = `r sprintf("%.4f", erglm1$coefficients[1])` + `r sprint
 Punktprognose für $x_0=10$ mit Hilfe der Funktion `predict():`
 
 ```{r}
-# Datensatz mit neuer Beobachtung
+# Datentabelle mit neuer Beobachtung
 x0 <- data.frame(total_bill = 10)
 
 # Prognose
@@ -399,7 +387,7 @@ Stimmt die Aussage: Bei einer Rechnungshöhe von $10\,\$$ wird das Trinkgeld mit
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_05-2019.jpg", "cartoon0519.jpg", pathToImages)
 ```
-"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Überschrift M. Dunlap]
+"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Bildunterschrift M. Dunlap]
 
 
 ### Übung `r nextExercise()`: Bestimmtheitsmaß  {.exercise type=A-B-C-D answer=D}
@@ -617,7 +605,7 @@ Setze Zufallszahlengenerator
 Bootvtlg soll sein:
   Wiederhole 10000 Mal:
     - Berechne ein lineares Modell,
-    - der Datensatz tips soll dabei jedes Mal resampelt werden.
+    - die Datentabelle tips soll dabei jedes Mal resampelt werden.
 ```
 
 ```{r do-resample-lm-many-times-no-eval, eval = FALSE}
@@ -1253,12 +1241,25 @@ contrasts(as.factor(tips$day)) %>% knitr::kable()
 ::: {.smalll}
 ```{r tips-erglm2-summary, echo=TRUE, eval=FALSE}
 erglm2 <- lm(tip ~ smoker, data = tips)
-summary(erglm2)
+coef(erglm2)
 ```
 :::
 
 ::: {.footnotesize}
 ```{r ref.label="tips-erglm2-summary", eval = TRUE, echo = FALSE}
+```
+:::
+
+::: {.small}
+```{r, eval=FALSE}
+rsquared(erglm2)
+```
+:::
+
+::: {.footnotesize}
+```{r erglm2_4_r2, echo=FALSE}
+erglm2 <- lm(tip ~ smoker, data = tips)
+rsquared(erglm2)
 ```
 :::
 
@@ -1537,7 +1538,7 @@ Modelliere die Trinkgeldhöhe als lineare Funktion von Rechnungshöhe und Rauche
 ```{r tips-erglm3-summary, echo=TRUE, eval=FALSE}
 erglm3 <- lm(tip ~ # abbhängige Variable 
                total_bill + smoker, # unabhängige Variablen
-             data = tips) # Datensatz
+             data = tips) # Datentabelle
 summary(erglm3)
 ```
 :::
@@ -1667,7 +1668,7 @@ Die $F$-Statistik (`F-statistic`) setzt die modellierte Variation ins Verhältni
 
 ```{r, echo=FALSE,  out.width = "50%", fig.align="center"}
 set.seed(1896)
-# Anzahl Beobachtungen im Datensatz
+# Anzahl Beobachtungen in der Datentabelle
 size.s <- 10
 # Anzahl Simulationen
 size.sim <- 5
@@ -2033,7 +2034,7 @@ Im Vergleich zu dem Modell ohne Interaktion sind die Koeffizienten für `smokerY
 Formeln bieten innerhalb der Modellierung in R viele Möglichkeiten:^[Die resultierenden Funktionen müssen nicht linear in $x$ sein.]
 
 - `+`: Hinzunahme von Variablen
-- `.`: Alle unabhängigen Variablen des Datensatzes im Modell
+- `.`: Alle unabhängigen Variablen der Datentabelle im Modell
 - `-`: Herausnahme von Variablen (`-1` für Achsenabschnitt)
 - `:`: Wechselwirkung von Variablen
 - `*`: Hinzunahme von Variablen und deren Wechselwirkung
@@ -2159,7 +2160,7 @@ Siehe auch: Data Science – Baba Brinkman Music Video: [https://youtu.be/uHGlCi
 
 ### Datenbasierte Entscheidungen
 
-$\hat{f}(x)$ kann zur Automatisierung von Entscheidungsprozessen genutzt werden. Bei der Anwendung von solchen Algorithmen sollten Regeln beachtet werden, siehe z.B. [Algo.Rules](https://algorules.org/):
+$\hat{f}(x)$, z.B. hier die lineare Regression, kann zur Automatisierung von Entscheidungsprozessen genutzt werden. Bei der Anwendung von solchen Algorithmen sollten Regeln beachtet werden, siehe z.B. [Algo.Rules](https://algorules.org/):
 
 1. Kompetenz aufbauen
 2. Verantwortung definieren
@@ -2200,7 +2201,7 @@ Trifft dies auf eine lineare Modellierung zu?
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_11-2019.jpg", "cartoon1119.jpg", pathToImages)
 ```
-"Nutze die Daten, aber verliere nicht die Kontrolle!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2019/results) &copy; J.B. Landers, Überschrift K. Lübke]
+"Nutze die Daten, aber verliere nicht die Kontrolle!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2019/results) &copy; J.B. Landers, Bildunterschrift K. Lübke]
 <!-- 
 ### Offene Übung `r nextExercise()`: Rechnungshöhe {.exercise type=essay exclude=bda}
 

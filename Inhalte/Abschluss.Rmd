@@ -31,7 +31,7 @@ Viel Erfolg!
 Song [https://www.causeweb.org](https://www.causeweb.org): [Lawrence Mark Lesser &copy; Doin' Statistics](https://www.causeweb.org/cause/resources/fun/songs/doin-statistics)
 
 
-```{r echo=FALSE, out.width = "75%", fig.align="center"}
+```{r echo=FALSE, out.width = "70%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "Zusammenhang-Lernen-Noten.pdf"), error=FALSE)
 ```
 

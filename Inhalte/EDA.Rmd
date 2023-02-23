@@ -14,7 +14,6 @@ pathToImages <- getPathToImages()
 
 library(mosaic)
 library(gridExtra)
-library(viridis)
 library(latex2exp)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
@@ -54,7 +53,7 @@ Die Studierenden ...
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
 ```
-"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Bildunterschrift K. Lübke]
 
 
 ### Warum R? {include-only=MasterNeu}
@@ -632,8 +631,8 @@ Dabei entspricht die Höhe und Breite der Rechtecke der jeweiligen relativen Hä
 
 ```{r EDA_Titanic, echo=FALSE, out.width = "65%", fig.align="center", cache=FALSE}
 data("Titanic")
-mosaicplot(~ Class+Survived,  
-           color = viridis(2, alpha = 0.6), 
+mosaicplot(~ Class + Survived,  
+           color = pal_npg(alpha = 0.8)(2), 
            main = "Überleben auf der Titanic", 
            cex = 1.5,
            data = Titanic)
@@ -663,7 +662,7 @@ So können Sie einen solchen Plot erzeugen.^[Hinweis: Bei `mosaicplot()` sollten
 mosaicplot(day ~ smoker, data = tips)
 ```
 ```{r evaL=TRUE, echo=FALSE,fig.align='center', out.width="60%"}
-mosaicplot(day ~ smoker, data = tips, color = viridis(2, alpha = 0.6), cex = 1.5)
+mosaicplot(day ~ smoker, data = tips, color = pal_npg(alpha = 0.8)(2), cex = 1.5)
 ```
 
 
@@ -1141,23 +1140,23 @@ xls <- 1 - rchisq(1000, 2)
 xrs <- rchisq(1000, 2)
 
 hls <- gf_histogram( ~ xls, 
-                     xlab = NULL, 
+                     xlab  = NULL, 
                      title = "A", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill  = pal_npg()(1), 
                      color = "darkgrey") %>% 
          gf_theme(axis.text.x = element_blank())
 
 hsym <- gf_histogram( ~ xsym, 
-                      xlab = NULL, 
+                      xlab  = NULL, 
                       title = "B", 
-                      fill = viridis(1, alpha = 0.6), 
+                      fill  = pal_npg()(1), 
                       color = "darkgrey") %>% 
           gf_theme(axis.text.x = element_blank())
 
 hrs <- gf_histogram( ~ xrs, 
-                     xlab = NULL, 
+                     xlab  = NULL, 
                      title = "C", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill  = pal_npg()(1), 
                      color = "darkgrey") %>% 
          gf_theme(axis.text.x = element_blank())
 
@@ -1192,11 +1191,11 @@ Schwerpunkt der Beobachtungen besser als der arithmetische Mittelwert (rot).
 hls <- gf_histogram( ~ xls, 
                      xlab = NULL, 
                      title = "A", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill = pal_npg()(1), 
                      color = "darkgrey") %>% 
       gf_theme(axis.text.x = element_blank()) %>%
       gf_vline(xintercept = ~median(xls), 
-               color = viridis(1, alpha = 0.6), 
+               color = pal_npg()(1), 
                linetype = "dashed") %>%
       gf_vline(xintercept = ~mean(xls), 
                color = "red") 
@@ -1204,11 +1203,11 @@ hls <- gf_histogram( ~ xls,
 hsym <- gf_histogram( ~ xsym, 
                       xlab = NULL, 
                       title = "B", 
-                      fill = viridis(1, alpha = 0.6), 
+                      fill = pal_npg()(1), 
                       color = "darkgrey") %>% 
         gf_theme(axis.text.x = element_blank()) %>%
         gf_vline(xintercept = ~median(xsym), 
-                 color = viridis(1, alpha = 0.6), 
+                 color = pal_npg()(1), 
                  linetype = "dashed") %>%
         gf_vline(xintercept = ~mean(xsym), 
                  color = "red") 
@@ -1216,11 +1215,11 @@ hsym <- gf_histogram( ~ xsym,
 hrs <- gf_histogram( ~ xrs, 
                      xlab = NULL, 
                      title = "C", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill = pal_npg()(1), 
                      color = "darkgrey") %>%
        gf_theme(axis.text.x = element_blank()) %>%
        gf_vline(xintercept = ~median(xrs), 
-                color = viridis(1, alpha = 0.6), 
+                color = pal_npg()(1), 
                 linetype = "dashed") %>%
        gf_vline(xintercept = ~mean(xrs), 
                 color = "red") 
@@ -1398,7 +1397,7 @@ mwplot <- ggplot(
 mwplot
 ```
 
-In welcher Situation beschreibt der arithmetische Mittelwert (vertikale Linie) die Beobachtungen (Punkte) *besser*?
+In welcher Situation beschreibt der arithmetische Mittelwert (vertikale Linie) als Modell die Beobachtungen (Punkte) *besser*?
 
 
 A.  Situation A.
@@ -1504,14 +1503,14 @@ d %>%
                 ymax = note2,
                 xmin = id,
                 xmax = id+delta_abs),
-            fill = viridis(1, alpha = 0.6),
+            fill = pal_npg()(1),
             alpha = .5) +
   geom_text(aes(label=round(delta_sq,3)),
             hjust = "left", 
             nudge_x = 0.05,
             vjust = ifelse(d$pos == "positiv", "top", "bottom"),
             nudge_y = ifelse(d$pos == "positiv", -0.05, 0.05),
-            color = viridis(1, alpha=0.8),
+            color = pal_npg()(1),
             size = 6) +
   geom_point(size = 5) +
     labs(linetype = "Richtung der Abweichung",
@@ -1552,7 +1551,7 @@ kaufdaten <- data.frame(Zeitpunkte = c(cumsum(gabi), cumsum(klaus)),
 gf_point(Personen ~ Zeitpunkte, 
          data = kaufdaten, 
          size = 3, 
-         color = viridis(1, alpha = 0.6))
+         color = pal_npg()(1))
 
 rm(gabi)
 rm(klaus)
@@ -1617,23 +1616,23 @@ xs2 <- rnorm(1000, sd = 2)
 xs3 <- runif(1000, -6, 6)
 
 hs1 <- gf_histogram( ~ xs1, 
-                     xlab = NULL, 
+                     xlab  = NULL, 
                      title = "A", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill  = pal_npg()(1), 
                      color = "darkgrey") %>% 
        gf_lims(x=c(-6,6))
 
 hs2 <- gf_histogram( ~ xs2, 
-                     xlab = NULL, 
+                     xlab  = NULL, 
                      title = "B", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill  = pal_npg()(1), 
                      color = "darkgrey") %>% 
        gf_lims(x=c(-6,6))
 
 hs3 <- gf_histogram( ~ xs3, 
-                     xlab = NULL, 
+                     xlab  = NULL, 
                      title = "C", 
-                     fill = viridis(1, alpha = 0.6), 
+                     fill  = pal_npg()(1), 
                      color = "darkgrey") %>% 
        gf_lims(x=c(-6,6)) +
        scale_y_continuous(breaks=c(20, 40), labels = c("  20", "  40"))
@@ -2083,7 +2082,7 @@ p2 <- ggplot(tips2) +
        x = "",
        y = "",
        caption = "Relativ wenig Residualstreuung") +
-  scale_color_viridis_d(alpha = 0.6) +
+  scale_color_npg() +
   geom_label(data = tips_sum,
              aes(y = total_bill),
              x = 1, label = paste0("size: ", tips_sum$size), hjust = 0) 
@@ -2671,7 +2670,7 @@ knitr::include_graphics(file.path(pathToImages, "EDAwayto.jpg"), error = FALSE)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_08-2016.jpg", "cartoon0816.jpg", pathToImages)
 ```
-"Ich weiß, dass Datenvisualisierung ein heißes Thema ist, aber gehst Du hier nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2016/results) &copy; J.B. Landers, Überschrift B. Osyk]
+"Ich weiß, dass Datenvisualisierung ein heißes Thema ist, aber gehst Du hier nicht ein wenig zu weit?"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/august/2016/results) &copy; J.B. Landers, Bildunterschrift B. Osyk]
 
 <!-- -->
 

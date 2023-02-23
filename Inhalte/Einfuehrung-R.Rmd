@@ -23,13 +23,11 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 
 ### Lernziele {exclude-only=NOlernziele}
 
+Die Studierenden ...
 
-- Die Studierenden können Gründe für den Einsatz von R nennen.
-- Die Studierenden können die Unterschiede zwischen R, RStudio und mosaic erläutern.
-- Die Studierenden können R in Grundzügen anwenden (wie Datentabellen laden und einfache Befehle eingeben).
-
-
-
+- können Gründe für den Einsatz von R nennen.
+- können die Unterschiede zwischen R, RStudio und mosaic erläutern.
+- können R in Grundzügen anwenden (wie Datentabellen laden und einfache Befehle eingeben).
 
 
 ### Cartoon: Computereinsatz in der Statistik
@@ -38,7 +36,7 @@ tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_05-2018.jpg", "cartoon0518.jpg", pathToImages)
 ```
-"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Überschrift K. Lübke]
+"Auch wenn die Zeit für das 'Einsetzen von Zahlen in Formeln' und das 'Abbildungen zeichnen per Hand` gekommen ist: die Ideen und Konzepte leben weiter -- in unseren Computerprogrammen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2018/results) &copy; J.B. Landers, Bildunterschrift K. Lübke]
 
 
 ### Warum R?
@@ -315,8 +313,13 @@ Probieren Sie es aus: `color = ~ mein.z`. Vemutung: Die *Wellen* liegen an den W
 
 ### Verlauf der Geburten je Wochentag
 
-```{r , fig.align="center", out.width="70%"}
+```{r , fig.align="center", out.width="70%", eval=FALSE}
 gf_point(births ~ date, color = ~ wday, data = Births78)
+```
+
+```{r , fig.align="center", out.width="70%", echo=FALSE}
+gf_point(births ~ date, color = ~ wday, data = Births78) +
+  scale_color_npg()
 ```
 
 

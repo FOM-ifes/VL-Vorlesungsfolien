@@ -472,24 +472,24 @@ Gegeben die Wohnfläche: Ist dann der (marginale) Effekt des Kamins in einem lin
 ***Nein***: Der p-Wert (`Pr(>|t|)`) für $H_0: \beta_{\text{Kamin}}=0$ ist mit $`r round(coef(summary(erglm))[3,4],4)`$ größer als $\alpha=5\%$, $H_0$ wird nicht verworfen. Der Unterschied, gegeben die Wohnfläche, liegt auch nur noch bei $`r round(coef(erglm)[3],2)`$ (statt $`r meandiff_est`$ ohne Berücksichtigung der Wohnfläche).
 :::
 
-### Übung  `r nextExercise()`: Kausalanalyse {.exercise type=A-B answer=B}
+<!-- ### Übung  `r nextExercise()`: Kausalanalyse {.exercise type=A-B answer=B} -->
 
-Angenommen es gelte folgendes Kausalmodell:
+<!-- Angenommen es gelte folgendes Kausalmodell: -->
 
-```{r echo=FALSE, out.width = "40%", fig.align="center"}
-DAG_Immo
-```
+<!-- ```{r echo=FALSE, out.width = "40%", fig.align="center"} -->
+<!-- DAG_Immo -->
+<!-- ``` -->
 
-Welches Modell sollte zur Bestimmung des erwarteten Preisänderung durch Einbau eines Kamins verwendet werden?
+<!-- Welches Modell sollte zur Bestimmung des erwarteten Preisänderung durch Einbau eines Kamins verwendet werden? -->
 
-A.  `lm(Preis ~ Kamin, data = Houses)`
-B.  `lm(Preis ~ Kamin + Wohnflaeche, data = Houses)`
+<!-- A.  `lm(Preis ~ Kamin, data = Houses)` -->
+<!-- B.  `lm(Preis ~ Kamin + Wohnflaeche, data = Houses)` -->
 
 
 
-::: {.notes}
-***B***: Der nicht-kausale Pfad Kamin $\leftarrow$ Fläche $\rightarrow$ Preis sollte durch Adjustierung geschlossen werden.
-:::
+<!-- ::: {.notes} -->
+<!-- ***B***: Der nicht-kausale Pfad Kamin $\leftarrow$ Fläche $\rightarrow$ Preis sollte durch Adjustierung geschlossen werden. -->
+<!-- ::: -->
 
 <!-- ### Übung  `r nextExercise()`: Zeitreihenanalyse {.exercise type=essay} -->
 

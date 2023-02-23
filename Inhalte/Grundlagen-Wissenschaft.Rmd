@@ -21,9 +21,11 @@ library(mosaic)
 
 Nach diesem Kapitel sollen die Studierenden folgende Lernziele erreicht haben:
 
-- Die Studierenden können die vorgestellten Grundkonzepte wissenschaftlichen Denkens erläutern.
-- Die Studierenden können zentrale Begriffe der Wissenschaftstheorie darlegen.
-- Die Studierenden sind fähig, eigenständig Beispiele für zentrale Begriffe (wie Hypothesen und zu den Schlusstechniken) zu generieren.
+Die Studierenden ...
+
+- können die vorgestellten Grundkonzepte wissenschaftlichen Denkens erläutern.
+- können zentrale Begriffe der Wissenschaftstheorie darlegen.
+- sind fähig, eigenständig Beispiele für zentrale Begriffe (wie Hypothesen und zu den Schlusstechniken) zu generieren.
 
 
 ### Übung `r nextExercise()`: Ihr Erinnerungsvermögen {.exercise type=A-B-C}
@@ -103,7 +105,7 @@ gf_histogram( ~ diffmean, data = Nullvtlg, center=0, binwidth = 0.8571428, fill=
   gf_vline(xintercept = ~emp_effect) %>%
     gf_labs(x="Differenz Mittelwert erinnerte Wörter", y="Anzahl Simulationen",
             title = "Im Modell vorhergesagte Differenzen - ", subtitle = "wenn es keinen Unterschied gibt") +
-  scale_fill_viridis_d(alpha = 0.6) +
+  scale_color_npg() +
   annotate(geom = "label", x =  emp_effect,
            y = 2000, label = "empirischer\nWert")
 ```
@@ -185,7 +187,7 @@ knitr::include_graphics(file.path(pathToImages, "Sinn3.png"), error = FALSE)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_03-2019.jpg", "cartoon0319.jpg", pathToImages)
 ```
-"Viele Generationen von Data Science"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2019/results) &copy; J.B. Landers, Überschrift L. Poisson ]
+"Viele Generationen von Data Science"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2019/results) &copy; J.B. Landers, Bildunterschrift L. Poisson ]
 
 
 ### Realität

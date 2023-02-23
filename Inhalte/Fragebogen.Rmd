@@ -758,6 +758,7 @@ Auf einer 11-stufigen Ratingskale von 0 (äußerst unzufrieden)  bis 10 (äußer
 
 ### Rating-Skalen – Darstellung
 
+:::{.small}
 **Anzahl der Antwortkategorien**  
 Die Anzahl der Antwortkategorien: wichtig für das Verständnis der Bewertungsdimension, orientiert sich auch an Abstraktionsfähigkeit der Befragten.  
 - Legt den Differenzierungsgrad der Ratingskala nach Range-Frequency Modell fest.  
@@ -765,19 +766,16 @@ Die Anzahl der Antwortkategorien: wichtig für das Verständnis der Bewertungsdi
 - Bei zu vielen Antwortkategorien >7 ist die Bedeutung der einzelnen Kategorie weniger klar   somit erhöht sich die Schwierigkeit der Beantwortung.  
 - Bei zu wenigen Antwortkategorien <5 differenzieren die Ratingskalen unzureichend.  
 
-
 **Orientierung der Skalen**  
 - steigend von links nach rechts! Diese Ordnung ist intuitiv.    
 - ggf. inverse Items erzeugen und zur Analyse die Werte umdrehen  
 - Orientierung immer in die gleiche Richtung  
 
-
-
-**Benennunge der Kategorien**  
+**Benennung der Kategorien**  
 - verbale Aussagen (stimme voll und  ganz zu…)  
 - Nur die Extremwerte verbalisieren – restliche Skale Zahlen  
 - Bildchen/ Symbole^[Menold, N., Bogner, K. (2015). Gestaltung von Ratingskalen in Fragebögen. Mannheim, GESIS – Leibniz-Institut für Sozialwissenschaften (SDM Survey Guidelines). DOI: 10.15465/sdm-sg_015 ]
-  
+:::
 
 ### Rating-Skalen – Vollverbalisierung I / II
 
@@ -946,16 +944,14 @@ Befragte gehen davon aus, dass überall das Gleiche gefordert und geschrieben is
 
 ### Beispiele Ratingskalen 
 
-
-
-
-
-```{r echo=FALSE, out.width = "100%", fig.align="center"}
+```{r echo=FALSE, out.width = "90%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "likert_arten.png"), error=FALSE)
 ```    
-Döring N. und Bortz J. (2016)^[Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. Seite 246 ]
 
 
+\small Döring N., Bortz J.(2016). Forschungsmethoden und Evaluation, 5. Auflage, Springer. Seite 246
+
+\normalsize
 
 
 ### Wie beurteilen Sie diese Fragen?
@@ -965,10 +961,7 @@ knitr::include_graphics(file.path(pathToImages, "Fragen.png"), error=FALSE)
 ```
 
 
-
 ### Abfrage von Intensitäten und Häufigkeiten
-
-
 
 ```{r echo=FALSE, out.width = "80%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "likert_intens_haeufigk.png"), error=FALSE)
@@ -1104,7 +1097,7 @@ Stellen Sie danach kurz Ihre Punkte vor und diskutieren Sie diese im Plenum.
 - bei Übertragung der Daten von Papierfragebögen ist die Eingabe durch eine andere Person zu überprüfen (4-Augen-Prinzip) - falls zu viele Fehler entdeckt werden, ist die Eingabe zu wiederholen.  
 
 
-- Sicherung der Daten!! weitere Arbeiten mit dem Datensatz erfolgen auf der Kopie, das Original wird nicht mehr verwendet!
+- Sicherung der Daten!! weitere Arbeiten mit der Datentabelle erfolgen auf der Kopie, das Original wird nicht mehr verwendet!
 - Datenaufbereitung, NA-Werte, Ausreißer, unplausible Werte
 
 ### Beispiel Fragebogen und Codebuch

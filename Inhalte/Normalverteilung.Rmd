@@ -67,10 +67,12 @@ $$F(x) = \int_{-\infty}^x f(u)\, du= \int_{-\infty}^x \frac{1}{\sqrt{2\pi\sigma^
 [$\mu=0$, $\sigma=1$, $X \sim N(\mu, \sigma^2)$, $\Phi(x)=F(x)$]{.scriptsize}
 
 ```{r NormDiagramm, echo=FALSE, fig.align="center", warning=FALSE}
-p1 <- gf_dist("norm", mean = 0, sd=1) %>% 
-  gf_labs(title = "Dichtefunktion", x="x", y="f(x)=F'(x)")
-p2 <- gf_dist("norm", mean = 0, sd=1, kind = "cdf") %>% 
-  gf_labs(title = "Verteilungsfunktion", x="x", y=expression(paste("F(x)=P(",X<=x,")")))
+p1 <- gf_dist("norm", mean = 0, sd = 1) %>% 
+  gf_labs(title = "Dichtefunktion", x = "x", y  ="f(x) = F'(x)") +
+  scale_fill_npg()
+p2 <- gf_dist("norm", mean = 0, sd = 1, kind = "cdf") %>% 
+  gf_labs(title = "Verteilungsfunktion", x="x", y = expression(paste("F(x) = P(",X <= x,")"))) +
+  scale_fill_npg()
 gridExtra::grid.arrange(p1,p2, nrow=2 )
 rm(p1)
 rm(p2)
@@ -101,8 +103,9 @@ $\sigma=\sqrt{Var(X)}=15$ (Standardabweichung Population)^[In der Praxis sind Kl
 :::
 
 ```{r, echo=FALSE, fig.align="center", fig.width = 10.5, fig.asp = 0.67, out.width="10.5cm"}
-p1 <- gf_dist("norm", mean = 55, sd=15) %>% gf_labs(title = "Dichtefunktion", x="Punkte", y="f(x)=F'(x)")
-p2 <- gf_dist("norm", mean = 55, sd=15, kind = "cdf") %>% gf_labs(title = "Verteilungsfunktion", x="Punkte", y=expression(paste("F(x)=P(",X<=x,")")))
+p1 <- gf_dist("norm", mean = 55, sd=15) %>% gf_labs(title = "Dichtefunktion", x = "Punkte", y="f(x) = F'(x)")
+p2 <- gf_dist("norm", mean = 55, sd=15, kind = "cdf") %>% gf_labs(title = "Verteilungsfunktion", x = "Punkte", y = expression(paste("F(x)=P(",X<=x,")"))) +
+  scale_fill_npg()
 gridExtra::grid.arrange(p1,p2, nrow=2 )
 rm(p1)
 rm(p2)
@@ -112,18 +115,21 @@ rm(p2)
 ### Parameter Normalverteilung
 
 ```{r, echo=FALSE, fig.align="center", fig.width = 12, fig.asp = 0.67, out.width="12cm", warning=FALSE}
-p1 <- gf_dist("norm", mean = 10, sd=5, xlim = c(-10, 30)) %>% 
+p1 <- gf_dist("norm", mean = 10, sd = 5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=10"," und ",sigma,"=5")),
-          x="x", y="f(x)=F'(x)") %>%
-  gf_lims(x=c(-10,30), y=c(0,0.175))
-p2 <- gf_dist("norm", mean = 15, sd=5, xlim = c(-10, 30)) %>% 
+          x = "x", y = "f(x) = F'(x)") %>%
+  gf_lims(x = c(-10,30), y = c(0,0.175)) +
+  scale_fill_npg()
+p2 <- gf_dist("norm", mean = 15, sd = 5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=15"," und ",sigma,"=5")),
-          x="x", y="f(x)=F'(x)") %>%
-  gf_lims(x=c(-10,30), y=c(0,0.175))
-p3 <- gf_dist("norm", mean = 15, sd=2.5, xlim = c(-10, 30)) %>% 
+          x = "x", y = "f(x) = F'(x)") %>%
+  gf_lims(x = c(-10,30), y = c(0,0.175)) +
+  scale_fill_npg()
+p3 <- gf_dist("norm", mean = 15, sd = 2.5, xlim = c(-10, 30)) %>% 
   gf_labs(title =expression(paste("Dichtefunktion mit ",mu,"=15"," und ",sigma,"=2.5")),
-          x="x", y="f(x)=F'(x)") %>%
-  gf_lims(x=c(-10,30), y=c(0,0.175))
+          x = "x", y="f(x) = F'(x)") %>%
+  gf_lims(x = c(-10,30), y = c(0,0.175)) +
+  scale_fill_npg()
 
 gridExtra::grid.arrange(p1,p2,p3, nrow=3)
 rm(p1)
@@ -147,7 +153,11 @@ mensch leider durch, dann liegt die Durchfallwahrscheinlichkeit bei
 
 $$p=F(x)=P(X\leq x)$$
 
-```{r, fig.align="center", out.width="35%"}
+```{r, fig.align="center", out.width="35%", echo=FALSE}
+library(mosaic)
+xpnorm(44.5, mean = 55, sd = 15, return = "plot") + scale_fill_npg()
+```
+```{r, fig.align="center", out.width="35%", eval=FALSE}
 library(mosaic)
 xpnorm(44.5, mean = 55, sd = 15)
 ```
@@ -222,8 +232,10 @@ $$z=\frac{x-\mu}{\sigma} \Leftrightarrow x=z \cdot \sigma + \mu$$
 Ein Studierender hat in der Klausur $60$ Punkte erreicht:
 :::
 ::: {.column width="54%"}
-
-```{r, fig.align="center", out.width="60%"}
+```{r, fig.align="center", out.width="60%", echo=FALSE}
+xpnorm(60, mean = 55, sd = 15, return ="plot") +  scale_fill_npg()
+```
+```{r, fig.align="center", out.width="60%", eval=FALSE}
 xpnorm(60, mean = 55, sd = 15)
 ```
 :::
@@ -251,7 +263,10 @@ Bei einer Normalverteilung liegen ca.
 - $99{,}7\,\%$ der Werte im Bereich $\mu\pm 3 \cdot \sigma$ $\quad\left(\text{formal: }P\left(\mu-3 \cdot \sigma \leq x \leq \mu+3 \cdot \sigma\right) \approx 99{,}7\,\%\right).$
 :::
 
-```{r, fig.align="center", out.width="40%"}
+```{r, fig.align="center", out.width="40%", echo=FALSE}
+xpnorm(c(-2,2), return ="plot") + scale_fill_npg() # Standardnormalverteilung
+```
+```{r, fig.align="center", out.width="40%", eval=FALSE}
 xpnorm(c(-2,2)) # Standardnormalverteilung
 ```
 
@@ -303,7 +318,10 @@ Man gehört zu den $10\,\%$ besten, wenn $90\,\%$ *nicht* besser sind.
 Dies ist ab `r round(qnorm(0.9, mean = 55, sd = 15))` Punkten der Fall:
 :::
 ::: {.column width="49%"}
-```{r, fig.align="center", out.width="60%"}
+```{r, fig.align="center", out.width="60%", echo=FALSE}
+xqnorm(0.9, mean = 55, sd = 15, return ="plot") + scale_fill_npg()
+```
+```{r, fig.align="center", out.width="60%", eval=FALSE}
 xqnorm(0.9, mean = 55, sd = 15)
 ```
 :::
@@ -341,11 +359,11 @@ Mit einer kleineren Wahrscheinlichkeit werden kleinere Werte nicht
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 pp<-seq(0,1, length=5000)
 qq<-qnorm(pp, mean = 55, sd = 15)
-p1 <- gf_dist("norm", mean = 55, sd=15, kind = "cdf") %>% 
-  gf_labs(title = "Verteilungsfunktion", x="q", y="p") %>%
+p1 <- gf_dist("norm", mean = 55, sd = 15, kind = "cdf") %>% 
+  gf_labs(title = "Verteilungsfunktion", x = "q", y = "p") %>%
   gf_refine(theme(aspect.ratio = 1))
-p2 <-gf_line(qq~pp) %>%
-  gf_labs(title="Quantilsfunktion", x="p",y="q") %>%
+p2 <-gf_line(qq ~ pp) %>%
+  gf_labs(title = "Quantilsfunktion", x = "p", y = "q") %>%
   gf_refine(theme(aspect.ratio = 1))
 gridExtra::grid.arrange(p1, p2, nrow = 1)
 rm(pp)
@@ -385,11 +403,13 @@ set.seed(1896)
 xnorm <- rnorm(200)
 xchi2 <- rchisq(200,4)
 
-hxn <- gf_dhistogram(~xnorm, bins = 10) %>% gf_fitdistr()
+hxn <- gf_dhistogram(~xnorm, bins = 10) %>% gf_fitdistr() +
+  scale_fill_npg()
 qxn <- gf_qq(~xnorm) %>% gf_qqline()
 
 
-hxc <- gf_dhistogram(~xchi2, bins=10) %>% gf_fitdistr()
+hxc <- gf_dhistogram(~xchi2, bins=10) %>% gf_fitdistr() +
+  scale_fill_npg()
 qxc <- gf_qq(~xchi2) %>% gf_qqline()
 
 gridExtra::grid.arrange(hxn, qxn, hxc, qxc, ncol=2)

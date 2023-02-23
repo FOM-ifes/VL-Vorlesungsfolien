@@ -99,7 +99,7 @@ Laecheln.shuffle %>%
 #  ggformula::gf_point(nachsichtigkeit ~ gesicht, color = ~ gesicht, data = Laecheln.shuffle,
 #           group = ~ gesicht, stat = "summary", size = 4) +
 #  facet_wrap(~ .index, ncol = 4) +
-#  scale_color_viridis_d()
+#  scale_color_npg()
 #  #ggthemes::scale_color_colorblind()
 ggformula::gf_jitter(
     nachsichtigkeit ~ gesicht, 

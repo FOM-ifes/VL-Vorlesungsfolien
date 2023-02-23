@@ -14,7 +14,7 @@ pathToImages <- getPathToImages()
 
 library(mosaic)
 library(knitr)
-library(viridis)
+library(ggsci)
 library(gridExtra)
 
 tips <- assertData("tips.csv", "https://goo.gl/whKjnl")
@@ -30,10 +30,12 @@ inspect <- mosaic::inspect # Sonst wir arules::inspect() vielleicht genommen
 
 ### Lernziele {exclude=NOlernziele,MasterNeu}
 
-- Die Studierenden kennen zentrale Operationen der Datenvorverarbeitung und können sie anwenden (wie Zeilen filtern).
-- Die Studierenden können eine Datentabelle von Lang- zur Breitform pivotieren und können Anwendungsbeispiele beschreiben.
-- Die Studierenden können Unterschiede in den Ursachen von fehlenden Werten erläutern und kennen Strategien zum Umgang mit fehlenden Werten.
-- Die Studierenden wissen um potenzielle Probeleme, die Ausreißerwerte verursachen und können sie in der Datentabelle identifizieren.
+Die Studierenden ...
+
+- kennen zentrale Operationen der Datenvorverarbeitung und können sie anwenden (wie Zeilen filtern).
+- können eine Datentabelle von Lang- zur Breitform pivotieren und können Anwendungsbeispiele beschreiben.
+- können Unterschiede in den Ursachen von fehlenden Werten erläutern und kennen Strategien zum Umgang mit fehlenden Werten.
+- wissen um potenzielle Probeleme, die Ausreißerwerte verursachen und können sie in der Datentabelle identifizieren.
 
 
 ## Grundlagen
@@ -129,7 +131,7 @@ B.  `r !((TRUE|FALSE)&(FALSE))`
 ```{r, echo=FALSE, fig.align="center", out.width="60%", results=FALSE}
 # https://rstudio-pubs-static.s3.amazonaws.com/13301_6641d73cfac741a59c0a851feb99e98b.html
 VennDiagram::draw.pairwise.venn(30, 25, 10, category = c("Hundeliebhaber*in", "Katzenliebhaber*in"),
-                                lty = rep("blank", 2), fill = viridis(2, alpha = 0.6), cat.cex=rep(1.5,2), cex=rep(2,3),
+                                lty = rep("blank", 2), fill = pal_npg()(2), cat.cex=rep(1.5,2), cex=rep(2,3),
                                 alpha = rep(0.5, 2), cat.pos = c(0, 0), cat.dist = rep(0.025, 2))
 ```
 
@@ -671,12 +673,11 @@ tips_no_na <- na.omit(tips_na)
 ::: {.column width="45%"}
 
 ```{r echo = FALSE, results = "hide"}
-
 x <- rnorm(1e05)
 y <- rnorm(1e04, 0, 1.5)
 z <- x + y 
 
-p1 <- gf_dens(~z, color = viridis(2)[1]) %>% 
+p1 <- gf_dens(~z) %>% 
   gf_dist("norm", color = "grey60") %>% 
   gf_lims(x = c(-5, +5)) %>% 
   gf_vline(xintercept = c(-3,3), linetype = "dashed")
@@ -684,11 +685,8 @@ p1 <- gf_dens(~z, color = viridis(2)[1]) %>%
 p2 <- gf_boxplot(~z)
 
 
-xpnorm(q = c(-3, 3), mean = 0, sd = 1.5, verbose = FALSE) %>% 
+xpnorm(q = c(-3, 3), mean = 0, sd = 1.5, verbose = FALSE, return = "plot") %>% gf_refine(scale_fill_npg()) %>% 
   gf_theme(legend.position = "none")
-
-
- 
 ```
 
 Bei einer normalverteilten Variablen $X$ kann z.B. ein $|x_i-\bar{x}| > 3 \cdot s_x$ als Ausreißer gelten.

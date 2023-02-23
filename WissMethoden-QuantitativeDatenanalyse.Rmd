@@ -2,6 +2,7 @@
 title: "Wissenschaftliche Methoden -- Quantitative Datenanalyse"
 tag:
     - bachelor
+    - sesmill
     - shiny
     - wmqd
 ---
@@ -27,12 +28,12 @@ if (!exists("prelude.rendertools")) {
 }
 
 assign("abschluss", FALSE, envir = .GlobalEnv)
-# assign("WDH", "Wiederholung: ", envir = .GlobalEnv)
+assign("WDH", "", envir = .GlobalEnv) 
 
 my.options$set(
   privateVorstellung = FALSE,   # Zeige die Private Vorstellung
   showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
-  showuseR = TRUE,             # Folien mit useR-Umfragen anzeigen oder ausschließen
+  showuseR = FALSE,              # Folien mit useR-Umfragen anzeigen oder ausschließen
   Corona = FALSE
 )
 
@@ -49,6 +50,7 @@ makeSkriptOfType("DozentenSkript")
 #makeSkriptOfType("LösungsSkript")
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggsci)
 library(ggplot2)
 # ggformula, also ggplot2 muss noch etwas konfiguriert werden.
 theme.fom <- theme_classic(22*1.02)
@@ -63,19 +65,19 @@ theme_set(
 ```{r setUpChildren, eval=TRUE, include=FALSE}
 ChildList <- c(
     {if_else(my.options$get("Corona"),
-             'WMQD-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
-             'WMQD-Organisatorisches.Rmd')},
-    {if_else(my.options$get("privateVorstellung"),
-             'private/private-Vorstellung.Rmd', 
-             'KeinInhalt.Rmd')},
-    'Organisatorisches/Hinweise.Rmd', 
-    'Grundlagen-Wissenschaft.Rmd', 
-    'Grundlagen-QuantDat.Rmd',
-    'Einfuehrung-R.Rmd',
-    'EDA.Rmd',
+              'WMQD-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+              'WMQD-Organisatorisches.Rmd')},
+     {if_else(my.options$get("privateVorstellung"),
+              'private/private-Vorstellung.Rmd', 
+              'KeinInhalt.Rmd')},
+     'Organisatorisches/Hinweise.Rmd', 
+     'Grundlagen-Wissenschaft.Rmd', 
+     'Grundlagen-QuantDat.Rmd',
+     'Einfuehrung-R.Rmd',
+     'EDA.Rmd',
     'Normalverteilung.Rmd',
-    'Regression.Rmd',
-    'Inferenz.Rmd',
+     'Regression.Rmd',
+     'Inferenz.Rmd',
     #'Inferenz-Beispiele.Rmd', # -> Anhang!
     # 'Datenhandling.Rmd',     # -> Anhang!
     'Abschluss.Rmd'

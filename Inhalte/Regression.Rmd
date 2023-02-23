@@ -160,8 +160,8 @@ Welches Skalenniveau hat die Variable Trinkgeldhöhe?
 
 A.  Kategorial - nominal.
 B.  Kategorial - ordinal.
-C.  Numerisch - intervallskala.
-D.  Numerisch - verhältnisskala.
+C.  Metrisch - intervallskala.
+D.  Metrisch - verhältnisskala.
 
 ::: {.notes}
 ***D***: Es gibt eine Ordnung, die Abstände sind vergleichbar und es gibt einen absoluten Nullpunkt.
@@ -322,7 +322,7 @@ Stimmt die Aussage: Bei einer Rechnungshöhe von $10\,\$$ wird das Trinkgeld mit
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_05-2019.jpg", "cartoon0519.jpg", pathToImages)
 ```
-"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Überschrift M. Dunlap]
+"Statistiker\*innen sind Wahrsager\*innen, aber mit größerer Genauigkeit."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/may/2019/results) &copy; J.B. Landers, Bildunterschrift M. Dunlap]
 
 
 ### Bestimmtheitsmaß
@@ -1227,8 +1227,8 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
 
 ### $H_0$ und $H_A$ in der Regression {include-only=MasterNeu}
 
-- Die Nullhypothese in der Regression lautet $H_0:\beta_1=0$ -- Es gibt keinen Zusammenhang.
-- Die Alternative ist daher das Gegenteil $H_A: \beta_1\neq 0$ -- Es gibt einen Zusammenhang.
+- Die Nullhypothese in der Regression lautet $H_0:\beta_1=0$ -- es gibt keinen Zusammenhang.
+- Die Alternative ist daher das Gegenteil $H_A: \beta_1\neq 0$ -- es gibt einen Zusammenhang.
 - Hier handelt es sich um eine zweiseitige oder ungerichtete Alternativhypothese.
 
 - Wenn der p-Wert sehr klein ist, spricht das gegen die Nullhypothese.
@@ -1242,7 +1242,7 @@ gf_bar(~cut(pNull$p.value, seq(0,1, by=0.05))) %>%
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_04-2018.jpg", "cartoon0418.jpg", pathToImages)
 ```
-"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Überschrift D. Nandy]
+"Beachte, dass die signifikanten Ereignisse an den Rändern auftauchen."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/april/2018/results) &copy; J.B. Landers, Bildunterschrift D. Nandy]
 
 
 ### Hintergrund: Fehlerarten (I/II) {include-only=MasterNeu}
@@ -1274,7 +1274,7 @@ p1 <- gf_dist("norm", mean=0, geom = "area", fill= ~(x>qnorm(0.95)), alpha = 0.5
   gf_vline(xintercept = ~qnorm(0.95)) %>%
   gf_labs(x=expression(bar(x))) %>%
   gf_dist("norm", mean=2, alpha = 0.5) %>% 
-  gf_refine(scale_fill_viridis_d()) %>%
+  gf_refine(scale_fill_npg()) %>%
  gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
             scale_y_continuous(limits = c(0, 0.5))) 
 
@@ -1286,7 +1286,7 @@ p2 <- gf_dist("norm", mean=2, geom = "area", fill= ~(x<qnorm(0.95)), alpha = 0.5
   gf_vline(xintercept = ~qnorm(0.95)) %>%
   gf_labs(x=expression(bar(x))) %>%
   gf_dist("norm", mean=0, alpha = 0.5) %>% 
-  gf_refine(scale_fill_viridis_d()) %>%
+  gf_refine(scale_fill_npg()) %>%
   gf_refine(annotate("label",x=1.65, y=0.45, label="Kritischer Wert"),
             scale_y_continuous(limits = c(0, 0.5))) 
 
@@ -1437,7 +1437,7 @@ plotModel(lm(tip ~ total_bill, data = tipsModified))
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_03-2018.jpg", "cartoon0318.jpg", pathToImages)
 ```
-"Punkte, die von ihren Peers abweichen, sind häufig die interessantesten."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2018/results) &copy; J.B. Landers, Überschrift J. Alloway]
+"Punkte, die von ihren Peers abweichen, sind häufig die interessantesten."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2018/results) &copy; J.B. Landers, Bildunterschrift J. Alloway]
 
 
 ### Verteilung der Residuen {include-only=master}
@@ -1571,7 +1571,7 @@ Eine Verletzung dieser Annahme beeinflusst die Effizienz der Schätzung (vgl. Li
 
 ```{r}
 predict(erglm1, # Modell
-        # Neue Beobachtung mit x=1000:
+        # Neue Beobachtung mit x = 1000:
         newdata = data.frame(total_bill = 1000), 
         # Prognoseintervall:
         interval  = "prediction") 
@@ -1669,12 +1669,25 @@ contrasts(as.factor(tips$day)) %>% knitr::kable()
 ::: {.smalll}
 ```{r tips-erglm2-summary, echo=TRUE, eval=FALSE}
 erglm2 <- lm(tip ~ smoker, data = tips)
-summary(erglm2)
+coef(erglm2)
 ```
 :::
 
 ::: {.footnotesize}
 ```{r ref.label="tips-erglm2-summary", eval = TRUE, echo = FALSE}
+```
+:::
+
+::: {.small}
+```{r, eval=FALSE}
+rsquared(erglm2)
+```
+:::
+
+::: {.footnotesize}
+```{r erglm2_4_r2, echo=FALSE}
+erglm2 <- lm(tip ~ smoker, data = tips)
+rsquared(erglm2)
 ```
 :::
 
@@ -1756,7 +1769,7 @@ prop( ~ abs(smokerYes) >= abs(dachbeta_smokerYes), data = Nullvtlg)
 
 ### Offene Übung `r nextExercise()`: Trinkgeld in Abhängigkeit von Raucher/Nichtraucher {.exercise type=essay exclude=bda}
 
-Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Modell, Nullmodell (Nullhypothese) und die Antwort auf die Forschungsfrage?
+Fassen Sie die vorangegangene Analyse zusammen. Wie lautete die Forschungsfrage, Modell, Hypothesen und die Antwort auf die Forschungsfrage?
 
 1.  [Think:]{.cemph} Überlegen Sie für sich.
 2.  [Pair:]{.cemph} Teilen Sie Ihr Ergebnis mit dem Nachbarn/der Nachbarin.
@@ -1961,9 +1974,9 @@ summary(erglm3)
 plotModel(erglm3) %>% gf_relabel(.color = "smoker")
 ```
 ```{r MMR-Ausgabe, out.width = "80%", fig.align="center", echo=FALSE}
-plotModel(erglm3, col = viridis(2, alpha = 0.6)) %>% 
+plotModel(erglm3, col = pal_npg()(2)) %>% 
   gf_relabel(.color = "smoker") %>%
-  gf_refine(scale_colour_viridis_d())
+  gf_refine(scale_colour_npg())
 ```
 
 
@@ -2130,8 +2143,8 @@ tips.s.ext <- tips.s %>%
 
 gf_lm(tip ~ total_bill , data = tips.s.ext) %>%
   gf_hline(yintercept = ~ mean(~tip, data = tips.s.ext)) %>%
-  gf_segment(tipd+tip0 ~ total_bill + total_bill, color = "#440154FF", size = 2) %>%
-  gf_segment(tipd+tip ~  total_bill + total_bill, color =  "#FDE725FF", size = 2) %>%
+  gf_segment(tipd+tip0 ~ total_bill + total_bill, color = pal_npg()(2)[1], size = 2) %>%
+  gf_segment(tipd+tip ~  total_bill + total_bill, color =  pal_npg()(2)[2], size = 2) %>%
   gf_labs(title = "Modellierte Abweichung zum Mittelwert (violett) \nund Abweichung zum modellierten Wert (gelb)") %>% 
   gf_point(tipd ~ total_bill, color = "grey80", size = 3) %>% 
   gf_point(color = "grey60", size = 3)
@@ -2325,7 +2338,7 @@ erglm4 <- lm(tip ~ total_bill + smoker + total_bill:smoker, data = tips)
 ```
 :::
 
-Grafisch^[Das Farbschema im Diagramm kann z.B. so angepasst werden: `plotModel(erglm4, col = viridis(2)) + scale_color_viridis_d()`]:
+Grafisch^[Das Farbschema im Diagramm kann z.B. so angepasst werden: `plotModel(erglm4) + scale_color_npg()`, wobei das Paket `ggsci` benötigt wird.]:
 
 :::::: {.columns}
 ::: {.column width="45%"}
@@ -2333,7 +2346,7 @@ Grafisch^[Das Farbschema im Diagramm kann z.B. so angepasst werden: `plotModel(e
 ```{r plot-wechselwirkung, echo=FALSE, eval = TRUE, out.width = "95%", fig.align="center"}
 plotModel(lm(tip ~ total_bill + smoker + total_bill:smoker, data = tips)) %>% 
   gf_relabel(.color = "smoker") %>%
-  gf_refine(scale_colour_viridis_d())
+  gf_refine(scale_colour_npg())
 ```
 :::
 
@@ -2349,9 +2362,9 @@ Da sich in diesem Beispiel das Einflussgewicht von `total_bill` zwischen den bei
 ### Übung `r nextExercise()`: Wechselwirkung {.exercise type=A-B-C answer=A exclude=bda}
 
 ```{r, echo=FALSE, fig.align="right", out.width="20%"}
-plotModel(erglm4, col = viridis(2)) %>% 
+plotModel(erglm4, col = pal_npg()(2)) %>% 
   gf_relabel(.color = "smoker") %>%
-  gf_refine(scale_colour_viridis_d())
+  gf_refine(scale_colour_npg())
 ```
 
 
@@ -2531,10 +2544,10 @@ C.  Egal.
 ***B***, da $`r -erglm4$coefficients[4]` \cdot 15 < `r erglm4$coefficients[3]`$, d.h., die Steigung bei den Rauchern ist zwar geringer (`r erglm4$coefficients[4]`), aber der zusätzliche Achsenabschnitt (`r erglm4$coefficients[3]`) wird bei 15\$ noch nicht ausgeglichen.
 
 ```{r, echo=FALSE, fig.align="center", out.width="30%"}
-plotModel(erglm4, col = viridis(2)) %>% 
+plotModel(erglm4, col = pal_npg()(2)) %>% 
   gf_relabel(.color = "smoker") %>%
   gf_vline(xintercept = ~15) %>%
-  gf_refine(scale_colour_viridis_d()) 
+  gf_refine(scale_colour_npg()) 
 ```
 
 Im Vergleich zu dem Modell ohne Interaktion sind die Koeffizienten für `smokerYes` und `total_bill:smokerYes` (Interaktion) jetzt beide signifikant, d.h., die Interaktion war eine notwendige Anpassung des Modells. Auch werden `r round((rsquared(erglm4) - rsquared(erglm3))*100, 0)`\%-Punkte mehr Variation des Trinkgelds durch das Modell erklärt (Differenz der R^2^-Werte der Modelle).
@@ -2661,8 +2674,7 @@ Siehe auch: Data Science – Baba Brinkman Music Video: [https://youtu.be/uHGlCi
 <!-- -->
 
 
-## Ausblick {include-only=MasterNeu}
-
+## Ausblick 
 
 ### Ethische Herausforderungen im Data Science
 
@@ -2678,7 +2690,7 @@ Siehe auch: Data Science – Baba Brinkman Music Video: [https://youtu.be/uHGlCi
 
 ### Datenbasierte Entscheidungen
 
-$\hat{f}(x)$ kann zur Automatisierung von Entscheidungsprozessen genutzt werden. Bei der Anwendung von solchen Algorithmen sollten Regeln beachtet werden, siehe z.B. [Algo.Rules](https://algorules.org/):
+$\hat{f}(x)$, z.B. hier die lineare Regression, kann zur Automatisierung von Entscheidungsprozessen genutzt werden. Bei der Anwendung von solchen Algorithmen sollten Regeln beachtet werden, siehe z.B. [Algo.Rules](https://algorules.org/):
 
 1. Kompetenz aufbauen
 2. Verantwortung definieren
@@ -2719,7 +2731,7 @@ Trifft dies auf eine lineare Modellierung zu?
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_11-2019.jpg", "cartoon1119.jpg", pathToImages)
 ```
-"Nutze die Daten, aber verliere nicht die Kontrolle!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2019/results) &copy; J.B. Landers, Überschrift K. Lübke]
+"Nutze die Daten, aber verliere nicht die Kontrolle!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/november/2019/results) &copy; J.B. Landers, Bildunterschrift K. Lübke]
 
 
 ### Wiederholung: PPDAC {include-only=MasterNeu}
@@ -2745,7 +2757,7 @@ extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption
 
 [C]{.cemph} 
 : (Conclusion)
-: Schlussfolgerungen, Interpretation, neue Ideen, Kommunikation.
+: Schlussfolgerungen, Interpretation, neue Ideen, Limitationen, Kommunikation.
 
 :::
 ::: {.column width="20%"}

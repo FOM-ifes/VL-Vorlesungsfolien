@@ -359,7 +359,7 @@ Für eine Wahrscheinlichkeit gelten folgende Axiome:
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2016/Caption-Contest_07-2016.jpg", "cartoon0716.jpg", pathToImages)
 ```
 
-"Na, das nenne ich mal eine 25\% Chance für gutes Wetter!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2016/results) &copy; J.B. Landers, Überschrift M. Huberty]
+"Na, das nenne ich mal eine 25\% Chance für gutes Wetter!"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/july/2016/results) &copy; J.B. Landers, Bildunterschrift M. Huberty]
 
 
 ### Bedingte Wahrscheinlichkeit
@@ -384,7 +384,7 @@ geschlecht <- rep(c("Frau","Mann"), each = length(groesse))
 Groesse <- data.frame(geschlecht = geschlecht, groesse = c(groesse, groesse), dichte = 0.5*c(dw,dm))
 
 plotG <- gf_line(dichte ~ groesse, color = ~ geschlecht, data = Groesse, size = 1.5) +
-  scale_color_viridis_d()
+  scale_fill_npg()
 
 plotG
 ```
@@ -446,7 +446,7 @@ Groesse <- Groesse %>%
   mutate(dichte = ifelse(geschlecht=="Frau", dichte*1.6, dichte*0.4))
 
 plotG <- gf_line(dichte ~ groesse, color = ~ geschlecht, data = Groesse, size = 1.5) +
-  scale_color_viridis_d()
+  scale_fill_npg()
 
 plotG %>%
     gf_vline(xintercept = ~171.5)
@@ -485,14 +485,14 @@ $$P(y|x)=\frac{P(x|y)\cdot P(y)}{P(x)}$$
 
 - Angenommen: Im Sommer wird bei Sonnenschein sowohl mehr Eis als auch mehr Sonnencreme verkauft.
 - *Eis* und *Sonnencreme* sind (unbedingt, marginal) nicht unabhängig: Wenn ich weiß, dass viel Eis verkauft wurde, kann ich davon ausgehen, dass auch viel Sonnencreme verkauft wurde. Vermutlich führte gutes Wetter zu hohem Eisverkauf und so auch zu hohem Sonnencremeverkauf. Über die Information *Eis* kann man über *Sonnenschein* etwas über *Sonnencreme* lernen.
-- Wenn ich weiß, dass *Sonnenschein* ist, enhält die Information, dass viel *Eis* verkauft wurde, keine zusätzliche Information über *Sonnnencreme*. Bedingt *Sonnenschein* sind *Eis* und *Sonnencreme* unabhängig.
+- Wenn ich weiß, dass *Sonnenschein* ist, enthält die Information, dass viel *Eis* verkauft wurde, keine zusätzliche Information über *Sonnnencreme*. Bedingt *Sonnenschein* sind *Eis* und *Sonnencreme* unabhängig.
 - Graphisches Modell: Eis $\leftarrow$ Sonnenschein $\rightarrow$ Sonnencreme.
 
 ### Beispiel: Ausschlafen, Wochenende und Urlaub
 
 - Angenommen: Sowohl am Wochenende als auch im Urlaub kann mensch ausschlafen.
 - In der Urlaubszeit gibt es genau so oft Wochenende wie sonst^[vereinfachende Annahme], *Wochenende* und *Urlaub* sind (unbedingt, marginal) unabhängig. Aus der Information *Wochenende* lerne ich nichts über *Urlaub*.
-- Wenn ich weiß, dass ich ausschlafen kann, weiß ich, dass entweder *Wochenende* oder *Urlaub* (oder beides) ist. Bei *Ausschlafen* lerne ich aus der Information kein *Urlaub*, dass *Wochenende* ist. Bedingt *Ausschlafen* sind *Wochenende* und *Urlaub* nicht unabhängig.
+- Wenn ich weiß, dass ich ausschlafen kann, weiß ich, dass entweder *Wochenende* oder *Urlaub* (oder beides) ist. Bei *Ausschlafen* lerne ich aus der Information kein *Urlaub*, dass *Wochenende* ist. Bedingt *Ausschlafen* sind *Wochenende* und *Urlaub* abhängig.
 - Graphisches Modell: Wochenende $\rightarrow$ Ausschlafen $\leftarrow$ Urlaub.
 
 
@@ -518,7 +518,7 @@ pfc <- gf_point(y ~ x, col = ~ z, data = Fork) %>%
   gf_hline(yintercept = ~-1, color = "#000000", linetype = "dashed") %>%
   gf_hline(yintercept = ~1, color = "#E69F00", linetype = "dashed") %>%
   gf_labs(title = "Bedingte Unabhängigkeit", subtitle="zwischen X und Y - gegeben Z") +
-  scale_color_viridis_d() + theme(legend.title = element_blank()) +
+  scale_color_npg() + theme(legend.title = element_blank()) +
   #ggthemes::scale_color_colorblind() + 
   theme(legend.position="none")
 
@@ -553,7 +553,7 @@ pcc <- gf_point(y ~ x, col = ~ z, data = Collider) %>%
   gf_abline(intercept = ~-2, slope = ~-1, color = "#000000", linetype = "dashed") %>%
   gf_abline(intercept = ~2, slope = ~-1, color = "#E69F00", linetype = "dashed") %>%
   gf_labs(title = "Bedingte Abhängigkeit", subtitle="zwischen X und Y - gegeben Z") +
-  scale_color_viridis_d() + theme(legend.title = element_blank()) +
+  scale_color_npg() + theme(legend.title = element_blank()) +
   #ggthemes::scale_color_colorblind() + 
   theme(legend.position="none")
 
@@ -817,7 +817,7 @@ DAG_bsp1
 **Fork:**
 
 - $A \leftarrow C \rightarrow B$
-- $A$ und $B$ haben eine gemeinsame Ursache: $C$ 
+- $A$ und $B$ haben eine gemeinsame Ursache: den Confounder $C$ 
 
 :::
 ::: {.column width="40%"}
@@ -825,7 +825,7 @@ DAG_bsp1
 **Inverted Fork:**
 
 - $A \rightarrow C \leftarrow B$
-- $A$ und $B$ haben eine gemeinsame Wirkung: $C$ 
+- $A$ und $B$ haben eine gemeinsame Wirkung: den Collider $C$ 
 
 :::
 ::::::
@@ -1032,6 +1032,8 @@ knitr::include_graphics(file.path(pathToImages, "GPG-3.png"), error = FALSE)
 
 ### Randomisierung
 
+Warum ist Randomisierung für Stichproben und in Experimenten wichtig?
+
 Seien $U$ (unbeobachtete) Variablen, die einen Einfluss haben können, ob die Beobachtung Teil der Stichprobe $S$ ist oder welchen Wert die Variable $X$ annimmt, d.h. $U \rightarrow S$ bzw. $U \rightarrow X$:
 
 - Zufällige Stichprobe: Der Pfeil wird gelöscht: $U \not\rightarrow S$.
@@ -1145,7 +1147,7 @@ DAG_ilk
 ### Daten: Intelligenz, Lernzeit und Klausurpunkte
 
 ```{r, echo=FALSE, out.width = "80%", fig.align="center"}
-ggformula::gf_point(test.score ~ learning.time, color = ~intelligence, data = ILT) 
+ggformula::gf_point(test.score ~ learning.time, color = ~intelligence, data = ILT) + scale_fill_npg()
 ```
 
 ### Ergebnis: Intelligenz, Lernzeit und Klausurpunkte
@@ -1216,8 +1218,8 @@ DAG_nkb
 
 ```{r plot-ncp2, echo=FALSE, out.width = "80%", fig.align="center"}
 NCP2 <- NCP %>% dplyr::mutate(promotion = as.factor(promotion))
-ggformula::gf_point(competence ~ network, color = ~promotion, data = NCP2) +
-  scale_color_viridis_d() + theme(legend.title = element_blank())
+ggformula::gf_point(competence ~ network, color = ~ promotion, data = NCP2) +
+  scale_color_npg() + theme(legend.title = element_blank())
   #ggthemes::scale_color_colorblind()
 ```
 
@@ -1299,7 +1301,7 @@ ILT.exp <- data.frame(intelligence = intelligence,
 ### Daten: Experiment Intelligenz, Lernzeit und Klausurpunkte
 
 ```{r plot-ilt-exp, echo=FALSE, out.width = "80%", fig.align="center"}
-ggformula::gf_jitter(test.score ~ learning.time, color = ~intelligence, data = ILT.exp, width = 1, height = 0) 
+ggformula::gf_jitter(test.score ~ learning.time, color = ~intelligence, data = ILT.exp, width = 1, height = 0) + scale_fill_npg()
 ```
 
 

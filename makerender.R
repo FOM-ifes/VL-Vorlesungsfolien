@@ -42,7 +42,7 @@ Semester <- "SoSe 2023"  # Standard Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe der/des Lehrenden. Standard ist "FOM Dozent:in"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
-Dozent <- "FOM Dozent:in"  # Standard Dozent:innenangabe
+Dozent <- "Dozent*in"  # Standard Dozent:innenangabe
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe des Studienortes. Standard ist "FOM"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -

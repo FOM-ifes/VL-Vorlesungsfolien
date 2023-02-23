@@ -14,7 +14,7 @@ tag:
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 source("prelude.R")
 initPrelude(
-    "QMEval-",       # Prefix für Terminlisten etc.
+    "QMEval-",     # Prefix für Terminlisten etc.
     TRUE           # Soll geprüft werden ob alle Pakete installiert sind?
 )
 ```
@@ -29,6 +29,7 @@ if (!exists("prelude.rendertools")) {
 }
 
 assign("abschluss", TRUE, envir = .GlobalEnv)
+assign("WDH", "", envir = .GlobalEnv)
 
 my.options$set(
   privateVorstellung = FALSE,   # Zeige die Private Vorstellung
@@ -43,12 +44,13 @@ assign("Vorlesungstermine", "default", envir = .GlobalEnv)
 
 # Standardeinstellung ("Dozent", "Semester", "FOM Standort")
 # muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
-createPrivateYaml("FOM-Dozent*in", "SoSe 2023", "FOM")
+createPrivateYaml("Dozent*in", "SoSe 2023", "FOM")
 
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
 makeSkriptOfType("DozentenSkript") 
 ```
 ```{r ggplot2Setup, eval=TRUE, echo=FALSE, include=FALSE}
+library(ggsci)  # color palette
 library(ggplot2)
 # ggformula, also ggplot2 muss noch etwas konfiguriert werden.
 theme.fom <- theme_classic(22*1.02)
@@ -64,9 +66,9 @@ ChildList <- c(
              'QMEval-Organisatorisches.Rmd')},
     {if_else(my.options$get("privateVorstellung"),
              'private/private-Vorstellung.Rmd', NULL)},
-    'Organisatorisches/Hinweise.Rmd', 
-    'Grundlagen-Wissenschaft.Rmd', 
-    'Grundlagen-QuantDat.Rmd', 
+    'Organisatorisches/Hinweise.Rmd',
+    'Grundlagen-Wissenschaft.Rmd',
+    'Grundlagen-QuantDat.Rmd',
     'Fragebogen.Rmd',
     'Einfuehrung-R.Rmd',
     'EDA.Rmd',

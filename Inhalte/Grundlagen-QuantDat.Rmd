@@ -95,11 +95,13 @@ library(tidyr)
 
 ### Lernziele {exclude-only=NOlernziele}
 
-- Die Studierenden können Messen definieren und können verschiedene Typen von Skalenniveaus sicher unterscheiden.
-- Die Studierenden kennen Grundbegriffe der quantitativen Datenanalyse (wie unabhängige und abhängige Variable) und können Probleme erklären, die aufgrund der Nichtberücksichtigung von Drittvariablen auftreten können.
-- Die Studierenden können zentrale Begriffe um Stichproben(arten) und Populationen erläutern.
-- Die Studierenden wissen um die Unterschiede hinsichtlich Zufall und Kausalität bei Beobachtungs- vs. Experimentalstudien.
-- Die Studierenden können die Phasen des PPDAC-Zyklus nennen und anhand von Beispielen illustrieren.
+Die Studierenden ...
+
+- können Messen definieren und können verschiedene Typen von Skalenniveaus sicher unterscheiden.
+- kennen Grundbegriffe der quantitativen Datenanalyse (wie unabhängige und abhängige Variable) und können Probleme erklären, die aufgrund der Nichtberücksichtigung von Drittvariablen auftreten können.
+- können zentrale Begriffe um Stichproben(arten) und Populationen erläutern.
+- wissen um die Unterschiede hinsichtlich Zufall und Kausalität bei Beobachtungs- vs. Experimentalstudien.
+- können die Phasen des PPDAC-Zyklus nennen und anhand von Beispielen illustrieren.
 
 
 
@@ -383,8 +385,8 @@ Je nach Skalenniveau sind unterschiedliche Aussagen und Operationen möglich.
 
 - Kategorial -- nominal: $=, \neq$
 - Kategorial -- ordinal: $=, \neq, <,>$
-- Numerisch -- intervallskaliert: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
-- Numerisch -- verhältnisskaliert: $=, \neq, <,>, +,-, *, :$
+- Metrisch -- intervallskaliert: $=, \neq, <,>, +,-$^[$*,:$ für die Differenzen.]
+- Metrisch -- verhältnisskaliert: $=, \neq, <,>, +,-, *, :$
 
 Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Dominic Dousa &copy; Levels of Measurement](https://www.causeweb.org/cause/resources/fun/songs/levels-measurement)
 
@@ -518,7 +520,7 @@ knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error = F
 ```
 
 
-### Begriffe: Stichproben (I/ II)
+### Begriffe: Stichproben
 
 - **Population**: Die Menge, über die eine Aussage getroffen werden soll: die ganze Suppe im Suppentopf.
 
@@ -533,7 +535,18 @@ knitr::include_graphics(file.path(pathToImages, "Kartoffelsuppe.jpg"), error = F
 - **Generalisierbarkeit**: Inwieweit kann von der Stichprobe auf die Grundgesamtheit geschlossen werden? Wenn wir gut umgerührt haben, sollten die Verteilung der Gewürze etc. auf dem Löffel ähnlich der im Topf sein und wir können vom Löffel auf den Topf schließen.
 
 
-### Begriffe: Stichproben (II/ II)
+### Sebastians Kaffeemühle {include-only=sesmill}
+
+```{r echo=FALSE, out.width = "20%", fig.align="right"}
+knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
+```
+
+- Population: Der Sack Bohnen, der uns interessiert, oder der Kaffee allgemein.
+
+- Stichprobe: Die Kaffeebohnen, die wir untersuchen.^[Skizze: Sebastian Sauer]
+
+
+### Begriffe: Statistik und Parameter (I/ II)
 
 - **Parameter**^[symbolisiert häufig durch griechische Buchstaben: $\mu, \ldots$]: Wert der Population, an dem wir interessiert sind: z. B. Temperatur der Suppe insgesamt.
 
@@ -545,15 +558,17 @@ Song: [https://www.causeweb.org](https://www.causeweb.org): [Larry Lesser und Do
 [Hinweis:]{.cemph} Häufig kann die *Datengenerierung* als *Zufallsprozess* aufgefasst werden, z.B. der Aktienkurs. Dann ist der beobachtete Kurs die Stichprobe, der theoretisch mögliche die Population: von den *möglichen* Kursen wurde der beobachtete realisiert.^[Formal: Beobachtung $x$ ist die Realisation einer Zufallsvariable $X$.]
 
 
-### Sebastians Kaffeemühle {include-only=sesmill}
+### Begriffe: Statistik und Parameter (II/ II)
 
-```{r echo=FALSE, out.width = "20%", fig.align="right"}
-knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
-```
+Der Wert der Statistik und der Wert des Parameters stimmen häufig **nicht** überein^[[Bueno de Mesquita und Fowler (2021)](https://press.princeton.edu/books/paperback/9780691214351/thinking-clearly-with-data): Estimate = Estimand + Bias + Noise]
 
-- Population: Der Sack Bohnen, der uns interessiert, oder der Kaffee allgemein.
+`Statistik = Parameter + Verzerrung + Rauschen`
 
-- Stichprobe: Die Kaffeebohnen, die wir untersuchen.^[Skizze: Sebastian Sauer]
+- Wert Statistik: Z.B. Temperatur des Suppenlöffels.
+- Wert Parameter: Z.B. Temperatur der Suppe.
+- Verzerrung: Systematische Abweichung, z.B. Löffel nur von der Oberfläche.
+- Rauschen: Zufällige Abweichung und Schwankungen der Stichprobe.
+
 
 
 ### Übung `r nextExercise()`: Stichprobe {.exercise type=yesno answer=no exclude=qmwinf}
@@ -664,8 +679,8 @@ grid.arrange(p1, p2, p3, p4, nrow = 1)
 Was glauben Sie: Welche Gruppe hat eine höhere Wahrscheinlichkeit, an einer freiwilligen Umfrage der Dozentin teilzunehmen?
 
 
-A.  Die Gruppe der nicht besonders gewissenhaft Studierende
-B.  Die Gruppe der besonders gewissenhafte Studierende
+A.  Die Gruppe der nicht besonders gewissenhaft Studierenden
+B.  Die Gruppe der besonders gewissenhaft Studierenden
 C.  Beide  Gruppen gleich
 
 
@@ -730,7 +745,7 @@ gridExtra::grid.arrange(dag_s1, dag_s2, nrow = 1)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2018/Caption-Contest_01-2018.jpg", "cartoon0118.jpg", pathToImages)
 ```
-"Gelegenheitsstichproben erreichen nur die niedrig hängenden Früchte."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/january/2018/results) &copy; J.B. Landers, Überschrift  L. Lesser]
+"Gelegenheitsstichproben erreichen nur die niedrig hängenden Früchte."^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/january/2018/results) &copy; J.B. Landers, Bildunterschrift  L. Lesser]
 
 
 ### Beobachtungsstudien und Experimente

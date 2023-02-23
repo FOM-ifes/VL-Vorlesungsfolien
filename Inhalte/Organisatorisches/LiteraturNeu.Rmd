@@ -40,7 +40,20 @@ Chester Ismay, Albert Y. Kim (2020): *ModernDive -- An Introduction to Statistic
 
 ::: {.columns .small}
 
-:::: {.column width="33%"}
+:::: {.column width="38%" .small}
+
+```{r, echo=FALSE, fig.align="center", out.width="50%"}
+knitr::include_graphics(file.path(pathToLiteraturImages,"A-Students-Guide-to-R-fix.jpg"), error = FALSE)
+```
+
+Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Little Books *A Student's Guide to R*,  [https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf](https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf)
+
+  - Übersetzung: [Mosaic-Handbuch.pdf](https://github.com/FOM-ifes/StudentGuide-mosaic/blob/main/_book/Mosaic-Handbuch.pdf)
+
+::::
+
+
+:::: {.column width="29%"}
 
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 knitr::include_graphics(file.path(pathToLiteraturImages,"An-Introduction-to-Statistical-Learning---with-Applications-in-R.jpg"), error = FALSE)
@@ -49,17 +62,8 @@ knitr::include_graphics(file.path(pathToLiteraturImages,"An-Introduction-to-Stat
 Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2021): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_website.pdf](https://hastie.su.domains/ISLR2/ISLRv2_website.pdf)
 ::::
 
-:::: {.column width="33%"}
 
-```{r, echo=FALSE, fig.align="center", out.width="60%"}
-knitr::include_graphics(file.path(pathToLiteraturImages,"A-Students-Guide-to-R-fix.jpg"), error = FALSE)
-```
-
-Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Little Books *A Student's Guide to R*,  [https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf](https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf)
-
-::::
-
-:::: {.column width="33%"}
+:::: {.column width="29%"}
 
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
 knitr::include_graphics(file.path(pathToLiteraturImages,"Statistical-Modeling.jpg"), error = FALSE)
