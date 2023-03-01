@@ -223,13 +223,13 @@ The following objects are masked from ‘package:base’:
 
 ### Beispiel `Births78`
 
-Interner Datentabelle `Births78` laden:^[Falls Sie aktuell noch kein lauffähiges R haben: Für die heutige Vorlesung geht auch [https://fomshinyapps.shinyapps.io/micRo-Births78/](https://fomshinyapps.shinyapps.io/micRo-Births78/)]
+Interne Datentabelle `Births78` laden:^[Falls Sie aktuell noch kein lauffähiges R haben: Für die heutige Vorlesung geht auch [https://fomshinyapps.shinyapps.io/micRo-Births78/](https://fomshinyapps.shinyapps.io/micRo-Births78/)]
 
 ```{r}
 data(Births78)
 ```
 
-Datentabellebeschreibung (Hilfe zu den Daten):
+Datentabellenbeschreibung (Hilfe zu den Daten):
 
 ```{r, eval=FALSE}
 ?Births78

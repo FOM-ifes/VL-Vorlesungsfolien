@@ -28,7 +28,7 @@ pathToImages <- getPathToImages()
 
 - Sabine Kirchhoff, Sonja Kuhnt, Peter Lipp, Siegfried Schlawin (2010): Der Fragebogen. Datenbasis, Konstruktion und Auswertung, 5. Auflage, VS-Verlag Wiesbaden.
 
-- Christoph J. Kemper, Elmar Brähler, Markus Zenger (2013): Psychologische und sozialwissenschaftliche Kurzskalen. 1.Auflage, Medizinisch Wissenschaftliche Verlagsgesellschaft Berlin.
+- Christoph J. Kemper, Elmar Brähler, Markus Zenger (2013): Psychologische und sozialwissenschaftliche Kurzskalen. 1. Auflage, Medizinisch Wissenschaftliche Verlagsgesellschaft Berlin.
 
 - Nicola Doering, Jürgen Bortz (2016): Forschungsmethoden und Evaluation in den Sozial- und Humanwissenschaften, 5. Auflage, Springer Verlag Berlin Heidelberg.
 
@@ -104,7 +104,7 @@ Die 4 Subskalen operationalisieren
 ```{r echo=FALSE, out.width = "100%", fig.align="center"}
 knitr::include_graphics(file.path(pathToImages, "4_Subskalen_psq.png"), error=FALSE)
 ```
-Fliege, H. etal.(2001)^[Fliege, H., Rose, M., Arck, P., Levenstein, S. & Klapp, B. F. (2001). Validierung des "Perceived Stress Questionnaire" (PSQ) an einer deutschen Stichprobe. Diagnostica, 47, 142-152. (https://www.testarchiv.eu/de/test/9004426)]
+Fliege, H. et al.(2001)^[Fliege, H., Rose, M., Arck, P., Levenstein, S. & Klapp, B. F. (2001). Validierung des "Perceived Stress Questionnaire" (PSQ) an einer deutschen Stichprobe. Diagnostica, 47, 142-152. (https://www.testarchiv.eu/de/test/9004426)]
 
 
 <!-- 
@@ -853,7 +853,7 @@ knitr::include_graphics(file.path(pathToImages, "likert_bipolar.png"), error=FAL
 ```    
   
   
-**Unipolare Skalen** ein Kontinuum ab. Beginnend beim „Nullpunkt“ bis zum Endpol. 
+**Unipolare Skalen** bilden ein Kontinuum ab. Beginnend beim „Nullpunkt“ bis zum Endpol. 
 
 
 ```{r echo=FALSE, out.width = "100%", fig.align="center"}

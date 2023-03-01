@@ -909,7 +909,7 @@ knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 
 - Über Simulationen erzeugen wir Vorhersagen darüber, wie der Kaffee schmecken würde, wenn das Modell der Nullhypothese stimmen würde.
 
-- Wir vergleichen diese Vorhersagen mit dem Kaffee, den wir haben, der Stichprobe.
+- Wir vergleichen diese Vorhersagen mit dem Kaffee, den wir haben -- der Stichprobe.
 
 - Der p-Wert zeigt, wie oft wir in den Vorhersagen einen Kaffee bekommen würden, der mindestens so extrem schmeckt, wie der, den wir haben.
 
@@ -1628,7 +1628,7 @@ Binär: Zwei Ausprägungen: Ja, Nein; $A, B$.
 
 ### Grundlagen Inferenz
 
-- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte^[Abkürzung u.i.v., auf englisch *independent, identically distributed*, iid] Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
+- [Voraussetzung:]{.cemph} Unabhängig, identisch verteilte^[Abkürzung u.i.v., auf englisch: *independent, identically distributed*, iid] Daten, z. B. aufgrund einer zufälligen Stichprobe oder einer zufälligen Zuordnung.
 - `Y ~ 1` (d. h. ohne unabhängige Variable): Modellierte Verteilung von $Y$ (z. B. Binomial- oder Normalverteilung) hängt von einem interessierenden Parameter ab. Nullhypothese z. B. $\pi=\pi_0$ oder $\mu=\mu_0$.
 - `Y ~ X`: Die Modellierung der Verteilung von $Y$ hängt evtl. von $X$ ab: Nullhypothese: Die Verteilung von $Y$ ist für alle $X$ gleich.
 - Bei den Regressionsverfahren können mehrere unabhängige Variablen $X$ (mit unterschiedlichem Skalenniveau) in der Modellierung berücksichtigt werden.

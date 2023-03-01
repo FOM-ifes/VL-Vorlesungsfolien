@@ -1001,7 +1001,7 @@ mosaic::do(3) * lm(tip ~ shuffle(total_bill), data = tips)
 knitr::include_graphics(file.path(pathToImages, "maschine.jpg"), error = FALSE)
 ```
 
-Wie schmeckt der Kaffee ($\hat{\beta}$), wenn die Größe der Bohnen ($x$) keine Rolle spielt ($\beta=0$)? Wir simulieren diese Maschine und gucken, ob der Kaffee, den wir probiert haben (Stichprobe, $\hat{\beta}$), so ähnlich schmeckt.^[Skizze: Sebastian Sauer]
+Wie schmeckt der Kaffee ($\hat{\beta}$), wenn die Größe der Bohnen ($x$) keine Rolle spielt ($\beta=0$)? Wir simulieren diese Maschine und prüfen, ob der Kaffee, den wir probiert haben (Stichprobe, $\hat{\beta}$), so ähnlich schmeckt.^[Skizze: Sebastian Sauer]
 
 <!-- -->
 
@@ -1535,7 +1535,7 @@ Ergänzung: Um evtl. zeitliche Abhängigkeiten zu überprüfen, kann ein Streudi
 
 ### Verteilung der Residuen und angepassten Werte {exclude=bda}
 
-*Annahme:* Fehler sind identisch verteilt. Überprüfung z.B. über Streudiagram $\hat{\epsilon}$ und $\hat{y}$.
+*Annahme:* Fehler sind identisch verteilt. Überprüfung z.B. über Streudiagramm $\hat{\epsilon}$ und $\hat{y}$.
 
 ```{r,  fig.align="center", out.width="50%"}
 gf_point(resid(erglm1) ~ fitted(erglm1))
@@ -1741,7 +1741,7 @@ qdata( ~ smokerYes, p = c(0.025, 0.975), data = Bootvtlg)
 ### Permutationsverteilung {exclude=bda}
 
 ::: {.scriptsize}
-```{r lm-smoker-shuffle-no-eval, out.width = "40%", fig.align="center", eval=FALSE}
+```{r lm-smoker-shuffle-no-eval, out.width = "30%", fig.align="center", eval=FALSE}
 set.seed(1896)
 Nullvtlg <- do(10000) * lm(tip ~ shuffle(smoker), data = tips)
 dachbeta_smokerYes <- coef(erglm2)[2]
@@ -1749,7 +1749,7 @@ gf_histogram( ~ smokerYes, data = Nullvtlg) %>%
   gf_vline(xintercept = ~dachbeta_smokerYes)
 ```
 
-```{r lm-smoker-shuffle, out.width = "40%", fig.align="center", echo=FALSE}
+```{r lm-smoker-shuffle, out.width = "30%", fig.align="center", echo=FALSE}
 set.seed(1896)
 Nullvtlg <- mosaic::do(10000) * lm(tip ~ shuffle(smoker), data = tips)
 dachbeta_smokerYes <- coef(erglm2)[2]
