@@ -158,8 +158,8 @@ Welches Skalenniveau hat die Variable `Heizung`?
 
 A.  Kategorial - nominal.
 B.  Kategorial - ordinal.
-C.  Numerisch - intervallskaliert.
-D.  Numerisch - verhältnisskaliert.
+C.  Metrisch - intervallskaliert.
+D.  Metrisch - verhältnisskaliert.
 
 
 ::: {.notes}
