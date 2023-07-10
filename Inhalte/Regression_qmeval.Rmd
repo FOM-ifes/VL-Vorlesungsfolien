@@ -1202,7 +1202,7 @@ gf_point(tip ~ smoker, data = tips,
 ```
 :::
 ::: {.column width="49%"}
-```{r ref.label="gf-point-tip-smoker", eval=TRUE, echo=FALSE, out.width = "65%", fig.align="center"}
+```{r ref.label="gf-point-tip-smoker", eval=TRUE, echo=FALSE, out.width = "50%", fig.align="center"}
 ```
 :::
 ::::::::
