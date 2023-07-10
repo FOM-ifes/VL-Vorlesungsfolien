@@ -21,11 +21,9 @@ library(mosaic)
 
 Nach diesem Kapitel sollen die Studierenden folgende Lernziele erreicht haben:
 
-Die Studierenden ...
-
-- können die vorgestellten Grundkonzepte wissenschaftlichen Denkens erläutern.
-- können zentrale Begriffe der Wissenschaftstheorie darlegen.
-- sind fähig, eigenständig Beispiele für zentrale Begriffe (wie Hypothesen und zu den Schlusstechniken) zu generieren.
+- Die Studierenden können die vorgestellten Grundkonzepte wissenschaftlichen Denkens erläutern.
+- Die Studierenden können zentrale Begriffe der Wissenschaftstheorie darlegen.
+- Die Studierenden sind fähig, eigenständig Beispiele für zentrale Begriffe (wie Hypothesen und zu den Schlusstechniken) zu generieren.
 
 
 ### Übung `r nextExercise()`: Ihr Erinnerungsvermögen {.exercise type=A-B-C}
@@ -187,7 +185,7 @@ knitr::include_graphics(file.path(pathToImages, "Sinn3.png"), error = FALSE)
 # Lizenzworkaround: 
 extern_image_include("https://www.causeweb.org/cause/sites/default/files/caption_contest/2019/Caption-Contest_03-2019.jpg", "cartoon0319.jpg", pathToImages)
 ```
-"Viele Generationen von Data Science"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2019/results) &copy; J.B. Landers, Bildunterschrift L. Poisson ]
+"Viele Generationen von Data Science"^[[https://www.CAUSEweb.org/](https://www.causeweb.org/cause/caption-contest/march/2019/results) &copy; J.B. Landers, Überschrift L. Poisson ]
 
 
 ### Realität
@@ -398,15 +396,15 @@ Insbesondere zu Beginn ist Literaturrecherche wichtig, damit Sie ein Bild über 
 
 Gütekriterien für Forschung:
 
-- **Ethische Aspekte**: Können negative Folgen, z. B. bei befragten/untersuchten Personen auftreten? Auch: Datenschutz.
+- **Ethische Aspekte**: Bei Probanden treten keine negativen Folgen infolge der Studie/ Befragten auf. Risiko- /Nutzenabwägung. Auch: Datenschutz.
 
-- **Transparenz**: Das Vorgehen ist klar dokumentiert und nachprüfbar (und damit prinzipiell **reproduzierbar**)?
+- **Transparenz**: Das Vorgehen ist klar und vollständig dokumentiert. Damit ist dieses nachprüfbar und prinzipiell **reproduzierbar**.
 
-- **Objektivität**: Sind die Ergebnisse unabhängig von der Person? Kommen andere zum selben Ergebnis?
+- **Objektivität**: Die Ergebnisse und der Forschungsprozess erfolgen unabhängig von der durchführenden Person. Eine Wiederholung führt zum gleichen Ergebnis.
 
-- **Interne Validität**: Keine anderen Erklärungen für die Ergebnisse? Ist der behauptete Zusammenhang richtig?
+- **Interne Validität**: Der beobachtete Effekt /Ergebnis ist eindeutig zu erklären, es gibt keine weiteren erklärenden Einflussfaktoren.
 
-- **Externe Validität**: Übertragbarkeit der Ergebnisse? Zeigt sich der behauptete Zusammenhang auch in anderen Situationen?
+- **Externe Validität**: Die Ergebnisse können auf andere Situationen (Zeit, Personen, Orte) übertragen (generalisiert) werden.
 
 <!-- Bug? -->
 
