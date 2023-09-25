@@ -33,7 +33,7 @@ Mine &Ccedil;etinkaya-Rundel, Johanna Hardin (2021): *Introduction to Modern Sta
 knitr::include_graphics(file.path(pathToLiteraturImages,"An-Introduction-to-Statistical-Learning---with-Applications-in-R.jpg"), error = FALSE)
 ```
 
-Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2021): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_website.pdf](https://hastie.su.domains/ISLR2/ISLRv2_website.pdf)
+Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2023): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)
 
 ::::
     
@@ -58,10 +58,10 @@ Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Littl
 :::: {.column width="29%"}
 
 ```{r, echo=FALSE, fig.align="center", out.width="60%"}
-knitr::include_graphics(file.path(pathToLiteraturImages,"ModernDive---An-Introduction-to-Statistical-and-Data-Science-via-R.jpg"), error = FALSE)
+knitr::include_graphics(file.path(pathToLiteraturImages,"Statistical Inference via Data Science - A ModernDive into R and the Tidyverse.jpg"), error = FALSE)
 ```
 
-Chester Ismay, Albert Y. Kim (2020): *ModernDive -- An Introduction to Statistical and Data Sciences via R*, [http://moderndive.com/](http://moderndive.com/)
+Chester Ismay, Albert Y. Kim (2023): *Statistical Inference via Data Science: A ModernDive into R and the Tidyverse!*, [http://moderndive.com/](http://moderndive.com/)
 
 ::::
 
