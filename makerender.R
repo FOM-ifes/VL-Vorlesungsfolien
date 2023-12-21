@@ -38,11 +38,11 @@ showVorlesungsplan <- FALSE
 # Wintersemesrer: "WiSe 20XX/XX"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 #Semester <- "WiSe 2021/22"  # Standard Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
-Semester <- "SoSe 2023"  # Standard Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
+Semester <- "SoSe 2024"  # Standard Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe der/des Lehrenden. Standard ist "FOM Dozent:in"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
-Dozent <- "Dozent*in"  # Standard Dozent:innenangabe
+Dozent <- "Dozent:in"  # Standard Dozent:innenangabe
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe des Studienortes. Standard ist "FOM"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
@@ -367,13 +367,13 @@ assign("WDH", "", envir = .GlobalEnv)
 # ------------------------------------------------------------------------
 # 
 my.options$set(
-    Corona = FALSE
+    Virtuell = FALSE
 )
 my.options$set(
   privateVorstellung = ShowPrivate,   # Zeige die Private Vorstellung
   showVorlesungsplan = showVorlesungsplan,  # Zeige den Vorlesungsplan
   showuseR = FALSE,
-  Corona = FALSE,
+  Virtuell = FALSE,
   MasterNeu = TRUE,            # Überarbeitung Master mg, kl
   use_private = UsePrivate
 )

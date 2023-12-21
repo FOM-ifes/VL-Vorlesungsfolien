@@ -23,11 +23,11 @@ REM > makerender --help
 REM 
 REM oder:
 REM 
-REM > makerender -cp --semester="SoSe 2023" Wissenschaftliche-Methodik 
+REM > makerender -cp --semester="SoSe 2024" Wissenschaftliche-Methodik 
 REM 
 REM Nochmal: Bitte keine weiteren Änderungen an dieser BATCH-Datei durchführen!
 REM ------------------------------------------------------------------------
 REM Python Updates nachhelfen und ggf. panflute installieren!
-%RSCRIPTEXE% pyhton-update.R
+REM%RSCRIPTEXE% pyhton-update.R
 REM Das eigentliche Programm ausführen
 %RSCRIPTEXE% makerender.R %*
