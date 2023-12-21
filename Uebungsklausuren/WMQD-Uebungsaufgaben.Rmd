@@ -17,7 +17,7 @@ p <- 0
 
 ## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) *Praxistransfer*
 
-Beschreiben Sie stichpunktartig entlang eines Beispiels einer eigenständigen^[d. h. keine Fallstudie o. ä. aus der Vorlesung] Forschungsfrage aus Ihrer Berufspraxis (angeben) den quantitativen Forschungsprozess.
+Geben Sie exemplarisch ein Beispiel aus Ihrer Berufspraxis^[d. h. keine Fallstudie o. ä. aus der Vorlesung] (angeben!) für die Analyse eines Anteilswertes (*oder:* eines Mittelwerts, Vergleich zweier Anteils\-werte, Vergleich zweier Mittelwerte, lineare Regression) an. Gehen Sie auch kurz auf die Forschungsfrage, die Datenerhebung, die Variable(n) und die Verfahren der Datenanalyse ein.
 
 \pagebreak
 
@@ -113,6 +113,21 @@ Was gilt in der Regel für linksschiefe Verteilungen (max. 1 Antwort richtig)
 4.  keine Aussage möglich
 
 
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+Für die Variablen `Geschlecht` und `Gewerkschaft` ergibt sich folgender Mosaikplot:
+
+```{r, eval=FALSE}
+mosaicplot(Geschlecht ~ Gewerkschaft, data = einkommen)
+```
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+mosaicplot(Geschlecht ~ Gewerkschaft, data = einkommen, color=TRUE)
+```
+
+Beschreiben Sie das Ergebnis.
+
 \pagebreak
 
 
@@ -156,18 +171,8 @@ Welche der folgenden Aussagen über den p-Wert stimmt (max. 1 Antwort richtig)?
 
 ## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
 
-Welche der folgenden Aussagen über den Chi-Quadrat Unabhängigkeitstest stimmt (max. 1 Antwort richtig)?
-
-1.  Die Nullhypothese lautet: es gibt keinen Zusammenhang zwischen den kategorialen Merkmalen
-2.  Die Nullhypothese lautet: es gibt einen Zusammenhang zwischen den kategorialen Merkmalen
-3.  Die Nullhypothese lautet: es gibt keinen kausalen Zusammenhang zwischen den kategorialen Merkmalen
-4.  Die Nullhypothese lautet: es gibt einen kausalen Zusammenhang zwischen den kategorialen Merkmalen
-
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
-
 Ein Test für $H_0: \mu \leq 100$ gegen $H_A: \mu > 100$ ergibt die Teststatistik $\bar{x}=95$. Was können Sie über das Testergebnis aussagen? Begründen Sie kurz.
 
-\pagebreak
 
 ## Aufgabe `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkte) 
 
@@ -177,18 +182,24 @@ Welches der genannten ist das richtige Testverfahren um einen Zusammenhang zwisc
 2.  Vergleich zweier Mittelwerte.
 
 
-## Aufgabe `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte) 
+## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
 
-Beschreiben Sie in eigenen Worten den Grundaufbau, die Testidee einer Varianzanalyse (ANOVA). Was wird dabei getestet?
+Angenommen die Jahre der Arbeitserfahrung sei normalverteilt mit $\mu=25$ und $\sigma=10$. Ein Freund erzählt Ihnen, dass er $30$ Jahre Arbeitserfahrung hat.
 
+Welche Aussage stimmt? (max. 1 Antwort ist richtig)
+
+A.  $30$ Jahre ist ein außergewöhnlicher (d. h. unwahrscheinlicher) Wert.
+B.  Der dazugehörende z-Wert ist $2$.
+C.  Der dazugehörende z-Wert ist $-0.5$.
+D.  Keine der Aussagen A--C stimmmt.
 \pagebreak
 
 ## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) 
 
-Eine t-Test der Ausbildungsjahre je Geschlecht ergibt folgendes Ergebnis:
+Ein t-Test der Ausbildungsjahre je Geschlecht ergibt folgendes Ergebnis:
 
 ```{r}
-t.test( Ausbildungsjahre ~ Geschlecht, data = einkommen)
+t.test(Ausbildungsjahre ~ Geschlecht, data = einkommen)
 ```
 
 Fassen Sie kurz Forschungsfrage, Hypothese und Ergebnis zusammen.
@@ -211,7 +222,12 @@ Beschreiben und diskutieren Sie das Ergebnis.
 
 \pagebreak
 
-(Fortsetzung Aufgabe `r a`)
+## Hinweise
 
-
-
+- Die Art und Weise der Aufgaben ist ähnlich denen einer Klausur. Sie können sich vom Anspruch und dem Fragentyp an diesen Übungsaufgaben orientieren, nicht aber was die konkreten Inhalte usw. betrifft.
+- Zum Üben besteht diese Probe aus Aufgaben mit insgesamt **`r p`** Punkten.
+- Es reicht nicht diese Übungsaufgaben zu lernen: Die Klausur hat andere Aufgaben.
+- Tipps zur Klausur:
+    - Prüfungsrelevant ist der gesamte Stoff der Vorlesung. Für die Wiederholungsprüfung gelten die gleichen Rahmenbedingungen wie für den regulären Prüfungstermin.
+    - Lesen Sie sich erst die ganze Klausur in Ruhe durch und fangen Sie mit den Aufgaben an, die Sie sicher können.
+    - Halten Sie sich nicht zu lange mit Aufgaben auf, die wenig Punkte bringen.
