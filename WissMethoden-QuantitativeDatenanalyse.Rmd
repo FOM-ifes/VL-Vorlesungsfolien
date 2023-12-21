@@ -34,7 +34,7 @@ my.options$set(
   privateVorstellung = FALSE,   # Zeige die Private Vorstellung
   showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
   showuseR = FALSE,              # Folien mit useR-Umfragen anzeigen oder ausschließen
-  Corona = FALSE
+  Virtuell = FALSE
 )
 
 assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
@@ -42,7 +42,7 @@ assign("Vorlesungstermine", "default", envir = .GlobalEnv)
 
 # Standardeinstellung ("Dozent", "Semester", "FOM Standort")
 # muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
-createPrivateYaml("Dozent*in", "SoSe 2023", "FOM") 
+createPrivateYaml("Dozent*in", "SoSe 2024", "FOM") 
 
 # Erzeuge Skript "DozentenSkript", "StudierendenSkript" oder "LösungsSkript": 
 makeSkriptOfType("DozentenSkript")
@@ -64,8 +64,8 @@ theme_set(
 ```
 ```{r setUpChildren, eval=TRUE, include=FALSE}
 ChildList <- c(
-    {if_else(my.options$get("Corona"),
-              'WMQD-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+    {if_else(my.options$get("Virtuell"),
+              'WMQD-Organisatorisches-Virtuell.Rmd',  # 60-min Klausur-Fassung
               'WMQD-Organisatorisches.Rmd')},
      {if_else(my.options$get("privateVorstellung"),
               'private/private-Vorstellung.Rmd', 

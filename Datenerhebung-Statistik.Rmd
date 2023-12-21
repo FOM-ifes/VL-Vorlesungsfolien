@@ -31,10 +31,10 @@ assign("abschluss", FALSE, envir = .GlobalEnv)
 my.options$set(
   privateVorstellung = FALSE,   # Zeige die Private Vorstellung
   showVorlesungsplan = FALSE,   # Zeige die Vorlesungstermine -> In der Datei WMQD-default.Rmd anpassen
-  Corona = FALSE
+  Virtuell = FALSE
 )
 
-createPrivateYaml("FOM-Dozent*in", "SoSe 2023", "FOM")
+createPrivateYaml("FOM-Dozent*in", "SoSe 2024", "FOM")
 
 
 assign("UseCache", TRUE, envir = .GlobalEnv)  # immer mal wieder auf FALSE setzen
@@ -57,8 +57,8 @@ theme_set(
 
 ```{r setUpChildren, eval=TRUE, include=FALSE}
 ChildList <- c(
-    {if_else(my.options$get("Corona"),
-             'DES-Organisatorisches-CORONA.Rmd',  # 60-min Klausur-Fassung
+    {if_else(my.options$get("Virtuell"),
+             'DES-Organisatorisches-Virtuell.Rmd',  # 60-min Klausur-Fassung
              'DES-Organisatorisches.Rmd')},
     {if_else(my.options$get("privateVorstellung"),
              'private/private-Vorstellung.Rmd', NULL)},
