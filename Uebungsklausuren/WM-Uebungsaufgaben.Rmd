@@ -12,17 +12,62 @@ require(mosaic)
 set.seed(1896)
 a <- 0
 p <- 0
+
+#### Daten für Fallstudie
+SATS <- read.csv2("data/Datenbasis_SATS.csv", stringsAsFactors = TRUE)
+
+
+my.y <-  "B_SATS_Aufwand"
+my.x1 <- "B_SATS_Schwierigkeit"
+my.x2 <- "B_SATS_Kompetenz"
+my.x3 <- "B_SATS_Interesse"
+my.x4 <- "G01_Geschlecht"
+my.x5 <- "C1_Mathe"
+my.n <- sample(150:200, 1)
+
+SATS <- SATS %>%
+  select(my.x1, my.x2, my.x3, my.x4, my.x5, my.y) %>%
+  mutate(!!my.x5 := factor(case_when((get(my.x5)) > 5 ~ "hoch",
+                                     (get(my.x5)) > 3  ~ "mittel",
+                                     (get(my.x5)) <=3 ~ "gering"), levels =c("gering", "mittel", "hoch"))) %>%
+  na.omit() %>%
+  sample_n(my.n) %>%
+  rename(Aufwand=B_SATS_Aufwand,
+         Leichtigkeit=B_SATS_Schwierigkeit,
+         Kompetenz=B_SATS_Kompetenz,
+         Interesse=B_SATS_Interesse,
+         Geschlecht=G01_Geschlecht,
+         Mathe=C1_Mathe
+         )
+
+attr(SATS, "na.action") <- NULL
+
+my.vars <- names(SATS)
+
+
+Beschreibung <- data.frame(Variable = my.vars,
+                           Beschreibung = c("Eingeschätzte Leichtigkeit des Faches.",
+                                            "Eingeschätzte Selbstkompetenz in dem Fach.",
+                                            "Interesse am Fach.",
+                                            "Geschlecht (maennlich, weiblich).",
+                                            "Eingeschätztes Leistungsniveau Mathematik (gering, mittel, hoch)",
+                                            "Geplanter Aufwand für das Fach.")
+)
 ```
 
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
+## Aufgabe `r a<-a+1;a`: (`r x<-9;p<-p+x; x`  Punkte, Praxistransfer)
 
-Alle Schwäne die ich bisher gesehen habe waren weiß. Ich schließe daraus: alle Schwäne sind weiß.
+Geben Sie bitte ein Beispiel für die Ebenen Assoziation, Intervention und Counterfactual auf der kausalen Leiter nach Pearl in Ihrer beruflichen Praxis (*bitte angeben*). Definieren Sie dabei $X$, $Y$.  
 
-Um welche Schlussart handelt es sich (max. 1 Antwort richtig)?
+\newpage
 
-1.  Induktion
-2.  Deduktion
-3.  Abduktion
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p <-p+x; x`  Punkt)
+
+Die Besitzerin einer Eisdiele beobachtet an einem Brückentag (Freitag, 4.10.2019) bei Sonnenschein einen hohen Umsatz. Sie schließt daraus: *Wenn Brückentag ist und die Sonne scheint, kaufen viele Menschen Eis.* Welche Schlussart liegt vor? (max. 1 Antwort ist richtig)
+
+A.  Induktion
+B.  Deduktion
+C.  Abduktion
 
 ## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
 
@@ -34,174 +79,585 @@ Welche Form der Datenerhebung ermöglicht Kausalaussagen (max. 1 Antwort richtig
 4.  Eine große Stichprobe
 
 
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
-
-Welches Skalenniveau hat das Merkmal Postleitzahl (max. 1 Antwort richtig)?
-
-1.  Numerisch diskret
-2.  Numerisch stetig
-3.  Kategorial ordinal
-4.  Kategorial nominal
-
-\pagebreak
-
-## Aufgabe `r a<-a+1;a`: (2+3=`r x<-5;p<-p+x; x`  Punkte) 
+## Aufgabe  `r a<-a+1;a`: (`r x<-3;p <-p+x; x`  Punkte)
 
 ```{r, include=FALSE}
-data(CPS85, package="mosaicData")
-einkommen <- CPS85[, c("wage", "educ", "sex", "age", "union")]
-colnames(einkommen) <- c("Stundenlohn", "Ausbildungsjahre","Geschlecht", "Alter", "Gewerkschaft")
-levels(einkommen$Geschlecht) <- c("weiblich", "männlich")
-levels(einkommen$Gewerkschaft) <- c("kein Mitglied", "Mitglied")
+vali <- sample(c("internen"),1)
 ```
 
-Es liegen folgende Daten einer zufälligen Bevölkerungssstichprobe aus dem Jahre 1985 vor (USA).
+Was verstehen Sie unter der `r vali` Validität eines Forschungsergebnisses? 
+
+\pagebreak
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Bei der Messung einer Eigenschaft $A$ stellt man fest, dass man statt dieser eigentlich die Eigenschaft $B$ misst. Welches Gütekriterium einer Messung ist verletzt? (max. 1 Antwort ist richtig)
+
+A.  Genauigkeit
+B.  Objektivität
+C.  Reliabilität
+D.  Validität
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Wie lautet die formal richtige Nullhypothese, wenn die Forschungsthese lautet: *Im Mittelwert essen die Deutschen mehr als 20 Kugeln Eis im Jahr*? (max. 1 Antwort ist richtig)
+
+A.  $\bar{x}=20$
+B.  $\bar{x}\geq20$
+C.  $\bar{x}\leq20$
+D.  $\mu=20$
+E.  $\mu\geq20$
+F.  $\mu\leq20$
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+Die Eisdielenbesitzerin befragt ihre Kund\*innen an dem sonnigen Brückentag (Fr., 4.10.2019), wie viele Kugeln Eis sie im Jahr essen. Um was für eine Stichprobe handelt es sich? (max. 1 Antwort ist richtig)
+
+
+A.  Eine zufällige Stichprobe.
+B.  Eine geschichtete Stichprobe.
+C.  Eine Gelegenheitsstichprobe.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Eine zufällige Stichprobe für die Hypothese aus Aufgabe `r a-2` ergibt einen Mittelwert von $25$ Kugeln.
+
+Welche Aussage stimmt? (max. 1 Antwort ist richtig)
+
+A.  $H_0$ wird auf keinen Fall verworfen.
+B.  $H_0$ wird auf jeden Fall verworfen.
+C.  Ob $H_0$ verworfen wird, kann noch nicht entschieden werden.
+
+\pagebreak
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Stimmt die Aussage: Der Korrelationskoeffizient $r_{x,y}$ ist unabhängig von der Skalierung von $x$ und $y$? (max. 1 Antwort ist richtig)
+
+
+Zur Verdeutlichung ein Beispiel: Wenn die Eisdielenbesitzerin anstatt des Korrelationskoeffizienten zwischen der Anzahl Eiskugeln und der Temperatur in °C, den Korrelationskoeffizienten zwischen dem Umsatz ($=$ Anzahl Kugeln $\times 1.10 \text{ Euro}$) und der Temperatur analysieren würde, so ändert sich das Ergebnis nicht.
+
+$$r_{\text{Eiskugeln, Temperatur}}=r_{\text{Eisumsatz, Temperatur}}$$
+
+
+A.  Ja.
+B.  Nein.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+Ändert sich der Korrelationskoeffizient (ceteris paribus) substantiell, wenn statt $n=100$ zufälligen Beobachtungen $n=1000$ zufällige Beobachtungen zur Berechnung verwendet werden? (max. 1 Antwort ist richtig)
+
+A.  Ja.
+B.  Nein.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+In einem Skatblatt gibt es 32 Karten: die vier Farben Karo, Herz, Pik und Kreuz mit jeweils den acht Werten 7, 8, 9, 10, Bube, Dame, König, Ass. 
+
+Unabhängig von Daten entscheidet sich eine Forscherin, die Nullhypothese zu verwerfen, wenn sie aus einem gut gemischten Blatt eine Karte zieht und dies der Herz-Bube ist.
+
+Was gilt? (max. **2** Antworten sind richtig)
+
+
+A.  Die Wahrscheinlichkeit für einen Fehler 1. Art ist $>0.05$.
+B.  Die Wahrscheinlichkeit für einen Fehler 1. Art ist $<0.05$.
+C.  Die Wahrscheinlichkeit für einen Fehler 2. Art ist $>0.05$.
+D.  Die Wahrscheinlichkeit für einen Fehler 2. Art ist $<0.05$.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+pwert <- round(runif(1),4)
+nein1 <- sample(c(""), 1)
+nein2 <- sample(c(""), 1)
+```
+
+Angenommen bei einer Hypothesenprüfung ergibt sich ein p-Wert von `r pwert`.
+
+Welche Aussage stimmt?  (max. 1 Antwort ist richtig)
+
+A.  Die Wahrscheinlichkeit, dass $H_0$ `r nein2` stimmt, liegt bei $`r nein1``r pwert`$.
+B.  Die Wahrscheinlichkeit, dass $H_A$ `r nein2` stimmt, liegt bei $`r nein1``r pwert`$.
+C.  Weder A noch B stimmen.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+covs <- matrix(c(0.15,0.85,-0.15,0.85,-0.1,-0.85,0.15,-0.85), ncol=4)
+covs <- sample(covs[,sample(1:4,1)])
+size <- 50
+X <- rbind(mvtnorm::rmvnorm(size, sigma=matrix(c(1,covs[1],covs[1],1), nrow=2)),
+           mvtnorm::rmvnorm(size, sigma=matrix(c(1,covs[2],covs[2],1), nrow=2)))
+daten <- tibble(Daten = rep(c("A","B"), each=size), X1 = X[,1], X2 = X[,2])
+gf_point(X2 ~ X1 | Daten, data = daten)
+```
+
+In welcher Abbildung ist der Korrelationskoeffizient $r=`r A<-daten %>% filter(Daten=="A"); round(cor(A$X1,A$X2),2)`$?  (max. 1 Antwort ist richtig)
+
+A.  In Abbildung A.
+B.  In Abbildung B
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Mit welcher Methode können Sie den Standardfehler bestimmen?
+
+A.  Bootstrapping (`resample()`).
+B.  Permutation (`shuffle()`).
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+```{r, include=FALSE}
+aussage <- sample(c("Signifikanz bedeutet inhaltliche Relevanz"),1)
+```
+
+Stimmt die Aussage: `r aussage`?
+
+A.  Ja.
+B.  Nein.
+
+\pagebreak
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Zwei lineare Regressionsmodelle ergeben folgende Residualplots:
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+fac <- sample(-3:3, 2)
+x <- runif(50)
+y <- scale(2 - (fac[1]*x) + rnorm(50))
+y2 <- scale(5 - (fac[2]*(x-5)^6) + rnorm(50))
+lm1 <- lm(y ~ x)
+lm2 <- lm(y2 ~ x)
+p1 <- gf_point(resid(lm1) ~ fitted(lm1)) %>% gf_labs(x="Angepasste Werte", y="Residuen", title="A")
+p2 <- gf_point(resid(lm2) ~ fitted(lm1)) %>% gf_labs(x="Angepasste Werte", y="Residuen", title="B")
+gridExtra::grid.arrange(p1,p2,nrow=1)
+```
+
+In welchem Fall ist eine Lineare Regression angemessen?  (max. 1 Antwort ist richtig)
+
+A.  Nur bei A.
+B.  Nur bei B.
+C.  Sowohl bei A als auch B.
+D.  Weder bei A noch bei B.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+Stimmt die Aussage: Das Bestimmtheitsmaß $R^2$ ist robust gegenüber Ausreißern? (max. 1 Antwort ist richtig)
+
+A.  Ja.
+B.  Nein.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+Stimmt die Aussage: Das Bestimmtheitsmaß $R^2$ steigt i. d. R. auch dann, wenn eine Variable $x$ ins Modell aufgenommen wird, die keinen Zusammenhang mit der abhängigen Variable $y$ hat? (max. 1 Antwort ist richtig)
+
+A.  Ja.
+B.  Nein.
+
+\pagebreak
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+Eine Forscherin geht von folgenden Zusammenhängen zwischen $X,C$ und $Y$ aus:
+  
+- `X ~ C`
+- `Y ~ X + C`
+
+Zeichen Sie den dazugehörigen Graphen (DAG, directed acyclic graph).
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Für das Modell in Aufgabe `r a-1` wird angenommen, dass lineare Zusammenhänge gelten. Welches Modell sollte dann gewählt werden, um den kausalen Effekt von  $X$ auf $Y$ zu bestimmen? (max. 1 Antwort ist richtig)
+
+A.  `lm(y ~ 1)`
+B.  `lm(y ~ x)`
+C.  `lm(y ~ c)`
+D.  `lm(y ~ x + c)`
+
+\pagebreak
+
+
+## Fallstudie
+
+Es liegt eine Stichprobe einer Erhebung der "Students Attidudes Towards Statistics" vor.
+
+
+```{r, echo=FALSE}
+Vars <- Beschreibung %>% filter(Variable %in% my.vars)
+kableExtra::kable(Vars,  
+      "latex", booktabs=T) %>%
+  kableExtra::column_spec(1,width = "3cm") %>%
+  kableExtra::column_spec(2,width = "12cm")
+```
+
+Datenstruktur:
 ```{r}
-inspect(einkommen)
+str(SATS)
 ```
 
-1.  Wie groß ist der Stichprobenumfang?
-2.  Welche numerischen Merkmale liegen vor? Sind diese Verhältnis- oder Intervallskaliert?
-
-\pagebreak
-
-
-## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) 
-
-Was können Sie der folgenden Abbildung entnehmen?
-
-```{r, out.width="60%", fig.align="center"}
-gf_boxplot(Alter ~ Gewerkschaft, data = einkommen)
+Datenbeispiele:
+```{r, echo=FALSE}
+knitr::kable(head(SATS))
 ```
 
-\pagebreak
- 
-## Aufgabe `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte) 
+\newpage
 
-Mit welchen Diagrammtyp könnte die Verteilung des Merkmals `Stundenlohn` sinnvoll visualisiert werden (max. 2 Antworten richtig)?
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
 
-1.  Histogramm
-2.  Boxplot
-3.  Liniendiagramm
-4.  Streudiagramm/ Scatterplot
-5.  Balkendiagramm
-
-
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
-
-
-Was gilt in der Regel für linksschiefe Verteilungen (max. 1 Antwort richtig)
-
-1.  Der Mittelwert ist gleich dem Median
-2.  Der Mittelwert ist kleiner als der Median
-3.  Der Mittelwert ist größer als der Median
-4.  keine Aussage möglich
-
-\pagebreak
-
-## Aufgabe `r a<-a+1;a`: (2+4=`r x<-6;p<-p+x; x`  Punkte) 
-
-Der Anteil der Personen in der Stichprobe, die Gewerkschaftsmitglied sind,
-```{r}
-prop( ~ Gewerkschaft, success="Mitglied", data = einkommen)
-```
-liegt bei $\approx `r round(mean(einkommen$Gewerkschaft=="Mitglied")*100)`\%$.
-
-```{r, out.width="60%", fig.align="center"}
-gewerkschaftsim <- do(10000) * prop( ~ Gewerkschaft, success="Mitglied", 
-                                     data = resample(einkommen))
-gf_histogram( ~ prop_Mitglied, data = gewerkschaftsim)
-quantile( ~ prop_Mitglied, data = gewerkschaftsim, probs=c(0.025, 0.975))
+```{r,include=FALSE}
+frage <- sample(c("Beobachtungen"),1)
 ```
 
-1.  Formulieren Sie die formalen Hypothesen, für die Forschungsthese, dass der Anteil der Gewerkschaftsmitglieder in der Population (Bevölkerung) nicht $20\%$ beträgt.
-2.  Können Sie anhand des Bootstrap Konfidenzintervalls den Hypothesentest entscheiden? Warum? Und wie lautet ggfs. die Testentscheidung?
-
-\pagebreak
+Wie viele `r frage` liegen im Datensatz `SATS` vor?
 
 
-## Aufgabe `r a<-a+1;a`: (`r x<-3;p<-p+x; x`  Punkte) 
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
 
-Welche der folgenden Aussagen über den p-Wert stimmt (max. 1 Antwort richtig)?
-
-1.  Der p-Wert weist auf die ökonomische Relevanz der Ergebnisse hin.
-2.  Der p-Wert weist auf die wissenschaftliche Relevanz der Ergebnisse hin.
-3.  Der p-Wert gibt die Wahrscheinlichkeit an, dass die Nullhypothese stimmt.
-4.  Der p-Wert gibt die Wahrscheinlichkeit an, dass die Alternativhypothese stimmt.
-5.  1.) und 3.) stimmen.
-6.  2.) und 4.) stimmen.
-7.  Keine der genannten Antworten stimmt.
-
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
-
-Welche der folgenden Aussagen über den Chi-Quadrat Unabhängigkeitstest stimmt (max. 1 Antwort richtig)?
-
-1.  Die Nullhypothese lautet: es gibt keinen Zusammenhang zwischen den kategorialen Merkmalen
-2.  Die Nullhypothese lautet: es gibt einen Zusammenhang zwischen den kategorialen Merkmalen
-3.  Die Nullhypothese lautet: es gibt keinen kausalen Zusammenhang zwischen den kategorialen Merkmalen
-4.  Die Nullhypothese lautet: es gibt einen kausalen Zusammenhang zwischen den kategorialen Merkmalen
-
-## Aufgabe `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte) 
-
-Ein Test für $H_0: \mu \leq 100$ gegen $H_A: \mu > 100$ ergibt die Teststatistik $\bar{x}=95$. Was können Sie über das Testergebnis aussagen? Begründen Sie kurz.
-
-## Aufgabe `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkte) 
-
-Welches der genannten ist das richtige Testverfahren um einen Zusammenhang zwischen `Gewerkschaft` und `Alter` zu analysieren (max. 1 Antwort richtig)?
-
-1.  Vergleich zweier Anteilswerte.
-2.  Vergleich zweier Mittelwerte.
-
-\pagebreak
-
-## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) 
-
-Eine t-Test der Ausbildungsjahre je Geschlecht ergibt folgendes Ergebnis:
-
-```{r}
-t.test( Ausbildungsjahre ~ Geschlecht, data = einkommen)
-```
-Beschreiben und diskutieren Sie das Ergebnis.
-
-\pagebreak
-
-(Fortsetzung Aufgabe `r a`)
-
-\pagebreak
-
-## Aufgabe `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte) 
-Beschreiben Sie in eigenen Worten den Grundaufbau, die Testidee einer Varianzanalyse (ANOVA). Was wird dabei getestet?
-
-\pagebreak
-
-
-## Aufgabe `r a<-a+1;a`: (`r x<-9;p<-p+x; x`  Punkte) 
-
-Eine lineare Regression des Stundenlohns auf die anderen Variablen ergibt folgendes Ergebnis:
-```{r}
-summary(lm(Stundenlohn ~ Ausbildungsjahre + Geschlecht + Alter + Gewerkschaft, 
-           data=einkommen))
+```{r, include=FALSE}
+art <- sample(c("einer Beobachtungsstudie"),1)
 ```
 
-Beschreiben und diskutieren Sie das Ergebnis.
+Stimmt die Aussage: Die Daten wurden im Rahmen `r art` erhoben? (max. 1 Antwort ist richtig)
 
-\pagebreak
+A.  Ja
+B.  Nein
 
-(Fortsetzung Aufgabe `r a`)
 
-\pagebreak
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
 
-## Aufgabe `r a<-a+1;a`: (`r x<-3;p<-p+x; x`  Punkte) 
-Eine logistische Regression der Mitgliedschaft in der Gewerkschaft ergibt:
-
-```{r}
-ergglm <- glm(Gewerkschaft ~ Stundenlohn + Ausbildungsjahre + Geschlecht + Alter, 
-             family=binomial(logit), data=einkommen)
-summary(ergglm)
-exp(coef(ergglm))  
+```{r, include=FALSE}
+j <- 5
+my.x <- my.vars[j]
 ```
 
-Wer hat eine höhere Wahrscheinlichkeit in der Gewerkschaft zu sein: Männer oder Frauen? Begründen Sie kurz.
+Mit welcher Abbildung kann die Variable `r my.x` sinnvoll visualisiert werden? (max. 1 Antwort ist richtig)
+
+A.  Säulendiagramm
+B.  Histogramm
+C.  Boxplot
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+```{r, include=FALSE}
+my.x <- my.vars[1]
+```
+
+Stimmt die Aussage: Die Variable `r my.x` ist diskret? (max. 1 Antwort ist richtig)
+
+A.  Ja
+B.  Nein
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+
+```{r, include=FALSE}
+my.x <- my.vars[2]
+kennzahl <- 3
+anteil <- sample(c("75%"),1)
+nein <- sample(c(""),1)
+
+vergleich <- round(favstats( ~get(my.x), data = SATS)[kennzahl],4)
+```
+
+Für die Analyse von `my.x`=`r my.x` ergeben sich folgende Kennzahlen:
+
+```{r, eval=FALSE}
+favstats( ~ my.x, data = SATS)
+```
+
+```{r, echo = FALSE}
+favstats( ~get(my.x), data = SATS)
+```
+
+Stimmt die Aussage: `r anteil` der Beobachtungen sind `r nein` größer oder gleich `r vergleich`?
+
+A.  Ja
+B.  Nein
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.x <- 5
+my.y <- 1
+my.x <- my.vars[my.x]
+my.y <- my.vars[my.y]
+```
+
+Mit welcher Methode können die Verteilungen von `r my.y` in Abhängigkeit von `r my.x` untersucht werden?  (max. 1 Antwort ist richtig)
+
+A.  Vergleich eines Anteilswertes
+B.  Vergleich eines Mittelwertes
+C.  Vergleich zweier Anteilswerte
+D.  Vergleich zweier Mittelwerte
+E.  Vergleich von mehr als zwei Anteilswerten
+F.  Vergleich von mehr als zwei Mittelwerten
 
 
 
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.p <- sample(c(0.0015),1)
+```
+
+Angenommen für eine Hypothesenprüfung von Aufgabe `r a-1` ergibt sich ein p-Wert von `r my.p`. Welche Aussage stimmt? (max. 1 Antwort ist richtig)
+
+A.  Der beobachtete Zusammenhang ist unter der Annahme einer Unabhängigkeit unwahrscheinlich.
+B.  Der beobachtete Zusammenhang ist unter der Annahme einer Abhängigkeit unwahrscheinlich.
+C.  Der beobachtete Zusammenhang ist unter der Annahme einer Unabhängigkeit wahrscheinlich.
+D.  Der beobachtete Zusammenhang ist unter der Annahme einer Abhängigkeit wahrscheinlich.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.alpha <- 5
+```
+
+Angenommen eine Hypothesenprüfung von Aufgabe `r a-2` erfolgt zum Niveau $\alpha=`r my.alpha`\%$ mit dem p-Wert von Aufgabe `r a-1`. Welche Aussage stimmt? (max. 1 Antwort ist richtig)
+
+A.  Die Nullhypothese wird bestätigt.
+B.  Die Nullhypothese wird verworfen.
+C.  Weder A noch B stimmen.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-1;p<-p+x; x`  Punkt)
+
+Wird das Ergebnis gemäß den obigen Aufgaben (`r a-3` -- `r a-1`) *signifikant* genannt? (max. 1 Antwort ist richtig)
+
+A.  Ja.
+B.  Nein.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-2;p<-p+x; x`  Punkte)
+
+Wie würde sich (ceteris paribus) der p-Wert verändern (alter p-Wert $p$, neuer p-Wert: $\tilde{p}$), wenn die Nullhypothese nicht gelten würde, Ihnen aber $\tilde{n}=`r 4*nrow(SATS)`$ Beobachtungen zur Verfügung stehen würden? (max. 1 Antwort ist richtig)
+
+A.  $\tilde{p} \approx p$.
+B.  $\tilde{p} < p$.
+C.  $\tilde{p} > p$.
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.x <- my.vars[3]
+```
+
+Für die Variablen `my.x`=`r my.x` ergibt sich folgendes Histogramm:
+
+```{r, eval=FALSE}
+gf_histogram( ~ my.x, data = SATS)
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+gf_histogram( ~ get(my.x), data = SATS, bins = 11) %>%
+  gf_labs(x=paste(my.x))
+```
+
+Beschreiben Sie das Ergebnis.
+
+
+\pagebreak
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.x <- my.vars[4:5]
+my.x1 <- my.x[1]
+my.x2 <- my.x[2]
+```
+
+Für die Variablen `my.x1`=`r my.x1` und `my.x2`=`r my.x2` ergibt sich folgender Mosaikplot:
+
+```{r, eval=FALSE}
+mosaicplot(my.x1 ~ my.x2, data = SATS)
+```
+
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+mosaicplot(get(my.x1) ~ get(my.x2), data = SATS, color=TRUE, xlab=paste(my.x1), ylab=paste(my.x2))
+```
+
+Beschreiben Sie das Ergebnis.
+
+\pagebreak
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+
+```{r, include=FALSE}
+my.x <- my.vars[5]
+my.y <- my.vars[1]
+```
+
+Ein Boxplot mit den Variablen `my.x`=`r my.x` und `my.y`=`r my.y` ergibt folgendes Ergebnis:
+
+```{r, eval=FALSE}
+gf_boxplot(my.y ~ my.x, data = SATS) 
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+gf_boxplot(get(my.y) ~ get(my.x), data = SATS) %>%
+  gf_labs(x=paste(my.x), y=paste(my.y))
+```
+
+Beschreiben Sie das Ergebnis.
+
+\pagebreak
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-4;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.x <- my.vars[2]
+```
+
+Für die Variable `my.x`=`r my.x` ergibt sich folgende Verteilung in der Stichprobe:
+
+Der Mittelwert in der Stichprobe liegt bei $$\bar{x}=`r round(mean(~get(my.x), data = SATS),2)`.$$
+
+Eine Resamplinganalyse ergibt folgendes Ergebnis:
+
+```{r, eval=FALSE}
+# Bootstraping
+Bootvtlg <- do(1000)* mean(~my.x, data = resample(SATS))
+# Bootstrap-Verteilung
+gf_histogram( ~ mean, data = Bootvtlg, bins = 11)
+# Resampling-Intervall
+confint(Bootvtlg)
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+# Bootstraping
+Bootvtlg <- do(1000)* mean(~get(my.x), data = resample(SATS))
+# Bootstrap-Verteilung
+gf_histogram( ~ mean, data = Bootvtlg, bins = 11)
+# Resampling-Intervall
+confint(Bootvtlg)
+```
+
+Interpretieren Sie das Ergebnis.
+
+\newpage
+
+Ggf. Fortsetzung Aufgabe `r a`
+
+\pagebreak
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-6;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.y <- my.vars[2]
+my.x <- my.vars[4]
+```
+
+Bei der Verteilung der Variable `my.y`=`r my.y` in Abhängigkeit der Variable `my.x`=`r my.x` ergibt sich für die arithmetischen Mittelwerte:
+
+```{r, eval=FALSE}
+mean(my.y ~ my.x, data = SATS)
+```
+
+```{r, echo=FALSE}
+mean(get(my.y) ~ get(my.x), data = SATS)
+```
+
+Und damit für die Differenz der Mittelwerte:
+
+```{r, eval=FALSE}
+diff.stipro <- diffmean(my.y ~ my.x, data = SATS)
+diff.stipro
+```
+
+```{r, echo=FALSE}
+diff.stipro <- diffmean(get(my.y) ~ get(my.x), data = SATS)
+diff.stipro
+```
+
+Ein Permutationstest ergibt folgendes Ergebnis:
+
+```{r, eval=FALSE}
+# Simulation unter H_0
+Nullvtlg <- do(1000)* diffmean(my.y ~ shuffle(my.x), data = SATS)
+# Permutationsverteilung
+gf_histogram( ~diffmean, data = Nullvtlg) %>%
+  gf_vline(xintercept = ~ diff.stipro) # Wert der Stichprobe
+# p-Wert
+prop( ~ abs(diffmean)>=abs(diff.stipro), data = Nullvtlg)
+```
+
+```{r, echo=FALSE, out.width="80%", fig.align="center"}
+Nullvtlg <- do(1000)* diffmean(get(my.y) ~ shuffle(get(my.x)), data = SATS)
+gf_histogram( ~diffmean, data = Nullvtlg, center = 0, bins = 11) %>%
+  gf_vline(xintercept = ~ diff.stipro)
+prop( ~ abs(diffmean)>=abs(diff.stipro), data = Nullvtlg)
+```
+
+Fassen Sie das Ergebnis der Analyse zusammen. Wie lauten die Forschungsfrage, die Hypothesen und das vorläufige Ergebnis?
+
+
+\newpage
+
+Ggf. Fortsetzung Aufgabe `r a`
+
+\pagebreak
+
+
+## Aufgabe  `r a<-a+1;a`: (`r x<-8;p<-p+x; x`  Punkte)
+
+```{r, include=FALSE}
+my.x <- my.vars[c(3,4)]
+my.y <- my.vars[6]
+my.x1 <- my.x[1]
+my.x2 <- my.x[2]
+```
+
+Eine Regression von `my.y`=`r my.y` auf die Variablen `my.x1`=`r my.x1` und `my.x2`=`r my.x2` ergibt folgendes Ergebnis:
+
+```{r, eval=FALSE}
+erglm <- lm(my.y ~ my.x1 + my.x2, data = SATS)
+# Zusammenfassung
+summary(erglm)
+```
+
+```{r, echo=FALSE}
+erglm <- lm(get(my.y)~get(my.x1)+get(my.x2), data = SATS)
+pp <- summary(erglm)
+rownames(pp$coefficients) <- stringr::str_remove(rownames(pp$coefficients), "get")
+print(pp)
+```
+
+Fassen Sie das Ergebnis der Analyse zusammen. Wie lauten die Forschungsfrage, die Hypothesen und das vorläufige Ergebnis?
+
+\newpage
+
+Ggf. Fortsetzung Aufgabe `r a`
+
+\pagebreak
+
+## Hinweise
+
+- Die Art und Weise der Aufgaben ist ähnlich denen einer Klausur. Sie können sich vom Anspruch und dem Fragentyp an diesen Übungsaufgaben orientieren, nicht aber was die konkreten Inhalte usw. betrifft.
+- Zum Üben besteht diese Probe aus Aufgaben mit insgesamt **`r p`** Punkten.
+- Es reicht nicht diese Übungsaufgaben zu lernen: Die Klausur hat andere Aufgaben.
+- Tipps zur Klausur:
+    - Prüfungsrelevant ist der gesamte Stoff der Vorlesung. Für die Wiederholungsprüfung gelten die gleichen Rahmenbedingungen wie für den regulären Prüfungstermin.
+    - Lesen Sie sich erst die ganze Klausur in Ruhe durch und fangen Sie mit den Aufgaben an, die Sie sicher können.
+    - Halten Sie sich nicht zu lange mit Aufgaben auf, die wenig Punkte bringen.
