@@ -6,5 +6,5 @@
 - Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Little Books *A Student's Guide to R*,  [https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf](https://github.com/ProjectMOSAIC/LittleBooks/raw/master/StudentGuide/MOSAIC-StudentGuide.pdf)
   - Übersetzung von „A Student‘s Guide to R“: [https://github.com/FOM-ifes/StudentGuide-mosaic/blob/main/_book/Mosaic-Handbuch.pdf](https://github.com/FOM-ifes/StudentGuide-mosaic/blob/main/_book/Mosaic-Handbuch.pdf)
 - Chester Ismay, Albert Y. Kim (2023): *Statistical Inference via Data Science: A ModernDive into R and the Tidyverse!*, [http://moderndive.com/](http://moderndive.com/)
-- Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2023): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)
+- Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2023): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.download.html](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.download.html)
 

@@ -60,7 +60,7 @@
 #                      Wegen der include_exclude.py Filter nun direkt in LaTeX
 #                      als Zähler dort. (beamerthemeNPBT.sty ab 4.2.1 nötig!!!)
 #                      (Release 2.4.0)
-# 27. Feb. 2021  (nm)  Corona und useR standardmässig auf FALSE gesetzt.
+# 27. Feb. 2021  (nm)  Virtuell und useR standardmässig auf FALSE gesetzt.
 #                      (Release 2.4.1)
 # 02. Mrz. 2021  (nm)  my.options() statt statischen Variablen
 #                      (Release 2.5)
@@ -174,7 +174,7 @@ if (!exists("my.options")) {
   assign("my.options",  my_defaults(list(
     layouttype = "FOM",        # Möglich sind: "eufom", "DLS"
     eufom = FALSE,             #
-    Corona = TRUE,             #
+    Virtuell = TRUE,             #
     UseCache = FALSE,          #
     showuseR = TRUE, 
     overwrite_old = TRUE,      # Sollen bestehende Dateien überschrieben werden?
@@ -237,9 +237,9 @@ initPrelude <- function(
       assign("Vorlesungstermine", "default")
   }
   
-  # Standardeinstellungen für useR und Corona Variablen
+  # Standardeinstellungen für useR und Virtuell Variablen
   if (!exists("showuseR")) assign("showuseR", FALSE, envir = .GlobalEnv)
-  if (!exists("Corona")) assign("Corona", FALSE, envir = .GlobalEnv)
+  if (!exists("Virtuell")) assign("Virtuell", FALSE, envir = .GlobalEnv)
   
   assign("kap", -1, envir = .GlobalEnv)
   assign("ex", 0, envir = .GlobalEnv)

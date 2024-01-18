@@ -42,7 +42,7 @@ Semester <- "SoSe 2024"  # Standard Semesterangabe (SoSe XXXX / WiSe XXXX/XX)
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe der/des Lehrenden. Standard ist "FOM Dozent:in"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
-Dozent <- "Dozent:in"  # Standard Dozent:innenangabe
+Dozent <- "Dozent*in"  # Standard Dozent:innenangabe
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
 # Angabe des Studienortes. Standard ist "FOM"
 #- - - - - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -
@@ -76,7 +76,7 @@ tmp_layouttype <- ""
 # Python Version benutzt werden!
 suppressWarnings({
     if (any(is.na(packageDescription("reticulate")))) { 
-        install.package("reticulate")
+        install.packages("reticulate")
     }
     out <- capture.output(reticulate::py_config())
     

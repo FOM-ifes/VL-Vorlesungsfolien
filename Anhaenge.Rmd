@@ -29,7 +29,7 @@ my.options$set(
   privateVorstellung = FALSE,
   showVorlesungsplan = FALSE,
   showuseR = FALSE,
-  Corona = TRUE
+  Virtuell = FALSE
 )
 
 if (!exists("prelude.rendertools")) {
@@ -38,7 +38,7 @@ if (!exists("prelude.rendertools")) {
 
 # Standardeinstellung ("Dozent", "Semester", "FOM Standort")
 # muss beim Kompilieren mit Knit-Button korrekt eingestellt werden
-createPrivateYaml("Dozent*in", "SoSe 2023", "FOM") 
+createPrivateYaml("Dozent*in", "SoSe 2024", "FOM") 
 
 UseCache <<- FALSE
 makeDozi()        # Erzeuge Dozierendenskript

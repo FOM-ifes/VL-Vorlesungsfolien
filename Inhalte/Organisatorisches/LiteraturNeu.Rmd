@@ -59,7 +59,7 @@ Nicholas J. Horton, Randall Pruim, Daniel T. Kaplan (2018): Project MOSAIC Littl
 knitr::include_graphics(file.path(pathToLiteraturImages,"An-Introduction-to-Statistical-Learning---with-Applications-in-R.jpg"), error = FALSE)
 ```
 
-Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2023): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)
+Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani (2023): *An Introduction to Statistical Learning -- with Applications in R*, [https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.download.html](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.download.html)
 ::::
 
 
