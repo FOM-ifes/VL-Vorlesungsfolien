@@ -65,8 +65,8 @@ ChildList <- c(
     {if_else(my.options$get("Virtuell"),
              'QMEval-Organisatorisches-Virtuell.Rmd',  # 60-min Klausur-Fassung
              'QMEval-Organisatorisches.Rmd')},
-    {if_else(my.options$get("privateVorstellung"),
-             'private/private-Vorstellung.Rmd', NULL)},
+    {if(my.options$get("privateVorstellung"))
+             'private/private-Vorstellung.Rmd'},
     'Organisatorisches/Hinweise.Rmd',
     'Grundlagen-Wissenschaft.Rmd',
     'Grundlagen-QuantDat.Rmd',

@@ -65,21 +65,20 @@ theme_set(
 ```{r setUpChildren, eval=TRUE, include=FALSE}
 ChildList <- c(
     {if_else(my.options$get("Virtuell"),
-              'WMQD-Organisatorisches-Virtuell.Rmd',  # 60-min Klausur-Fassung
-              'WMQD-Organisatorisches.Rmd')},
-     {if_else(my.options$get("privateVorstellung"),
-              'private/private-Vorstellung.Rmd', 
-              'KeinInhalt.Rmd')},
-     'Organisatorisches/Hinweise.Rmd', 
-     'Grundlagen-Wissenschaft.Rmd', 
-     'Grundlagen-QuantDat.Rmd',
-     'Einfuehrung-R.Rmd',
-     'EDA.Rmd',
+            'WMQD-Organisatorisches-Virtuell.Rmd',  # 60-min Klausur-Fassung
+            'WMQD-Organisatorisches.Rmd')},
+    {if(my.options$get("privateVorstellung"))
+             'private/private-Vorstellung.Rmd'},
+    'Organisatorisches/Hinweise.Rmd', 
+    'Grundlagen-Wissenschaft.Rmd', 
+    'Grundlagen-QuantDat.Rmd',
+    'Einfuehrung-R.Rmd',
+    'EDA.Rmd',
     'Normalverteilung.Rmd',
-     'Regression.Rmd',
-     'Inferenz.Rmd',
+    'Regression.Rmd',
+    'Inferenz.Rmd',
     #'Inferenz-Beispiele.Rmd', # -> Anhang!
-    # 'Datenhandling.Rmd',     # -> Anhang!
+    #'Datenhandling.Rmd',      # -> Anhang!
     'Abschluss.Rmd'
 )
 if (FALSE) { # Zum Debuggen einfach auf TRUE setzen!
